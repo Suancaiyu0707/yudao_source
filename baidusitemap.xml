@@ -4,8 +4,26 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/Architecture/books-recommended/</loc>
+    <lastmod>2017-09-18T11:04:33.000Z</lastmod>
+    <data>
+        <display>
+        <title>闲聊如何阅读文章</title>
+        <pubTime>2017-12-14T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="技术杂文" url="http://www.iocoder.cn/categories/%E6%8A%80%E6%9C%AF%E6%9D%82%E6%96%87/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
-    <lastmod>2017-09-17T18:56:22.000Z</lastmod>
+    <lastmod>2017-09-18T08:14:58.000Z</lastmod>
     <data>
         <display>
         <title>TCC-Transaction 源码分析 —— 项目实战</title>
@@ -94,12 +112,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/tcc-core/</loc>
     <lastmod>2017-09-17T11:06:25.000Z</lastmod>
     <data>
         <display>
-        <title>TCC-Transaction 源码分析 —— 调试环境搭建</title>
-        <pubTime>2018-01-31T16:00:00.000Z</pubTime>
+        <title>TCC-Transaction 源码分析 —— TCC 实现</title>
+        <pubTime>2018-02-07T16:00:00.000Z</pubTime>
         
          
            
@@ -112,12 +130,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/tcc-core/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
     <lastmod>2017-09-17T11:06:25.000Z</lastmod>
     <data>
         <display>
-        <title>TCC-Transaction 源码分析 —— TCC 实现</title>
-        <pubTime>2018-02-07T16:00:00.000Z</pubTime>
+        <title>TCC-Transaction 源码分析 —— 调试环境搭建</title>
+        <pubTime>2018-01-31T16:00:00.000Z</pubTime>
         
          
            
@@ -321,24 +339,6 @@
            
              
               <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/connect-mongodb/</loc>
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    <data>
-        <display>
-        <title>MyCAT 源码分析  —— SQL ON MongoDB</title>
-        <pubTime>2017-07-18T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="MyCAT" url="http://www.iocoder.cn/categories/MyCAT/"/>
           
         </display>
     </data>
@@ -1192,17 +1192,17 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-3/</loc>
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    <loc>http://www.iocoder.cn/MyCAT/connect-mongodb/</loc>
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>Sharding-JDBC 源码分析 —— SQL 解析（三）之查询SQL</title>
-        <pubTime>2017-07-26T16:00:00.000Z</pubTime>
+        <title>MyCAT 源码分析  —— SQL ON MongoDB</title>
+        <pubTime>2017-07-18T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
+              <breadCrumb title="MyCAT" url="http://www.iocoder.cn/categories/MyCAT/"/>
           
         </display>
     </data>
@@ -1383,6 +1383,24 @@
            
              
               <breadCrumb title="Elastic-Job-Cloud" url="http://www.iocoder.cn/categories/Elastic-Job-Cloud/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-3/</loc>
+    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    <data>
+        <display>
+        <title>Sharding-JDBC 源码分析 —— SQL 解析（三）之查询SQL</title>
+        <pubTime>2017-07-26T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
           
         </display>
     </data>

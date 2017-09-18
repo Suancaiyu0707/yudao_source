@@ -870,7 +870,9 @@ public void cancelRecord(TransactionContext transactionContext, CapitalTradeOrde
 
 # 666. 彩蛋
 
-嘿嘿，代码只是看起来比较多，实际不对。
+嘿嘿，代码只是看起来比较多，实际不多。
+
+蚂蚁金融云提供了银行间转账的 TCC 过程例子，有兴趣的同学可以看看：[《蚂蚁金融云 —— 分布式事务服务（DTS） —— 场景介绍》](https://www.cloud.alipay.com/docs/2/46886)。
 
 本系列 EOF ~撒花
 
