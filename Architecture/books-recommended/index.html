@@ -1,5 +1,710 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E"><meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0"><meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214"><meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1"><meta name="sogou_site_verification" content="MpPsku240L"><title>源码圈书单整理 | 芋道源码 —— 纯源码解析BLOG</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1"><meta name="author" content="王文斌"><meta name="description" content="🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：
 
-RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
-RocketMQ / MyCAT / Sharding-JDBC 中文注释源码 GitHub 地址
-您对于源码的疑问每条留言都将得到认真回复。甚至不知道"><meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表"><link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml"><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/css/style.css"><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="//hm.baidu.com/hm.js?9e70e3362807c1bd185a79655b307027";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script>!function(){var t="http:"==document.location.protocol?"http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";document.write('<script src="'+t+'" id="sozz"><\/script>')}()</script><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head></html><body><header><div><div id="textlogo"><h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1><a class="blog-motto">愿半生编码，如一生老友！</a></div><div class="navbar"><a class="navbutton navmobile" href="#" title="菜单"></a></div><nav class="animated"><ul><ul><li><a href="/">文章</a></li><li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li><li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li><li><a href="/link_url">友链</a></li></ul></ul></nav></div></header><div id="container"><div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div><div id="toc" class="toc-aside"><strong class="toc-title">文章目录</strong><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">《Effective Java 中文版》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">《Spring揭秘》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">《SpringBoot揭秘》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">《MyBatis技术内幕》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">《有效的单元测试》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">《Java并发编程实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">《Netty实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">《深入剖析Tomcat》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">9.</span> <span class="toc-text">《Nginx 中文官方文档》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">10.</span> <span class="toc-text">《深入理解Nginx》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">11.</span> <span class="toc-text">《深入理解Java虚拟机：JVM高级特性与最佳实践》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">12.</span> <span class="toc-text">《Java核心技术系列：Java虚拟机规范（Java SE 8版）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">13.</span> <span class="toc-text">《MySQL技术内幕》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">14.</span> <span class="toc-text">《高性能MySQL》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">15.</span> <span class="toc-text">《高可用MySQL》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">16.</span> <span class="toc-text">《MongoDB权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">17.</span> <span class="toc-text">《Redis开发与运维》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">18.</span> <span class="toc-text">《Redis设计与实现》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">19.</span> <span class="toc-text">《ElasticSearch 可扩展的开源弹性搜索解决方案》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">20.</span> <span class="toc-text">《ELK Stack权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">21.</span> <span class="toc-text">《ZooKeeper：分布式过程协同技术详解》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">22.</span> <span class="toc-text">《从Paxos到Zookeeper分布式一致性原理与实践》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">23.</span> <span class="toc-text">《RabbitMQ实战：高效部署分布式消息队列》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">24.</span> <span class="toc-text">《Apache Kafka源码剖析》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">25.</span> <span class="toc-text">《作业调度系统 Quartz 中文文档》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">26.</span> <span class="toc-text">《微服务设计》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">27.</span> <span class="toc-text">《Spring Cloud微服务实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">28.</span> <span class="toc-text">《亿级流量网站架构核心技术》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">29.</span> <span class="toc-text">《架构即未来：现代企业可扩展的Web架构、流程和组织》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">30.</span> <span class="toc-text">《Maven 实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">31.</span> <span class="toc-text">《Jenkins权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">32.</span> <span class="toc-text">《鸟哥的Linux私房菜 （基础学习篇）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">33.</span> <span class="toc-text">《鸟哥的Linux私房菜 （服务器架设篇）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">34.</span> <span class="toc-text">《Zabbix企业级分布式监控系统》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">35.</span> <span class="toc-text">《第一本Docker书》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">36.</span> <span class="toc-text">《Kubernetes权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">37.</span> <span class="toc-text">《用Mesos框架构建分布式应用》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">38.</span> <span class="toc-text">《数据结构与算法分析：Java语言描述》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">39.</span> <span class="toc-text">《Head First 设计模式》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">40.</span> <span class="toc-text">《HTTP权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">41.</span> <span class="toc-text">《TCP/IP详解 系列》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">42.</span> <span class="toc-text">《剑指Offer：名企面试官精讲典型编程题》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">43.</span> <span class="toc-text">ToDO List</span></a></li></ol></div><div id="asidepart"><aside class="clearfix"><div id="authorInfo"><div><img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"></div><div class="social-list"></div></div><div class="categorieslist"><p class="asidetitle">微信公众号福利：芋道源码</p><ul><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">0. 阅读源码葵花宝典</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">2. 您对于源码的疑问每条留言都将得到认真回复</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">3. 新的源码解析文章实时收到通知，每周六十点更新</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群</a></li></ul></div><div class="categorieslist"><p class="asidetitle">分类</p><ul><li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li><li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li><li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li><li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li><li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li><li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li><li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li><li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li><li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li></ul></div></aside></div><div id="main" class="post" itemscope="" itemprop="blogPost"><article itemprop="articleBody"><header class="article-info clearfix"><h1 itemprop="name"><a href="/Architecture/books-recommended/" title="源码圈书单整理" itemprop="url">源码圈书单整理</a></h1><p class="article-author"></p><p class="article-time">总阅读量:<span id="busuanzi_value_page_pv"></span>次</p></header><div class="article-content"><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><ul><li><p><strong>【源码圈】众胖友协作完成</strong></p></li><li><p><strong>希望书单能在你想要进一步打怪升级的路上，给予些许帮助</strong></p></li><li><p><strong>建议先收藏本书单，认真啃完一本再买下一本，扎实走完每一步</strong></p></li><li><p><strong>如果对你略有帮助，烦请分享给你的基友</strong></p></li><li><p><strong>与君共勉，若有合适的书籍，请一定告诉我，谢谢</strong></p></li><li><p><strong>分类困难因而没分。大体顺序，编程开发 =&gt; 数据库 =&gt; 架构运维 =&gt; 算法</strong></p></li></ul><h3><a href="https://item.jd.com/10058902.html" rel="external nofollow noopener noreferrer" target="_blank">《Effective Java 中文版》</a></h3><ul><li>豆瓣评分：9.1【1235 人评价】</li><li>推荐理由：本书介绍了在Java编程中78条极具实用价值的经验规则，这些经验规则涵盖了大多数开发人员每天所面临的问题的解决方案。</li><li>友情提示：同推荐《重构 : 改善既有代码的设计》、《代码整洁之道》、《代码大全》，有一定的内容重叠。</li></ul><h3><a href="https://e.jd.com/30142898.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring揭秘》</a></h3><ul><li>豆瓣评分：9.0 【162 人评价】</li><li>推荐理由：Spring 使用者不得不读！</li></ul><h3><a href="https://item.jd.com/11940558.html" rel="external nofollow noopener noreferrer" target="_blank">《SpringBoot揭秘》</a></h3><ul><li>豆瓣评分：6.8 【44 人评价】</li><li>推荐理由：《Spring揭秘》相同作者。SpringBoot 入门书籍。</li></ul><h3><a href="https://item.jd.com/14357404208.html" rel="external nofollow noopener noreferrer" target="_blank">《MyBatis技术内幕》</a></h3><ul><li>豆瓣评分：暂无</li><li>推荐理由：以MyBatis 3.4为基础，针对MyBatis的架构设计和实现细节进行了详细分析，其中穿插介绍了MyBatis源码中涉及的基础知识、设计模式以及笔者自己在实践中的思考。</li></ul><h3><a href="https://item.jd.com/11582394.html" rel="external nofollow noopener noreferrer" target="_blank">《有效的单元测试》</a></h3><ul><li>豆瓣评分：7.4 【18 人评价】</li><li>土建理由：Java 单元测试入门。</li></ul><h3><a href="https://item.jd.com/10922250.html" rel="external nofollow noopener noreferrer" target="_blank">《Java并发编程实战》</a></h3><ul><li>豆瓣评分：9.0 【651 人评价】</li><li>推荐理由：本书深入浅出地介绍了Java线程和并发，是一本完美的Java并发参考手册。</li></ul><h3><a href="https://item.jd.com/12070975.html" rel="external nofollow noopener noreferrer" target="_blank">《Netty实战》</a></h3><ul><li>豆瓣评分：7.5【24 人评价】</li><li>豆瓣评分：8.1【83 人评价】 《Netty in Action》英文版</li><li>推荐理由：Netty之父”Trustin Lee作序推荐。</li></ul><h3><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.1.76bf523c6QtUK&amp;id=549538669450&amp;ns=1&amp;abbucket=2#detail" rel="external nofollow noopener noreferrer" target="_blank">《深入剖析Tomcat》</a></h3><ul><li>豆瓣评分：8.3【118 人评价】</li><li>豆瓣评分：8.9【73 人评价】 《How Tomcat Works》英文版</li><li>推荐理由：本书深入剖析Tomcat 4和Tomcat 5中的每个组件，并揭示其内部工作原理。通过学习本书，你将可以自行开发Tomcat组件，或者扩展已有的组件。</li></ul><h3><a href="https://wizardforcel.gitbooks.io/nginx-doc/content/" rel="external nofollow noopener noreferrer" target="_blank">《Nginx 中文官方文档》</a></h3><ul><li>豆瓣评分：暂无</li><li>推荐理由：暂时未找到大家评价不错的 Nginx 实战相关书籍，先推荐看中文翻译的官方文档。如果你有合适的推荐，烦请告诉我。</li></ul><h3><a href="https://item.jd.com/11877268.html" rel="external nofollow noopener noreferrer" target="_blank">《深入理解Nginx》</a></h3><ul><li>豆瓣评分：8.5【138 人评价】</li><li>推荐理由：书中首先通过介绍官方Nginx的基本用法和配置规则，帮助读者了解一般Nginx模块的用法，然后重点介绍了如何开发HTTP模块(含HTTP过滤模块)来得到定制化的Nginx，其中包括开发—个功能复杂的模块所需要了解的各种知识，并对内存池的实现细节及TCP协议进行了详细介绍；接着，综合Nginx框架代码分析了Nginx架构的设计理念和技巧，此外，还新增了如何在模块中支持HTTP变量，以及与slab共享内存等相关的内容，相信通过完善，可进一步帮助读者更好地开发出功能丰富、性能—流的Nginx模块。</li><li>友情提示：相对适用于 Nginx 开发者。Nginx 使用者可以了解。</li></ul><h3><a href="https://item.jd.com/11252778.html" rel="external nofollow noopener noreferrer" target="_blank">《深入理解Java虚拟机：JVM高级特性与最佳实践》</a></h3><ul><li>豆瓣评分：8.9 【657 人评价】</li><li>推荐理由：不去了解 JVM 的工程师，和咸鱼有什么区别？</li></ul><h3><a href="https://item.jd.com/11703581.html" rel="external nofollow noopener noreferrer" target="_blank">《Java核心技术系列：Java虚拟机规范（Java SE 8版）》</a></h3><ul><li>豆瓣评分：暂无评价</li><li>豆瓣评分：8.3 【27 人评价】《Java虚拟机规范(Java SE 7版)》</li><li>推荐理由：基于Java SE 8,Oracle官方发布，Java虚拟机技术创建人撰写，国内Java技术专家翻译，是深度了解Java虚拟机和Java语言实现细节的必读之作</li></ul><h3><a href="https://item.jd.com/11252326.html" rel="external nofollow noopener noreferrer" target="_blank">《MySQL技术内幕》</a></h3><ul><li>豆瓣评分：8.6 【104 人评价】</li><li>推荐理由：从源代码的角度深度解析了InnoDB的体系结构、实现原理、工作机制，并给出了大量最佳实践，能帮助你系统而深入地掌握InnoDB，更重要的是，它能为你设计管理高性能、高可用的数据库系统提供绝佳的指导。</li></ul><h3><a href="https://item.jd.com/11220393.html" rel="external nofollow noopener noreferrer" target="_blank">《高性能MySQL》</a></h3><ul><li>豆瓣评分：9.3 【245 人评价】</li><li>推荐理由：对于想要了解MySQL性能提升的人来说，这是一本不可多得的书。书中没有各种提升性能的秘籍，而是深入问题的核心，详细的解释了每种提升性能的原理，从而可以使你四两拨千斤。授之于鱼不如授之于渔，这本书做到了。</li></ul><h3><a href="https://item.jd.com/11774353.html" rel="external nofollow noopener noreferrer" target="_blank">《高可用MySQL》</a></h3><ul><li>豆瓣评分：8.0 【87 人评价】</li><li>推荐理由：《高性能MySQL》的姊妹篇。</li></ul><h3><a href="https://item.jd.com/11384782.html" rel="external nofollow noopener noreferrer" target="_blank">《MongoDB权威指南》</a></h3><ul><li>豆瓣评分：8.0 【69 人评价】</li><li>推荐理由：算是普通的参考书了，没有特别有深度的讲解。其实就是一本正常的介绍mongoDB是怎么用的，也可以作为nosql学习的入门。作为指南书，还是很合格的符合期望。</li></ul><h3><a href="https://item.jd.com/12121730.html" rel="external nofollow noopener noreferrer" target="_blank">《Redis开发与运维》</a></h3><ul><li>豆瓣评分：8.8 【41 人评价】</li><li>推荐理由：从开发、运维两个角度总结了Redis实战经验，深入浅出地剖析底层实现，包含大规模集群开发与运维的实际案例、应用技巧。全面覆盖Redis 基本功能及应用，图示丰富，讲解细腻。</li></ul><h3><a href="https://item.jd.com/11486101.html" rel="external nofollow noopener noreferrer" target="_blank">《Redis设计与实现》</a></h3><ul><li>豆瓣评分：8.5 【427 人评价】</li><li>推荐理由：系统而全面地描述了 Redis 内部运行机制。图示丰富，描述清晰，并给出大量参考信息，是NoSQL数据库开发人员案头必备。</li></ul><h3><a href="https://item.jd.com/11622840.html" rel="external nofollow noopener noreferrer" target="_blank">《ElasticSearch 可扩展的开源弹性搜索解决方案》</a></h3><ul><li>豆瓣评分：7.3 【23 人评价】</li><li>推荐理由：基于ElasticSearch 的0.2 版本，覆盖了ElasticSearch 各种功能和命令的应用，全面、详细地介绍了开源、分布式、RESTful，具有全文检索功能的搜索引擎ElasticSearch。</li><li>友情提示：本书 ElasticSearch 比较旧，仅适合入门。有其他合适的 ElasticSearch 书籍，烦请告诉我。</li></ul><h3><a href="https://item.jd.com/12073937.html" rel="external nofollow noopener noreferrer" target="_blank">《ELK Stack权威指南》</a></h3><ul><li>豆瓣评分：7.0 【10 人评价】</li><li>推荐理由：ELK stack是以Elasticsearch、Logstash、Kibana三个开源软件为主的数据处理工具链，是目前开源界最流行的实时数据分析解决方案，成为实时日志处理领域开源界的第一选择。</li></ul><h3><a href="https://item.jd.com/11880788.html" rel="external nofollow noopener noreferrer" target="_blank">《ZooKeeper：分布式过程协同技术详解》</a></h3><ul><li>豆瓣评分：7.6 【49 人评价】</li><li>推荐理由：Zookeeper 入门</li><li>友情提示：翻译可能略显尴尬。</li></ul><h3><a href="https://item.jd.com/11622772.html" rel="external nofollow noopener noreferrer" target="_blank">《从Paxos到Zookeeper分布式一致性原理与实践》</a></h3><ul><li>豆瓣评分：8.1 【187 人评价】</li><li>推荐理由：从分布式一致性的理论出发，向读者简要介绍几种典型的分布式一致性协议，以及解决分布式一致性问题的思路，其中重点讲解了Paxos和ZAB协议。同时，本书深入介绍了分布式一致性问题的工业解决方案——ZooKeeper，并着重向读者展示这一分布式协调框架的使用方法、内部实现及运维技巧，旨在帮助读者全面了解ZooKeeper，并更好地使用和运维ZooKeeper。</li></ul><h3><a href="https://item.jd.com/11790530.html" rel="external nofollow noopener noreferrer" target="_blank">《RabbitMQ实战：高效部署分布式消息队列》</a></h3><ul><li>豆瓣评分：6.9 【47 人评价】</li><li>推荐理由：本书对RabbitMQ做了全面、翔实的讲解，体现了两位专家的真知灼见。本书首先介绍了有关MQ的历史，然后从基本的消息通信原理讲起，带领读者一路探索RabbitMQ的消息通信世界。</li><li>友情提示：本书 RabbitMQ 版本较旧。消息队列中间件 RabbitMQ、ActiveMQ、RocketMQ、Kafka 可以选择了解一下。</li></ul><h3><a href="https://item.jd.com/12190152.html" rel="external nofollow noopener noreferrer" target="_blank">《Apache Kafka源码剖析》</a></h3><ul><li>豆瓣评分：7.8 【30 人评价】</li><li>推荐理由：以Kafka 0.10.0版本源码为基础，针对Kafka的架构设计到实现细节进行详细阐述。</li></ul><h3><a href="https://xuzongbao.gitbooks.io/quartz/content/" rel="external nofollow noopener noreferrer" target="_blank">《作业调度系统 Quartz 中文文档》</a></h3><ul><li>豆瓣评分：暂无</li><li>推荐理由：暂时未找到大家评价不错的 Quartz 实战相关书籍，先推荐看中文翻译的官方文档。如果你有合适的推荐，烦请告诉我。</li></ul><h3><a href="https://item.jd.com/11917800.html" rel="external nofollow noopener noreferrer" target="_blank">《微服务设计》</a></h3><ul><li>豆瓣评分：8.1 【273 人评价】</li><li>推荐理由：通过Netflix等多个业界案例，从微服务架构演进到原理剖析，全面讲解建模集成部署等微服务所涉及的各种主题，微服务架构与实践指南。</li></ul><h3><a href="https://item.jd.com/12172344.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></h3><ul><li>豆瓣评分：7.9【20 人评价】</li><li>推荐理由：从时下流行的微服务架构概念出发，详细介绍了Spring Cloud针对微服务架构中几大核心要素的解决方案和基础组件。对于各个组件的介绍，主要以示例与源码结合的方式来帮助读者更好地理解这些组件的使用方法以及运行原理。同时，在介绍的过程中，还包含了作者在实践中所遇到的一些问题和解决思路，可供读者在实践中作为参考。</li></ul><h3><a href="https://item.jd.com/12153914.html" rel="external nofollow noopener noreferrer" target="_blank">《亿级流量网站架构核心技术》</a></h3><ul><li>豆瓣评分：7.6【57 人评价】</li><li>推荐理由：总结并梳理了亿级流量网站高可用和高并发原则，通过实例详细介绍了如何落地这些原则。本书分为四部分：概述、高可用原则、高并发原则、案例实战。</li></ul><h3><a href="https://item.jd.com/10297816478.html" rel="external nofollow noopener noreferrer" target="_blank">《架构即未来：现代企业可扩展的Web架构、流程和组织》</a></h3><ul><li>豆瓣评分：8.7【77 人评价】</li><li>推荐理由：任何一个持续成长的公司最终都需要解决系统、组织和流程的扩展性问题。本书汇聚了作者从eBay、VISA、Salesforce.com到Apple超过30年的丰富经验， 全面阐释了经过验证的信息技术扩展方法，对所需要掌握的产品和服务的平滑扩展做了详尽的论述，并在第1版的基础上更新了扩展的策略、技术和案例。</li></ul><h3><a href="https://item.jd.com/10476794.html" rel="external nofollow noopener noreferrer" target="_blank">《Maven 实战》</a></h3><ul><li>豆瓣评分：8.1【563 人评价】</li><li>推荐理由：国内最权威的Maven专家的力作，唯一一本哦！</li></ul><h3><a href="https://item.jd.com/12052762.html" rel="external nofollow noopener noreferrer" target="_blank">《Jenkins权威指南》</a></h3><ul><li>豆瓣评分：暂无评分</li><li>推荐理由：Jenkins 唯一实体书。</li><li>友情提示：内容相对比较旧，大多是过时的案例。建议，快速过一遍。Jenkins 方面无特别好的选择推荐书籍。可以选择 Google 一些教程。</li></ul><h3><a href="https://item.jd.com/10064429.html" rel="external nofollow noopener noreferrer" target="_blank">《鸟哥的Linux私房菜 （基础学习篇）》</a></h3><ul><li>豆瓣评分：9.1【2269 人评价】</li><li>推荐理由：本书是最具知名度的Linux入门书《鸟哥的Linux私房菜基础学习篇》的最新版，全面而详细地介绍了Linux操作系统。</li><li>友情提示：内容非常全面，建议挑选和自己实际工作相关度较高的，其他部分有需要再阅读。</li></ul><h3><a href="https://item.jd.com/10064429.html" rel="external nofollow noopener noreferrer" target="_blank">《鸟哥的Linux私房菜 （服务器架设篇）》</a></h3><ul><li>豆瓣评分：8.8 【198 人评价】</li><li>推荐理由：您已有Linux基础，想要进一步学习服务器架设？还想了解如何维护与管理您的服务器？本书是您最佳的选择。</li></ul><h3><a href="https://item.jd.com/11522142.html" rel="external nofollow noopener noreferrer" target="_blank">《Zabbix企业级分布式监控系统》</a></h3><ul><li>豆瓣评分：7.6 【39 人评价】</li><li>推荐理由：本书从运维（OPS）角度对Zabbix的各项功能进行了详细介绍，以自动化运维视角为出发点，对Zabbix的安装和配置、自动化功能、监控告警、性能调优、Zabbix API、Zabbix协议、RPM安装包定制，结合SaltStack实现自动化配置管理等内容进行了全方位的深入剖析。</li></ul><h3><a href="https://item.jd.com/11909234.html" rel="external nofollow noopener noreferrer" target="_blank">《第一本Docker书》</a></h3><ul><li>豆瓣评分：8.8 【63 人评价】</li><li>推荐理由：本书由Docker公司前服务与支持副总裁James Turnbull编写，是Docker开发指南。本书专注于Docker 1.9及以上版本，指导读者完成Docker的安装、部署、管理和扩展，带领读者经历从测试到生产的整个开发生命周期，让读者了解Docker适用于什么场景。</li></ul><h3><a href="https://item.jd.com/11980349.html" rel="external nofollow noopener noreferrer" target="_blank">《Kubernetes权威指南》</a></h3><ul><li>豆瓣评分：7.7【15 人评价】</li><li>推荐理由：Kubernetes重磅开山之作，针对Kubernetes v1.6和本书第2版进行大篇幅内容更新，全方位完美覆盖，可借鉴性极强。</li></ul><h3><a href="https://item.jd.com/12043093.html" rel="external nofollow noopener noreferrer" target="_blank">《用Mesos框架构建分布式应用》</a></h3><ul><li>豆瓣评分：暂无评分</li><li>推荐理由：超级薄的一本书，看完之后，你会对 Mesos 会非常了解，并且极大可能性学会如何基于 Mesos 框架构建分布式应用。</li></ul><h3><a href="https://item.jd.com/11886254.html" rel="external nofollow noopener noreferrer" target="_blank">《数据结构与算法分析：Java语言描述》</a></h3><ul><li>豆瓣评分：8.3【183 人评价】</li><li>推荐理由：本书是国外数据结构与算法分析方面的经典教材，使用卓越的Java编程语言作为实现工具讨论了数据结构（组织大量数据的方法）和算法分析（对算法运行时间的估计）。</li><li>友情提示：算法方法还有其他很好的书籍，例如《算法导论》、《算法（第四版）》，也可以选择阅读。重要的是，保持耐心，享受这个痛并快乐的过程。</li></ul><h3><a href="https://item.jd.com/10100236.html" rel="external nofollow noopener noreferrer" target="_blank">《Head First 设计模式》</a></h3><ul><li>豆瓣评分：9.2【2394 人评价】</li><li>推荐理由：《Head First设计模式》(中文版)共有14章，每章都介绍了几个设计模式，完整地涵盖了四人组版本全部23个设计模式。</li></ul><h3><a href="https://item.jd.com/11056556.html" rel="external nofollow noopener noreferrer" target="_blank">《HTTP权威指南》</a></h3><ul><li>豆瓣评分：8.7 【1126 人评价】</li><li>推荐理由：本书尝试着将HTTP中一些互相关联且常被误解的规则梳理清楚，并编写了一系列基于各种主题的章节，对HTTP各方面的特性进行了介绍。纵观全书，对HTTP“为什么”这样做进行了详细的解释，而不仅仅停留在它是“怎么做”的。</li></ul><h3><a href="https://item.jd.com/10057317.html" rel="external nofollow noopener noreferrer" target="_blank">《TCP/IP详解 系列》</a></h3><ul><li>豆瓣评分：9.3 【1883 人评价】</li><li>推荐理由：完整而详细的TCP/IP协议指南。针对任何希望理解TCP/IP协议是如何实现的读者设计。</li></ul><h3><a href="https://item.jd.com/12163054.html" rel="external nofollow noopener noreferrer" target="_blank">《剑指Offer：名企面试官精讲典型编程题》</a></h3><ul><li>豆瓣评分：8.5【508 人评价】</li><li>推荐理由：剖析了80个典型的编程面试题，系统整理基础知识、代码质量、解题思路、优化效率和综合能力这5个面试要点。</li></ul><hr><h3>ToDO List</h3><p>待推荐主题书籍</p><ul><li>[ ] Go<ul><li>《Go语言学习笔记》</li><li>《Go程序设计语言》</li></ul></li><li>[ ] Node</li><li>[ ] Linux 内核<ul><li>《深入理解LINUX内核(第三版)》</li><li>《深入Linux内核架构》</li><li>《Linux内核设计与实现(原书第3版)》已购买</li></ul></li><li>[ ] 领域<ul><li>《领域特定语言》</li><li>《领域驱动设计》</li><li>《实现领域驱动设计》</li><li>《领域驱动设计》</li></ul></li><li>[ ] UML<ul><li>《UML和模式应用》</li><li>《大象：Thinking in UML》</li></ul></li></ul><ul><li>[x] Tomcat</li><li>[x] SpringCloud</li><li>[x] Java 基础</li><li>[x] Netty</li><li>[x] MyBatis</li><li>[x] 数据库</li><li>[x] MongoDB</li><li>[x] Maven</li><li>[x] DevOps</li><li>[x] Linux 运维</li><li>[x] 面试</li><li>[x] 消息队列</li><li>[x] 设计模式</li><li>[x] 算法与数据结构</li><li>[x] Zookeeper</li><li>[x] SpringBoot</li><li>[x] Nginx</li><li>[x] 定时任务</li><li>[x] 搜索引擎</li><li>[x] 协议</li><li>[x] 单元测试</li><li>[x] 重构</li><li>[x] 日志</li><li>[x] Docker</li><li>[x] 监控</li></ul></div><footer class="article-footer clearfix"><div class="article-categories"><span></span> <a class="article-category-link" href="/categories/技术杂文/">技术杂文</a></div><div class="article-share" id="share"><div data-url="http://www.iocoder.cn/Architecture/books-recommended/" data-title="源码圈书单整理 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix"></div></div></footer></article><nav class="article-nav clearfix"><div class="prev"><a href="/Elastic-Job/cloud-job-scheduler-and-executor-first/" title="Elastic-Job-Cloud 源码分析 —— 作业调度（一）"><strong>PREVIOUS:</strong><br><span>Elastic-Job-Cloud 源码分析 —— 作业调度（一）</span></a></div><div class="next"><a href="/Architecture/how-to-read-article/" title="闲聊如何阅读文章"><strong>NEXT:</strong><br><span>闲聊如何阅读文章</span></a></div></nav></div></div><footer><div id="footer"><img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display:none"><p class="copyright">© 2017 <a href="http://www.iocoder.cn" target="_blank" title="王文斌">王文斌</a> && <span style="display:inline" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span> && <span style="display:inline" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span> && Hosted by <a href="https://pages.coding.me" style="font-weight:700" rel="external nofollow noopener noreferrer" target="_blank">Coding Pages</a> && Powered by <a href="http://hexo.io" target="_blank" title="hexo" rel="external nofollow noopener noreferrer">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney" rel="external nofollow noopener noreferrer">coney</a></p></div></footer><script src="/js/jquery-2.1.0.min.js"></script><script type="text/javascript">$(document).ready(function(){function e(){"number"==typeof window.innerWidth?n=window.innerWidth:document.documentElement&&document.documentElement.clientWidth&&(n=document.documentElement.clientWidth)}$(".navbar").click(function(){$("header nav").toggleClass("shownav")});var n=0,s=$("#main"),a=$("#asidepart"),o=$(".closeaside"),d=$(".openaside");$(window).resize(function(){e(),n>=1024?$("header nav").removeClass("shownav"):(s.removeClass("moveMain"),a.css("display","block").removeClass("fadeOut"),d.css("display","none"),$("#toc.toc-aside").css("display","none"))}),o.click(function(){a.addClass("fadeOut").css("display","none"),d.css("display","block").addClass("fadeIn"),s.addClass("moveMain")}),d.click(function(){d.css("display","none").removeClass("beforeFadeIn"),a.css("display","block").removeClass("fadeOut").addClass("fadeIn"),s.removeClass("moveMain")}),$(window).scroll(function(){d.css("top",Math.max(80,260-$(this).scrollTop()))})})</script><script type="text/javascript">$(document).ready(function(){var a=$(".article-content>iframe"),t=$(".article-content>embed"),n=$("#toc");$("article h2");ah=$("article h2"),ta=$("#toc.toc-aside"),o=$(".openaside"),c=$(".closeaside"),a.length>0&&a.wrap('<div class="video-container" />'),t.length>0&&t.wrap('<div class="video-container" />'),0==ah.length?n.css("display","none"):(c.click(function(){ta.css("display","block").addClass("fadeIn")}),o.click(function(){ta.css("display","none")}),$(window).scroll(function(){ta.css("top",Math.max(140,320-$(this).scrollTop()))}))})</script><script type="text/javascript">$(document).ready(function(){var t=$(".share"),a=t.attr("data-url"),e=encodeURIComponent(a),r=['<a href="#" class="overlay" id="qrcode"></a>','<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url='+e+'"/></div>','<a href="#textlogo" class="article-back-to-top" title="Top"></a>','<a href="https://www.facebook.com/sharer.php?u='+e+'" class="article-share-facebook" target="_blank" title="Facebook"></a>','<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>','<a href="https://twitter.com/intent/tweet?url='+e+'" class="article-share-twitter" target="_blank" title="Twitter"></a>','<a href="http://service.weibo.com/share/share.php?title='+t.attr("data-title")+"&url="+e+"&ralateUid="+t.attr("data-tsina")+'&searchPic=true&style=number" class="article-share-weibo" target="_blank" title="Weibo"></a>','<span title="Share to"></span>'].join("");t.append(r),$(".article-share-qrcode").click(function(){var t=$("#qrcode-pic").attr("data-src");$("#qrcode-pic").attr("src",t),$("#qrcode-pic").load(function(){$(".qrcode strong").text(" ")})})})</script><link rel="stylesheet" href="/alert/css/alert.css"><script src="/alert/js/alert.js"></script><script src="/js/jquery.cookie.js"></script><script src="/js/util.js"></script></body>
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>源码圈书单整理 | 芋道源码 —— 纯源码解析BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="王文斌">
+    
+    <meta name="description" content="🙂🙂🙂关注微信公众号：【芋道源码】有福利：  
+
+RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表  
+RocketMQ / MyCAT / Sharding-JDBC 中文注释源码 GitHub 地址  
+您对于源码的疑问每条留言都将得到认真回复。甚至不">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#书籍列表"><span class="toc-number">1.</span> <span class="toc-text">书籍列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#《Effective-Java-中文版》"><span class="toc-number">1.0.1.</span> <span class="toc-text">《Effective Java 中文版》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Spring揭秘》"><span class="toc-number">1.0.2.</span> <span class="toc-text">《Spring揭秘》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《SpringBoot揭秘》"><span class="toc-number">1.0.3.</span> <span class="toc-text">《SpringBoot揭秘》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《MyBatis技术内幕》"><span class="toc-number">1.0.4.</span> <span class="toc-text">《MyBatis技术内幕》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《有效的单元测试》"><span class="toc-number">1.0.5.</span> <span class="toc-text">《有效的单元测试》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Java并发编程实战》"><span class="toc-number">1.0.6.</span> <span class="toc-text">《Java并发编程实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Netty实战》"><span class="toc-number">1.0.7.</span> <span class="toc-text">《Netty实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《深入剖析Tomcat》"><span class="toc-number">1.0.8.</span> <span class="toc-text">《深入剖析Tomcat》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Nginx-中文官方文档》"><span class="toc-number">1.0.9.</span> <span class="toc-text">《Nginx 中文官方文档》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《深入理解Nginx》"><span class="toc-number">1.0.10.</span> <span class="toc-text">《深入理解Nginx》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《深入理解Java虚拟机：JVM高级特性与最佳实践》"><span class="toc-number">1.0.11.</span> <span class="toc-text">《深入理解Java虚拟机：JVM高级特性与最佳实践》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Java核心技术系列：Java虚拟机规范（Java-SE-8版）》"><span class="toc-number">1.0.12.</span> <span class="toc-text">《Java核心技术系列：Java虚拟机规范（Java SE 8版）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《MySQL技术内幕》"><span class="toc-number">1.0.13.</span> <span class="toc-text">《MySQL技术内幕》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《高性能MySQL》"><span class="toc-number">1.0.14.</span> <span class="toc-text">《高性能MySQL》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《高可用MySQL》"><span class="toc-number">1.0.15.</span> <span class="toc-text">《高可用MySQL》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《MongoDB权威指南》"><span class="toc-number">1.0.16.</span> <span class="toc-text">《MongoDB权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Redis开发与运维》"><span class="toc-number">1.0.17.</span> <span class="toc-text">《Redis开发与运维》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Redis设计与实现》"><span class="toc-number">1.0.18.</span> <span class="toc-text">《Redis设计与实现》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《ElasticSearch-可扩展的开源弹性搜索解决方案》"><span class="toc-number">1.0.19.</span> <span class="toc-text">《ElasticSearch 可扩展的开源弹性搜索解决方案》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《ELK-Stack权威指南》"><span class="toc-number">1.0.20.</span> <span class="toc-text">《ELK Stack权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《ZooKeeper：分布式过程协同技术详解》"><span class="toc-number">1.0.21.</span> <span class="toc-text">《ZooKeeper：分布式过程协同技术详解》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《从Paxos到Zookeeper分布式一致性原理与实践》"><span class="toc-number">1.0.22.</span> <span class="toc-text">《从Paxos到Zookeeper分布式一致性原理与实践》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《RabbitMQ实战：高效部署分布式消息队列》"><span class="toc-number">1.0.23.</span> <span class="toc-text">《RabbitMQ实战：高效部署分布式消息队列》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Apache-Kafka源码剖析》"><span class="toc-number">1.0.24.</span> <span class="toc-text">《Apache Kafka源码剖析》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《作业调度系统-Quartz-中文文档》"><span class="toc-number">1.0.25.</span> <span class="toc-text">《作业调度系统 Quartz 中文文档》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《微服务设计》"><span class="toc-number">1.0.26.</span> <span class="toc-text">《微服务设计》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Spring-Cloud微服务实战》"><span class="toc-number">1.0.27.</span> <span class="toc-text">《Spring Cloud微服务实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《亿级流量网站架构核心技术》"><span class="toc-number">1.0.28.</span> <span class="toc-text">《亿级流量网站架构核心技术》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《架构即未来：现代企业可扩展的Web架构、流程和组织》"><span class="toc-number">1.0.29.</span> <span class="toc-text">《架构即未来：现代企业可扩展的Web架构、流程和组织》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Maven-实战》"><span class="toc-number">1.0.30.</span> <span class="toc-text">《Maven 实战》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Jenkins权威指南》"><span class="toc-number">1.0.31.</span> <span class="toc-text">《Jenkins权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《鸟哥的Linux私房菜-（基础学习篇）》"><span class="toc-number">1.0.32.</span> <span class="toc-text">《鸟哥的Linux私房菜 （基础学习篇）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《鸟哥的Linux私房菜-（服务器架设篇）》"><span class="toc-number">1.0.33.</span> <span class="toc-text">《鸟哥的Linux私房菜 （服务器架设篇）》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Zabbix企业级分布式监控系统》"><span class="toc-number">1.0.34.</span> <span class="toc-text">《Zabbix企业级分布式监控系统》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《第一本Docker书》"><span class="toc-number">1.0.35.</span> <span class="toc-text">《第一本Docker书》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Kubernetes权威指南》"><span class="toc-number">1.0.36.</span> <span class="toc-text">《Kubernetes权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《用Mesos框架构建分布式应用》"><span class="toc-number">1.0.37.</span> <span class="toc-text">《用Mesos框架构建分布式应用》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《数据结构与算法分析：Java语言描述》"><span class="toc-number">1.0.38.</span> <span class="toc-text">《数据结构与算法分析：Java语言描述》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《Head-First-设计模式》"><span class="toc-number">1.0.39.</span> <span class="toc-text">《Head First 设计模式》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《HTTP权威指南》"><span class="toc-number">1.0.40.</span> <span class="toc-text">《HTTP权威指南》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《TCP-IP详解-系列》"><span class="toc-number">1.0.41.</span> <span class="toc-text">《TCP/IP详解 系列》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#《剑指Offer：名企面试官精讲典型编程题》"><span class="toc-number">1.0.42.</span> <span class="toc-text">《剑指Offer：名企面试官精讲典型编程题》</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#ToDO-List"><span class="toc-number">2.</span> <span class="toc-text">ToDO List</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更新日志"><span class="toc-number">3.</span> <span class="toc-text">更新日志</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-09-19"><span class="toc-number">3.1.</span> <span class="toc-text">2017.09.19</span></a></li></ol></li>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+    </aside>
+</div>
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Architecture/books-recommended/" title="源码圈书单整理" itemprop="url">源码圈书单整理</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="王文斌">王文斌</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2017-12-14T16:00:00.000Z" itemprop="datePublished">2017-12-15</time>-->
+    <!--更新日期:<time datetime="2017-09-19T15:30:42.000Z" itemprop="dateModified">2017-09-19</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
+<blockquote>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<ol>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li><strong>认真的</strong>源码交流微信群。</li>
+</ol>
+</blockquote>
+<hr>
+<ul>
+<li><p><strong>【源码圈】众胖友协作完成</strong></p>
+</li>
+<li><p><strong>希望书单能在你想要进一步打怪升级的路上，给予些许帮助</strong></p>
+</li>
+<li><p><strong>建议先收藏本书单，认真啃完一本再买下一本，扎实走完每一步</strong></p>
+</li>
+<li><p><strong>如果对你略有帮助，烦请分享给你的基友</strong></p>
+</li>
+<li><p><strong>与君共勉，若有合适的书籍，请一定告诉我，谢谢</strong></p>
+</li>
+<li><p><strong>分类困难因而没分。大体顺序，编程开发 =&gt; 数据库 =&gt; 架构运维 =&gt; 算法</strong></p>
+</li>
+</ul>
+<h1 id="书籍列表"><a href="#书籍列表" class="headerlink" title="书籍列表"></a>书籍列表</h1><h3 id="《Effective-Java-中文版》"><a href="#《Effective-Java-中文版》" class="headerlink" title="《Effective Java 中文版》"></a><a href="https://item.jd.com/10058902.html" rel="external nofollow noopener noreferrer" target="_blank">《Effective Java 中文版》</a></h3><ul>
+<li>豆瓣评分：9.1【1235 人评价】</li>
+<li>推荐理由：本书介绍了在Java编程中78条极具实用价值的经验规则，这些经验规则涵盖了大多数开发人员每天所面临的问题的解决方案。</li>
+<li>友情提示：同推荐《重构 : 改善既有代码的设计》、《代码整洁之道》、《代码大全》，有一定的内容重叠。</li>
+</ul>
+<h3 id="《Spring揭秘》"><a href="#《Spring揭秘》" class="headerlink" title="《Spring揭秘》"></a><a href="https://e.jd.com/30142898.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring揭秘》</a></h3><ul>
+<li>豆瓣评分：9.0 【162 人评价】</li>
+<li>推荐理由：Spring 使用者不得不读！</li>
+</ul>
+<h3 id="《SpringBoot揭秘》"><a href="#《SpringBoot揭秘》" class="headerlink" title="《SpringBoot揭秘》"></a><a href="https://item.jd.com/11940558.html" rel="external nofollow noopener noreferrer" target="_blank">《SpringBoot揭秘》</a></h3><ul>
+<li>豆瓣评分：6.8 【44 人评价】</li>
+<li>推荐理由：《Spring揭秘》相同作者。SpringBoot 入门书籍。</li>
+</ul>
+<h3 id="《MyBatis技术内幕》"><a href="#《MyBatis技术内幕》" class="headerlink" title="《MyBatis技术内幕》"></a><a href="https://item.jd.com/14357404208.html" rel="external nofollow noopener noreferrer" target="_blank">《MyBatis技术内幕》</a></h3><ul>
+<li>豆瓣评分：暂无</li>
+<li>推荐理由：以MyBatis 3.4为基础，针对MyBatis的架构设计和实现细节进行了详细分析，其中穿插介绍了MyBatis源码中涉及的基础知识、设计模式以及笔者自己在实践中的思考。</li>
+</ul>
+<h3 id="《有效的单元测试》"><a href="#《有效的单元测试》" class="headerlink" title="《有效的单元测试》"></a><a href="https://item.jd.com/11582394.html" rel="external nofollow noopener noreferrer" target="_blank">《有效的单元测试》</a></h3><ul>
+<li>豆瓣评分：7.4 【18 人评价】</li>
+<li>土建理由：Java 单元测试入门。</li>
+</ul>
+<h3 id="《Java并发编程实战》"><a href="#《Java并发编程实战》" class="headerlink" title="《Java并发编程实战》"></a><a href="https://item.jd.com/10922250.html" rel="external nofollow noopener noreferrer" target="_blank">《Java并发编程实战》</a></h3><ul>
+<li>豆瓣评分：9.0 【651 人评价】</li>
+<li>推荐理由：本书深入浅出地介绍了Java线程和并发，是一本完美的Java并发参考手册。</li>
+</ul>
+<h3 id="《Netty实战》"><a href="#《Netty实战》" class="headerlink" title="《Netty实战》"></a><a href="https://item.jd.com/12070975.html" rel="external nofollow noopener noreferrer" target="_blank">《Netty实战》</a></h3><ul>
+<li>豆瓣评分：7.5【24 人评价】</li>
+<li>豆瓣评分：8.1【83 人评价】 《Netty in Action》英文版</li>
+<li>推荐理由：Netty之父”Trustin Lee作序推荐。</li>
+</ul>
+<h3 id="《深入剖析Tomcat》"><a href="#《深入剖析Tomcat》" class="headerlink" title="《深入剖析Tomcat》"></a><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.1.76bf523c6QtUK&amp;id=549538669450&amp;ns=1&amp;abbucket=2#detail" rel="external nofollow noopener noreferrer" target="_blank">《深入剖析Tomcat》</a></h3><ul>
+<li>豆瓣评分：8.3【118 人评价】</li>
+<li>豆瓣评分：8.9【73 人评价】 《How Tomcat Works》英文版</li>
+<li>推荐理由：本书深入剖析Tomcat 4和Tomcat 5中的每个组件，并揭示其内部工作原理。通过学习本书，你将可以自行开发Tomcat组件，或者扩展已有的组件。</li>
+</ul>
+<h3 id="《Nginx-中文官方文档》"><a href="#《Nginx-中文官方文档》" class="headerlink" title="《Nginx 中文官方文档》"></a><a href="https://wizardforcel.gitbooks.io/nginx-doc/content/" rel="external nofollow noopener noreferrer" target="_blank">《Nginx 中文官方文档》</a></h3><ul>
+<li>豆瓣评分：暂无</li>
+<li>推荐理由：暂时未找到大家评价不错的 Nginx 实战相关书籍，先推荐看中文翻译的官方文档。如果你有合适的推荐，烦请告诉我。</li>
+</ul>
+<h3 id="《深入理解Nginx》"><a href="#《深入理解Nginx》" class="headerlink" title="《深入理解Nginx》"></a><a href="https://item.jd.com/11877268.html" rel="external nofollow noopener noreferrer" target="_blank">《深入理解Nginx》</a></h3><ul>
+<li>豆瓣评分：8.5【138 人评价】</li>
+<li>推荐理由：书中首先通过介绍官方Nginx的基本用法和配置规则，帮助读者了解一般Nginx模块的用法，然后重点介绍了如何开发HTTP模块(含HTTP过滤模块)来得到定制化的Nginx，其中包括开发—个功能复杂的模块所需要了解的各种知识，并对内存池的实现细节及TCP协议进行了详细介绍；接着，综合Nginx框架代码分析了Nginx架构的设计理念和技巧，此外，还新增了如何在模块中支持HTTP变量，以及与slab共享内存等相关的内容，相信通过完善，可进一步帮助读者更好地开发出功能丰富、性能—流的Nginx模块。</li>
+<li>友情提示：相对适用于 Nginx 开发者。Nginx 使用者可以了解。</li>
+</ul>
+<h3 id="《深入理解Java虚拟机：JVM高级特性与最佳实践》"><a href="#《深入理解Java虚拟机：JVM高级特性与最佳实践》" class="headerlink" title="《深入理解Java虚拟机：JVM高级特性与最佳实践》"></a><a href="https://item.jd.com/11252778.html" rel="external nofollow noopener noreferrer" target="_blank">《深入理解Java虚拟机：JVM高级特性与最佳实践》</a></h3><ul>
+<li>豆瓣评分：8.9 【657 人评价】</li>
+<li>推荐理由：不去了解 JVM 的工程师，和咸鱼有什么区别？</li>
+</ul>
+<h3 id="《Java核心技术系列：Java虚拟机规范（Java-SE-8版）》"><a href="#《Java核心技术系列：Java虚拟机规范（Java-SE-8版）》" class="headerlink" title="《Java核心技术系列：Java虚拟机规范（Java SE 8版）》"></a><a href="https://item.jd.com/11703581.html" rel="external nofollow noopener noreferrer" target="_blank">《Java核心技术系列：Java虚拟机规范（Java SE 8版）》</a></h3><ul>
+<li>豆瓣评分：暂无评价</li>
+<li>豆瓣评分：8.3 【27 人评价】《Java虚拟机规范(Java SE 7版)》</li>
+<li>推荐理由：基于Java SE 8,Oracle官方发布，Java虚拟机技术创建人撰写，国内Java技术专家翻译，是深度了解Java虚拟机和Java语言实现细节的必读之作</li>
+</ul>
+<h3 id="《MySQL技术内幕》"><a href="#《MySQL技术内幕》" class="headerlink" title="《MySQL技术内幕》"></a><a href="https://item.jd.com/11252326.html" rel="external nofollow noopener noreferrer" target="_blank">《MySQL技术内幕》</a></h3><ul>
+<li>豆瓣评分：8.6 【104 人评价】</li>
+<li>推荐理由：从源代码的角度深度解析了InnoDB的体系结构、实现原理、工作机制，并给出了大量最佳实践，能帮助你系统而深入地掌握InnoDB，更重要的是，它能为你设计管理高性能、高可用的数据库系统提供绝佳的指导。</li>
+</ul>
+<h3 id="《高性能MySQL》"><a href="#《高性能MySQL》" class="headerlink" title="《高性能MySQL》"></a><a href="https://item.jd.com/11220393.html" rel="external nofollow noopener noreferrer" target="_blank">《高性能MySQL》</a></h3><ul>
+<li>豆瓣评分：9.3 【245 人评价】</li>
+<li>推荐理由：对于想要了解MySQL性能提升的人来说，这是一本不可多得的书。书中没有各种提升性能的秘籍，而是深入问题的核心，详细的解释了每种提升性能的原理，从而可以使你四两拨千斤。授之于鱼不如授之于渔，这本书做到了。</li>
+</ul>
+<h3 id="《高可用MySQL》"><a href="#《高可用MySQL》" class="headerlink" title="《高可用MySQL》"></a><a href="https://item.jd.com/11774353.html" rel="external nofollow noopener noreferrer" target="_blank">《高可用MySQL》</a></h3><ul>
+<li>豆瓣评分：8.0 【87 人评价】</li>
+<li>推荐理由：《高性能MySQL》的姊妹篇。</li>
+</ul>
+<h3 id="《MongoDB权威指南》"><a href="#《MongoDB权威指南》" class="headerlink" title="《MongoDB权威指南》"></a><a href="https://item.jd.com/11384782.html" rel="external nofollow noopener noreferrer" target="_blank">《MongoDB权威指南》</a></h3><ul>
+<li>豆瓣评分：8.0 【69 人评价】</li>
+<li>推荐理由：算是普通的参考书了，没有特别有深度的讲解。其实就是一本正常的介绍mongoDB是怎么用的，也可以作为nosql学习的入门。作为指南书，还是很合格的符合期望。</li>
+</ul>
+<h3 id="《Redis开发与运维》"><a href="#《Redis开发与运维》" class="headerlink" title="《Redis开发与运维》"></a><a href="https://item.jd.com/12121730.html" rel="external nofollow noopener noreferrer" target="_blank">《Redis开发与运维》</a></h3><ul>
+<li>豆瓣评分：8.8 【41 人评价】</li>
+<li>推荐理由：从开发、运维两个角度总结了Redis实战经验，深入浅出地剖析底层实现，包含大规模集群开发与运维的实际案例、应用技巧。全面覆盖Redis 基本功能及应用，图示丰富，讲解细腻。</li>
+</ul>
+<h3 id="《Redis设计与实现》"><a href="#《Redis设计与实现》" class="headerlink" title="《Redis设计与实现》"></a><a href="https://item.jd.com/11486101.html" rel="external nofollow noopener noreferrer" target="_blank">《Redis设计与实现》</a></h3><ul>
+<li>豆瓣评分：8.5 【427 人评价】</li>
+<li>推荐理由：系统而全面地描述了 Redis 内部运行机制。图示丰富，描述清晰，并给出大量参考信息，是NoSQL数据库开发人员案头必备。</li>
+</ul>
+<h3 id="《ElasticSearch-可扩展的开源弹性搜索解决方案》"><a href="#《ElasticSearch-可扩展的开源弹性搜索解决方案》" class="headerlink" title="《ElasticSearch 可扩展的开源弹性搜索解决方案》"></a><a href="https://item.jd.com/11622840.html" rel="external nofollow noopener noreferrer" target="_blank">《ElasticSearch 可扩展的开源弹性搜索解决方案》</a></h3><ul>
+<li>豆瓣评分：7.3 【23 人评价】</li>
+<li>推荐理由：基于ElasticSearch 的0.2 版本，覆盖了ElasticSearch 各种功能和命令的应用，全面、详细地介绍了开源、分布式、RESTful，具有全文检索功能的搜索引擎ElasticSearch。</li>
+<li>友情提示：本书 ElasticSearch 比较旧，仅适合入门。有其他合适的 ElasticSearch 书籍，烦请告诉我。</li>
+</ul>
+<h3 id="《ELK-Stack权威指南》"><a href="#《ELK-Stack权威指南》" class="headerlink" title="《ELK Stack权威指南》"></a><a href="https://item.jd.com/12073937.html" rel="external nofollow noopener noreferrer" target="_blank">《ELK Stack权威指南》</a></h3><ul>
+<li>豆瓣评分：7.0 【10 人评价】</li>
+<li>推荐理由：ELK stack是以Elasticsearch、Logstash、Kibana三个开源软件为主的数据处理工具链，是目前开源界最流行的实时数据分析解决方案，成为实时日志处理领域开源界的第一选择。</li>
+</ul>
+<h3 id="《ZooKeeper：分布式过程协同技术详解》"><a href="#《ZooKeeper：分布式过程协同技术详解》" class="headerlink" title="《ZooKeeper：分布式过程协同技术详解》"></a><a href="https://item.jd.com/11880788.html" rel="external nofollow noopener noreferrer" target="_blank">《ZooKeeper：分布式过程协同技术详解》</a></h3><ul>
+<li>豆瓣评分：7.6 【49 人评价】</li>
+<li>推荐理由：Zookeeper 入门</li>
+<li>友情提示：翻译可能略显尴尬。</li>
+</ul>
+<h3 id="《从Paxos到Zookeeper分布式一致性原理与实践》"><a href="#《从Paxos到Zookeeper分布式一致性原理与实践》" class="headerlink" title="《从Paxos到Zookeeper分布式一致性原理与实践》"></a><a href="https://item.jd.com/11622772.html" rel="external nofollow noopener noreferrer" target="_blank">《从Paxos到Zookeeper分布式一致性原理与实践》</a></h3><ul>
+<li>豆瓣评分：8.1 【187 人评价】</li>
+<li>推荐理由：从分布式一致性的理论出发，向读者简要介绍几种典型的分布式一致性协议，以及解决分布式一致性问题的思路，其中重点讲解了Paxos和ZAB协议。同时，本书深入介绍了分布式一致性问题的工业解决方案——ZooKeeper，并着重向读者展示这一分布式协调框架的使用方法、内部实现及运维技巧，旨在帮助读者全面了解ZooKeeper，并更好地使用和运维ZooKeeper。</li>
+</ul>
+<h3 id="《RabbitMQ实战：高效部署分布式消息队列》"><a href="#《RabbitMQ实战：高效部署分布式消息队列》" class="headerlink" title="《RabbitMQ实战：高效部署分布式消息队列》"></a><a href="https://item.jd.com/11790530.html" rel="external nofollow noopener noreferrer" target="_blank">《RabbitMQ实战：高效部署分布式消息队列》</a></h3><ul>
+<li>豆瓣评分：6.9 【47 人评价】</li>
+<li>推荐理由：本书对RabbitMQ做了全面、翔实的讲解，体现了两位专家的真知灼见。本书首先介绍了有关MQ的历史，然后从基本的消息通信原理讲起，带领读者一路探索RabbitMQ的消息通信世界。</li>
+<li>友情提示：本书 RabbitMQ 版本较旧。消息队列中间件 RabbitMQ、ActiveMQ、RocketMQ、Kafka 可以选择了解一下。</li>
+</ul>
+<h3 id="《Apache-Kafka源码剖析》"><a href="#《Apache-Kafka源码剖析》" class="headerlink" title="《Apache Kafka源码剖析》"></a><a href="https://item.jd.com/12190152.html" rel="external nofollow noopener noreferrer" target="_blank">《Apache Kafka源码剖析》</a></h3><ul>
+<li>豆瓣评分：7.8 【30 人评价】</li>
+<li>推荐理由：以Kafka 0.10.0版本源码为基础，针对Kafka的架构设计到实现细节进行详细阐述。</li>
+</ul>
+<h3 id="《作业调度系统-Quartz-中文文档》"><a href="#《作业调度系统-Quartz-中文文档》" class="headerlink" title="《作业调度系统 Quartz 中文文档》"></a><a href="https://xuzongbao.gitbooks.io/quartz/content/" rel="external nofollow noopener noreferrer" target="_blank">《作业调度系统 Quartz 中文文档》</a></h3><ul>
+<li>豆瓣评分：暂无</li>
+<li>推荐理由：暂时未找到大家评价不错的 Quartz 实战相关书籍，先推荐看中文翻译的官方文档。如果你有合适的推荐，烦请告诉我。</li>
+</ul>
+<h3 id="《微服务设计》"><a href="#《微服务设计》" class="headerlink" title="《微服务设计》"></a><a href="https://item.jd.com/11917800.html" rel="external nofollow noopener noreferrer" target="_blank">《微服务设计》</a></h3><ul>
+<li>豆瓣评分：8.1 【273 人评价】</li>
+<li>推荐理由：通过Netflix等多个业界案例，从微服务架构演进到原理剖析，全面讲解建模集成部署等微服务所涉及的各种主题，微服务架构与实践指南。</li>
+</ul>
+<h3 id="《Spring-Cloud微服务实战》"><a href="#《Spring-Cloud微服务实战》" class="headerlink" title="《Spring Cloud微服务实战》"></a><a href="https://item.jd.com/12172344.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></h3><ul>
+<li>豆瓣评分：7.9【20 人评价】</li>
+<li>推荐理由：从时下流行的微服务架构概念出发，详细介绍了Spring Cloud针对微服务架构中几大核心要素的解决方案和基础组件。对于各个组件的介绍，主要以示例与源码结合的方式来帮助读者更好地理解这些组件的使用方法以及运行原理。同时，在介绍的过程中，还包含了作者在实践中所遇到的一些问题和解决思路，可供读者在实践中作为参考。</li>
+</ul>
+<h3 id="《亿级流量网站架构核心技术》"><a href="#《亿级流量网站架构核心技术》" class="headerlink" title="《亿级流量网站架构核心技术》"></a><a href="https://item.jd.com/12153914.html" rel="external nofollow noopener noreferrer" target="_blank">《亿级流量网站架构核心技术》</a></h3><ul>
+<li>豆瓣评分：7.6【57 人评价】</li>
+<li>推荐理由：总结并梳理了亿级流量网站高可用和高并发原则，通过实例详细介绍了如何落地这些原则。本书分为四部分：概述、高可用原则、高并发原则、案例实战。</li>
+</ul>
+<h3 id="《架构即未来：现代企业可扩展的Web架构、流程和组织》"><a href="#《架构即未来：现代企业可扩展的Web架构、流程和组织》" class="headerlink" title="《架构即未来：现代企业可扩展的Web架构、流程和组织》"></a><a href="https://item.jd.com/10297816478.html" rel="external nofollow noopener noreferrer" target="_blank">《架构即未来：现代企业可扩展的Web架构、流程和组织》</a></h3><ul>
+<li>豆瓣评分：8.7【77 人评价】</li>
+<li>推荐理由：任何一个持续成长的公司最终都需要解决系统、组织和流程的扩展性问题。本书汇聚了作者从eBay、VISA、Salesforce.com到Apple超过30年的丰富经验， 全面阐释了经过验证的信息技术扩展方法，对所需要掌握的产品和服务的平滑扩展做了详尽的论述，并在第1版的基础上更新了扩展的策略、技术和案例。</li>
+</ul>
+<h3 id="《Maven-实战》"><a href="#《Maven-实战》" class="headerlink" title="《Maven 实战》"></a><a href="https://item.jd.com/10476794.html" rel="external nofollow noopener noreferrer" target="_blank">《Maven 实战》</a></h3><ul>
+<li>豆瓣评分：8.1【563 人评价】</li>
+<li>推荐理由：国内最权威的Maven专家的力作，唯一一本哦！</li>
+</ul>
+<h3 id="《Jenkins权威指南》"><a href="#《Jenkins权威指南》" class="headerlink" title="《Jenkins权威指南》"></a><a href="https://item.jd.com/12052762.html" rel="external nofollow noopener noreferrer" target="_blank">《Jenkins权威指南》</a></h3><ul>
+<li>豆瓣评分：暂无评分</li>
+<li>推荐理由：Jenkins 唯一实体书。</li>
+<li>友情提示：内容相对比较旧，大多是过时的案例。建议，快速过一遍。Jenkins 方面无特别好的选择推荐书籍。可以选择 Google 一些教程。</li>
+</ul>
+<h3 id="《鸟哥的Linux私房菜-（基础学习篇）》"><a href="#《鸟哥的Linux私房菜-（基础学习篇）》" class="headerlink" title="《鸟哥的Linux私房菜 （基础学习篇）》"></a><a href="https://item.jd.com/10064429.html" rel="external nofollow noopener noreferrer" target="_blank">《鸟哥的Linux私房菜 （基础学习篇）》</a></h3><ul>
+<li>豆瓣评分：9.1【2269 人评价】</li>
+<li>推荐理由：本书是最具知名度的Linux入门书《鸟哥的Linux私房菜基础学习篇》的最新版，全面而详细地介绍了Linux操作系统。</li>
+<li>友情提示：内容非常全面，建议挑选和自己实际工作相关度较高的，其他部分有需要再阅读。</li>
+</ul>
+<h3 id="《鸟哥的Linux私房菜-（服务器架设篇）》"><a href="#《鸟哥的Linux私房菜-（服务器架设篇）》" class="headerlink" title="《鸟哥的Linux私房菜 （服务器架设篇）》"></a><a href="https://item.jd.com/10064429.html" rel="external nofollow noopener noreferrer" target="_blank">《鸟哥的Linux私房菜 （服务器架设篇）》</a></h3><ul>
+<li>豆瓣评分：8.8 【198 人评价】</li>
+<li>推荐理由：您已有Linux基础，想要进一步学习服务器架设？还想了解如何维护与管理您的服务器？本书是您最佳的选择。</li>
+</ul>
+<h3 id="《Zabbix企业级分布式监控系统》"><a href="#《Zabbix企业级分布式监控系统》" class="headerlink" title="《Zabbix企业级分布式监控系统》"></a><a href="https://item.jd.com/11522142.html" rel="external nofollow noopener noreferrer" target="_blank">《Zabbix企业级分布式监控系统》</a></h3><ul>
+<li>豆瓣评分：7.6 【39 人评价】</li>
+<li>推荐理由：本书从运维（OPS）角度对Zabbix的各项功能进行了详细介绍，以自动化运维视角为出发点，对Zabbix的安装和配置、自动化功能、监控告警、性能调优、Zabbix API、Zabbix协议、RPM安装包定制，结合SaltStack实现自动化配置管理等内容进行了全方位的深入剖析。</li>
+</ul>
+<h3 id="《第一本Docker书》"><a href="#《第一本Docker书》" class="headerlink" title="《第一本Docker书》"></a><a href="https://item.jd.com/11909234.html" rel="external nofollow noopener noreferrer" target="_blank">《第一本Docker书》</a></h3><ul>
+<li>豆瓣评分：8.8 【63 人评价】</li>
+<li>推荐理由：本书由Docker公司前服务与支持副总裁James Turnbull编写，是Docker开发指南。本书专注于Docker 1.9及以上版本，指导读者完成Docker的安装、部署、管理和扩展，带领读者经历从测试到生产的整个开发生命周期，让读者了解Docker适用于什么场景。</li>
+</ul>
+<h3 id="《Kubernetes权威指南》"><a href="#《Kubernetes权威指南》" class="headerlink" title="《Kubernetes权威指南》"></a><a href="https://item.jd.com/11980349.html" rel="external nofollow noopener noreferrer" target="_blank">《Kubernetes权威指南》</a></h3><ul>
+<li>豆瓣评分：7.7【15 人评价】</li>
+<li>推荐理由：Kubernetes重磅开山之作，针对Kubernetes v1.6和本书第2版进行大篇幅内容更新，全方位完美覆盖，可借鉴性极强。 </li>
+</ul>
+<h3 id="《用Mesos框架构建分布式应用》"><a href="#《用Mesos框架构建分布式应用》" class="headerlink" title="《用Mesos框架构建分布式应用》"></a><a href="https://item.jd.com/12043093.html" rel="external nofollow noopener noreferrer" target="_blank">《用Mesos框架构建分布式应用》</a></h3><ul>
+<li>豆瓣评分：暂无评分</li>
+<li>推荐理由：超级薄的一本书，看完之后，你会对 Mesos 会非常了解，并且极大可能性学会如何基于 Mesos 框架构建分布式应用。</li>
+</ul>
+<h3 id="《数据结构与算法分析：Java语言描述》"><a href="#《数据结构与算法分析：Java语言描述》" class="headerlink" title="《数据结构与算法分析：Java语言描述》"></a><a href="https://item.jd.com/11886254.html" rel="external nofollow noopener noreferrer" target="_blank">《数据结构与算法分析：Java语言描述》</a></h3><ul>
+<li>豆瓣评分：8.3【183 人评价】</li>
+<li>推荐理由：本书是国外数据结构与算法分析方面的经典教材，使用卓越的Java编程语言作为实现工具讨论了数据结构（组织大量数据的方法）和算法分析（对算法运行时间的估计）。</li>
+<li>友情提示：算法方法还有其他很好的书籍，例如《算法导论》、《算法（第四版）》，也可以选择阅读。重要的是，保持耐心，享受这个痛并快乐的过程。</li>
+</ul>
+<h3 id="《Head-First-设计模式》"><a href="#《Head-First-设计模式》" class="headerlink" title="《Head First 设计模式》"></a><a href="https://item.jd.com/10100236.html" rel="external nofollow noopener noreferrer" target="_blank">《Head First 设计模式》</a></h3><ul>
+<li>豆瓣评分：9.2【2394 人评价】</li>
+<li>推荐理由：《Head First设计模式》(中文版)共有14章，每章都介绍了几个设计模式，完整地涵盖了四人组版本全部23个设计模式。</li>
+</ul>
+<h3 id="《HTTP权威指南》"><a href="#《HTTP权威指南》" class="headerlink" title="《HTTP权威指南》"></a><a href="https://item.jd.com/11056556.html" rel="external nofollow noopener noreferrer" target="_blank">《HTTP权威指南》</a></h3><ul>
+<li>豆瓣评分：8.7 【1126 人评价】</li>
+<li>推荐理由：本书尝试着将HTTP中一些互相关联且常被误解的规则梳理清楚，并编写了一系列基于各种主题的章节，对HTTP各方面的特性进行了介绍。纵观全书，对HTTP“为什么”这样做进行了详细的解释，而不仅仅停留在它是“怎么做”的。</li>
+</ul>
+<h3 id="《TCP-IP详解-系列》"><a href="#《TCP-IP详解-系列》" class="headerlink" title="《TCP/IP详解 系列》"></a><a href="https://item.jd.com/10057317.html" rel="external nofollow noopener noreferrer" target="_blank">《TCP/IP详解 系列》</a></h3><ul>
+<li>豆瓣评分：9.3 【1883 人评价】</li>
+<li>推荐理由：完整而详细的TCP/IP协议指南。针对任何希望理解TCP/IP协议是如何实现的读者设计。</li>
+</ul>
+<h3 id="《剑指Offer：名企面试官精讲典型编程题》"><a href="#《剑指Offer：名企面试官精讲典型编程题》" class="headerlink" title="《剑指Offer：名企面试官精讲典型编程题》"></a><a href="https://item.jd.com/12163054.html" rel="external nofollow noopener noreferrer" target="_blank">《剑指Offer：名企面试官精讲典型编程题》</a></h3><ul>
+<li>豆瓣评分：8.5【508 人评价】</li>
+<li>推荐理由：剖析了80个典型的编程面试题，系统整理基础知识、代码质量、解题思路、优化效率和综合能力这5个面试要点。</li>
+</ul>
+<hr>
+<h1 id="ToDO-List"><a href="#ToDO-List" class="headerlink" title="ToDO List"></a>ToDO List</h1><p>待推荐主题书籍</p>
+<ul>
+<li>[ ] Go<ul>
+<li>《Go语言学习笔记》</li>
+<li>《Go程序设计语言》 </li>
+</ul>
+</li>
+<li>[ ] Node</li>
+<li>[ ] Linux 内核<ul>
+<li>《深入理解LINUX内核(第三版)》 </li>
+<li>《深入Linux内核架构》</li>
+<li>《Linux内核设计与实现(原书第3版)》已购买</li>
+</ul>
+</li>
+<li>[ ] 领域<ul>
+<li>《领域特定语言》</li>
+<li>《领域驱动设计》</li>
+<li>《实现领域驱动设计》</li>
+<li>《领域驱动设计》</li>
+</ul>
+</li>
+<li>[ ] UML<ul>
+<li>《UML和模式应用》</li>
+<li>《大象：Thinking in UML》</li>
+</ul>
+</li>
+<li>[x] Tomcat</li>
+<li>[x] SpringCloud</li>
+<li>[x] Java 基础</li>
+<li>[x] Netty</li>
+<li>[x] MyBatis</li>
+<li>[x] 数据库</li>
+<li>[x] MongoDB</li>
+<li>[x] Maven</li>
+<li>[x] DevOps</li>
+<li>[x] Linux 运维</li>
+<li>[x] 面试</li>
+<li>[x] 消息队列</li>
+<li>[x] 设计模式</li>
+<li>[x] 算法与数据结构</li>
+<li>[x] Zookeeper</li>
+<li>[x] SpringBoot </li>
+<li>[x] Nginx</li>
+<li>[x] 定时任务</li>
+<li>[x] 搜索引擎</li>
+<li>[x] 协议</li>
+<li>[x] 单元测试</li>
+<li>[x] 重构</li>
+<li>[x] 日志</li>
+<li>[x] Docker</li>
+<li>[x] 监控</li>
+</ul>
+<hr>
+<h1 id="更新日志"><a href="#更新日志" class="headerlink" title="更新日志"></a>更新日志</h1><h2 id="2017-09-19"><a href="#2017-09-19" class="headerlink" title="2017.09.19"></a>2017.09.19</h2><ul>
+<li>新增<ul>
+<li>《Effective Java 中文版》</li>
+<li>《Spring揭秘》、《SpringBoot揭秘》</li>
+<li>《MyBatis技术内幕》</li>
+<li>《有效的单元测试》</li>
+<li>《Java并发编程实战》</li>
+<li>《Netty实战》</li>
+<li>《深入剖析Tomcat》</li>
+<li>《Nginx 中文官方文档》、《深入理解Nginx》</li>
+<li>《深入理解Java虚拟机：JVM高级特性与最佳实践》、《Java核心技术系列：Java虚拟机规范（Java SE 8版）》</li>
+<li>《MySQL技术内幕》、《高性能MySQL》、《高可用MySQL》</li>
+<li>《MongoDB权威指南》</li>
+<li>《Redis开发与运维》、《Redis设计与实现》</li>
+<li>《ElasticSearch 可扩展的开源弹性搜索解决方案》</li>
+<li>《ELK Stack权威指南》</li>
+<li>《ZooKeeper：分布式过程协同技术详解》、《从Paxos到Zookeeper分布式一致性原理与实践》</li>
+<li>《RabbitMQ实战：高效部署分布式消息队列》、《Apache Kafka源码剖析》</li>
+<li>《作业调度系统 Quartz 中文文档》</li>
+<li>《微服务设计》、《Spring Cloud微服务实战》</li>
+<li>《亿级流量网站架构核心技术》、《架构即未来：现代企业可扩展的Web架构、流程和组织》</li>
+<li>《Maven 实战》、《Jenkins权威指南》</li>
+<li>《鸟哥的Linux私房菜 （基础学习篇）》、《鸟哥的Linux私房菜 （服务器架设篇）》</li>
+<li>《Zabbix企业级分布式监控系统》</li>
+<li>《第一本Docker书》、《Kubernetes权威指南》、《用Mesos框架构建分布式应用》</li>
+<li>《数据结构与算法分析：Java语言描述》</li>
+<li>《Head First 设计模式》、《HTTP权威指南》、《TCP/IP详解 系列》</li>
+<li>《剑指Offer：名企面试官精讲典型编程题》。</li>
+</ul>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/技术杂文/">技术杂文</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Architecture/books-recommended/" data-title="源码圈书单整理 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Elastic-Job/cloud-job-scheduler-and-executor-first/" title="Elastic-Job-Cloud 源码分析 —— 作业调度（一）">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Elastic-Job-Cloud 源码分析 —— 作业调度（一）</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/Architecture/how-to-read-article/" title="闲聊如何阅读文章">
+ <strong>NEXT:</strong><br> 
+ <span>闲聊如何阅读文章
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2017 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="王文斌">王文斌</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            && Hosted by <a href="https://pages.coding.me" style="font-weight: bold" rel="external nofollow noopener noreferrer" target="_blank">Coding Pages</a>
+            && Powered by <a href="http://hexo.io" target="_blank" title="hexo" rel="external nofollow noopener noreferrer">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney" rel="external nofollow noopener noreferrer">coney</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+  </body>
+
+
