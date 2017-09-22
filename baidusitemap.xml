@@ -5,16 +5,34 @@
     
   <url>
     <loc>http://www.iocoder.cn/Architecture/books-recommended/</loc>
-    <lastmod>2017-09-20T16:27:29.000Z</lastmod>
+    <lastmod>2017-09-22T13:45:41.000Z</lastmod>
     <data>
         <display>
-        <title>源码圈 300 胖友的书单整理</title>
+        <title>源码圈 300 胖友的书单整理（最后更新时间：2017.09.22）</title>
         <pubTime>2017-12-14T16:00:00.000Z</pubTime>
         
          
            
              
               <breadCrumb title="技术杂文" url="http://www.iocoder.cn/categories/%E6%8A%80%E6%9C%AF%E6%9D%82%E6%96%87/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/cloud-job-config/</loc>
+    <lastmod>2017-09-22T09:54:42.000Z</lastmod>
+    <data>
+        <display>
+        <title>Elastic-Job-Cloud 源码分析 —— 作业配置</title>
+        <pubTime>2017-12-13T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Elastic-Job-Cloud" url="http://www.iocoder.cn/categories/Elastic-Job-Cloud/"/>
           
         </display>
     </data>
@@ -346,24 +364,6 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-console/</loc>
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    <data>
-        <display>
-        <title>Elastic-Job-Lite 源码分析 —— 运维平台</title>
-        <pubTime>2017-12-06T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.iocoder.cn/Elastic-Job/reconcile/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
@@ -400,17 +400,17 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/cloud-job-config/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>Elastic-Job-Cloud 源码分析 —— 作业配置</title>
-        <pubTime>2017-12-13T16:00:00.000Z</pubTime>
+        <title>Elastic-Job-Lite 源码分析 —— 作业初始化</title>
+        <pubTime>2017-09-15T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="Elastic-Job-Cloud" url="http://www.iocoder.cn/categories/Elastic-Job-Cloud/"/>
+              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
           
         </display>
     </data>
@@ -418,12 +418,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-config/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>Elastic-Job-Lite 源码分析 —— 作业初始化</title>
-        <pubTime>2017-09-15T16:00:00.000Z</pubTime>
+        <title>Elastic-Job-Lite 源码分析 —— 作业配置</title>
+        <pubTime>2017-09-08T16:00:00.000Z</pubTime>
         
          
            
@@ -454,17 +454,17 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-config/</loc>
+    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>Elastic-Job-Lite 源码分析 —— 作业配置</title>
-        <pubTime>2017-09-08T16:00:00.000Z</pubTime>
+        <title>闲聊如何阅读源码（音频）</title>
+        <pubTime>2017-12-01T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
+              <breadCrumb title="技术杂文" url="http://www.iocoder.cn/categories/%E6%8A%80%E6%9C%AF%E6%9D%82%E6%96%87/"/>
           
         </display>
     </data>
@@ -526,12 +526,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
+    <loc>http://www.iocoder.cn/Architecture/talk-about-global-id/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>闲聊如何阅读源码（音频）</title>
-        <pubTime>2017-12-01T16:00:00.000Z</pubTime>
+        <title>谈谈 ID</title>
+        <pubTime>2017-03-03T16:00:00.000Z</pubTime>
         
          
            
@@ -598,17 +598,17 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Architecture/talk-about-global-id/</loc>
+    <loc>http://www.iocoder.cn/Docker/docker-learning-notes/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>谈谈 ID</title>
-        <pubTime>2017-03-03T16:00:00.000Z</pubTime>
+        <title>Docker —— 学习笔记</title>
+        <pubTime>2017-01-05T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="技术杂文" url="http://www.iocoder.cn/categories/%E6%8A%80%E6%9C%AF%E6%9D%82%E6%96%87/"/>
+              <breadCrumb title="Docker" url="http://www.iocoder.cn/categories/Docker/"/>
           
         </display>
     </data>
@@ -958,17 +958,17 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Docker/docker-learning-notes/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper-listener/</loc>
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     <data>
         <display>
-        <title>Docker —— 学习笔记</title>
-        <pubTime>2017-01-05T16:00:00.000Z</pubTime>
+        <title>Elastic-Job-Lite 源码分析 —— 注册中心监听器</title>
+        <pubTime>2017-10-13T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="Docker" url="http://www.iocoder.cn/categories/Docker/"/>
+              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
           
         </display>
     </data>
@@ -1023,24 +1023,6 @@
            
              
               <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper-listener/</loc>
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    <data>
-        <display>
-        <title>Elastic-Job-Lite 源码分析 —— 注册中心监听器</title>
-        <pubTime>2017-10-13T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
           
         </display>
     </data>
@@ -1167,6 +1149,24 @@
            
              
               <breadCrumb title="RocketMQ" url="http://www.iocoder.cn/categories/RocketMQ/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-console/</loc>
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    <data>
+        <display>
+        <title>Elastic-Job-Lite 源码分析 —— 运维平台</title>
+        <pubTime>2017-12-06T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Elastic-Job-Lite" url="http://www.iocoder.cn/categories/Elastic-Job-Lite/"/>
           
         </display>
     </data>
