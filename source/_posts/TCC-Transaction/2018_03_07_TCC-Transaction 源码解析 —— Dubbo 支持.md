@@ -98,7 +98,7 @@ public String record(RedPacketTradeOrderDto paramRedPacketTradeOrderDto) {
 * 该代码通过 Javassist 生成的 Proxy 代码的示例。
 * `propagation=Propagation.SUPPORTS` ：支持当前事务，如果当前没有事务，就以非事务方式执行。**为什么不使用 REQUIRED** ？如果使用 REQUIRED 事务传播级别，事务恢复重试时，会发起新的事务。
 * `confirmMethod`、`cancelMethod` 使用和 try 方法**相同方法名**：**本地发起**远程服务 TCC confirm / cancel 阶段，调用相同方法进行事务的提交或回滚。远程服务的 CompensableTransactionInterceptor 会根据事务的状态是 CONFIRMING / CANCELLING 来调用对应方法。
-    * ![](../../../images/TCC-Transaction/2018_03_07/02.png) 
+    * ![](http://www.iocoder.cn/images/TCC-Transaction/2018_03_07/02.png) 
 * `transactionContextEditor=DubboTransactionContextEditor.class`，使用 Dubbo 事务上下文编辑器，在[「3. Dubbo 事务上下文编辑器」](#)详细分享。
 
 Dubbo Service Proxy 提供了两种生成方式：
@@ -115,7 +115,7 @@ Dubbo Service Proxy 提供了两种生成方式：
 
 Dubbo 的 Invoker 模型是非常关键的概念，看下图：
 
-![](../../../images/TCC-Transaction/2018_03_07/03.jpeg)
+![](http://www.iocoder.cn/images/TCC-Transaction/2018_03_07/03.jpeg)
 
 ## 2.1 JavassistProxyFactory
 
@@ -497,7 +497,7 @@ public class proxy3 implements TccClassGenerator.DC, RedPacketTradeOrderService,
                 return (String)localObject;
               }
             ```
-            * ![](../../../images/TCC-Transaction/2018_03_07/04.png)
+            * ![](http://www.iocoder.cn/images/TCC-Transaction/2018_03_07/04.png)
 
         * 第 112 至 118 行 ：调用 `TccClassGenerator#addMethod(...)` 方法，添加生成的方法。实现代码如下：
 
@@ -834,7 +834,7 @@ tccJavassist=org.mengyun.tcctransaction.dubbo.proxy.javassist.TccJavassistProxyF
 
 目前 Maven 项目 `tcc-transaction-dubbo` 已经**默认**配置，引入即可。
 
-![](../../../images/TCC-Transaction/2018_03_07/05.png)
+![](http://www.iocoder.cn/images/TCC-Transaction/2018_03_07/05.png)
        
 ## 2.2 JdkProxyFactory
 

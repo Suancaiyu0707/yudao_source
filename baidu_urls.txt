@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Eureka/build-debugging-environment/
 http://www.iocoder.cn/Eureka/project-structure/
 http://www.iocoder.cn/TCC-Transaction/http-sample/
 http://www.iocoder.cn/TCC-Transaction/console/
