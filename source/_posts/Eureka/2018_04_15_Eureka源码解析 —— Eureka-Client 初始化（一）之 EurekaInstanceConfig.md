@@ -10,7 +10,17 @@ permalink: Eureka/eureka-client-init-first
 
 **本文主要基于 Eureka 1.8.X 版本** 
 
-
+- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
+- [2. EurekaInstanceConfig](#2-eurekainstanceconfig)
+  - [2.1 类关系图](#21-%E7%B1%BB%E5%85%B3%E7%B3%BB%E5%9B%BE)
+  - [2.2 配置属性](#22-%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7)
+  - [2.3 AbstractInstanceConfig](#23-abstractinstanceconfig)
+  - [2.4 PropertiesInstanceConfig](#24-propertiesinstanceconfig)
+  - [2.5 MyDataCenterInstanceConfig](#25-mydatacenterinstanceconfig)
+  - [2.6 小结](#26-%E5%B0%8F%E7%BB%93)
+- [3. InstanceInfo](#3-instanceinfo)
+- [4. ApplicationInfoManager](#4-applicationinfomanager)
+- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
 
 ---
 
@@ -31,7 +41,7 @@ permalink: Eureka/eureka-client-init-first
 
 Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
-[](../../../images/Eureka/2018_04_15/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_04_15/01.png)
 
 1. **创建** EurekaInstanceConfig对象
 1. 使用 EurekaInstanceConfig对象 **创建** InstanceInfo对象
@@ -54,13 +64,13 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 * EurekaInstanceConfig，重在**应用对象**，例如，应用名、应用的端口等等。此处应用指的是，Application Consumer 和 Application Provider。
 * EurekaClientConfig，重在 **Eureka-Client**，例如， 连接的 Eureka-Server 的地址、获取服务提供者列表的频率、注册自身为服务提供者的频率等等。
 
-[](../../../images/Eureka/2018_04_15/02.jpeg)
+![](http://www.iocoder.cn/images/Eureka/2018_04_15/02.jpeg)
 
 ## 2.1 类关系图
 
 EurekaInstanceConfig 整体类关系如下图：
 
-[](../../../images/Eureka/2018_04_15/03.png)
+![](http://www.iocoder.cn/images/Eureka/2018_04_15/03.png)
 
 * 本文只解析**红圈**部分类。
 * EurekaArchaius2ClientConfig 基于 [Netflix Archaius 2.x](https://github.com/Netflix/archaius) 实现，目前还在开发中，因此暂不解析。
