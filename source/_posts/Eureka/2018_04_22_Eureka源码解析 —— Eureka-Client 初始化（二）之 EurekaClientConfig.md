@@ -8,6 +8,8 @@ permalink: Eureka/eureka-client-init-second
 
 摘要: 原创出处 http://www.iocoder.cn/Eureka/eureka-client-init-second/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Eureka 1.8.X 版本** 
+
 - [1. 概述](#)
 - [2. EurekaClientConfig](#)
 	- [2.1 类关系图](#)

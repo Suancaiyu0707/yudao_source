@@ -6,13 +6,38 @@ permalink: Eureka/eureka-client-init-third
 
 ---
 
+摘要: 原创出处 http://www.iocoder.cn/Eureka/eureka-client-init-third/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+**本文主要基于 Eureka 1.8.X 版本** 
+
+- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
+- [2. EurekaClient](#2-eurekaclient)
+  - [2.1 LookupService](#21-lookupservice)
+- [3. DiscoveryClient](#3-discoveryclient)
+  - [3.1 构造方法参数](#31-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0)
+  - [3.2 构造方法](#32-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95)
+- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
+
+---
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+---
+
 # 1. 概述
 
 本文接[《Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig》](http://www.iocoder.cn/Eureka/eureka-client-init-second/?self)，主要分享 **Eureka-Client 自身初始化的过程**的第三部分 —— **EurekaClient**，不包含 Eureka-Client 向 Eureka-Server 的注册过程( 🙂后面会另外文章分享 )。
 
 Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
-[](http://www.iocoder.cn/images/Eureka/2018_04_15/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_04_15/01.png)
 
 1. **创建** EurekaInstanceConfig对象
 1. 使用 EurekaInstanceConfig对象 **创建** InstanceInfo对象
@@ -32,22 +57,22 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
 [`com.netflix.discovery.EurekaClient`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/EurekaClient.java)，Eureka-Client **接口**，声明如下方法：
 
-* 提供**多种**方式获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用对象信息集合( `com.netflix.appinfo.InstanceInfo` )。
-* 提供方式获取**本地**客户端信息，例如，应用管理器( `com.netflix.appinfo.ApplicationInfoManager` )和 Eureka-Client 配置( `com.netflix.discovery.EurekaClientConfig` )。
-* 提供方式**注册**本地客户端的健康检查和事件监听器。
+* 提供**多种**方法获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用对象信息集合( `com.netflix.appinfo.InstanceInfo` )。
+* 提供方法获取**本地**客户端信息，例如，应用管理器( `com.netflix.appinfo.ApplicationInfoManager` )和 Eureka-Client 配置( `com.netflix.discovery.EurekaClientConfig` )。
+* 提供方法**注册**本地客户端的健康检查和 Eureka 事件监听器。
 
 另外，Eureka 2.X 版本正在开发，该接口为 Eureka 1.X 和 2.X 提供平滑过渡接口。
 
 > This interface does NOT try to clean up the current client interface for eureka 1.x. Rather it tries to provide an easier transition path from eureka 1.x to eureka 2.x.
 
-
 ## 2.1 LookupService
 
 [`com.netflix.discovery.shared.LookupService`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/shared/LookupService.java)，查找服务**接口**，提供**简单单一**的方式获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用对象信息集合( `com.netflix.appinfo.InstanceInfo` )。
 
-EurekaClient 继承该接口。
+![](http://www.iocoder.cn/images/Eureka/2018_04_29/01.png)
 
-在 Eureka-Server 里，`com.netflix.eureka.registry.InstanceRegistry` 也继承该接口。
+* 在 Eureka-Client 里，EurekaClient 继承该接口。
+* 在 Eureka-Server 里，`com.netflix.eureka.registry.InstanceRegistry` 继承该接口。
 
 # 3. DiscoveryClient
 
@@ -57,7 +82,7 @@ EurekaClient 继承该接口。
 * 向 Eureka-Server **续约**自身服务
 * 向 Eureka-Server **取消**自身服务，当关闭时
 * 从 Eureka-Server **查询**应用集合和应用对象信息
-* *土鳖点来理解，对 Eureka-Server 服务的增删改查*
+* *简单来理解，对 Eureka-Server 服务的增删改查*
 
 ## 3.1 构造方法参数
 
@@ -70,7 +95,7 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
 }
 ```
 
-* ApplicationInfoManager，在[《Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaInstanceConfig》](ttp://www.iocoder.cn/Eureka/eureka-client-init-first/)有详细解析。
+* ApplicationInfoManager，在[《Eureka 源码解析 —— Eureka-Client 初始化（一）之 EurekaInstanceConfig》](ttp://www.iocoder.cn/Eureka/eureka-client-init-first/)有详细解析。
 * EurekaClientConfig，在[《Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig》](http://www.iocoder.cn/Eureka/eureka-client-init-second/)有详细解析。
 * `com.netflix.discovery.BackupRegistry`，备份注册中心**接口**。当 Eureka-Client 启动时，无法从 Eureka-Server 读取注册信息（可能挂了），从备份注册中心读取注册信息。实现代码如下：
 
@@ -97,7 +122,7 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
         }
     }
     ```
-    * 从 `com.netflix.discovery.NotImplementedRegistryImpl` 可以看出，目前 Eureka-Client 未提供合适的实现。
+    * 从 `com.netflix.discovery.NotImplementedRegistryImpl` 可以看出，目前 Eureka-Client 未提供合适的默认实现。
 
 * `com.netflix.discovery.AbstractDiscoveryClientOptionalArgs`，DiscoveryClient 可选参数抽象基类。不同于上面三个**必填**参数，该参数是**选填**参数，实际生产下使用较少。实现代码如下：
 
@@ -135,7 +160,7 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
     }
     ```
     * `com.netflix.appinfo.HealthCheckCallback`，健康检查回调**接口**，目前已经废弃，使用 HealthCheckHandler 替代，**你可以不关注该参数**。
-    * `com.netflix.appinfo.HealthCheckHandler`，健康检查处理器**接口**，目前暂未提供默认实现，唯一提供的 `com.netflix.appinfo.HealthCheckCallbackToHandlerBridge`，用于将 HealthCheckCallback **桥接**成 HealthCheckHandler，实现代码如下：
+    * `com.netflix.appinfo.HealthCheckHandler`，健康检查处理器**接口**，目前暂未提供合适的**默认**实现，唯一提供的 `com.netflix.appinfo.HealthCheckCallbackToHandlerBridge`，用于将 HealthCheckCallback **桥接**成 HealthCheckHandler，实现代码如下：
     
         ```Java
         // HealthCheckHandler.java
@@ -201,7 +226,7 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
        ```
        * Jersey 1.X 使用 ClientFilter 。ClientFilter 目前有两个过滤器实现：EurekaIdentityHeaderFilter 、DynamicGZIPContentEncodingFilter，本文暂不拓展开，后面另开文章分享。（TODO 后文超链）
        * Jersey 2.X 使用 ClientRequestFilter 。
-       * DiscoveryClient 使用 DiscoveryClientOptionalArgs，即 Jersey 1.X。
+       * DiscoveryClient 使用 DiscoveryClientOptionalArgs，即 Jersey 1.X 。
 
   * `eurekaJerseyClient`，Jersey 客户端。该**参数**目前废弃，使用下面 TransportClientFactories 参数来进行生成。
   * `com.netflix.discovery.shared.transport.jersey.TransportClientFactories`，生成 Jersey 客户端**工厂的工厂**接口。目前有 Jersey1TransportClientFactories 、Jersey2TransportClientFactories 两个实现。TransportClientFactories 实现代码如下：
@@ -228,7 +253,7 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
     
       }
       ```
-      * 第一个方法已经废弃，这就是为什么说上面的 `eurekaJerseyClient` **参数( 不是 EurekaJerseyClient 类 )**已经废弃，被第二个方法取代。相比来说，第二个方法对 EurekaJerseyClient 创建封装会更好。
+      * 第一个方法已经废弃，这就是为什么说上面的 `eurekaJerseyClient` **参数**( 不是 EurekaJerseyClient 类)已经废弃，被第二个方法取代。相比来说，第二个方法对 EurekaJerseyClient 创建封装会更好。
 
  * `com.netflix.discovery.EurekaEventListener`，Eureka 事件监听器。实现代码如下：
 
@@ -252,6 +277,8 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
      * CacheRefreshedEvent （TODO 后文超链）
 
 ## 3.2 构造方法
+
+DiscoveryClient 的构造方法实现代码相对较多，已经将代码**切块** + **中文注册**，点击 [DiscoveryClient](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/DiscoveryClient.java#L298) 链接，对照下面每个小结阅读理解。
 
 ### 3.2.1 赋值 AbstractDiscoveryClientOptionalArgs
 
@@ -455,7 +482,7 @@ cacheRefreshExecutor = new ThreadPoolExecutor(
 );  // use direct handoff
 ```
 
-* `scheduler`，线程池，初始化大小为 2，一个给 `heartbeatExecutor`，一个给 `cacheRefreshExecutor`。
+* `scheduler`，**定时任务**线程池，初始化大小为 2，一个给 `heartbeatExecutor`，一个给 `cacheRefreshExecutor`。
 * `heartbeatExecutor`、`cacheRefreshExecutor` 在提交给 `scheduler` 才声明具体的**任务**。
 
 ### 3.2.10 初始化 Eureka 网络通信相关
@@ -686,4 +713,12 @@ logger.info("Discovery Client initialized at timestamp {} with initial instances
 
 # 666. 彩蛋
 
+由于笔者是边理解源码边输出博客内容，如果有错误或者不清晰的地方，**欢迎**微笑给我的微信公众号( **芋道源码** ) 留言，我会**仔细**回复。感谢 + 1024。
+
+后面文章不断更新，会慢慢完善本文中的 TODO。
+
+推荐参考阅读：
+
+* [程序猿DD —— 《Spring Cloud微服务实战》](https://union-click.jd.com/jdc?d=505Twi) Spring Cloud Eureka —— 源码分析
+* **买盗版书，等于编写一个初级 BUG**
 
