@@ -36,7 +36,7 @@ permalink: Eureka/eureka-client-init-second
 
 # 1. 概述
 
-本文接[《Eureka 源码解析 —— Eureka-Client 初始化（一）之 EurekaInstanceConfig》](http://www.iocoder.cn/Eureka/eureka-client-init-second/?self)，主要分享 **Eureka-Client 自身初始化的过程**的第二部分 —— **EurekaClientConfig**，不包含 Eureka-Client 向 Eureka-Server 的注册过程( 🙂后面会另外文章分享 )。
+本文接[《Eureka 源码解析 —— Eureka-Client 初始化（一）之 EurekaInstanceConfig》](http://www.iocoder.cn/Eureka/eureka-client-init-first/?self)，主要分享 **Eureka-Client 自身初始化的过程**的第二部分 —— **EurekaClientConfig**，不包含 Eureka-Client 向 Eureka-Server 的注册过程( 🙂后面会另外文章分享 )。
 
 Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
