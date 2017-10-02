@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.iocoder.cn/"/>
-  <updated>2017-10-02T04:58:52.000Z</updated>
+  <updated>2017-10-02T05:07:25.000Z</updated>
   <id>http://www.iocoder.cn/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Eureka 源码解析 —— Eureka-Server 启动（二）之 ServerConfig</title>
+    <link href="http://www.iocoder.cn/Eureka/eureka-server-init-second/"/>
+    <id>http://www.iocoder.cn/Eureka/eureka-server-init-second/</id>
+    <published>2018-05-13T16:00:00.000Z</published>
+    <updated>2017-10-02T05:07:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/eureka-server-init-second/">http://www.iocoder.cn/Eureka/eureka-server-init-second/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p><p><strong>本文主要基于 Eureka 1.8.X 版本</strong> </p><p>TODO</p><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文接<a href="http://www.iocoder.cn/Eureka/eureka-server-init-first/?self">《Eureka 源码解析 —— Eureka-Server 启动（一）之 EurekaServerConfig》</a>，主要分享 <strong>Eureka-Server 启动的过程</strong>的第二部分 —— <strong>EurekaBootStrap</strong>。</p><p>考虑到整个初始化的过程中涉及的代码特别多，拆分成两两篇文章：</p><ul><li><a href="http://www.iocoder.cn/Eureka/eureka-server-init-first/?self">ServerConfig</a></li><li>【本文】EurekaBootStrap</li></ul><p><strong>推荐 Spring Cloud 书籍</strong>：</p><ul><li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li><li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li><li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li><li>两书齐买，京东包邮。</li></ul><h1 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h1>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;摘要: 原创出处 &lt;a href=&quot;http://www.iocoder.cn/Eureka/eureka-server-init-second/&quot;&gt;http://www.iocoder.cn/Eureka/eureka-server-init-second/&lt;/a&gt; 「芋
+      
+    
+    </summary>
+    
+      <category term="Eureka" scheme="http://www.iocoder.cn/categories/Eureka/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Eureka 源码解析 —— Eureka-Server 启动（一）之 ServerConfig</title>
@@ -30,29 +53,6 @@
       
       
         &lt;p&gt;摘要: 原创出处 &lt;a href=&quot;http://www.iocoder.cn/Eureka/eureka-server-init-first/&quot;&gt;http://www.iocoder.cn/Eureka/eureka-server-init-first/&lt;/a&gt; 「芋道源
-      
-    
-    </summary>
-    
-      <category term="Eureka" scheme="http://www.iocoder.cn/categories/Eureka/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Eureka 源码解析 —— Eureka-Server 启动（二）之 ServerConfig</title>
-    <link href="http://www.iocoder.cn/Eureka/eureka-server-init-second/"/>
-    <id>http://www.iocoder.cn/Eureka/eureka-server-init-second/</id>
-    <published>2018-05-06T16:00:00.000Z</published>
-    <updated>2017-10-02T05:02:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/eureka-server-init-second/">http://www.iocoder.cn/Eureka/eureka-server-init-second/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p><p><strong>本文主要基于 Eureka 1.8.X 版本</strong> </p><p>TODO</p><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文接<a href="http://www.iocoder.cn/Eureka/eureka-server-init-first/?self">《Eureka 源码解析 —— Eureka-Server 启动（一）之 EurekaServerConfig》</a>，主要分享 <strong>Eureka-Server 启动的过程</strong>的第二部分 —— <strong>EurekaBootStrap</strong>。</p><p>考虑到整个初始化的过程中涉及的代码特别多，拆分成两两篇文章：</p><ul><li><a href="http://www.iocoder.cn/Eureka/eureka-server-init-first/?self">ServerConfig</a></li><li>【本文】EurekaBootStrap</li></ul><p><strong>推荐 Spring Cloud 书籍</strong>：</p><ul><li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li><li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li><li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li><li>两书齐买，京东包邮。</li></ul><h1 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h1>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;摘要: 原创出处 &lt;a href=&quot;http://www.iocoder.cn/Eureka/eureka-server-init-second/&quot;&gt;http://www.iocoder.cn/Eureka/eureka-server-init-second/&lt;/a&gt; 「芋
       
     
     </summary>

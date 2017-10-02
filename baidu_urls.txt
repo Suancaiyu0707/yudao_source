@@ -1,5 +1,5 @@
-http://www.iocoder.cn/Eureka/eureka-server-init-first/
 http://www.iocoder.cn/Eureka/eureka-server-init-second/
+http://www.iocoder.cn/Eureka/eureka-server-init-first/
 http://www.iocoder.cn/Eureka/eureka-client-init-third/
 http://www.iocoder.cn/Eureka/eureka-client-init-second/
 http://www.iocoder.cn/Eureka/eureka-client-init-first/
