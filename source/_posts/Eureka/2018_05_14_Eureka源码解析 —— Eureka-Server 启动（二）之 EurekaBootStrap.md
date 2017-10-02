@@ -10,11 +10,21 @@ permalink: Eureka/eureka-server-init-second
 
 **本文主要基于 Eureka 1.8.X 版本** 
 
-TODO
+- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
+- [2. EurekaBootStrap](#2-eurekabootstrap)
+  - [2.1 初始化 Eureka-Server 配置环境](#21-%E5%88%9D%E5%A7%8B%E5%8C%96-eureka-server-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83)
+  - [2.2 初始化 Eureka-Server 上下文](#22-%E5%88%9D%E5%A7%8B%E5%8C%96-eureka-server-%E4%B8%8A%E4%B8%8B%E6%96%87)
+- [3. Filter](#3-filter)
+  - [3.1 StatusFilter](#31-statusfilter)
+  - [3.2 ServerRequestAuthFilter](#32-serverrequestauthfilter)
+  - [3.3 RateLimitingFilter](#33-ratelimitingfilter)
+  - [3.4 GzipEncodingEnforcingFilter](#34-gzipencodingenforcingfilter)
+  - [3.5 ServletContainer](#35-servletcontainer)
+- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
 
 ---
 
-[](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
 
 > 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
 > 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
@@ -45,7 +55,7 @@ TODO
 
 `com.netflix.eureka.EurekaBootStrap`，Eureka-Server **启动入口**。
 
-[](../../../images/Eureka/2018_05_14/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_05_14/01.png)
 
 EurekaBootStrap 实现了 `javax.servlet.ServletContextListener` **接口**，在 Servlet 容器( 例如 Tomcat、Jetty )启动时，调用 `#contextInitialized()` 方法，初始化 Eureka-Server，实现代码如下：
 
@@ -220,7 +230,7 @@ if (isAws(applicationInfoManager.getInfo())) { // AWS 相关，跳过
 
 * 应用对象信息的注册表**类关系图**如下：
 
-    [](../../../images/Eureka/2018_05_14/02.png)
+    ![](http://www.iocoder.cn/images/Eureka/2018_05_14/02.png)
 
 * 本文不展开分享，在[TODO](TODO)详细解析。
 
@@ -373,30 +383,35 @@ Eureka-Server 过滤器( `javax.servlet.Filter` ) **顺序**如下：
 
 * StatusFilter
 * ServerRequestAuthFilter
+* RateLimitingFilter
+* GzipEncodingEnforcingFilter
+* ServletContainer
 
 ## 3.1 StatusFilter
 
 `com.netflix.eureka.StatusFilter`，Eureka-Server 状态过滤器。当 Eureka-Server 未处于开启( `InstanceStatus.UP` )状态，返回 HTTP 状态码 307 重定向，实现代码如下：
 
-    ```Java
-    // StatusFilter.java
-    private static final int SC_TEMPORARY_REDIRECT = 307;
+```Java
+// StatusFilter.java
+private static final int SC_TEMPORARY_REDIRECT = 307;
     
-    public void doFilter(ServletRequest request, ServletResponse response,
-                        FilterChain chain) throws IOException, ServletException {
-       InstanceInfo myInfo = ApplicationInfoManager.getInstance().getInfo();
-       InstanceStatus status = myInfo.getStatus();
-       if (status != InstanceStatus.UP && response instanceof HttpServletResponse) {
-           HttpServletResponse httpRespone = (HttpServletResponse) response;
-           httpRespone.sendError(SC_TEMPORARY_REDIRECT,
-                   "Current node is currently not ready to serve requests -- current status: "
-                           + status + " - try another DS node: ");
-       }
-       chain.doFilter(request, response);
-    }
-    ```
+public void doFilter(ServletRequest request, ServletResponse response,
+                   FilterChain chain) throws IOException, ServletException {
+  InstanceInfo myInfo = ApplicationInfoManager.getInstance().getInfo();
+  InstanceStatus status = myInfo.getStatus();
+  if (status != InstanceStatus.UP && response instanceof HttpServletResponse) {
+      HttpServletResponse httpRespone = (HttpServletResponse) response;
+      httpRespone.sendError(SC_TEMPORARY_REDIRECT,
+              "Current node is currently not ready to serve requests -- current status: "
+                      + status + " - try another DS node: ");
+  }
+  chain.doFilter(request, response);
+}
+```
 
-* `com.netflix.eureka.ServerRequestAuthFilter`，Eureka-Server 请求认证过滤器。Eureka-Server 未实现认证。目前打印访问的客户端名和版本号，配合 [Netflix Servo](https://github.com/Netflix/servo) 实现监控信息采集。实现代码如下：
+## 3.2 ServerRequestAuthFilter
+
+`com.netflix.eureka.ServerRequestAuthFilter`，Eureka-Server 请求认证过滤器。Eureka-Server 未实现认证。目前打印访问的客户端名和版本号，配合 [Netflix Servo](https://github.com/Netflix/servo) 实现监控信息采集。实现代码如下：
 
     ```Java
     // ServerRequestAuthFilter.java
@@ -414,46 +429,63 @@ Eureka-Server 过滤器( `javax.servlet.Filter` ) **顺序**如下：
     }
     ```
 
-* `com.netflix.eureka.RateLimitingFilter`，请求限流过滤器。在[TODO](TODO)详细解析。
-* `com.netflix.eureka.GzipEncodingEnforcingFilter`，GZIP 编码过滤器。
-* `com.sun.jersey.spi.container.servlet.ServletContainer`，Jersey MVC 请求过滤器。
-    * Jersey MVC 模式如下图：
+## 3.3 RateLimitingFilter
 
-        [](../../../images/Eureka/2018_05_14/02.png)
+`com.netflix.eureka.RateLimitingFilter`，请求限流过滤器。在[TODO](TODO)详细解析。
+
+## 3.4 GzipEncodingEnforcingFilter
+
+`com.netflix.eureka.GzipEncodingEnforcingFilter`，GZIP 编码过滤器。
+
+## 3.5 ServletContainer
+
+`com.sun.jersey.spi.container.servlet.ServletContainer`，Jersey MVC 请求过滤器。
+
+* Jersey MVC 模式如下图：
+
+   > FROM [《Jersey框架的MVC》](http://blog.csdn.net/wangqyoho/article/details/51981916)
+   > ![](http://www.iocoder.cn/images/Eureka/2018_05_14/02.png)
    
-    * 在 `com.netflix.eureka.resources` 包里，有所有的 Eureka-Server Jersey Resource ( Controller )。
-    * 过滤器在 `web.xml` 配置如下：
+* 在 `com.netflix.eureka.resources` 包里，有所有的 Eureka-Server Jersey Resource ( Controller )。
+* 过滤器在 `web.xml` 配置如下：
 
-        ```XML
-        <filter>
-            <filter-name>jersey</filter-name>
-            <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
-            <init-param>
-              <param-name>com.sun.jersey.config.property.WebPageContentRegex</param-name>
-              <param-value>/(flex|images|js|css|jsp)/.*</param-value>
-            </init-param>
-            <init-param>
-              <param-name>com.sun.jersey.config.property.packages</param-name>
-              <param-value>com.sun.jersey;com.netflix</param-value>
-            </init-param>
-        
-            <!-- GZIP content encoding/decoding -->
-            <init-param>
-              <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-              <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
-            </init-param>
-            <init-param>
-              <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-              <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
-            </init-param>
-        </filter>
-           
-        <filter-mapping>
-            <filter-name>jersey</filter-name>
-            <url-pattern>/*</url-pattern>
-        </filter-mapping>
-        ```
+   ```XML
+   <filter>
+       <filter-name>jersey</filter-name>
+       <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
+       <init-param>
+         <param-name>com.sun.jersey.config.property.WebPageContentRegex</param-name>
+         <param-value>/(flex|images|js|css|jsp)/.*</param-value>
+       </init-param>
+       <init-param>
+         <param-name>com.sun.jersey.config.property.packages</param-name>
+         <param-value>com.sun.jersey;com.netflix</param-value>
+       </init-param>
+   
+       <!-- GZIP content encoding/decoding -->
+       <init-param>
+         <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+         <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+       </init-param>
+       <init-param>
+         <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+         <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+       </init-param>
+   </filter>
+      
+   <filter-mapping>
+       <filter-name>jersey</filter-name>
+       <url-pattern>/*</url-pattern>
+   </filter-mapping>
+   ```
 
 # 666. 彩蛋
 
+啦啦啦，Eureka-Server 启动完成！
+
+准备工作已经完成，可以开始更加有趣的注册、续约、取消注册、过期等等 Eureka-Client 与 Eureka-Server 的交互。
+
+搞起！
+
+胖友，分享一波朋友圈可好！？
 
