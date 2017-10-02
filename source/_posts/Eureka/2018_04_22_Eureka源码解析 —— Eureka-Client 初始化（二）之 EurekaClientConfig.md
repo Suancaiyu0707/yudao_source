@@ -58,6 +58,13 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
 下面我们来看看每个**类**的实现。
 
+**推荐 Spring Cloud 书籍**：
+
+* 请支持正版。下载盗版，**等于主动编写低级 BUG** 。
+* 程序猿DD —— [《Spring Cloud微服务实战》](https://union-click.jd.com/jdc?d=505Twi)
+* 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
+* 两书齐买，京东包邮。
+
 # 2. EurekaClientConfig
 
 `com.netflix.discovery.EurekaClientConfig`，**Eureka-Client** 配置**接口**。
