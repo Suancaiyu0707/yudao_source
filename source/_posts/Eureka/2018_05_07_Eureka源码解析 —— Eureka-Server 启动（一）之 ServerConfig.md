@@ -88,15 +88,15 @@ permalink: Eureka/eureka-server-init-first
     * `#getEvictionIntervalTimerInMs()` ：租约过期定时任务执行频率，单位：毫秒。
 * **Eureka-Server 集群读取相关**
     * TODO （后文链接）详细解析 
-    * `#getRemoteRegionUrlsWithName()` ：远程 Eureka-Server 映射。
-        * `key` ：Eureka-Server 名
+    * `#getRemoteRegionUrlsWithName()` ：TODO【N】RemoteRegionRegistry。
+        * `key` ：Eureka-Server 区域( `region` )
         * `value` ：Eureka-Server 地址
    * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。TODOTODO（后面源码在细读，可能要修正）
-    * `#getRemoteRegionAppWhitelist()` ：从远程 Eureka-Server 拉取应用注册信息集合。TODOTODO（后面源码在细读，可能要修正）
-    * `#getRemoteRegionRegistryFetchInterval()` ：远程 Eureka-Server 拉取注册信息的间隔，单位：秒。
+    * `#getRemoteRegionAppWhitelist()` ：TODO【N】RemoteRegionRegistry。
+    * `#getRemoteRegionRegistryFetchInterval()` ：TODO【N】RemoteRegionRegistry。
     * `#getRegistrySyncRetries()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取失败重试次数。
     * `#getRegistrySyncRetryWaitMs()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取失败等待( `sleep` )间隔，单位：毫秒。 
-    * `#getRemoteRegionFetchThreadPoolSize()` ：远程 Eureka-Server 拉取注册信息的线程池大小。
+    * `#getRemoteRegionFetchThreadPoolSize()` ：TODO【N】RemoteRegionRegistry。
     * `#disableTransparentFallbackToOtherRegion()` ：是否禁用本地读取不到注册信息，从远程 Eureka-Server 读取。
     * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODOTODO（后面源码在细读，可能要修正）
 * **Eureka-Server 集群同步相关**

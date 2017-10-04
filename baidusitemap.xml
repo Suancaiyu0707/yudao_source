@@ -4,6 +4,42 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-first/</loc>
+    <lastmod>2017-10-04T13:10:33.000Z</lastmod>
+    <data>
+        <display>
+        <title>Eureka 源码解析 —— Eureka-Server 启动（一）之 ServerConfig</title>
+        <pubTime>2018-05-06T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
+    <lastmod>2017-10-04T13:08:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig</title>
+        <pubTime>2018-04-22T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/Eureka/instance-registry-class-diagram/</loc>
     <lastmod>2017-10-04T12:55:37.000Z</lastmod>
     <data>
@@ -28,42 +64,6 @@
         <display>
         <title>Eureka 源码解析 —— Eureka-Client 初始化（三）之 EurekaClient</title>
         <pubTime>2018-04-28T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
-    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
-    <data>
-        <display>
-        <title>Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig</title>
-        <pubTime>2018-04-22T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-first/</loc>
-    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
-    <data>
-        <display>
-        <title>Eureka 源码解析 —— Eureka-Server 启动（一）之 ServerConfig</title>
-        <pubTime>2018-05-06T16:00:00.000Z</pubTime>
         
          
            

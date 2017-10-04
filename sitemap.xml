@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-first/</loc>
+    
+    <lastmod>2017-10-04T13:10:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
+    
+    <lastmod>2017-10-04T13:08:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Eureka/instance-registry-class-diagram/</loc>
     
     <lastmod>2017-10-04T12:55:37.000Z</lastmod>
@@ -10,20 +24,6 @@
   
   <url>
     <loc>http://www.iocoder.cn/Eureka/eureka-client-init-third/</loc>
-    
-    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
-    
-    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-first/</loc>
     
     <lastmod>2017-10-04T11:24:12.000Z</lastmod>
     

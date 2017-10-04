@@ -99,7 +99,7 @@ EurekaClientConfig 整体类关系如下图：
     * `#shouldFetchRegistry()` ：是否从 Eureka-Server 拉取注册信息。
     * `#getRegistryFetchIntervalSeconds()` ：从 Eureka-Server 拉取注册信息频率，单位：秒。默认：30 秒。
     * `#shouldFilterOnlyUpInstances()` ：是否过滤，只获取状态为开启( Up )的应用实例集合。
-    * `#fetchRegistryForRemoteRegions()` ：获取哪些区域( `region` )集合的注册信息。
+    * `#fetchRegistryForRemoteRegions()` ：TODO【N】RemoteRegionRegistry。
     * `#getCacheRefreshExecutorThreadPoolSize()` ：注册信息缓存刷新线程池大小。
     * `#getCacheRefreshExecutorExponentialBackOffBound()` ：注册信息缓存刷新执行超时后的延迟重试的时间。
     * `#getRegistryRefreshSingleVipAddress()` ：TODO【1】vip
