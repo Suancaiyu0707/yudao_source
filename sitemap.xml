@@ -2,16 +2,100 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-second/</loc>
+    <loc>http://www.iocoder.cn/Eureka/instance-registry-class-diagram/</loc>
     
-    <lastmod>2017-10-02T12:33:09.000Z</lastmod>
+    <lastmod>2017-10-04T12:55:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-third/</loc>
+    
+    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
+    
+    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.iocoder.cn/Eureka/eureka-server-init-first/</loc>
     
-    <lastmod>2017-10-02T04:58:52.000Z</lastmod>
+    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-server-init-second/</loc>
+    
+    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-first/</loc>
+    
+    <lastmod>2017-10-04T11:24:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/connect-mongodb/</loc>
+    
+    <lastmod>2017-10-03T11:49:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/what-is-PreparedStatement/</loc>
+    
+    <lastmod>2017-10-03T11:49:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/xa-distributed-transaction/</loc>
+    
+    <lastmod>2017-10-03T11:48:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/two-table-share-join/</loc>
+    
+    <lastmod>2017-10-03T11:48:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/sharding-result-merge-first/</loc>
+    
+    <lastmod>2017-10-03T11:48:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/single-db-single-table-select/</loc>
+    
+    <lastmod>2017-10-03T11:47:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/single-db-single-table-insert/</loc>
+    
+    <lastmod>2017-10-03T11:47:08.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/MyCAT/build-debugging-environment/</loc>
+    
+    <lastmod>2017-10-03T11:46:51.000Z</lastmod>
     
   </url>
   
@@ -26,27 +110,6 @@
     <loc>http://www.iocoder.cn/Eureka/build-debugging-environment/</loc>
     
     <lastmod>2017-10-02T04:38:30.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-first/</loc>
-    
-    <lastmod>2017-10-02T04:38:25.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
-    
-    <lastmod>2017-10-02T04:38:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-third/</loc>
-    
-    <lastmod>2017-10-02T04:38:13.000Z</lastmod>
     
   </url>
   
@@ -100,14 +163,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/tcc-core/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
     
     <lastmod>2017-09-17T11:06:25.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/tcc-core/</loc>
     
     <lastmod>2017-09-17T11:06:25.000Z</lastmod>
     
@@ -191,28 +254,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/MyCAT/sharding-result-merge-first/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-monitor/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/reconcile/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/message-pull-and-consume-second/</loc>
+    <loc>http://www.iocoder.cn/Docker/docker-network-flannel/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -226,56 +268,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/MyCAT/why-read-MyCAT-source-code/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-storage/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper-listener/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/build-debugging-environment/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/single-db-single-table-insert/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/single-db-single-table-select/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Docker/docker-network-flannel/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/two-table-share-join/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/MyCAT/xa-distributed-transaction/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-listener/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -296,7 +296,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/MyCAT/connect-mongodb/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-sharding-strategy/</loc>
+    
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/election/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -422,7 +429,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-storage/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper-listener/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -464,21 +471,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/election/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-sharding-strategy/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -492,21 +485,35 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/MyCAT/why-read-MyCAT-source-code/</loc>
+    
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
+    
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-monitor/</loc>
+    
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/reconcile/</loc>
+    
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Elastic-Job/job-sharding/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
-    
-    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-listener/</loc>
     
     <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
@@ -520,28 +527,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/result-merger/</loc>
+    <loc>http://www.iocoder.cn/RocketMQ/message-pull-and-consume-second/</loc>
     
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/cloud-local-executor/</loc>
-    
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    <lastmod>2017-09-06T10:53:51.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/transaction-bed/</loc>
-    
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/why-read-RocketMQ-source-code/</loc>
     
     <lastmod>2017-09-06T10:53:50.000Z</lastmod>
     
@@ -555,21 +548,21 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/namesrv-intro/</loc>
-    
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/message/</loc>
-    
-    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-schedule-and-retry/</loc>
+    
+    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Elastic-Job/cloud-local-executor/</loc>
+    
+    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/why-read-RocketMQ-source-code/</loc>
     
     <lastmod>2017-09-06T10:53:50.000Z</lastmod>
     
@@ -590,7 +583,21 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/MyCAT/what-is-PreparedStatement/</loc>
+    <loc>http://www.iocoder.cn/RocketMQ/message/</loc>
+    
+    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/result-merger/</loc>
+    
+    <lastmod>2017-09-06T10:53:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/namesrv-intro/</loc>
     
     <lastmod>2017-09-06T10:53:50.000Z</lastmod>
     

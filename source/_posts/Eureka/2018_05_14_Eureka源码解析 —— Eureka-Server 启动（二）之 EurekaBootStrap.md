@@ -205,7 +205,7 @@ if (eurekaClient == null) {
     ```
     * **大多数情况下用不到**。
 
-### 2.2.5 创建应用对象信息的注册表
+### 2.2.5 创建应用实例信息的注册表
 
 ```Java
 PeerAwareInstanceRegistry registry;
@@ -228,7 +228,7 @@ if (isAws(applicationInfoManager.getInfo())) { // AWS 相关，跳过
 }
 ```
 
-* 应用对象信息的注册表**类关系图**如下：
+* 应用实例信息的注册表**类关系图**如下：
 
     ![](http://www.iocoder.cn/images/Eureka/2018_05_14/02.png)
 
@@ -275,7 +275,7 @@ serverContext = new DefaultEurekaServerContext(
          */
         private final ServerCodecs serverCodecs;
         /**
-         * 应用对象信息的注册表
+         * 应用实例信息的注册表
          */
         private final PeerAwareInstanceRegistry registry;
         /**
@@ -283,7 +283,7 @@ serverContext = new DefaultEurekaServerContext(
          */
         private final PeerEurekaNodes peerEurekaNodes;
         /**
-         * 应用对象信息管理器
+         * 应用实例信息管理器
          */
         private final ApplicationInfoManager applicationInfoManager;
         
@@ -351,7 +351,7 @@ logger.info("Initialized server context");
     
        // 启动 Eureka-Server 集群节点集合（复制）
        peerEurekaNodes.start();
-       // 初始化 应用对象信息的注册表
+       // 初始化 应用实例信息的注册表
        registry.init(peerEurekaNodes);
     
        logger.info("Initialized");
@@ -444,7 +444,7 @@ public void doFilter(ServletRequest request, ServletResponse response,
 * Jersey MVC 模式如下图：
 
    > FROM [《Jersey框架的MVC》](http://blog.csdn.net/wangqyoho/article/details/51981916)
-   > ![](http://www.iocoder.cn/images/Eureka/2018_05_14/02.png)
+   > ![](http://www.iocoder.cn/images/Eureka/2018_05_14/03.png)
    
 * 在 `com.netflix.eureka.resources` 包里，有所有的 Eureka-Server Jersey Resource ( Controller )。
 * 过滤器在 `web.xml` 配置如下：

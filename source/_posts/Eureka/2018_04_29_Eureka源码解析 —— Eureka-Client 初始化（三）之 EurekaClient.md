@@ -64,7 +64,7 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
 [`com.netflix.discovery.EurekaClient`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/EurekaClient.java)，Eureka-Client **接口**，声明如下方法：
 
-* 提供**多种**方法获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用对象信息集合( `com.netflix.appinfo.InstanceInfo` )。
+* 提供**多种**方法获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用实例信息集合( `com.netflix.appinfo.InstanceInfo` )。
 * 提供方法获取**本地**客户端信息，例如，应用管理器( `com.netflix.appinfo.ApplicationInfoManager` )和 Eureka-Client 配置( `com.netflix.discovery.EurekaClientConfig` )。
 * 提供方法**注册**本地客户端的健康检查和 Eureka 事件监听器。
 
@@ -74,7 +74,7 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
 ## 2.1 LookupService
 
-[`com.netflix.discovery.shared.LookupService`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/shared/LookupService.java)，查找服务**接口**，提供**简单单一**的方式获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用对象信息集合( `com.netflix.appinfo.InstanceInfo` )。
+[`com.netflix.discovery.shared.LookupService`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/shared/LookupService.java)，查找服务**接口**，提供**简单单一**的方式获取应用集合(`com.netflix.discovery.shared.Applications`) 和 应用实例信息集合( `com.netflix.appinfo.InstanceInfo` )。
 
 ![](http://www.iocoder.cn/images/Eureka/2018_04_29/01.png)
 
@@ -88,7 +88,7 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 * 向 Eureka-Server **注册**自身服务
 * 向 Eureka-Server **续约**自身服务
 * 向 Eureka-Server **取消**自身服务，当关闭时
-* 从 Eureka-Server **查询**应用集合和应用对象信息
+* 从 Eureka-Server **查询**应用集合和应用实例信息
 * *简单来理解，对 Eureka-Server 服务的增删改查*
 
 ## 3.1 构造方法参数
@@ -519,7 +519,7 @@ instanceRegionChecker = new InstanceRegionChecker(azToRegionMapper, clientConfig
 ```
 
 * `com.netflix.discovery.AzToRegionMapper`，主要用于亚马逊 AWS，跳过。
-* `com.netflix.discovery.InstanceRegionChecker`，应用对象信息区域( `region` )校验，实现代码如下：
+* `com.netflix.discovery.InstanceRegionChecker`，应用实例信息区域( `region` )校验，实现代码如下：
 
     ```Java
     public class InstanceRegionChecker {

@@ -17,6 +17,10 @@ permalink: MyCAT/what-is-PreparedStatement
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/MyCAT/what-is-PreparedStatement/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+**本文主要基于 MyCAT 1.6.5 正式版**  
+
 - [1. 概述](#)
 - [2. JDBC Client 实现](#)
 - [3. MyCAT Server 实现](#)

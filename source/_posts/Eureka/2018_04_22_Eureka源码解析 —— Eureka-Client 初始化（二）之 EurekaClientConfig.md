@@ -98,7 +98,7 @@ EurekaClientConfig 整体类关系如下图：
 * **发现：从 Eureka-Server 获取注册信息相关**
     * `#shouldFetchRegistry()` ：是否从 Eureka-Server 拉取注册信息。
     * `#getRegistryFetchIntervalSeconds()` ：从 Eureka-Server 拉取注册信息频率，单位：秒。默认：30 秒。
-    * `#shouldFilterOnlyUpInstances()` ：是否过滤，只获取状态为开启( Up )的应用对象集合。
+    * `#shouldFilterOnlyUpInstances()` ：是否过滤，只获取状态为开启( Up )的应用实例集合。
     * `#fetchRegistryForRemoteRegions()` ：获取哪些区域( `region` )集合的注册信息。
     * `#getCacheRefreshExecutorThreadPoolSize()` ：注册信息缓存刷新线程池大小。
     * `#getCacheRefreshExecutorExponentialBackOffBound()` ：注册信息缓存刷新执行超时后的延迟重试的时间。
@@ -106,7 +106,7 @@ EurekaClientConfig 整体类关系如下图：
 * **注册：向 Eureka-Server 注册自身服务**
     * `#shouldRegisterWithEureka()` ：是否向 Eureka-Server 注册自身服务。
     * `#shouldUnregisterOnShutdown()` ：是否向 Eureka-Server 取消注册自身服务，当进程关闭时。
-    * `#getInstanceInfoReplicationIntervalSeconds()` ：向 Eureka-Server 同步应用对象信息变化频率，单位：秒。
+    * `#getInstanceInfoReplicationIntervalSeconds()` ：向 Eureka-Server 同步应用实例信息变化频率，单位：秒。
     * `#getInitialInstanceInfoReplicationIntervalSeconds()` ：向 Eureka-Server 同步应用信息变化初始化延迟，单位：秒。
     * `#getBackupRegistryImpl()` ：获取备份注册中心实现类。当 Eureka-Client 启动时，无法从 Eureka-Server 读取注册信息（可能挂了），从备份注册中心读取注册信息。目前 Eureka-Client 未提供合适的实现。
     * `#getHeartbeatExecutorThreadPoolSize()` ：心跳执行线程池大小。

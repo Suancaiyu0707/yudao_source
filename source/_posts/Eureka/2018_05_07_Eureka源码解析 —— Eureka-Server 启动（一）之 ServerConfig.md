@@ -74,7 +74,7 @@ permalink: Eureka/eureka-server-init-first
     * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**永不过期**的**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
     * `#getResponseCacheUpdateIntervalMs()` ：**只读缓存**更新频率，单位：毫秒。**只读缓存**定时更新任务只更新读取过请求 (`com.netflix.eureka.registry.Key`)，因此虽然永不过期，也会存在读取不到的情况。
     * `#getResponseCacheAutoExpirationInSeconds()` ：**读写缓存**写入后过期时间，单位：秒。
-* **注册的应用对象信息的租约相关**
+* **注册的应用实例信息的租约相关**
     * TODO （后文链接）详细解析 
     * `#shouldEnableSelfPreservation()` ：是否开启自我保护模式。
         
@@ -101,10 +101,10 @@ permalink: Eureka/eureka-server-init-first
     * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODOTODO（后面源码在细读，可能要修正）
 * **Eureka-Server 集群同步相关**
     * TODO （后文链接）详细解析 
-    * `#getMaxThreadsForPeerReplication()` ：同步应用对象信息最大线程数。
-    * `#getMaxElementsInPeerReplicationPool()` ：待执行同步应用对象信息事件缓冲最大数量。
-    * `#getMaxTimeForReplication()` ：执行单个同步应用对象信息状态任务最大时间。
-    * `#shouldSyncWhenTimestampDiffers()` ：是否同步应用对象信息，当应用对象信息最后更新时间戳( `lastDirtyTimestamp` )发生改变。
+    * `#getMaxThreadsForPeerReplication()` ：同步应用实例信息最大线程数。
+    * `#getMaxElementsInPeerReplicationPool()` ：待执行同步应用实例信息事件缓冲最大数量。
+    * `#getMaxTimeForReplication()` ：执行单个同步应用实例信息状态任务最大时间。
+    * `#shouldSyncWhenTimestampDiffers()` ：是否同步应用实例信息，当应用实例信息最后更新时间戳( `lastDirtyTimestamp` )发生改变。
 * TODO ：`#getRetentionTimeInMSInDeltaQueue()`
 * TODO ：`#DeltaRetentionTimerIntervalInMs()`
 

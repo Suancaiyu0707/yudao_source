@@ -66,9 +66,9 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 
 # 2. EurekaInstanceConfig
 
-`com.netflix.appinfo.EurekaInstanceConfig`，Eureka **应用对象**配置**接口**。在下文你会看到 EurekaClientConfig **接口**，两者的区别如下：
+`com.netflix.appinfo.EurekaInstanceConfig`，Eureka **应用实例**配置**接口**。在下文你会看到 EurekaClientConfig **接口**，两者的区别如下：
 
-* EurekaInstanceConfig，重在**应用对象**，例如，应用名、应用的端口等等。此处应用指的是，Application Consumer 和 Application Provider。
+* EurekaInstanceConfig，重在**应用实例**，例如，应用名、应用的端口等等。此处应用指的是，Application Consumer 和 Application Provider。
 * EurekaClientConfig，重在 **Eureka-Client**，例如， 连接的 Eureka-Server 的地址、获取服务提供者列表的频率、注册自身为服务提供者的频率等等。
 
 ![](http://www.iocoder.cn/images/Eureka/2018_04_15/02.jpeg)
@@ -125,7 +125,7 @@ EurekaInstanceConfig 整体类关系如下图：
 
 ## 2.3 AbstractInstanceConfig
 
-`com.netflix.appinfo.AbstractInstanceConfig`，Eureka **应用对象**配置**抽象基类**，主要实现一些相对**通用**的配置，实现代码如下：
+`com.netflix.appinfo.AbstractInstanceConfig`，Eureka **应用实例**配置**抽象基类**，主要实现一些相对**通用**的配置，实现代码如下：
 
 ```Java
 public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
@@ -196,7 +196,7 @@ public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
 
 ## 2.4 PropertiesInstanceConfig
 
-`com.netflix.appinfo.PropertiesInstanceConfig`，基于**配置文件**的 Eureka **应用对象**配置**抽象基类**，实现代码如下：
+`com.netflix.appinfo.PropertiesInstanceConfig`，基于**配置文件**的 Eureka **应用实例**配置**抽象基类**，实现代码如下：
 
 ```Java
 public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig implements EurekaInstanceConfig {
@@ -297,7 +297,7 @@ public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig im
 
 ## 2.5 MyDataCenterInstanceConfig
 
-`com.netflix.appinfo.MyDataCenterInstanceConfig`，非 AWS 数据中心的 Eureka **应用对象**配置**实现类**，实现代码如下：
+`com.netflix.appinfo.MyDataCenterInstanceConfig`，非 AWS 数据中心的 Eureka **应用实例**配置**实现类**，实现代码如下：
 
 ```Java
 public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig implements EurekaInstanceConfig {
@@ -318,13 +318,13 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
 
 ## 2.6 小结
 
-一般情况下，使用 MyDataCenterInstanceConfig 配置 Eureka 应用对象。
+一般情况下，使用 MyDataCenterInstanceConfig 配置 Eureka 应用实例。
 
 在 Spring-Cloud-Eureka 里，**直接**基于 EurekaInstanceConfig 接口重新实现了配置类，实际逻辑差别不大，在[《TODO 标题待定》](#)详细解析。
 
 # 3. InstanceInfo
 
-`com.netflix.appinfo.InstanceInfo`，**应用对象**信息。Eureka-Client 向 Eureka-Server **注册**该对象信息。注册成功后，可以被其他 Eureka-Client **发现**。
+`com.netflix.appinfo.InstanceInfo`，**应用实例**信息。Eureka-Client 向 Eureka-Server **注册**该对象信息。注册成功后，可以被其他 Eureka-Client **发现**。
 
 **本文仅分享 InstanceInfo 的初始化**。InstanceInfo 里和注册发现相关的属性和方法，暂时跳过。
 
@@ -362,10 +362,10 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
  29:             }
  30: 
  31:             // Builder the instance information to be registered with eureka server
- 32:             // 创建 应用对象信息构建器
+ 32:             // 创建 应用实例信息构建器
  33:             InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder(vipAddressResolver);
  34: 
- 35:             // 应用对象编号
+ 35:             // 应用实例编号
  36:             // set the appropriate id for the InstanceInfo, falling back to datacenter Id if applicable, else hostname
  37:             String instanceId = config.getInstanceId();
  38:             DataCenterInfo dataCenterInfo = config.getDataCenterInfo();
@@ -390,7 +390,7 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
  57:                 defaultAddress = config.getIpAddress();
  58:             }
  59: 
- 60:             // 设置 应用对象信息构建器 的 属性
+ 60:             // 设置 应用实例信息构建器 的 属性
  61:             builder.setNamespace(config.getNamespace())
  62:                     .setInstanceId(instanceId)
  63:                     .setAppName(config.getAppname())
@@ -422,7 +422,7 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
  89:                          InstanceStatus.UP);
  90:             }
  91: 
- 92:             // 设置 应用对象信息构建器 的 元数据( Metadata )集合
+ 92:             // 设置 应用实例信息构建器 的 元数据( Metadata )集合
  93:             // Add any user-specific metadata information
  94:             for (Map.Entry<String, String> mapEntry : config.getMetadataMap().entrySet()) {
  95:                 String key = mapEntry.getKey();
@@ -430,10 +430,10 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
  97:                 builder.add(key, value);
  98:             }
  99: 
-100:             // 创建 应用对象信息
+100:             // 创建 应用实例信息
 101:             instanceInfo = builder.build();
 102: 
-103:             // 设置 应用对象信息 的 租约信息
+103:             // 设置 应用实例信息 的 租约信息
 104:             instanceInfo.setLeaseInfo(leaseInfoBuilder.build());
 105:         }
 106:         return instanceInfo;
@@ -488,14 +488,14 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
         ```
         * 使用 `#resolveDeploymentContextBasedVipAddresses()` 方法，将 **VIP地址** 里的 `${(.*?)}` 查找配置文件里的键值进行替换。例如，`${eureka.env}.domain.com`，查找配置文件里的键 `${eureka.env}` 对应值进行替换。TODO【1】：调试下来，发现 Archaius 已经替换，等到找到答案修改此处。
 
-    * 第 32 至 33 行 ：创建应用对象信息构建器( [`com.netflix.appinfo.InstanceInfo.Builder`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
-    * 第 35 至 45 行 ：获得应用对象编号( `instanceId` )。
+    * 第 32 至 33 行 ：创建应用实例信息构建器( [`com.netflix.appinfo.InstanceInfo.Builder`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
+    * 第 35 至 45 行 ：获得应用实例编号( `instanceId` )。
     * 第 47 至 58 行 ：获得主机名。
-    * 第 60 至 78 行 ：设置应用对象信息构建器的属性。
+    * 第 60 至 78 行 ：设置应用实例信息构建器的属性。
     * 第 80 至 90 行 ：TODO【2】isInstanceEnabledOnit
-    * 第 92 至 98 行 ：设置应用对象信息构建器的元数据( Metadata )集合。
-    * 第 100 至 101 行 ：创建应用对象信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
-    * 第 103 至 104 行 ：设置应用对象信息的租约信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
+    * 第 92 至 98 行 ：设置应用实例信息构建器的元数据( Metadata )集合。
+    * 第 100 至 101 行 ：创建应用实例信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
+    * 第 103 至 104 行 ：设置应用实例信息的租约信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
 
 # 4. ApplicationInfoManager
 
@@ -514,15 +514,15 @@ public class ApplicationInfoManager {
      */
     protected final Map<String, StatusChangeListener> listeners;
     /**
-     * 应用对象状态匹配
+     * 应用实例状态匹配
      */
     private final InstanceStatusMapper instanceStatusMapper;
     /**
-     * 应用对象信息
+     * 应用实例信息
      */
     private InstanceInfo instanceInfo;
     /**
-     * 应用对象配置
+     * 应用实例配置
      */
     private EurekaInstanceConfig config;
     
@@ -547,7 +547,7 @@ public class ApplicationInfoManager {
 ```
 
 * `listeners` 属性，状态变更监听器集合。在[《TODO 题目待定》](#)详细解析。
-* `instanceStatusMapper` 属性，应用对象状态匹配。在[《TODO 题目待定》](#)详细解析。
+* `instanceStatusMapper` 属性，应用实例状态匹配。在[《TODO 题目待定》](#)详细解析。
 
 # 666. 彩蛋
 

@@ -17,6 +17,10 @@ permalink: MyCAT/connect-mongodb
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/MyCAT/connect-mongodb/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+**本文主要基于 MyCAT 1.6.5 正式版**  
+
 - [1. 概述](#)
 - [2. 主流程](#)
 - [3. 查询操作](#)
