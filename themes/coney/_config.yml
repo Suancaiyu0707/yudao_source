@@ -93,7 +93,7 @@ baidu_share:
 theme_color:
     background: "#dddddd"
     font: "#817c7c"
-    theme: '#ea6753'
+    theme: '#2E68AA'
     footer: "#ddd"
  ####Baidu search 
 baidu_search:
@@ -102,8 +102,8 @@ baidu_search:
   site: http://zhannei.baidu.com/cse/search  #your can change your site instead the default site
 
 google_analytics:
-  enable: false
-  id:   ## e.g. UA-55273525-1 your google analytics ID.
+  enable: true
+  id: UA-107572620-1
   site: ## e.g. gengbiao.me your google analytics site or set the value as auto.
 ## You MUST upgrade to Universal Analytics first!
 ## https://developers.google.com/analytics/devguides/collection/upgrade/?hl=zh_CN
@@ -128,6 +128,12 @@ highlight:
   line_number: false
   auto_detect: false
   tab_replace:
+
+#theme_color:
+    #background: "#dddddd"
+    #font: "#817c7c"
+    #theme: '#ea6753'
+    #footer: "#ffffff"
 
 #marked:
 #  gfm: true

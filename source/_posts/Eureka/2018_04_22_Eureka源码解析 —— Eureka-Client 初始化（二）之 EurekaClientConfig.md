@@ -80,12 +80,33 @@ EurekaClientConfig 整体类关系如下图：
 
 ## 2.2 配置属性
 
-点击 [EurekaClientConfig](TODOTODO) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
+点击 [EurekaClientConfig](https://github.com/YunaiV/eureka/blob/8b0f67ac33116ee05faad1ff5125034cfcf573bf/eureka-client/src/main/java/com/netflix/discovery/EurekaClientConfig.java) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
 
 * **Region、Zone 相关**
     * `#getRegion()` ：Eureka-Client 所在区域( `region` )。
-    * `#getAvailabilityZones()` ：Eureka-Client 所在地区( `region` ) 可用区( `zone` )集合。
-    * 进步一步理解 Region、Zone 查看[《周立 —— Region、Zone解析》](http://www.itmuch.com/spring-cloud-1/?from=www.iocoder.cn)。
+    * `#getAvailabilityZones()` ：Eureka-Client 所在地区( `region` ) 可用区( `zone` )集合。**该参数虽然是数组，第一个元素代表其所在的可用区**。实现代码如下：
+    
+        ```Java
+        // InstanceInfo.java
+        public static String getZone(String[] availZones, InstanceInfo myInfo) {
+            String instanceZone = ((availZones == null || availZones.length == 0) ? "default"
+                    : availZones[0]);
+            if (myInfo != null
+                    && myInfo.getDataCenterInfo().getName() == DataCenterInfo.Name.Amazon) {
+    
+                String awsInstanceZone = ((AmazonInfo) myInfo.getDataCenterInfo())
+                        .get(AmazonInfo.MetaDataKey.availabilityZone);
+                if (awsInstanceZone != null) {
+                    instanceZone = awsInstanceZone;
+                }
+    
+            }
+            return instanceZone;
+        }
+        ```
+        * x
+    
+   * 进步一步理解 Region、Zone 查看[《周立 —— Region、Zone解析》](http://www.itmuch.com/spring-cloud-1/?from=www.iocoder.cn)。
 * **使用 DNS 获取 Eureka-Server URL 相关**
     * `#shouldUseDnsForFetchingServiceUrls()` ：是否使用 DNS 方式获取 Eureka-Server URL 地址。
     * `#getEurekaServerDNSName()` ：Eureka-Server 的 DNS 名。
@@ -99,10 +120,10 @@ EurekaClientConfig 整体类关系如下图：
     * `#shouldFetchRegistry()` ：是否从 Eureka-Server 拉取注册信息。
     * `#getRegistryFetchIntervalSeconds()` ：从 Eureka-Server 拉取注册信息频率，单位：秒。默认：30 秒。
     * `#shouldFilterOnlyUpInstances()` ：是否过滤，只获取状态为开启( Up )的应用实例集合。
-    * `#fetchRegistryForRemoteRegions()` ：TODO【N】RemoteRegionRegistry。
+    * `#fetchRegistryForRemoteRegions()` ：TODO[0009]：RemoteRegionRegistry
     * `#getCacheRefreshExecutorThreadPoolSize()` ：注册信息缓存刷新线程池大小。
     * `#getCacheRefreshExecutorExponentialBackOffBound()` ：注册信息缓存刷新执行超时后的延迟重试的时间。
-    * `#getRegistryRefreshSingleVipAddress()` ：TODO【1】vip
+    * `#getRegistryRefreshSingleVipAddress()` ：TODO[0010]：getRegistryRefreshSingleVipAddress
 * **注册：向 Eureka-Server 注册自身服务**
     * `#shouldRegisterWithEureka()` ：是否向 Eureka-Server 注册自身服务。
     * `#shouldUnregisterOnShutdown()` ：是否向 Eureka-Server 取消注册自身服务，当进程关闭时。
@@ -201,7 +222,7 @@ EurekaTransportConfig 整体类关系如下图：
 
 ## 3.2 配置属性
 
-TODO 后面看到那部分源码在补充，没理顺。
+TODO[0011]：EurekaTransportConfig 后面看到那部分源码在补充，没理顺。
 
 ## 3.3 DefaultEurekaTransportConfig
 

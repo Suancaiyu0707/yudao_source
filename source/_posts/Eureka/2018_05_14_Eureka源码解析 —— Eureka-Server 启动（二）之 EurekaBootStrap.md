@@ -1,4 +1,4 @@
-title: Eureka 源码解析 —— Eureka-Server 启动（二）之 ServerConfig
+title: Eureka 源码解析 —— Eureka-Server 启动（二）之 EurekaBootStrap
 date: 2018-05-14
 tags:
 categories: Eureka
@@ -232,7 +232,7 @@ if (isAws(applicationInfoManager.getInfo())) { // AWS 相关，跳过
 
     ![](http://www.iocoder.cn/images/Eureka/2018_05_14/02.png)
 
-* 本文不展开分享，在[TODO](TODO)详细解析。
+* 本文不展开分享，在[《Eureka 源码解析 —— 注册表 InstanceRegistry 类关系》](http://www.iocoder.cn/Eureka/instance-registry-class-diagram/?self)详细解析。
 
 ### 2.2.6 创建 Eureka-Server 集群节点集合
 
@@ -247,7 +247,7 @@ PeerEurekaNodes peerEurekaNodes = getPeerEurekaNodes(
 );
 ```
 
-* `com.netflix.eureka.cluster.PeerEurekaNodes`，Eureka-Server 集群节点集合，在[TODO](TODO)详细解析。
+* `com.netflix.eureka.cluster.PeerEurekaNodes`，Eureka-Server 集群节点集合，在[《TODO[0019]：集群初始化》](#)详细解析。
 
 ### 2.2.7 创建 Eureka-Server 上下文
 
@@ -366,7 +366,7 @@ int registryCount = registry.syncUp();
 registry.openForTraffic(applicationInfoManager, registryCount);
 ```
 
-* 本文不展开分享，在[TODO](TODO)详细解析。
+* 本文不展开分享，在[《TODO[0019]：集群初始化》](#)详细解析。
 
 ### 2.2.11 注册监控
 
@@ -431,7 +431,7 @@ public void doFilter(ServletRequest request, ServletResponse response,
 
 ## 3.3 RateLimitingFilter
 
-`com.netflix.eureka.RateLimitingFilter`，请求限流过滤器。在[TODO](TODO)详细解析。
+`com.netflix.eureka.RateLimitingFilter`，请求限流过滤器。在[《TODO[0020]：限流》](#)详细解析。
 
 ## 3.4 GzipEncodingEnforcingFilter
 

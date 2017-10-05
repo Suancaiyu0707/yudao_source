@@ -36,7 +36,7 @@ permalink: Eureka/instance-registry-class-diagram
 ![](http://www.iocoder.cn/images/Eureka/2018_05_21/01.png)
 
 * `com.netflix.eureka.registry.AwsInstanceRegistry`，主要用于亚马逊 AWS，跳过。
-* `com.netflix.eureka.registry.RemoteRegionRegistry`，笔者暂时不太理解它的用途。目前猜测 Eureka-Server 集群和集群之间的注册信息的交互方式。查阅官方资料，[《Add ability to retrieve instances from any remote region》](https://github.com/Netflix/eureka/issues/29) 在做了简单介绍。翻看目前网络上的博客、书籍、项目实战，暂时都没提及此块。估摸和亚马逊 AWS 跨区域( `region` ) 机制有一定关系，先暂时跳过。有了解此块的同学，麻烦告知下笔者，万分感谢。TODO：疑问：RemoteRegionRegistry。
+* `com.netflix.eureka.registry.RemoteRegionRegistry`，笔者暂时不太理解它的用途。目前猜测 Eureka-Server 集群和集群之间的注册信息的交互方式。查阅官方资料，[《Add ability to retrieve instances from any remote region》](https://github.com/Netflix/eureka/issues/29) 在做了简单介绍。翻看目前网络上的博客、书籍、项目实战，暂时都没提及此块。估摸和亚马逊 AWS 跨区域( `region` ) 机制有一定关系，先暂时跳过。有了解此块的同学，麻烦告知下笔者，万分感谢。TODO[0009]：RemoteRegionRegistry。
 * **蓝框**部分，本文主角。
 
 # 3. LookupService

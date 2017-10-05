@@ -56,13 +56,13 @@ permalink: Eureka/eureka-server-init-first
 
 ## 2.2 配置属性
 
-点击 [EurekaServerConfig](TODOTODO) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
+点击 [EurekaServerConfig](https://github.com/YunaiV/eureka/blob/8b0f67ac33116ee05faad1ff5125034cfcf573bf/eureka-core/src/main/java/com/netflix/eureka/EurekaServerConfig.java) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
 
 * **请求认证相关**
     * Eureka-Server 未实现认证。在 Spring-Cloud-Eureka-Server，通过 `spring-boot-starter-security` 模块支持。[《spring cloud-给Eureka Server加上安全的用户认证》](http://blog.csdn.net/liuchuanhong1/article/details/54729556)有详细解析。
     * `#shouldLogIdentityHeaders()` ：打印访问的客户端名和版本号，配合 [Netflix Servo](https://github.com/Netflix/servo) 实现监控信息采集。
 * **请求限流相关**
-    * TODO （后文链接）详细解析 
+    * TODO[0020]：限流
     * `#isRateLimiterEnabled()` ：请求限流是否开启。
     * `#isRateLimiterThrottleStandardClients()` ：是否限制**非标准**客户端的访问。**标准客户端**通过请求头( `header` )的 `"DiscoveryIdentity-Name"` 来判断，是否在标准客户端名集合里。
     * `#getRateLimiterPrivilegedClients()` ：**标准**客户端名集合。默认包含`"DefaultClient"` 和 `"DefaultServer"` 。
@@ -70,12 +70,12 @@ permalink: Eureka/eureka-server-init-first
     * `#getRateLimiterRegistryFetchAverageRate()` ：**增量**拉取注册信息的速率限制。
     * `#getRateLimiterFullFetchAverageRate()` ：**全量**拉取注册信息的速率限制。
 * **拉取注册信息请求响应缓存相关**
-    * TODO （后文链接）详细解析 
+    * TODO[0014]：全量拉取
     * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**永不过期**的**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
     * `#getResponseCacheUpdateIntervalMs()` ：**只读缓存**更新频率，单位：毫秒。**只读缓存**定时更新任务只更新读取过请求 (`com.netflix.eureka.registry.Key`)，因此虽然永不过期，也会存在读取不到的情况。
     * `#getResponseCacheAutoExpirationInSeconds()` ：**读写缓存**写入后过期时间，单位：秒。
-* **注册的应用实例信息的租约相关**
-    * TODO （后文链接）详细解析 
+* **注册的应用实例的租约过期相关**
+    * TODO[0017]：租约过期
     * `#shouldEnableSelfPreservation()` ：是否开启自我保护模式。
         
         > FROM [周立——《理解Eureka的自我保护模式》](http://www.itmuch.com/spring-cloud-sum/understanding-eureka-self-preservation/?from=www.iocoder.cn)  
@@ -86,27 +86,27 @@ permalink: Eureka/eureka-server-init-first
     * `#getRenewalPercentThreshold()` ：开启自我保护模式比例，超过该比例后开启自我保护模式。
     * `#getRenewalThresholdUpdateIntervalMs()` ：自我保护模式比例更新定时任务执行频率，单位：毫秒。
     * `#getEvictionIntervalTimerInMs()` ：租约过期定时任务执行频率，单位：毫秒。
-* **Eureka-Server 集群读取相关**
-    * TODO （后文链接）详细解析 
-    * `#getRemoteRegionUrlsWithName()` ：TODO【N】RemoteRegionRegistry。
+* **Eureka-Server 远程节点( 非集群 )读取相关**
+    * TODO[0009]：RemoteRegionRegistry
+    * `#getRemoteRegionUrlsWithName()` ：TODO[0009]：RemoteRegionRegistry。
         * `key` ：Eureka-Server 区域( `region` )
         * `value` ：Eureka-Server 地址
-   * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。TODOTODO（后面源码在细读，可能要修正）
-    * `#getRemoteRegionAppWhitelist()` ：TODO【N】RemoteRegionRegistry。
-    * `#getRemoteRegionRegistryFetchInterval()` ：TODO【N】RemoteRegionRegistry。
+    * `#getRemoteRegionAppWhitelist()` ：TODO[0009]：RemoteRegionRegistry。
+    * `#getRemoteRegionRegistryFetchInterval()` ：TODO[0009]：RemoteRegionRegistry。
     * `#getRegistrySyncRetries()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取失败重试次数。
     * `#getRegistrySyncRetryWaitMs()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取失败等待( `sleep` )间隔，单位：毫秒。 
-    * `#getRemoteRegionFetchThreadPoolSize()` ：TODO【N】RemoteRegionRegistry。
+    * `#getRemoteRegionFetchThreadPoolSize()` ：TODO[0009]：RemoteRegionRegistry。
     * `#disableTransparentFallbackToOtherRegion()` ：是否禁用本地读取不到注册信息，从远程 Eureka-Server 读取。
-    * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODOTODO（后面源码在细读，可能要修正）
 * **Eureka-Server 集群同步相关**
-    * TODO （后文链接）详细解析 
+    * TODO[0021]：集群同步
     * `#getMaxThreadsForPeerReplication()` ：同步应用实例信息最大线程数。
     * `#getMaxElementsInPeerReplicationPool()` ：待执行同步应用实例信息事件缓冲最大数量。
     * `#getMaxTimeForReplication()` ：执行单个同步应用实例信息状态任务最大时间。
     * `#shouldSyncWhenTimestampDiffers()` ：是否同步应用实例信息，当应用实例信息最后更新时间戳( `lastDirtyTimestamp` )发生改变。
-* TODO ：`#getRetentionTimeInMSInDeltaQueue()`
-* TODO ：`#DeltaRetentionTimerIntervalInMs()`
+    * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODO[0019]：集群初始化
+    * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。TTODO[0019]：集群初始化
+* `#getRetentionTimeInMSInDeltaQueue()`：TODO[0018]：增量拉取
+* `#DeltaRetentionTimerIntervalInMs()`：TODO[0018]：增量拉取
 
 ## 2.3 DefaultEurekaServerConfig
 

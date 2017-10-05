@@ -85,7 +85,7 @@ EurekaInstanceConfig 整体类关系如下图：
 
 ## 2.2 配置属性
 
-点击 [EurekaInstanceConfig](TODOTODO) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
+点击 [EurekaInstanceConfig](https://github.com/YunaiV/eureka/blob/8b0f67ac33116ee05faad1ff5125034cfcf573bf/eureka-client/src/main/java/com/netflix/appinfo/EurekaInstanceConfig.java) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
 
 * `#getLeaseRenewalIntervalInSeconds()` ：租约续约频率，单位：秒。应用不断通过按照该频率发送心跳给 Eureka-Server 以达到续约的作用。当 Eureka-Server 超过最大频率未收到续约（心跳），契约失效，进行应用移除。应用移除后，其他应用无法从 Eureka-Server 获取该应用。
 * `#getLeaseExpirationDurationInSeconds()` ：契约过期时间，单位：秒。
@@ -119,9 +119,9 @@ EurekaInstanceConfig 整体类关系如下图：
     ```
     * 每个属性**最前面**的 `eureka` 即是配置命名空间，一般情况无需修改。
 
-* TODO 健康检查
-* TODO getDefaultAddressResolutionOrder
-* TODO isInstanceEnabledOnit
+* TODO[0004]：健康检查
+* TODO[0006]：getDefaultAddressResolutionOrder
+* `#isInstanceEnabledOnit()` ：应用初始化后是否开启。在[「3. InstanceInfo」](#)详细解析。
 
 ## 2.3 AbstractInstanceConfig
 
@@ -320,7 +320,7 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
 
 一般情况下，使用 MyDataCenterInstanceConfig 配置 Eureka 应用实例。
 
-在 Spring-Cloud-Eureka 里，**直接**基于 EurekaInstanceConfig 接口重新实现了配置类，实际逻辑差别不大，在[《TODO 标题待定》](#)详细解析。
+在 Spring-Cloud-Eureka 里，**直接**基于 EurekaInstanceConfig 接口重新实现了配置类，实际逻辑差别不大，在[TODO[0007] ：《Spring-Cloud-Eureka-Client》](#)详细解析。
 
 # 3. InstanceInfo
 
@@ -410,7 +410,7 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
  77:                     .setHealthCheckUrls(config.getHealthCheckUrlPath(),
  78:                             config.getHealthCheckUrl(), config.getSecureHealthCheckUrl());
  79: 
- 80:             // TODO
+ 80:             // 应用初始化后是否开启
  81:             // Start off with the STARTING state to avoid traffic
  82:             if (!config.isInstanceEnabledOnit()) {
  83:                 InstanceStatus initialStatus = InstanceStatus.STARTING;
@@ -486,13 +486,16 @@ public class MyDataCenterInstanceConfig extends PropertiesInstanceConfig impleme
             }
         }
         ```
-        * 使用 `#resolveDeploymentContextBasedVipAddresses()` 方法，将 **VIP地址** 里的 `${(.*?)}` 查找配置文件里的键值进行替换。例如，`${eureka.env}.domain.com`，查找配置文件里的键 `${eureka.env}` 对应值进行替换。TODO【1】：调试下来，发现 Archaius 已经替换，等到找到答案修改此处。
+        * 使用 `#resolveDeploymentContextBasedVipAddresses()` 方法，将 **VIP地址** 里的 `${(.*?)}` 查找配置文件里的键值进行替换。例如，`${eureka.env}.domain.com`，查找配置文件里的键 `${eureka.env}` 对应值进行替换。TODO[0005]：调试下来，发现 Archaius 已经替换，等到找到答案修改此处。
 
     * 第 32 至 33 行 ：创建应用实例信息构建器( [`com.netflix.appinfo.InstanceInfo.Builder`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
     * 第 35 至 45 行 ：获得应用实例编号( `instanceId` )。
     * 第 47 至 58 行 ：获得主机名。
     * 第 60 至 78 行 ：设置应用实例信息构建器的属性。
-    * 第 80 至 90 行 ：TODO【2】isInstanceEnabledOnit
+    * 第 80 至 90 行 ：应用初始化后是否开启。
+        * 第 82 至 85 行 ：应用**不开启**，应用实例处于 STARTING 状态。
+        * 第 86 至 90 行 ：应用**开启**，应用实例处于 UP 状态。
+        * **使用应用初始化后不开启**，可以通过调用 `ApplicationInfoManager#setInstanceStatus(...)` 方法改变应用实例状态，在[《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》「2.1 应用实例信息复制器」](http://www.iocoder.cn/Eureka/instance-registry-register/?self)有详细解析。
     * 第 92 至 98 行 ：设置应用实例信息构建器的元数据( Metadata )集合。
     * 第 100 至 101 行 ：创建应用实例信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
     * 第 103 至 104 行 ：设置应用实例信息的租约信息( [`com.netflix.appinfo.InstanceInfo`](https://github.com/YunaiV/eureka/blob/671d7fc20bd6353040431d6e298eac5f82293497/eureka-client/src/main/java/com/netflix/appinfo/InstanceInfo.java) )。
@@ -546,8 +549,24 @@ public class ApplicationInfoManager {
 }
 ```
 
-* `listeners` 属性，状态变更监听器集合。在[《TODO 题目待定》](#)详细解析。
-* `instanceStatusMapper` 属性，应用实例状态匹配。在[《TODO 题目待定》](#)详细解析。
+* `listeners` 属性，状态变更监听器集合。在[《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》「2.1 应用实例信息复制器」](http://www.iocoder.cn/Eureka/instance-registry-register/?self)有详细解析。
+* `instanceStatusMapper` 属性，应用实例状态匹配。实现代码如下：
+
+    ```Java
+    // ApplicationInfoManager.java
+    
+    public static interface InstanceStatusMapper {
+    }
+    
+    private static final InstanceStatusMapper NO_OP_MAPPER = new InstanceStatusMapper() {
+       @Override
+       public InstanceStatus map(InstanceStatus prev) {
+           return prev;
+       }
+    };
+    ```
+    * `#map` 方法，根据传入 `pre` 参数，转换成对应的应用实例状态。
+    * 默认情况下，使用 NO_OP_MAPPER 。一般情况下，不需要关注该类。
 
 # 666. 彩蛋
 
