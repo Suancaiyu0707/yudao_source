@@ -1,0 +1,592 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>芋道源码 —— 纯源码解析BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="王文斌">
+    
+    <meta name="description" content="1. 概述
+本文主要分享 Eureka-Client 向 Eureka-Server 续租应用实例的过程。
+
+FROM 《深度剖析服务发现组件Netflix Eureka》 二次编辑
+
+
+
+蓝框部分，为本文重点。
+非蓝框部分，Eureka-Server 集群间复制注册的应用实例信息，不在本文内容范畴">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. Eureka-Client 发起续租</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 初始化定时任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 HeartbeatThread</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 TimedSupervisorTask</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. Eureka-Server 接收续租</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 接收续租请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 续租应用实例信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+    </aside>
+</div>
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Eureka/2018_06_01_Eureka源码解析 —— 应用实例注册发现 （二）之续租/" title="" itemprop="url"></a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="王文斌">王文斌</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2017-10-05T11:04:28.000Z" itemprop="datePublished">2017-10-05</time>-->
+    <!--更新日期:<time datetime="2017-10-05T15:53:48.000Z" itemprop="dateModified">2017-10-05</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<h1>1. 概述</h1>
+<p>本文主要分享 <strong>Eureka-Client 向 Eureka-Server 续租应用实例的过程</strong>。</p>
+<blockquote>
+<p>FROM <a href="%E3%80%8Ahttp://techshow.ctrip.com/archives/1699.html%E3%80%8B">《深度剖析服务发现组件Netflix Eureka》</a> 二次编辑<br>
+<a href="../../../images/Eureka/2018_06_01/01.jpeg"></a></p>
+</blockquote>
+<ul>
+<li><strong>蓝框</strong>部分，为本文重点。</li>
+<li>非<strong>蓝框</strong>部分，Eureka-Server 集群间复制注册的应用实例信息，不在本文内容范畴。</li>
+</ul>
+<p><strong>推荐 Spring Cloud 书籍</strong>：</p>
+<ul>
+<li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
+<li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li>
+<li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
+</ul>
+<h1>2. Eureka-Client 发起续租</h1>
+<p>Eureka-Client 向 Eureka-Server 发起注册应用实例成功后获得租约 ( Lease )。
+Eureka-Client <strong>固定间隔</strong>向 Eureka-Server 发起<strong>续租</strong>( renew )，避免租约过期。</p>
+<p>默认情况下，租约有效期为 90 秒，续租频率为 30 秒。两者比例为 1 : 3 ，保证在网络异常等情况下，有三次重试的机会。</p>
+<h2>2.1 初始化定时任务</h2>
+<p>Eureka-Client 在<a href="http://www.iocoder.cn/Eureka/eureka-client-init-third/?self">初始化</a>过程中，创建<strong>心跳</strong>线程，<strong>固定间隔</strong>向 Eureka-Server 发起<strong>续租</strong>( renew )。实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// DiscoveryClient.java</span></div><div class="line"></div><div class="line">DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfig config, AbstractDiscoveryClientOptionalArgs args,</div><div class="line">               Provider&lt;BackupRegistry&gt; backupRegistryProvider) &#123;</div><div class="line">    <span class="comment">// ... 省略无关代码</span></div><div class="line">    scheduler = Executors.newScheduledThreadPool(<span class="number">2</span>,</div><div class="line">               <span class="keyword">new</span> ThreadFactoryBuilder()</div><div class="line">                       .setNameFormat(<span class="string">"DiscoveryClient-%d"</span>)</div><div class="line">                       .setDaemon(<span class="keyword">true</span>)</div><div class="line">                       .build());</div><div class="line"></div><div class="line">    heartbeatExecutor = <span class="keyword">new</span> ThreadPoolExecutor(</div><div class="line">              <span class="number">1</span>, clientConfig.getHeartbeatExecutorThreadPoolSize(), <span class="number">0</span>, TimeUnit.SECONDS,</div><div class="line">              <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;(),</div><div class="line">              <span class="keyword">new</span> ThreadFactoryBuilder()</div><div class="line">                      .setNameFormat(<span class="string">"DiscoveryClient-HeartbeatExecutor-%d"</span>)</div><div class="line">                      .setDaemon(<span class="keyword">true</span>)</div><div class="line">                      .build()</div><div class="line">    );  <span class="comment">// use direct handoff</span></div><div class="line">      </div><div class="line">    <span class="comment">// ... 省略无关代码</span></div><div class="line">  </div><div class="line">    <span class="comment">// 【3.2.14】初始化定时任务</span></div><div class="line">    initScheduledTasks();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initScheduledTasks</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 向 Eureka-Server 心跳（续租）执行器</span></div><div class="line">    <span class="keyword">if</span> (clientConfig.shouldRegisterWithEureka()) &#123;</div><div class="line">        <span class="keyword">int</span> renewalIntervalInSecs = instanceInfo.getLeaseInfo().getRenewalIntervalInSecs(); <span class="comment">// 续租频率</span></div><div class="line">        <span class="keyword">int</span> expBackOffBound = clientConfig.getHeartbeatExecutorExponentialBackOffBound(); <span class="comment">//</span></div><div class="line">        logger.info(<span class="string">"Starting heartbeat executor: "</span> + <span class="string">"renew interval is: "</span> + renewalIntervalInSecs);</div><div class="line"></div><div class="line">        <span class="comment">// Heartbeat timer</span></div><div class="line">        scheduler.schedule(</div><div class="line">               <span class="keyword">new</span> TimedSupervisorTask(</div><div class="line">                       <span class="string">"heartbeat"</span>,</div><div class="line">                       scheduler,</div><div class="line">                       heartbeatExecutor,</div><div class="line">                       renewalIntervalInSecs,</div><div class="line">                       TimeUnit.SECONDS,</div><div class="line">                       expBackOffBound,</div><div class="line">                       <span class="keyword">new</span> HeartbeatThread()</div><div class="line">               ),</div><div class="line">               renewalIntervalInSecs, TimeUnit.SECONDS);</div><div class="line">               </div><div class="line">          <span class="comment">// ... 省略无关代码</span></div><div class="line">     &#125;</div><div class="line">     <span class="comment">// ... 省略无关代码</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>scheduler</code>，定时任务服务，用于定时触发心跳( 续租 )。细心如你，会发现任务提交的方式是 <code>ScheduledExecutorService#schedule(...)</code> 方法，<strong>无法固定频率执行心跳</strong>！！！答案在 <a href="#">「2.3 TimedSupervisorTask」</a> 揭晓。</li>
+<li><code>heartbeatExecutor</code>，心跳任务执行线程池。为什么有 <code>scheduler</code> 的情况下，还有 <code>heartbeatExecutor</code> ？？？答案也在 <a href="#">「2.3 TimedSupervisorTask」</a> 揭晓。</li>
+<li>HeartbeatThread，心跳线程，在<a href="#">「2.2 TimedSupervisorTask」</a> 详细解析。</li>
+</ul>
+<h2>2.2 HeartbeatThread</h2>
+<p><code>com.netflix.discovery.DiscoveryClient.HeartbeatThread</code>，心跳线程，<strong>实现</strong>执行 Eureka-Client 向 Eureka-Server 发起<strong>续租</strong>( renew )请求。实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// DiscoveryClient.java</span></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* 最后成功向 Eureka-Server 心跳时间戳</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">long</span> lastSuccessfulHeartbeatTimestamp = -<span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">HeartbeatThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">if</span> (renew()) &#123;</div><div class="line">           lastSuccessfulHeartbeatTimestamp = System.currentTimeMillis();</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>
+<p>调用 <code>#renew</code> 方法，执行续租逻辑。实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// DiscoveryClient.java</span></div><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">renew</span><span class="params">()</span> </span>&#123;</div><div class="line">   EurekaHttpResponse&lt;InstanceInfo&gt; httpResponse;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">       httpResponse = eurekaTransport.registrationClient.sendHeartBeat(instanceInfo.getAppName(), instanceInfo.getId(), instanceInfo, <span class="keyword">null</span>);</div><div class="line">       logger.debug(<span class="string">"&#123;&#125; - Heartbeat status: &#123;&#125;"</span>, PREFIX + appPathIdentifier, httpResponse.getStatusCode());</div><div class="line">       <span class="keyword">if</span> (httpResponse.getStatusCode() == <span class="number">404</span>) &#123;</div><div class="line">           REREGISTER_COUNTER.increment();</div><div class="line">           logger.info(<span class="string">"&#123;&#125; - Re-registering apps/&#123;&#125;"</span>, PREFIX + appPathIdentifier, instanceInfo.getAppName());</div><div class="line">           <span class="keyword">long</span> timestamp = instanceInfo.setIsDirtyWithTime();</div><div class="line">           <span class="comment">// 发起注册</span></div><div class="line">           <span class="keyword">boolean</span> success = register();</div><div class="line">           <span class="keyword">if</span> (success) &#123;</div><div class="line">               instanceInfo.unsetIsDirty(timestamp);</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">return</span> success;</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> httpResponse.getStatusCode() == <span class="number">200</span>;</div><div class="line">   &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">       logger.error(<span class="string">"&#123;&#125; - was unable to send heartbeat!"</span>, PREFIX + appPathIdentifier, e);</div><div class="line">       <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>
+<p>调用 <code>AbstractJerseyEurekaHttpClient#sendHeartBeat(...)</code> 方法，发起<strong>续租请求</strong>，实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// AbstractJerseyEurekaHttpClient.java</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> EurekaHttpResponse&lt;InstanceInfo&gt; <span class="title">sendHeartBeat</span><span class="params">(String appName, String id, InstanceInfo info, InstanceStatus overriddenStatus)</span> </span>&#123;</div><div class="line">   String urlPath = <span class="string">"apps/"</span> + appName + <span class="string">'/'</span> + id;</div><div class="line">   ClientResponse response = <span class="keyword">null</span>;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">       WebResource webResource = jerseyClient.resource(serviceUrl)</div><div class="line">               .path(urlPath)</div><div class="line">               .queryParam(<span class="string">"status"</span>, info.getStatus().toString())</div><div class="line">               .queryParam(<span class="string">"lastDirtyTimestamp"</span>, info.getLastDirtyTimestamp().toString());</div><div class="line">       <span class="keyword">if</span> (overriddenStatus != <span class="keyword">null</span>) &#123;</div><div class="line">           webResource = webResource.queryParam(<span class="string">"overriddenstatus"</span>, overriddenStatus.name());</div><div class="line">       &#125;</div><div class="line">       Builder requestBuilder = webResource.getRequestBuilder();</div><div class="line">       addExtraHeaders(requestBuilder);</div><div class="line">       response = requestBuilder.put(ClientResponse.class);</div><div class="line">       EurekaHttpResponseBuilder&lt;InstanceInfo&gt; eurekaResponseBuilder = anEurekaHttpResponse(response.getStatus(), InstanceInfo.class).headers(headersOf(response));</div><div class="line">       <span class="keyword">if</span> (response.hasEntity()) &#123;</div><div class="line">           eurekaResponseBuilder.entity(response.getEntity(InstanceInfo.class));</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> eurekaResponseBuilder.build();</div><div class="line">   &#125; <span class="keyword">finally</span> &#123;</div><div class="line">       <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</div><div class="line">           logger.debug(<span class="string">"Jersey HTTP PUT &#123;&#125;/&#123;&#125;; statusCode=&#123;&#125;"</span>, serviceUrl, urlPath, response == <span class="keyword">null</span> ? <span class="string">"N/A"</span> : response.getStatus());</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">if</span> (response != <span class="keyword">null</span>) &#123;</div><div class="line">           response.close();</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>PUT 请求 Eureka-Server 的 <code>apps/${APP_NAME}/${INSTANCE_INFO_ID}</code> 接口，参数为 <code>status</code>、<code>lastDirtyTimestamp</code>，实现续租。</li>
+</ul>
+</li>
+<li>
+<p>调用 <code>AbstractJerseyEurekaHttpClient#register(...)</code> 方法，当 Eureka-Server <strong>不存在租约</strong>时，重新发起注册，在<a href="http://www.iocoder.cn/Eureka/instance-registry-register/?self">《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》</a>有详细解析。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2>2.3 TimedSupervisorTask</h2>
+<p><code>com.netflix.discovery.TimedSupervisorTask</code>，监管<strong>定时任务</strong>的任务。</p>
+<blockquote>
+<p>A supervisor task that schedules subtasks while enforce a timeout.</p>
+</blockquote>
+<p>创建 TimedSupervisorTask 代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimedSupervisorTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Counter timeoutCounter;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Counter rejectedCounter;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Counter throwableCounter;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LongGauge threadPoolLevelGauge;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 定时任务服务</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService scheduler;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 执行子任务线程池</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ThreadPoolExecutor executor;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 子任务执行超时时间</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> timeoutMillis;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 子任务</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Runnable task;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 当前任子务执行频率</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AtomicLong delay;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 最大子任务执行频率</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * 子任务执行超时情况下使用</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> maxDelay;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimedSupervisorTask</span><span class="params">(String name, ScheduledExecutorService scheduler, ThreadPoolExecutor executor,</span></span></div><div class="line"><span class="function"><span class="params">                               <span class="keyword">int</span> timeout, TimeUnit timeUnit, <span class="keyword">int</span> expBackOffBound, Runnable task)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.scheduler = scheduler;</div><div class="line">        <span class="keyword">this</span>.executor = executor;</div><div class="line">        <span class="keyword">this</span>.timeoutMillis = timeUnit.toMillis(timeout);</div><div class="line">        <span class="keyword">this</span>.task = task;</div><div class="line">        <span class="keyword">this</span>.delay = <span class="keyword">new</span> AtomicLong(timeoutMillis);</div><div class="line">        <span class="keyword">this</span>.maxDelay = timeoutMillis * expBackOffBound;</div><div class="line"></div><div class="line">        <span class="comment">// Initialize the counters and register.</span></div><div class="line">        timeoutCounter = Monitors.newCounter(<span class="string">"timeouts"</span>);</div><div class="line">        rejectedCounter = Monitors.newCounter(<span class="string">"rejectedExecutions"</span>);</div><div class="line">        throwableCounter = Monitors.newCounter(<span class="string">"throwables"</span>);</div><div class="line">        threadPoolLevelGauge = <span class="keyword">new</span> LongGauge(MonitorConfig.builder(<span class="string">"threadPoolUsed"</span>).build());</div><div class="line">        Monitors.registerObject(name, <span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>scheduler</code> ，定时任务服务，用于定时【<strong>发起</strong>】子任务。</li>
+<li><code>executor</code> ，执行子任务线程池，用于【<strong>提交</strong>】子任务执行。</li>
+<li><code>task</code> ，子任务。</li>
+<li><code>timeoutMillis</code> ，子任务执行超时时间，单位：毫秒。</li>
+<li><code>delay</code> ，当前子任务执行频率，单位：毫秒。值等于 <code>timeout</code> 参数。</li>
+<li><code>maxDelay</code> ，<strong>最大</strong>子任务执行频率，单位：毫秒。值等于 <code>timeout * expBackOffBound</code> 参数。</li>
+</ul>
+<p><a href="../../../images/Eureka/2018_06_01/02.png"></a></p>
+<ul>
+<li><code>scheduler</code> 初始化延迟执行 TimedSupervisorTask 。</li>
+<li>TimedSupervisorTask 执行时，提交 <code>task</code> 到 <code>executor</code> 执行任务。
+<ul>
+<li>当 <code>task</code> 执行正常，TimedSupervisorTask <strong>再次</strong>提交<strong>自己</strong>到<code>scheduler</code> 延迟 <code>timeoutMillis</code> 执行。</li>
+<li>当 <code>task</code> 执行超时，重新计算延迟时间( 不允许超过 <code>maxDelay</code> )，<strong>再次</strong>提交<strong>自己</strong>到<code>scheduler</code> 延迟执行。</li>
+</ul>
+</li>
+</ul>
+<p>实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// TimedSupervisorTask.java</span></div><div class="line">  <span class="number">1</span>: <span class="meta">@Override</span></div><div class="line">  <span class="number">2</span>: <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="number">3</span>:     Future&lt;?&gt; future = <span class="keyword">null</span>;</div><div class="line">  <span class="number">4</span>:     <span class="keyword">try</span> &#123;</div><div class="line">  <span class="number">5</span>:         <span class="comment">// 提交 任务</span></div><div class="line">  <span class="number">6</span>:         future = executor.submit(task);</div><div class="line">  <span class="number">7</span>:         <span class="comment">//</span></div><div class="line">  <span class="number">8</span>:         threadPoolLevelGauge.set((<span class="keyword">long</span>) executor.getActiveCount());</div><div class="line">  <span class="number">9</span>:         <span class="comment">// 等待任务 执行完成 或 超时</span></div><div class="line"> <span class="number">10</span>:         future.get(timeoutMillis, TimeUnit.MILLISECONDS);  <span class="comment">// block until done or timeout</span></div><div class="line"> <span class="number">11</span>:         <span class="comment">// 设置 下一次任务执行频率</span></div><div class="line"> <span class="number">12</span>:         delay.set(timeoutMillis);</div><div class="line"> <span class="number">13</span>:         <span class="comment">//</span></div><div class="line"> <span class="number">14</span>:         threadPoolLevelGauge.set((<span class="keyword">long</span>) executor.getActiveCount());</div><div class="line"> <span class="number">15</span>:     &#125; <span class="keyword">catch</span> (TimeoutException e) &#123;</div><div class="line"> <span class="number">16</span>:         logger.error(<span class="string">"task supervisor timed out"</span>, e);</div><div class="line"> <span class="number">17</span>:         timeoutCounter.increment(); <span class="comment">//</span></div><div class="line"> <span class="number">18</span>: </div><div class="line"> <span class="number">19</span>:         <span class="comment">// 设置 下一次任务执行频率</span></div><div class="line"> <span class="number">20</span>:         <span class="keyword">long</span> currentDelay = delay.get();</div><div class="line"> <span class="number">21</span>:         <span class="keyword">long</span> newDelay = Math.min(maxDelay, currentDelay * <span class="number">2</span>);</div><div class="line"> <span class="number">22</span>:         delay.compareAndSet(currentDelay, newDelay);</div><div class="line"> <span class="number">23</span>: </div><div class="line"> <span class="number">24</span>:     &#125; <span class="keyword">catch</span> (RejectedExecutionException e) &#123;</div><div class="line"> <span class="number">25</span>:         <span class="keyword">if</span> (executor.isShutdown() || scheduler.isShutdown()) &#123;</div><div class="line"> <span class="number">26</span>:             logger.warn(<span class="string">"task supervisor shutting down, reject the task"</span>, e);</div><div class="line"> <span class="number">27</span>:         &#125; <span class="keyword">else</span> &#123;</div><div class="line"> <span class="number">28</span>:             logger.error(<span class="string">"task supervisor rejected the task"</span>, e);</div><div class="line"> <span class="number">29</span>:         &#125;</div><div class="line"> <span class="number">30</span>: </div><div class="line"> <span class="number">31</span>:         rejectedCounter.increment(); <span class="comment">//</span></div><div class="line"> <span class="number">32</span>:     &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line"> <span class="number">33</span>:         <span class="keyword">if</span> (executor.isShutdown() || scheduler.isShutdown()) &#123;</div><div class="line"> <span class="number">34</span>:             logger.warn(<span class="string">"task supervisor shutting down, can't accept the task"</span>);</div><div class="line"> <span class="number">35</span>:         &#125; <span class="keyword">else</span> &#123;</div><div class="line"> <span class="number">36</span>:             logger.error(<span class="string">"task supervisor threw an exception"</span>, e);</div><div class="line"> <span class="number">37</span>:         &#125;</div><div class="line"> <span class="number">38</span>: </div><div class="line"> <span class="number">39</span>:         throwableCounter.increment(); <span class="comment">//</span></div><div class="line"> <span class="number">40</span>:     &#125; <span class="keyword">finally</span> &#123;</div><div class="line"> <span class="number">41</span>:         <span class="comment">// 取消 未完成的任务</span></div><div class="line"> <span class="number">42</span>:         <span class="keyword">if</span> (future != <span class="keyword">null</span>) &#123;</div><div class="line"> <span class="number">43</span>:             future.cancel(<span class="keyword">true</span>);</div><div class="line"> <span class="number">44</span>:         &#125;</div><div class="line"> <span class="number">45</span>: </div><div class="line"> <span class="number">46</span>:         <span class="comment">// 调度 下次任务</span></div><div class="line"> <span class="number">47</span>:         <span class="keyword">if</span> (!scheduler.isShutdown()) &#123;</div><div class="line"> <span class="number">48</span>:             scheduler.schedule(<span class="keyword">this</span>, delay.get(), TimeUnit.MILLISECONDS);</div><div class="line"> <span class="number">49</span>:         &#125;</div><div class="line"> <span class="number">50</span>:     &#125;</div><div class="line"> <span class="number">51</span>: &#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>第 5 至 6 行 ：提交子任务 <code>task</code> 到执行子任务线程池 <code>executor</code> 。</li>
+<li>第 9 至 10 行 ：等待子任务 <code>task</code> 执行完成或执行超时。</li>
+<li>第 11 至 12 行 ：子任务 <code>task</code> 执行完成，设置下一次执行延迟 <code>delay</code> 。</li>
+<li>第 19 至 22 行 ：子任务 <code>task</code> 执行超时，重新计算下一次执行延迟 <code>delay</code> 。计算公式为 <code>Math.min(maxDelay, currentDelay * 2)</code> 。如果多次超时，超时时间不断乘以 2 ，不允许超过最大延迟时间( <code>maxDelay</code> )。</li>
+<li>第 41 至 44 行 ：<strong>强制</strong>取消未完成的子任务。</li>
+<li>第 46 至 49 行 ：调度下一次 TimedSupervisorTask 。</li>
+</ul>
+<h1>3. Eureka-Server 接收续租</h1>
+<h2>3.1 接收续租请求</h2>
+<p><code>com.netflix.eureka.resources.InstanceResource</code>，处理<strong>单个</strong>应用实例信息的请求操作的 Resource ( Controller )。</p>
+<p>续租应用实例信息的请求，映射 <code>InstanceResource#renewLease()</code> 方法，实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="meta">@PUT</span></div><div class="line"> <span class="number">2</span>: <span class="function"><span class="keyword">public</span> Response <span class="title">renewLease</span><span class="params">(</span></span></div><div class="line"><span class="function"><span class="params"> <span class="number">3</span>:         @HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication,</span></div><div class="line"><span class="function"> 4:         @<span class="title">QueryParam</span><span class="params">(<span class="string">"overriddenstatus"</span>)</span> String overriddenStatus,</span></div><div class="line"><span class="function"> 5:         @<span class="title">QueryParam</span><span class="params">(<span class="string">"status"</span>)</span> String status,</span></div><div class="line"><span class="function"> 6:         @<span class="title">QueryParam</span><span class="params">(<span class="string">"lastDirtyTimestamp"</span>)</span> String lastDirtyTimestamp) </span>&#123;</div><div class="line"> <span class="number">7</span>:     <span class="keyword">boolean</span> isFromReplicaNode = <span class="string">"true"</span>.equals(isReplication);</div><div class="line"> <span class="number">8</span>:     <span class="comment">// 续租</span></div><div class="line"> <span class="number">9</span>:     <span class="keyword">boolean</span> isSuccess = registry.renew(app.getName(), id, isFromReplicaNode);</div><div class="line"><span class="number">10</span>: </div><div class="line"><span class="number">11</span>:     <span class="comment">// 续租失败</span></div><div class="line"><span class="number">12</span>:     <span class="comment">// Not found in the registry, immediately ask for a register</span></div><div class="line"><span class="number">13</span>:     <span class="keyword">if</span> (!isSuccess) &#123;</div><div class="line"><span class="number">14</span>:         logger.warn(<span class="string">"Not Found (Renew): &#123;&#125; - &#123;&#125;"</span>, app.getName(), id);</div><div class="line"><span class="number">15</span>:         <span class="keyword">return</span> Response.status(Status.NOT_FOUND).build();</div><div class="line"><span class="number">16</span>:     &#125;</div><div class="line"><span class="number">17</span>: </div><div class="line"><span class="number">18</span>:     <span class="comment">// 比较 InstanceInfo 的 lastDirtyTimestamp 属性</span></div><div class="line"><span class="number">19</span>:     <span class="comment">// Check if we need to sync based on dirty time stamp, the client</span></div><div class="line"><span class="number">20</span>:     <span class="comment">// instance might have changed some value</span></div><div class="line"><span class="number">21</span>:     Response response = <span class="keyword">null</span>;</div><div class="line"><span class="number">22</span>:     <span class="keyword">if</span> (lastDirtyTimestamp != <span class="keyword">null</span> &amp;&amp; serverConfig.shouldSyncWhenTimestampDiffers()) &#123;</div><div class="line"><span class="number">23</span>:         response = <span class="keyword">this</span>.validateDirtyTimestamp(Long.valueOf(lastDirtyTimestamp), isFromReplicaNode);</div><div class="line"><span class="number">24</span>:         <span class="comment">// Store the overridden status since the validation found out the node that replicates wins</span></div><div class="line"><span class="number">25</span>:         <span class="keyword">if</span> (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()</div><div class="line"><span class="number">26</span>:                 &amp;&amp; (overriddenStatus != <span class="keyword">null</span>)</div><div class="line"><span class="number">27</span>:                 &amp;&amp; !(InstanceStatus.UNKNOWN.name().equals(overriddenStatus))</div><div class="line"><span class="number">28</span>:                 &amp;&amp; isFromReplicaNode) &#123;</div><div class="line"><span class="number">29</span>:             registry.storeOverriddenStatusIfRequired(app.getAppName(), id, InstanceStatus.valueOf(overriddenStatus));</div><div class="line"><span class="number">30</span>:         &#125;</div><div class="line"><span class="number">31</span>:     &#125; <span class="keyword">else</span> &#123; <span class="comment">// 成功</span></div><div class="line"><span class="number">32</span>:         response = Response.ok().build();</div><div class="line"><span class="number">33</span>:     &#125;</div><div class="line"><span class="number">34</span>:     logger.debug(<span class="string">"Found (Renew): &#123;&#125; - &#123;&#125;; reply status=&#123;&#125;"</span> + app.getName(), id, response.getStatus());</div><div class="line"><span class="number">35</span>:     <span class="keyword">return</span> response;</div><div class="line"><span class="number">36</span>: &#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>
+<p>第 8 至 9 行 ：调用 <code>PeerAwareInstanceRegistryImpl#renew(...)</code> 方法，续租。实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// PeerAwareInstanceRegistryImpl.java</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">renew</span><span class="params">(<span class="keyword">final</span> String appName, <span class="keyword">final</span> String id, <span class="keyword">final</span> <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</div><div class="line">   <span class="keyword">if</span> (<span class="keyword">super</span>.renew(appName, id, isReplication)) &#123; <span class="comment">// 续租</span></div><div class="line">       <span class="comment">// Eureka-Server 复制</span></div><div class="line">       replicateToPeers(Action.Heartbeat, appName, id, <span class="keyword">null</span>, <span class="keyword">null</span>, isReplication);</div><div class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>调用父类 <code>AbstractInstanceRegistry#renew(...)</code> 方法，注册应用实例信息。</li>
+</ul>
+</li>
+<li>
+<p>第 11 至 16 行 ：续租失败，返回 404 响应。当 Eureka-Client 收到 404 响应后，会重新发起 InstanceInfo 的注册。</p>
+</li>
+<li>
+<p>第 18 至 30 行 ：比较请求的 <code>lastDirtyTimestamp</code> 和 Server 的 InstanceInfo 的 <code>lastDirtyTimestamp</code> 属性差异，需要配置 <code>eureka.syncWhenTimestampDiffers = true</code> ( 默认开启 )。</p>
+<ul>
+<li>
+<p>第 23 行 ：调用 <code>#validateDirtyTimestamp(...)</code> 方法，比较 <code>lastDirtyTimestamp</code> 的差异。实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// InstanceResource.java</span></div><div class="line">  <span class="number">1</span>: <span class="function"><span class="keyword">private</span> Response <span class="title">validateDirtyTimestamp</span><span class="params">(Long lastDirtyTimestamp, <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</div><div class="line">  <span class="number">2</span>:     <span class="comment">// 获取 InstanceInfo</span></div><div class="line">  <span class="number">3</span>:     InstanceInfo appInfo = registry.getInstanceByAppAndId(app.getName(), id, <span class="keyword">false</span>);</div><div class="line">  <span class="number">4</span>:     <span class="keyword">if</span> (appInfo != <span class="keyword">null</span>) &#123;</div><div class="line">  <span class="number">5</span>:         <span class="keyword">if</span> ((lastDirtyTimestamp != <span class="keyword">null</span>) &amp;&amp; (!lastDirtyTimestamp.equals(appInfo.getLastDirtyTimestamp()))) &#123;</div><div class="line">  <span class="number">6</span>:             Object[] args = &#123;id, appInfo.getLastDirtyTimestamp(), lastDirtyTimestamp, isReplication&#125;;</div><div class="line">  <span class="number">7</span>:             <span class="comment">// 请求 的 较大</span></div><div class="line">  <span class="number">8</span>:             <span class="keyword">if</span> (lastDirtyTimestamp &gt; appInfo.getLastDirtyTimestamp()) &#123;</div><div class="line">  <span class="number">9</span>:                 logger.debug(<span class="string">"Time to sync, since the last dirty timestamp differs -"</span></div><div class="line"> <span class="number">10</span>:                                 + <span class="string">" ReplicationInstance id : &#123;&#125;,Registry : &#123;&#125; Incoming: &#123;&#125; Replication: &#123;&#125;"</span>, args);</div><div class="line"> <span class="number">11</span>:                 <span class="keyword">return</span> Response.status(Status.NOT_FOUND).build();</div><div class="line"> <span class="number">12</span>:             <span class="comment">// Server 的 较大</span></div><div class="line"> <span class="number">13</span>:             &#125; <span class="keyword">else</span> <span class="keyword">if</span> (appInfo.getLastDirtyTimestamp() &gt; lastDirtyTimestamp) &#123;</div><div class="line"> <span class="number">14</span>:                 <span class="comment">// In the case of replication, send the current instance info in the registry for the</span></div><div class="line"> <span class="number">15</span>:                 <span class="comment">// replicating node to sync itself with this one.</span></div><div class="line"> <span class="number">16</span>:                 <span class="keyword">if</span> (isReplication) &#123;</div><div class="line"> <span class="number">17</span>:                     logger.debug(</div><div class="line"> <span class="number">18</span>:                             <span class="string">"Time to sync, since the last dirty timestamp differs -"</span></div><div class="line"> <span class="number">19</span>:                                     + <span class="string">" ReplicationInstance id : &#123;&#125;,Registry : &#123;&#125; Incoming: &#123;&#125; Replication: &#123;&#125;"</span>,</div><div class="line"> <span class="number">20</span>:                             args);</div><div class="line"> <span class="number">21</span>:                     <span class="keyword">return</span> Response.status(Status.CONFLICT).entity(appInfo).build();</div><div class="line"> <span class="number">22</span>:                 &#125; <span class="keyword">else</span> &#123;</div><div class="line"> <span class="number">23</span>:                     <span class="keyword">return</span> Response.ok().build();</div><div class="line"> <span class="number">24</span>:                 &#125;</div><div class="line"> <span class="number">25</span>:             &#125;</div><div class="line"> <span class="number">26</span>:         &#125;</div><div class="line"> <span class="number">27</span>: </div><div class="line"> <span class="number">28</span>:     &#125;</div><div class="line"> <span class="number">29</span>:     <span class="keyword">return</span> Response.ok().build();</div><div class="line"> <span class="number">30</span>: &#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>第 7 至 11 行 ：请求的 <code>lastDirtyTimestamp</code> 较大，<strong>意味着请求方( 可能是 Eureka-Client ，也可能是 Eureka-Server 集群内的其他 Server )存在 InstanceInfo 和 Eureka-Server 的 InstanceInfo 的数据不一致，返回 404 响应。请求方收到 404 响应后重新发起注册</strong>。</li>
+<li>第 16 至 21 行 ：TODO[0021]：集群同步</li>
+<li>第 22 至 24 行 ：Server 的 <code>lastDirtyTimestamp</code> 较大，并且请求方为 Eureka-Client，续租成功，返回 200 成功响应。</li>
+<li>第 29 行 ：<code>lastDirtyTimestamp</code> 一致，返回 200 成功响应。</li>
+</ul>
+</li>
+<li>
+<p>第 24 至 30 行 ：TODO[0022]：状态更新。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>第 31 至 33 行 ：续租成功，返回 200 成功响应。</p>
+</li>
+</ul>
+<h2>3.2 续租应用实例信息</h2>
+<p>调用 <code>AbstractInstanceRegistry#renew(...)</code> 方法，续租应用实例信息，实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">renew</span><span class="params">(String appName, String id, <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</div><div class="line"> <span class="number">2</span>:     <span class="comment">// 增加 续租次数 到 监控</span></div><div class="line"> <span class="number">3</span>:     RENEW.increment(isReplication);</div><div class="line"> <span class="number">4</span>:     <span class="comment">// 获得 租约</span></div><div class="line"> <span class="number">5</span>:     Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(appName);</div><div class="line"> <span class="number">6</span>:     Lease&lt;InstanceInfo&gt; leaseToRenew = <span class="keyword">null</span>;</div><div class="line"> <span class="number">7</span>:     <span class="keyword">if</span> (gMap != <span class="keyword">null</span>) &#123;</div><div class="line"> <span class="number">8</span>:         leaseToRenew = gMap.get(id);</div><div class="line"> <span class="number">9</span>:     &#125;</div><div class="line"><span class="number">10</span>:     <span class="comment">// 租约不存在</span></div><div class="line"><span class="number">11</span>:     <span class="keyword">if</span> (leaseToRenew == <span class="keyword">null</span>) &#123;</div><div class="line"><span class="number">12</span>:         RENEW_NOT_FOUND.increment(isReplication);</div><div class="line"><span class="number">13</span>:         logger.warn(<span class="string">"DS: Registry: lease doesn't exist, registering resource: &#123;&#125; - &#123;&#125;"</span>, appName, id);</div><div class="line"><span class="number">14</span>:         <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line"><span class="number">15</span>:     &#125; <span class="keyword">else</span> &#123;</div><div class="line"><span class="number">16</span>:         InstanceInfo instanceInfo = leaseToRenew.getHolder();</div><div class="line"><span class="number">17</span>:         <span class="keyword">if</span> (instanceInfo != <span class="keyword">null</span>) &#123;</div><div class="line"><span class="number">18</span>:             <span class="comment">// touchASGCache(instanceInfo.getASGName());</span></div><div class="line"><span class="number">19</span>:             <span class="comment">// TODO 芋艿：over status</span></div><div class="line"><span class="number">20</span>:             InstanceStatus overriddenInstanceStatus = <span class="keyword">this</span>.getOverriddenInstanceStatus(</div><div class="line"><span class="number">21</span>:                     instanceInfo, leaseToRenew, isReplication);</div><div class="line"><span class="number">22</span>:             <span class="keyword">if</span> (overriddenInstanceStatus == InstanceStatus.UNKNOWN) &#123;</div><div class="line"><span class="number">23</span>:                 logger.info(<span class="string">"Instance status UNKNOWN possibly due to deleted override for instance &#123;&#125;"</span></div><div class="line"><span class="number">24</span>:                         + <span class="string">"; re-register required"</span>, instanceInfo.getId());</div><div class="line"><span class="number">25</span>:                 RENEW_NOT_FOUND.increment(isReplication);</div><div class="line"><span class="number">26</span>:                 <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line"><span class="number">27</span>:             &#125;</div><div class="line"><span class="number">28</span>:             <span class="keyword">if</span> (!instanceInfo.getStatus().equals(overriddenInstanceStatus)) &#123;</div><div class="line"><span class="number">29</span>:                 Object[] args = &#123;</div><div class="line"><span class="number">30</span>:                         instanceInfo.getStatus().name(),</div><div class="line"><span class="number">31</span>:                         instanceInfo.getOverriddenStatus().name(),</div><div class="line"><span class="number">32</span>:                         instanceInfo.getId()</div><div class="line"><span class="number">33</span>:                 &#125;;</div><div class="line"><span class="number">34</span>:                 logger.info(</div><div class="line"><span class="number">35</span>:                         <span class="string">"The instance status &#123;&#125; is different from overridden instance status &#123;&#125; for instance &#123;&#125;. "</span></div><div class="line"><span class="number">36</span>:                                 + <span class="string">"Hence setting the status to overridden status"</span>, args);</div><div class="line"><span class="number">37</span>:                 instanceInfo.setStatusWithoutDirty(overriddenInstanceStatus);</div><div class="line"><span class="number">38</span>:             &#125;</div><div class="line"><span class="number">39</span>:         &#125;</div><div class="line"><span class="number">40</span>:         <span class="comment">// TODO 芋艿：可能和自我保护</span></div><div class="line"><span class="number">41</span>:         renewsLastMin.increment();</div><div class="line"><span class="number">42</span>:         <span class="comment">// 设置 租约最后更新时间（续租）</span></div><div class="line"><span class="number">43</span>:         leaseToRenew.renew();</div><div class="line"><span class="number">44</span>:         <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line"><span class="number">45</span>:     &#125;</div><div class="line"><span class="number">46</span>: &#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>
+<p>第 2 至 3 行 ：增加续租次数到监控。配合 <a href="https://github.com/Netflix/servo" rel="external nofollow noopener noreferrer" target="_blank">Netflix Servo</a> 实现监控信息采集。</p>
+</li>
+<li>
+<p>第 4 至 9 行 ：获得租约( Lease )。</p>
+</li>
+<li>
+<p>第 10 至 14 行 ：租约不存在，返回续租失败( <code>false</code> )。</p>
+</li>
+<li>
+<p>第 19 至 39 行 ：TODO[0022]：状态更新。</p>
+</li>
+<li>
+<p>第 40 至 41 行 ：TODO[0023]：自我保护。</p>
+</li>
+<li>
+<p>第 42 至 43 行 ：调用 <code>Lease#renew()</code> 方法，设置租约最后更新时间( 续租 )，实现代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">renew</span><span class="params">()</span> </span>&#123;</div><div class="line">    lastUpdateTimestamp = System.currentTimeMillis() + duration;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>x</li>
+</ul>
+</li>
+<li>
+<p>第 44 行 ：返回续租成功( <code>true</code> )。</p>
+</li>
+<li>
+<p><strong>整个过程修改的租约的过期时间，即使并发请求，也不会对数据的一致性产生不一致的影响，因此像注册操作一样加锁</strong>。</p>
+</li>
+</ul>
+<h1>666. 彩蛋</h1>
+<p>效率比想象的低一些，加油继续更新下一篇。</p>
+<p>胖友，分享我的公众号( <strong>芋道源码</strong> ) 给你的胖友可好？</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Eureka/2018_06_01_Eureka源码解析 —— 应用实例注册发现 （二）之续租/" data-title="芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Elastic-Job/job-storage/" title="Elastic-Job-Lite 源码分析 —— 作业数据存储">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Elastic-Job-Lite 源码分析 —— 作业数据存储</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/Elastic-Job/reg-center-zookeeper/" title="Elastic-Job-Lite 源码分析 —— 注册中心">
+ <strong>NEXT:</strong><br> 
+ <span>Elastic-Job-Lite 源码分析 —— 注册中心
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2017 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="王文斌">王文斌</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'null');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+
