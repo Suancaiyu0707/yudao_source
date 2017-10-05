@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Eureka/instance-registry-cancel/
 http://www.iocoder.cn/Eureka/instance-registry-renew/
 http://www.iocoder.cn/Eureka/instance-registry-register/
 http://www.iocoder.cn/Eureka/instance-registry-class-diagram/
