@@ -4,15 +4,18 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Eureka/2018_06_01_Eureka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%20%E2%80%94%E2%80%94%20%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B%E6%B3%A8%E5%86%8C%E5%8F%91%E7%8E%B0%20%EF%BC%88%E4%BA%8C%EF%BC%89%E4%B9%8B%E7%BB%AD%E7%A7%9F/</loc>
-    <lastmod>2017-10-05T15:53:48.000Z</lastmod>
+    <loc>http://www.iocoder.cn/Eureka/instance-registry-renew/</loc>
+    <lastmod>2017-10-05T16:04:54.000Z</lastmod>
     <data>
         <display>
-        <title></title>
-        <pubTime>2017-10-05T11:04:28.000Z</pubTime>
+        <title>Eureka 源码解析 —— 应用实例注册发现 （二）之续租</title>
+        <pubTime>2018-05-31T16:00:00.000Z</pubTime>
         
          
            
+             
+              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
+          
         </display>
     </data>
     </url>
