@@ -683,7 +683,7 @@ private void initScheduledTasks() {
 ```
 
 * **初始化**从 Eureka-Server 拉取注册信息执行器，在（TODO[0014]：全量拉取）详细解析。
-* **初始化**向 Eureka-Server 心跳（续租）执行器，在（TODO[0015]：租约续约）详细解析。
+* **初始化**向 Eureka-Server 心跳（续租）执行器，在 [《Eureka 源码解析 —— 应用实例注册发现（二）之续租》](http://www.iocoder.cn/Eureka/instance-registry-renew/?self) 详细解析。
 
 ### 3.2.15 向 Servo 注册监控
 

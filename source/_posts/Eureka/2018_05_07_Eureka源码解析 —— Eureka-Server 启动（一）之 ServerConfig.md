@@ -87,7 +87,7 @@ permalink: Eureka/eureka-server-init-first
     * `#getRenewalThresholdUpdateIntervalMs()` ：自我保护模式比例更新定时任务执行频率，单位：毫秒。
 
 * **注册的应用实例的租约过期相关**
-    * TODO[0017]：租约过期
+    * 在 [《Eureka 源码解析 —— 应用实例注册发现（五）之过期》](http://www.iocoder.cn/Eureka/instance-registry-evict/?self) 有详细解析。 
     
     * `#getEvictionIntervalTimerInMs()` ：租约过期定时任务执行频率，单位：毫秒。
 * **Eureka-Server 远程节点( 非集群 )读取相关**
