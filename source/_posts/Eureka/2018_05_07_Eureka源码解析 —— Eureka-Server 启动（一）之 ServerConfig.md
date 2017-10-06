@@ -52,7 +52,7 @@ permalink: Eureka/eureka-server-init-first
 
 ## 2.1 类关系图
 
-![](http://www/iocoder.cn/images/Eureka/2018_05_07/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_05_07/01.png)
 
 ## 2.2 配置属性
 
@@ -74,8 +74,8 @@ permalink: Eureka/eureka-server-init-first
     * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**永不过期**的**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
     * `#getResponseCacheUpdateIntervalMs()` ：**只读缓存**更新频率，单位：毫秒。**只读缓存**定时更新任务只更新读取过请求 (`com.netflix.eureka.registry.Key`)，因此虽然永不过期，也会存在读取不到的情况。
     * `#getResponseCacheAutoExpirationInSeconds()` ：**读写缓存**写入后过期时间，单位：秒。
-* **注册的应用实例的租约过期相关**
-    * TODO[0017]：租约过期
+* **自我保护机制相关**
+    * 在 [《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》](http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self) 有详细解析。 
     * `#shouldEnableSelfPreservation()` ：是否开启自我保护模式。
         
         > FROM [周立——《理解Eureka的自我保护模式》](http://www.itmuch.com/spring-cloud-sum/understanding-eureka-self-preservation/?from=www.iocoder.cn)  
@@ -85,6 +85,10 @@ permalink: Eureka/eureka-server-init-first
     
     * `#getRenewalPercentThreshold()` ：开启自我保护模式比例，超过该比例后开启自我保护模式。
     * `#getRenewalThresholdUpdateIntervalMs()` ：自我保护模式比例更新定时任务执行频率，单位：毫秒。
+
+* **注册的应用实例的租约过期相关**
+    * TODO[0017]：租约过期
+    
     * `#getEvictionIntervalTimerInMs()` ：租约过期定时任务执行频率，单位：毫秒。
 * **Eureka-Server 远程节点( 非集群 )读取相关**
     * TODO[0009]：RemoteRegionRegistry

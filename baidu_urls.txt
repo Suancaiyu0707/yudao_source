@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Eureka/instance-registry-self-preservation/
 http://www.iocoder.cn/Eureka/instance-registry-cancel/
 http://www.iocoder.cn/Eureka/instance-registry-renew/
 http://www.iocoder.cn/Eureka/instance-registry-register/
@@ -10,8 +11,8 @@ http://www.iocoder.cn/Eureka/eureka-client-init-first/
 http://www.iocoder.cn/Eureka/build-debugging-environment/
 http://www.iocoder.cn/Eureka/project-structure/
 http://www.iocoder.cn/TCC-Transaction/http-sample/
-http://www.iocoder.cn/TCC-Transaction/console/
 http://www.iocoder.cn/TCC-Transaction/dubbo-support/
+http://www.iocoder.cn/TCC-Transaction/console/
 http://www.iocoder.cn/TCC-Transaction/transaction-recovery/
 http://www.iocoder.cn/TCC-Transaction/transaction-repository/
 http://www.iocoder.cn/TCC-Transaction/tcc-core/
@@ -21,8 +22,8 @@ http://www.iocoder.cn/Elastic-Job/cloud-job-failover/
 http://www.iocoder.cn/Elastic-Job/cloud-local-executor/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-second/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/
-http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Architecture/how-to-read-article/
+http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Elastic-Job/cloud-job-config/
 http://www.iocoder.cn/Elastic-Job/job-console/
 http://www.iocoder.cn/Architecture/how-to-read-source-code/
