@@ -280,8 +280,8 @@ DiscoveryClient(ApplicationInfoManager applicationInfoManager, EurekaClientConfi
      
      }
      ```
-     * `com.netflix.discovery.StatusChangeEvent`，应用实例状态变更事件，在[《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》「2.1 应用实例信息复制器」](http://www.iocoder.cn/Eureka/instance-registry-register/?self)有详细解析。
-     * CacheRefreshedEvent （TODO[0014]：全量拉取）
+     * `com.netflix.discovery.StatusChangeEvent`，应用实例状态变更事件，在[《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》「2.1 应用实例信息复制器」](http://www.iocoder.cn/Eureka/instance-registry-register/?self) 有详细解析。
+     * `com.netflix.discovery.CacheRefreshedEvent`，在[《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》「2.4 发起获取注册信息」](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 有详细解析。
 
 ## 3.2 构造方法
 
@@ -356,7 +356,7 @@ fetchRegistryGeneration = new AtomicLong(0);
 ```
 
 * 在创建 DiscoveryClient 时，`localRegionApps` 为空。
-* 定时任务**间隔**从 Eureka-Server 拉取注册应用信息到本地缓存，在 (TODO[0014]：全量拉取)详细解析。
+* 定时任务**间隔**从 Eureka-Server 拉取注册应用信息到本地缓存，在 [《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 有详细解析。
 
 ### 3.2.6 获取哪些 Region 集合的注册信息
 
@@ -682,7 +682,7 @@ private void initScheduledTasks() {
 }
 ```
 
-* **初始化**从 Eureka-Server 拉取注册信息执行器，在（TODO[0014]：全量拉取）详细解析。
+* **初始化**从 Eureka-Server 拉取注册信息执行器，在 [《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 详细解析。
 * **初始化**向 Eureka-Server 心跳（续租）执行器，在 [《Eureka 源码解析 —— 应用实例注册发现（二）之续租》](http://www.iocoder.cn/Eureka/instance-registry-renew/?self) 详细解析。
 
 ### 3.2.15 向 Servo 注册监控

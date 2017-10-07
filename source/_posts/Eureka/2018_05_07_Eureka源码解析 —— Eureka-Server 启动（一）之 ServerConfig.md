@@ -70,8 +70,8 @@ permalink: Eureka/eureka-server-init-first
     * `#getRateLimiterRegistryFetchAverageRate()` ：**增量**拉取注册信息的速率限制。
     * `#getRateLimiterFullFetchAverageRate()` ：**全量**拉取注册信息的速率限制。
 * **拉取注册信息请求响应缓存相关**
-    * TODO[0014]：全量拉取
-    * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**永不过期**的**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
+    * [《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 有详细解析。
+    * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
     * `#getResponseCacheUpdateIntervalMs()` ：**只读缓存**更新频率，单位：毫秒。**只读缓存**定时更新任务只更新读取过请求 (`com.netflix.eureka.registry.Key`)，因此虽然永不过期，也会存在读取不到的情况。
     * `#getResponseCacheAutoExpirationInSeconds()` ：**读写缓存**写入后过期时间，单位：秒。
 * **自我保护机制相关**
