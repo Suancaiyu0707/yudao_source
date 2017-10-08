@@ -69,11 +69,15 @@ permalink: Eureka/eureka-server-init-first
     * `#getRateLimiterBurstSize()` ：速率限制的 burst size ，使用**令牌桶算法**。
     * `#getRateLimiterRegistryFetchAverageRate()` ：**增量**拉取注册信息的速率限制。
     * `#getRateLimiterFullFetchAverageRate()` ：**全量**拉取注册信息的速率限制。
-* **拉取注册信息请求响应缓存相关**
-    * [《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 有详细解析。
+* **获取注册信息请求相关**
+    * [《Eureka 源码解析 —— 应用实例注册发现 （六）之全量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self) 有详细解析。
+    * [《Eureka 源码解析 —— 应用实例注册发现 （七）之增量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/?self) 有详细解析。
     * `#shouldUseReadOnlyResponseCache()` ：是否开启只读请求响应缓存。响应缓存 ( ResponseCache ) 机制目前使用两层缓存策略。优先读取**只读缓存**，读取不到后读取**固定过期**的**读写缓存**。
     * `#getResponseCacheUpdateIntervalMs()` ：**只读缓存**更新频率，单位：毫秒。**只读缓存**定时更新任务只更新读取过请求 (`com.netflix.eureka.registry.Key`)，因此虽然永不过期，也会存在读取不到的情况。
     * `#getResponseCacheAutoExpirationInSeconds()` ：**读写缓存**写入后过期时间，单位：秒。
+    * `#getRetentionTimeInMSInDeltaQueue()`：租约变更记录过期时长，单位：毫秒。默认值 ： 3 * 60 * 1000 毫秒。
+    * `#DeltaRetentionTimerIntervalInMs()`：移除队列里过期的租约变更记录的定时任务执行频率，单位：毫秒。默认值 ：30 * 1000 毫秒。
+
 * **自我保护机制相关**
     * 在 [《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》](http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self) 有详细解析。 
     * `#shouldEnableSelfPreservation()` ：是否开启自我保护模式。
@@ -109,8 +113,6 @@ permalink: Eureka/eureka-server-init-first
     * `#shouldSyncWhenTimestampDiffers()` ：是否同步应用实例信息，当应用实例信息最后更新时间戳( `lastDirtyTimestamp` )发生改变。
     * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODO[0019]：集群初始化
     * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。TTODO[0019]：集群初始化
-* `#getRetentionTimeInMSInDeltaQueue()`：TODO[0018]：增量拉取
-* `#DeltaRetentionTimerIntervalInMs()`：TODO[0018]：增量拉取
 
 ## 2.3 DefaultEurekaServerConfig
 
