@@ -6,6 +6,20 @@ permalink: TCC-Transaction/build-debugging-environment
 
 ---
 
+摘要: 原创出处 http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+**本文主要基于 TCC-Transaction 1.2.3.3 正式版**  
+
+- [1. 依赖工具](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [2. 源码拉取](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [3. 初始化数据库](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [4. 启动 capital 项目](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [5. 启动 redpacket 项目](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [6. 启动 order 项目](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+- [666. 彩蛋](http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/)
+
+-------
+
 ![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
 
 > 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
@@ -16,16 +30,6 @@ permalink: TCC-Transaction/build-debugging-environment
 > 5. **认真的**源码交流微信群。
 
 -------
-
-**本文主要基于 TCC-Transaction 1.2.3.3 正式版**  
-
-- [1. 依赖工具](#)
-- [2. 源码拉取](#)
-- [3. 初始化数据库](#)
-- [4. 启动 capital 项目](#)
-- [5. 启动 redpacket 项目](#)
-- [6. 启动 order 项目](#)
-- [7. 交流](#)
 
 # 1. 依赖工具
 

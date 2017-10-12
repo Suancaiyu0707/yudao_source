@@ -1,5 +1,6 @@
-http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/
+http://www.iocoder.cn/Eureka/batch-tasks/
 http://www.iocoder.cn/Eureka/instance-registry-override-status/
+http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/
 http://www.iocoder.cn/Eureka/instance-registry-fetch-all/
 http://www.iocoder.cn/Eureka/instance-registry-evict/
 http://www.iocoder.cn/Eureka/instance-registry-self-preservation/

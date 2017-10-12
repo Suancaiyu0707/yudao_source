@@ -55,6 +55,10 @@ gulp.task("cssmin", function () {
     gulp.src(datas.css).pipe(csso()).pipe(gulp.dest(buildDir));
 });
 
+// gulp.task("default", ["htmlmin",
+//     "tinypng",
+//     "jsmin", "cssmin"]);
+
 gulp.task("default", ["htmlmin",
     "tinypng",
     "jsmin", "cssmin"]);

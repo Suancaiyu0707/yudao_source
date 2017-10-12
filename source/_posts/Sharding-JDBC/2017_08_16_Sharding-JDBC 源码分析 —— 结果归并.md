@@ -18,26 +18,28 @@ keywords: Sharding-JDBC,ShardingJDBC,Sharding-JDBC 源码,结果归并
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Sharding-JDBC/result-merger/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
 **本文主要基于 Sharding-JDBC 1.5.0 正式版**  
 
-- [1. 概述](#)
-- [2. MergeEngine](#)
-	- [2.1 SelectStatement#setIndexForItems()](#)
-	- [2.2 ResultSetMerger](#)
-		- [2.2.1 AbstractStreamResultSetMerger](#)
-		- [2.2.2 AbstractMemoryResultSetMerger](#)
-		- [2.2.3 AbstractDecoratorResultSetMerger](#)
-- [3. OrderByStreamResultSetMerger](#)
-	- [3.1 归并算法](#)
-	- [3.2 #next()](#)
-- [4. GroupByStreamResultSetMerger](#)
-	- [4.1 AggregationUnit](#)
-	- [4.2 #next()](#)
-- [5. GroupByMemoryResultSetMerger](#)
-	- [5.1 #next()](#)
-- [6. IteratorStreamResultSetMerger](#)
-- [7. LimitDecoratorResultSetMerger](#)
-- [666. 彩蛋](#)
+- [1. 概述](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [2. MergeEngine](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [2.1 SelectStatement#setIndexForItems()](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [2.2 ResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+		- [2.2.1 AbstractStreamResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+		- [2.2.2 AbstractMemoryResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+		- [2.2.3 AbstractDecoratorResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [3. OrderByStreamResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [3.1 归并算法](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [3.2 #next()](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [4. GroupByStreamResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [4.1 AggregationUnit](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [4.2 #next()](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [5. GroupByMemoryResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+	- [5.1 #next()](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [6. IteratorStreamResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [7. LimitDecoratorResultSetMerger](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
+- [666. 彩蛋](http://www.iocoder.cn/Sharding-JDBC/result-merger/)
 
 -------
 

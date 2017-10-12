@@ -10,13 +10,13 @@ permalink: Eureka/eureka-client-init-third
 
 **本文主要基于 Eureka 1.8.X 版本** 
 
-- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
-- [2. EurekaClient](#2-eurekaclient)
-  - [2.1 LookupService](#21-lookupservice)
-- [3. DiscoveryClient](#3-discoveryclient)
-  - [3.1 构造方法参数](#31-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0)
-  - [3.2 构造方法](#32-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95)
-- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
+- [1. 概述](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+- [2. EurekaClient](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+  - [2.1 LookupService](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+- [3. DiscoveryClient](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+  - [3.1 构造方法参数](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+  - [3.2 构造方法](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
+- [666. 彩蛋](http://www.iocoder.cn/Eureka/eureka-client-init-third/)
 
 ---
 

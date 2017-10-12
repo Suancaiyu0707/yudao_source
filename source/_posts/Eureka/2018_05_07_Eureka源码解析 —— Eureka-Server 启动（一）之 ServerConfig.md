@@ -10,12 +10,12 @@ permalink: Eureka/eureka-server-init-first
 
 **本文主要基于 Eureka 1.8.X 版本** 
 
-- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
-- [2. EurekaServerConfig](#2-eurekaserverconfig)
-  - [2.1 类关系图](#21-%E7%B1%BB%E5%85%B3%E7%B3%BB%E5%9B%BE)
-  - [2.2 配置属性](#22-%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7)
-  - [2.3 DefaultEurekaServerConfig](#23-defaulteurekaserverconfig)
-- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
+- [1. 概述](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
+- [2. EurekaServerConfig](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
+  - [2.1 类关系图](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
+  - [2.2 配置属性](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
+  - [2.3 DefaultEurekaServerConfig](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
+- [666. 彩蛋](http://www.iocoder.cn/Eureka/eureka-server-init-first/)
 
 ---
 

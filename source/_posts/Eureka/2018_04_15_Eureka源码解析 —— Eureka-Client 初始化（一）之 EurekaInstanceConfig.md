@@ -10,17 +10,17 @@ permalink: Eureka/eureka-client-init-first
 
 **本文主要基于 Eureka 1.8.X 版本** 
 
-- [1. 概述](#1-%E6%A6%82%E8%BF%B0)
-- [2. EurekaInstanceConfig](#2-eurekainstanceconfig)
-  - [2.1 类关系图](#21-%E7%B1%BB%E5%85%B3%E7%B3%BB%E5%9B%BE)
-  - [2.2 配置属性](#22-%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7)
-  - [2.3 AbstractInstanceConfig](#23-abstractinstanceconfig)
-  - [2.4 PropertiesInstanceConfig](#24-propertiesinstanceconfig)
-  - [2.5 MyDataCenterInstanceConfig](#25-mydatacenterinstanceconfig)
-  - [2.6 小结](#26-%E5%B0%8F%E7%BB%93)
-- [3. InstanceInfo](#3-instanceinfo)
-- [4. ApplicationInfoManager](#4-applicationinfomanager)
-- [666. 彩蛋](#666-%E5%BD%A9%E8%9B%8B)
+- [1. 概述](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+- [2. EurekaInstanceConfig](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.1 类关系图](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.2 配置属性](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.3 AbstractInstanceConfig](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.4 PropertiesInstanceConfig](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.5 MyDataCenterInstanceConfig](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+  - [2.6 小结](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+- [3. InstanceInfo](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+- [4. ApplicationInfoManager](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
+- [666. 彩蛋](http://www.iocoder.cn/Eureka/eureka-client-init-first/)
 
 ---
 
