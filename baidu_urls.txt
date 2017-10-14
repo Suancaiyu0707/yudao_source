@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Eureka/end-point-and-resolver/
 http://www.iocoder.cn/Eureka/batch-tasks/
 http://www.iocoder.cn/Eureka/instance-registry-override-status/
 http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/

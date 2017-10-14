@@ -102,7 +102,7 @@ baidu_search:
   site: http://zhannei.baidu.com/cse/search  #your can change your site instead the default site
 
 google_analytics:
-  enable: true
+  enable: false
   id: UA-107572620-1
   site: ## e.g. gengbiao.me your google analytics site or set the value as auto.
 ## You MUST upgrade to Universal Analytics first!

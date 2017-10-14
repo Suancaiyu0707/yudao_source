@@ -20,8 +20,8 @@ permalink: Eureka/end-point-and-resolver
   - [3.4 ConfigClusterResolver](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
   - [3.5 ZoneAffinityClusterResolver](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
   - [3.6 AsyncResolver](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
-    - [3.6.1 定时任务](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
-    - [3.6.2 解析 EndPoint 集群](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
+     - [3.6.1 定时任务](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
+     - [3.6.2 解析 EndPoint 集群](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
 - [4. 初始化解析器](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
 - [666. 彩蛋](http://www.iocoder.cn/Eureka/end-point-and-resolver/)
 
@@ -52,7 +52,7 @@ permalink: Eureka/end-point-and-resolver
 
 本文涉及类在 `com.netflix.discovery.shared.resolver` 包下，涉及到主体类的类图如下( [打开大图](http://www.iocoder.cn/images/Eureka/2018_07_24/01.png) )：
 
-[](http://www.iocoder.cn/images/Eureka/2018_07_24/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_07_24/01.png)
 
 * 红色部分 —— EndPoint
 * 黄色部分 —— EndPoint 解析器
@@ -204,7 +204,7 @@ EndPoint 解析器使用**委托设计模式**实现。所以，上文图片中�
 
 我们在上图的基础上，**增加委托的关系**，如下图：
 
-[](http://www.iocoder.cn/images/Eureka/2018_07_24/02.png)
+![](http://www.iocoder.cn/images/Eureka/2018_07_24/02.png)
 
 ## 3.1 ClusterResolver
 
@@ -284,7 +284,7 @@ public class DnsTxtRecordClusterResolver implements ClusterResolver<AwsEndpoint>
         * 记录类型 ：**TXT 记录类型**。
         * 记录值 ：EndPoint 的网络地址。如有多个 EndPoint，使用**空格**分隔。
    * 举个例子：
-        [](http://www.iocoder.cn/images/Eureka/2018_07_24/03.png)
+        ![](http://www.iocoder.cn/images/Eureka/2018_07_24/03.png)
 
 * `rootClusterDNS` ，集群根地址。例如：`txt.default.eureka.iocoder.cn`，其· `txt.default.eureka` 为 DNS 解析记录的第一层的**主机记录**。
 * `region` ：地区。需要和 `rootClusterDNS` 的 `${REGION}` 一致。
@@ -530,7 +530,7 @@ public class ConfigClusterResolver implements ClusterResolver<AwsEndpoint> {
         * 当方法参数 `preferSameZone=false` ，即 `eureka.preferSameZone=false`( 默认值 ：`true` ) 时，**开始位置**为可用区数组( `availZones` )的**第一个**和应用实例所在的可用区( `myZone` )【**不相等**】元素的位置。
     
     * 第 20 至 33 行 ：从开始位置**顺序**将剩余的可用区的 `serviceUrls` 添加到结果。**顺序**理解如下图：
-        [](http://www.iocoder.cn/images/Eureka/2018_07_24/04.png)
+        ![](http://www.iocoder.cn/images/Eureka/2018_07_24/04.png)
 
 * 第 9 至 18 行 ：拼装 EndPoint 集群结果。
 
