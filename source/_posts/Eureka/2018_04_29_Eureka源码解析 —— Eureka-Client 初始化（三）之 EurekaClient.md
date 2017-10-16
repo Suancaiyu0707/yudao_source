@@ -500,7 +500,7 @@ eurekaTransport = new EurekaTransport();
 scheduleServerEndpointTask(eurekaTransport, args);
 ```
 
-* 本文暂不拓展开，后面另开文章分享。（TODO[0013]：网络传输相关）
+* 本文暂不拓展开，在 [《Eureka 源码解析 —— EndPoint 与 解析器》](http://www.iocoder.cn/Eureka/end-point-and-resolver/?self) 和 [《Eureka 源码解析 —— 网络通信》](http://www.iocoder.cn/Eureka/transport/?self) 详细解析。
 
 ### 3.2.11 初始化 InstanceRegionChecker
 

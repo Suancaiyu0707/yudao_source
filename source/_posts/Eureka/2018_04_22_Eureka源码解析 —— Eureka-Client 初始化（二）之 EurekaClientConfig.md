@@ -222,7 +222,22 @@ EurekaTransportConfig 整体类关系如下图：
 
 ## 3.2 配置属性
 
-TODO[0011]：EurekaTransportConfig 后面看到那部分源码在补充，没理顺。
+点击 [EurekaTransportConfig](TODO) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
+
+* `#getSessionedClientReconnectIntervalSeconds()` ：EurekaHttpClient 会话周期性重连时间，单位：秒。在 [《Eureka 源码解析 —— 网络通信》「5.4 SessionedEurekaHttpClient」》](http://www.iocoder.cn/Eureka/transport/?self) 有详细解析。
+* `#getRetryableClientQuarantineRefreshPercentage()` ：重试 EurekaHttpClient ，请求失败的 Eureka-Server 隔离集合占比 Eureka-Server 全量集合占比，超过该比例，进行清空。在 [《Eureka 源码解析 —— 网络通信》「5.3 RetryableEurekaHttpClient」》](http://www.iocoder.cn/Eureka/transport/?self) 有详细解析。
+* **异步 EndPoint 集群解析器** ：
+    * 在 [《Eureka 源码解析 —— EndPoint 与 解析器》「3.6 AsyncResolver」》](http://www.iocoder.cn/Eureka/end-point-and-resolver/?self) 有详细解析。
+    * `#getAsyncResolverRefreshIntervalMs()` ：异步解析 EndPoint 集群频率，单位：毫秒。
+    * `#getAsyncResolverWarmUpTimeoutMs()` ：异步解析器预热解析 EndPoint 集群超时时间，单位：毫秒。
+    * `#getAsyncExecutorThreadPoolSize()` ：异步解析器线程池大小。
+* TODO[0028]：写入集群和读取集群。Eureka 2.x 兼容 ：
+    * `#getApplicationsResolverDataStalenessThresholdSeconds()`
+    * `#applicationsResolverUseIp()`
+    * `#getWriteClusterVip()`
+    * `#getReadClusterVip()`
+    * `#getBootstrapResolverStrategy()`
+    * `#useBootstrapResolverForQuery()`
 
 ## 3.3 DefaultEurekaTransportConfig
 
