@@ -222,7 +222,7 @@ EurekaTransportConfig 整体类关系如下图：
 
 ## 3.2 配置属性
 
-点击 [EurekaTransportConfig](TODO) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
+点击 [EurekaTransportConfig](https://github.com/YunaiV/eureka/blob/3a65b471526e4912829bbfedc29822ba93ef42bb/eureka-client/src/main/java/com/netflix/discovery/shared/transport/EurekaTransportConfig.java) 查看配置属性简介，已经添加中文注释，可以对照着英文注释一起理解。这里笔者摘出部分较为重要的属性：
 
 * `#getSessionedClientReconnectIntervalSeconds()` ：EurekaHttpClient 会话周期性重连时间，单位：秒。在 [《Eureka 源码解析 —— 网络通信》「5.4 SessionedEurekaHttpClient」》](http://www.iocoder.cn/Eureka/transport/?self) 有详细解析。
 * `#getRetryableClientQuarantineRefreshPercentage()` ：重试 EurekaHttpClient ，请求失败的 Eureka-Server 隔离集合占比 Eureka-Server 全量集合占比，超过该比例，进行清空。在 [《Eureka 源码解析 —— 网络通信》「5.3 RetryableEurekaHttpClient」》](http://www.iocoder.cn/Eureka/transport/?self) 有详细解析。

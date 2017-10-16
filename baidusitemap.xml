@@ -5,11 +5,29 @@
     
   <url>
     <loc>http://www.iocoder.cn/Eureka/transport/</loc>
-    <lastmod>2017-10-16T12:59:33.000Z</lastmod>
+    <lastmod>2017-10-16T13:49:17.000Z</lastmod>
     <data>
         <display>
         <title>Eureka 源码解析 —— 网络通信</title>
         <pubTime>2018-07-30T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
+    <lastmod>2017-10-16T13:39:38.000Z</lastmod>
+    <data>
+        <display>
+        <title>Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig</title>
+        <pubTime>2018-04-22T16:00:00.000Z</pubTime>
         
          
            
@@ -28,24 +46,6 @@
         <display>
         <title>Eureka 源码解析 —— EndPoint 与 解析器</title>
         <pubTime>2018-07-23T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Eureka" url="http://www.iocoder.cn/categories/Eureka/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
-    <lastmod>2017-10-16T11:12:43.000Z</lastmod>
-    <data>
-        <display>
-        <title>Eureka 源码解析 —— Eureka-Client 初始化（二）之 EurekaClientConfig</title>
-        <pubTime>2018-04-22T16:00:00.000Z</pubTime>
         
          
            
