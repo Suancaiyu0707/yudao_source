@@ -2,16 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.iocoder.cn/Eureka/batch-tasks/</loc>
+    <loc>http://www.iocoder.cn/Eureka/transport/</loc>
     
-    <lastmod>2017-10-14T08:26:12.000Z</lastmod>
+    <lastmod>2017-10-16T12:59:33.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.iocoder.cn/Eureka/end-point-and-resolver/</loc>
     
-    <lastmod>2017-10-14T08:15:58.000Z</lastmod>
+    <lastmod>2017-10-16T11:13:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
+    
+    <lastmod>2017-10-16T11:12:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-third/</loc>
+    
+    <lastmod>2017-10-16T09:46:06.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Architecture/talk-about-java-unit-test/</loc>
+    
+    <lastmod>2017-10-14T09:12:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Eureka/batch-tasks/</loc>
+    
+    <lastmod>2017-10-14T08:26:12.000Z</lastmod>
     
   </url>
   
@@ -163,6 +191,13 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
@@ -177,7 +212,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -185,13 +220,6 @@
   
   <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-schedule-and-retry/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -219,7 +247,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/dubbo-support/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/console/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -254,7 +282,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/console/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/dubbo-support/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -282,6 +310,13 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
+    
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
@@ -289,14 +324,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-route-1/</loc>
-    
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
@@ -310,7 +338,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-route-1/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
@@ -457,20 +485,6 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-third/</loc>
-    
-    <lastmod>2017-10-12T05:37:43.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-second/</loc>
-    
-    <lastmod>2017-10-12T05:37:05.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/Eureka/build-debugging-environment/</loc>
     
     <lastmod>2017-10-12T05:36:45.000Z</lastmod>
@@ -478,14 +492,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Eureka/project-structure/</loc>
+    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-first/</loc>
     
     <lastmod>2017-10-12T05:36:08.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Eureka/eureka-client-init-first/</loc>
+    <loc>http://www.iocoder.cn/Eureka/project-structure/</loc>
     
     <lastmod>2017-10-12T05:36:08.000Z</lastmod>
     
@@ -611,14 +625,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
     
     <lastmod>2017-10-12T05:33:33.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/reg-center-zookeeper/</loc>
     
     <lastmod>2017-10-12T05:33:33.000Z</lastmod>
     
@@ -649,13 +663,6 @@
     <loc>http://www.iocoder.cn/Architecture/books-recommended/</loc>
     
     <lastmod>2017-10-12T05:27:18.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Architecture/talk-about-java-unit-test/</loc>
-    
-    <lastmod>2017-10-12T05:26:29.000Z</lastmod>
     
   </url>
   
