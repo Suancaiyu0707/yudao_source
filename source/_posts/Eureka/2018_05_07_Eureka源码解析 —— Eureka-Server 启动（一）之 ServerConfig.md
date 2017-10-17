@@ -106,7 +106,7 @@ permalink: Eureka/eureka-server-init-first
     * `#getRemoteRegionFetchThreadPoolSize()` ：TODO[0009]：RemoteRegionRegistry。
     * `#disableTransparentFallbackToOtherRegion()` ：是否禁用本地读取不到注册信息，从远程 Eureka-Server 读取。
 * **Eureka-Server 集群同步相关**
-    * TODO[0021]：集群同步
+    * 在 [《Eureka 源码解析 —— Eureka-Server 集群同步》](http://www.iocoder.cn/Eureka/instance-registry-register/)
     * `#getMaxThreadsForPeerReplication()` ：同步应用实例信息最大线程数。
     * `#getMaxElementsInPeerReplicationPool()` ：待执行同步应用实例信息事件缓冲最大数量。
     * `#getMaxTimeForReplication()` ：执行单个同步应用实例信息状态任务最大时间。
