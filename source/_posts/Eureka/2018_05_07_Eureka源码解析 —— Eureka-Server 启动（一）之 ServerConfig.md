@@ -111,8 +111,8 @@ permalink: Eureka/eureka-server-init-first
     * `#getMaxElementsInPeerReplicationPool()` ：待执行同步应用实例信息事件缓冲最大数量。
     * `#getMaxTimeForReplication()` ：执行单个同步应用实例信息状态任务最大时间。
     * `#shouldSyncWhenTimestampDiffers()` ：是否同步应用实例信息，当应用实例信息最后更新时间戳( `lastDirtyTimestamp` )发生改变。
-    * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。TODO[0019]：集群初始化
-    * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。TTODO[0019]：集群初始化
+    * `#getWaitTimeInMsWhenSyncEmpty()` ：Eureka-Server **启动**时，从远程 Eureka-Server 读取不到注册信息时，多长时间不允许 Eureka-Client 访问。
+    * `#getPeerEurekaNodesUpdateIntervalMs()` ：Eureka-Server 集群节点更新频率，单位：毫秒。
 
 ## 2.3 DefaultEurekaServerConfig
 
