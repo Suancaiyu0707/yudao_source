@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Eureka/rate-limiter/
 http://www.iocoder.cn/Eureka/server-cluster/
 http://www.iocoder.cn/Eureka/transport/
 http://www.iocoder.cn/Eureka/end-point-and-resolver/

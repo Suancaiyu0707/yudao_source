@@ -62,9 +62,9 @@ permalink: Eureka/eureka-server-init-first
     * Eureka-Server 未实现认证。在 Spring-Cloud-Eureka-Server，通过 `spring-boot-starter-security` 模块支持。[《spring cloud-给Eureka Server加上安全的用户认证》](http://blog.csdn.net/liuchuanhong1/article/details/54729556)有详细解析。
     * `#shouldLogIdentityHeaders()` ：打印访问的客户端名和版本号，配合 [Netflix Servo](https://github.com/Netflix/servo) 实现监控信息采集。
 * **请求限流相关**
-    * TODO[0020]：限流
+    * [《Eureka 源码解析 —— 基于令牌桶算法的 RateLimiter》](http://www.iocoder.cn/Eureka/rate-limiter/?self) 有详细解析。
     * `#isRateLimiterEnabled()` ：请求限流是否开启。
-    * `#isRateLimiterThrottleStandardClients()` ：是否限制**非标准**客户端的访问。**标准客户端**通过请求头( `header` )的 `"DiscoveryIdentity-Name"` 来判断，是否在标准客户端名集合里。
+    * `#isRateLimiterThrottleStandardClients()` ：是否对**标准客户端**判断是否限流。**标准客户端**通过请求头( `header` )的 `"DiscoveryIdentity-Name"` 来判断，是否在标准客户端名集合里。
     * `#getRateLimiterPrivilegedClients()` ：**标准**客户端名集合。默认包含`"DefaultClient"` 和 `"DefaultServer"` 。
     * `#getRateLimiterBurstSize()` ：速率限制的 burst size ，使用**令牌桶算法**。
     * `#getRateLimiterRegistryFetchAverageRate()` ：**增量**拉取注册信息的速率限制。

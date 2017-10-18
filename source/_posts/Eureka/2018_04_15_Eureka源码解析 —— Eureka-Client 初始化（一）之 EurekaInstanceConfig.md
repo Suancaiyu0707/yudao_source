@@ -120,7 +120,6 @@ EurekaInstanceConfig 整体类关系如下图：
     * 每个属性**最前面**的 `eureka` 即是配置命名空间，一般情况无需修改。
 
 * TODO[0004]：健康检查
-* TODO[0006]：getDefaultAddressResolutionOrder
 * `#isInstanceEnabledOnit()` ：应用初始化后是否开启。在[「3. InstanceInfo」](#)详细解析。
 
 ## 2.3 AbstractInstanceConfig

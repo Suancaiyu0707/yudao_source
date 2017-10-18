@@ -123,7 +123,9 @@ EurekaClientConfig 整体类关系如下图：
     * `#fetchRegistryForRemoteRegions()` ：TODO[0009]：RemoteRegionRegistry
     * `#getCacheRefreshExecutorThreadPoolSize()` ：注册信息缓存刷新线程池大小。
     * `#getCacheRefreshExecutorExponentialBackOffBound()` ：注册信息缓存刷新执行超时后的延迟重试的时间。
-    * `#getRegistryRefreshSingleVipAddress()` ：TODO[0010]：getRegistryRefreshSingleVipAddress
+    * `#getRegistryRefreshSingleVipAddress()` ：只获得一个 `vipAddress` 对应的应用实例们的注册信息。
+        * 实现逻辑和 [《Eureka 源码解析 —— 应用实例注册发现 （六）之全量获取》](http://www.iocoder.cn/Eureka/instance-registry-fetch-all/?self)
+        * 本系列暂时写对它的源码解析，感兴趣的同学可以看 `com.netflix.discovery.shared.transport.EurekaHttpClient#getVip(String, String...)` 和 `com.netflix.eureka.resources.AbstractVIPResource` 。
 * **注册：向 Eureka-Server 注册自身服务**
     * `#shouldRegisterWithEureka()` ：是否向 Eureka-Server 注册自身服务。
     * `#shouldUnregisterOnShutdown()` ：是否向 Eureka-Server 取消注册自身服务，当进程关闭时。

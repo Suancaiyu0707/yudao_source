@@ -371,7 +371,7 @@ Eureka-Server 启动时，调用 `PeerAwareInstanceRegistryImpl#syncUp()` 方法
        // ... 省略其他代码
        return true;
     }
-    ``` 
+    ```
 
 # 4. 同步注册信息
 
@@ -716,7 +716,7 @@ private void replicateInstanceActionsToPeers(Action action, String appName,
 ```
 
 * 第 10 行 ，调用 `#isSuccess(...)` 方法，判断请求是否成功，响应状态码是否在  [200, 300) 范围内。
-* 第 11 至 13 行 ：状态码 503 ，目前 Eureka-Server 返回 503 的原因是被限流。在 [《TODO[0021]：限流》]() 详细解析。**该情况为瞬时错误，会重试该同步操作任务**，在 [《Eureka 源码解析 —— 任务批处理》「3. 任务处理器」](http://www.iocoder.cn/Eureka/batch-tasks/?self) 有详细解析。
+* 第 11 至 13 行 ：状态码 503 ，目前 Eureka-Server 返回 503 的原因是被限流。在 [《Eureka 源码解析 —— 基于令牌桶算法的 RateLimiter》](http://www.iocoder.cn/Eureka/rate-limiter/?self) 详细解析。**该情况为瞬时错误，会重试该同步操作任务**，在 [《Eureka 源码解析 —— 任务批处理》「3. 任务处理器」](http://www.iocoder.cn/Eureka/batch-tasks/?self) 有详细解析。
 * 第 14 至 18 行 ：非**预期**状态码，目前 Eureka-Server 在代码上看下来，不会返回这样的状态码。**该情况为永久错误，会重试该同步操作任务**，在 [《Eureka 源码解析 —— 任务批处理》「3. 任务处理器」](http://www.iocoder.cn/Eureka/batch-tasks/?self) 有详细解析。
 * 第 20 行 ：请求成功，调用 `#handleBatchResponse(...)` 方法，逐个处理**每个** ReplicationTask 和 ReplicationInstanceResponse 。**这里有一点要注意下，请求成功指的是整个请求成功，实际每个 ReplicationInstanceResponse 可能返回的状态码不在 [200, 300) 范围内**。该方法下文详细解析。
 * 第 23 至 25 行 ：请求发生网络异常，例如网络超时，打印网络异常日志。目前日志的打印为部分采样，条件为网络发生异常每间隔 10 秒打印一条，避免网络发生异常打印超级大量的日志。**该情况为永久错误，会重试该同步操作任务**，在 [《Eureka 源码解析 —— 任务批处理》「3. 任务处理器」](http://www.iocoder.cn/Eureka/batch-tasks/?self) 有详细解析。
@@ -832,7 +832,26 @@ OK，撒花！记住：Eureka 通过 Heartbeat 实现 Eureka-Server 集群同步
 
 写的比较嗨皮，所以就送胖友一只胖友
 
-![](http://www.iocoder.cn/images/Eureka/2018_08_07/01.png)
+![](http://www.iocoder.cn/images/Eureka/2018_08_07/04.png)
 
 胖友，分享我的公众号( **芋道源码** ) 给你的胖友可好？
 
+以下是草稿，可以凑合看
+
+eureka server 集群假定是 s1 s2  
+
+1）client 向 s1 注册，有一个 lastDirtyTime ，正常情况下成功， s1 会向 s2 同步  
+2）client 向 s1 注册（成功，但是网络波动），然后 client 发生状态的变化，lastDirtyTime 变化，向 s2 注册。  
+这个时候，s1 s2 是冲突的，但是他们会互相同步，实际 s2 => s1 的注册会真正成功，s1 => s2 的注册不会返回失败，但是实际 s2 处理的时候，用的是自身的。  
+
+心跳只是最终去校验。  
+
+理论来说，心跳不应该带 lastDirtyTime 参数。带的原因就是为了做固定周期的比较。  
+
+最优解是 注册 就处理掉数据不一致  
+次优解是 心跳 处理掉数据不一致  
+
+如果在类比，  
+
+注册，相当于 insertOrUpdate   
+心跳，附加了校验是否要发起【注册】  
