@@ -8,6 +8,8 @@ permalink: Eureka/server-cluster
 
 摘要: 原创出处 http://www.iocoder.cn/Eureka/server-cluster/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Eureka 1.8.X 版本**
+
 - [1. 概述](http://www.iocoder.cn/Eureka/server-cluster/)
 - [2. 集群节点初始化与更新](http://www.iocoder.cn/Eureka/server-cluster/)
   - [2.1 集群节点启动](http://www.iocoder.cn/Eureka/server-cluster/)
