@@ -7,7 +7,7 @@ permalink: TCC-Transaction/tcc-core
 
 ---
 
-摘要: 原创出处 http://www.iocoder.cn// 「芋道源码」欢迎转载，保留摘要，谢谢！
+摘要: 原创出处 http://www.iocoder.cn/TCC-Transaction/tcc-core 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 **本文主要基于 TCC-Transaction 1.2.3.3 正式版**  
 
