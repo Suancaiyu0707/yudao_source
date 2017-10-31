@@ -1,3 +1,4 @@
+http://www.iocoder.cn/Hystrix/command-execute-result-cache/
 http://www.iocoder.cn/Hystrix/command-execute-mode/
 http://www.iocoder.cn/Hystrix/build-debugging-environment/
 http://www.iocoder.cn/Eureka/string-cache/
@@ -97,4 +98,3 @@ http://www.iocoder.cn/RocketMQ/topic/
 http://www.iocoder.cn/RocketMQ/namesrv-intro/
 http://www.iocoder.cn/RocketMQ/why-read-RocketMQ-source-code/
 http://www.iocoder.cn/Architecture/talk-about-java-unit-test/
-http://www.iocoder.cn/Architecture/talk-about-global-id/
