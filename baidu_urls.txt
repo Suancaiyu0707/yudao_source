@@ -1,3 +1,4 @@
+http://www.iocoder.cn/RxJava/scheduler/
 http://www.iocoder.cn/RxJava/blocking-observable/
 http://www.iocoder.cn/RxJava/observable-defer/
 http://www.iocoder.cn/Hystrix/command-execute-result-cache/
@@ -27,8 +28,8 @@ http://www.iocoder.cn/Eureka/eureka-client-init-first/
 http://www.iocoder.cn/Eureka/build-debugging-environment/
 http://www.iocoder.cn/Eureka/project-structure/
 http://www.iocoder.cn/TCC-Transaction/http-sample/
-http://www.iocoder.cn/TCC-Transaction/console/
 http://www.iocoder.cn/TCC-Transaction/dubbo-support/
+http://www.iocoder.cn/TCC-Transaction/console/
 http://www.iocoder.cn/TCC-Transaction/transaction-recovery/
 http://www.iocoder.cn/TCC-Transaction/transaction-repository/
 http://www.iocoder.cn/TCC-Transaction/tcc-core/
@@ -38,8 +39,8 @@ http://www.iocoder.cn/Elastic-Job/cloud-job-failover/
 http://www.iocoder.cn/Elastic-Job/cloud-local-executor/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-second/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/
-http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Architecture/how-to-read-article/
+http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Elastic-Job/cloud-job-config/
 http://www.iocoder.cn/Elastic-Job/job-console/
 http://www.iocoder.cn/Architecture/how-to-read-source-code/
@@ -48,6 +49,7 @@ http://www.iocoder.cn/Elastic-Job/reconcile/
 http://www.iocoder.cn/Elastic-Job/job-listener/
 http://www.iocoder.cn/Elastic-Job/job-event-trace/
 http://www.iocoder.cn/Elastic-Job/job-failover/
+http://www.iocoder.cn/RxJava/2019_01_22_RxJava 源码解析 —— Observable#subscribeOn(Scheduler)/
 http://www.iocoder.cn/Elastic-Job/job-sharding/
 http://www.iocoder.cn/Elastic-Job/job-sharding-strategy/
 http://www.iocoder.cn/Elastic-Job/election/
@@ -96,5 +98,3 @@ http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/
 http://www.iocoder.cn/RocketMQ/message-store/
 http://www.iocoder.cn/RocketMQ/message-send-and-receive/
 http://www.iocoder.cn/RocketMQ/message/
-http://www.iocoder.cn/RocketMQ/topic/
-http://www.iocoder.cn/RocketMQ/namesrv-intro/

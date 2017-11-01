@@ -14,6 +14,17 @@ permalink: RxJava/blocking-observable
 
 -------
 
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 > [《ReactiveX/RxJava文档中文版 —— 阻塞操作》](https://mcxiaoke.gitbooks.io/rxdocs/content/operators/Blocking-Observable-Operators.html)  
 > BlockingObservable 的方法不是将一个 Observable 变换为另一个，也不是过滤Observables，它们会打断 Observable 的调用链，会阻塞等待直到 Observable 发射了想要的数据，然后返回这个数据（而不是一个 Observable ）。
 

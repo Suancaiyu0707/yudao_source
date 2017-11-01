@@ -1,4 +1,22 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E"><meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0"><meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214"><meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1"><meta name="sogou_site_verification" content="MpPsku240L"><title>Eureka 源码解析 —— 项目结构简介 | 芋道源码 —— 纯源码解析BLOG</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1"><meta name="author" content="王文斌"><meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Eureka/project-structure/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>Eureka 源码解析 —— 项目结构简介 | 芋道源码 —— 纯源码解析BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="王文斌">
+    
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Eureka/project-structure/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 本文主要基于 Eureka 1.8.X 版本  
 
 1. 概述
@@ -7,4 +25,564 @@
 
 
 2. eureka-client
-2.1 eu"><meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表"><link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml"><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/css/style.css"><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="//hm.baidu.com/hm.js?9e70e3362807c1bd185a79655b307027";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script>!function(){var t="http:"==document.location.protocol?"http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";document.write('<script src="'+t+'" id="sozz"><\/script>')}()</script><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head></html><body><header><div><div id="textlogo"><h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1><a class="blog-motto">愿半生编码，如一生老友！</a></div><div class="navbar"><a class="navbutton navmobile" href="#" title="菜单"></a></div><nav class="animated"><ul><ul><li><a href="/">文章</a></li><li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li><li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li><li><a href="/link_url">友链</a></li></ul></ul></nav></div></header><div id="container"><div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div><div id="toc" class="toc-aside"><strong class="toc-title">文章目录</strong><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-简介"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-项目结构"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 项目结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-eureka-client"><span class="toc-number">2.</span> <span class="toc-text">2. eureka-client</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-eureka-client-archaius2"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 eureka-client-archaius2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-eureka-client-jersey2"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 eureka-client-jersey2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-eureka-core"><span class="toc-number">3.</span> <span class="toc-text">3. eureka-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-eureka-core-jersey2"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 eureka-core-jersey2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-eureka-resources"><span class="toc-number">4.</span> <span class="toc-text">4. eureka-resources</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-eureka-server"><span class="toc-number">5.</span> <span class="toc-text">5. eureka-server</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-eureka-server-governator"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 eureka-server-governator</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-eureka-examples"><span class="toc-number">6.</span> <span class="toc-text">6. eureka-examples</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-eureka-test-utils"><span class="toc-number">7.</span> <span class="toc-text">7. eureka-test-utils</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">8.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol></div><div id="asidepart"><aside class="clearfix"><div id="authorInfo"><div><img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"></div><div class="social-list"></div></div><div class="categorieslist"><p class="asidetitle">微信公众号福利：芋道源码</p><ul><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">0. 阅读源码葵花宝典</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">2. 您对于源码的疑问每条留言都将得到认真回复</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">3. 新的源码解析文章实时收到通知，每周六十点更新</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群</a></li></ul></div><div class="categorieslist"><p class="asidetitle">分类</p><ul><li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li><li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li><li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li><li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li><li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>3</sup></a></li><li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li><li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li><li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li><li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>2</sup></a></li><li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li><li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li><li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li></ul></div></aside></div><div id="main" class="post" itemscope="" itemprop="blogPost"><article itemprop="articleBody"><header class="article-info clearfix"><h1 itemprop="name"><a href="/Eureka/project-structure/" title="Eureka 源码解析 —— 项目结构简介" itemprop="url">Eureka 源码解析 —— 项目结构简介</a></h1><p class="article-author"></p><p class="article-time">总阅读量:<span id="busuanzi_value_page_pv"></span>次</p></header><div class="article-content"><p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/project-structure/">http://www.iocoder.cn/Eureka/project-structure/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p><p><strong>本文主要基于 Eureka 1.8.X 版本</strong></p><ul><li><a href="http://www.iocoder.cn/Eureka/project-structure/">1. 概述</a><ul><li><a href="http://www.iocoder.cn/Eureka/project-structure/">1.1 简介</a></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">1.2 项目结构</a></li></ul></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">2. eureka-client</a><ul><li><a href="http://www.iocoder.cn/Eureka/project-structure/">2.1 eureka-client-archaius2</a></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">2.2 eureka-client-jersey2</a></li></ul></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">3. eureka-core</a><ul><li><a href="http://www.iocoder.cn/Eureka/project-structure/">3.1 eureka-core-jersey2</a></li></ul></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">4. eureka-resources</a></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">5. eureka-server</a><ul><li><a href="http://www.iocoder.cn/Eureka/project-structure/">5.1 eureka-server-governator</a></li></ul></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">6. eureka-examples</a></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">7. eureka-test-utils</a></li><li><a href="http://www.iocoder.cn/Eureka/project-structure/">666. 彩蛋</a></li></ul><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：</p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Eureka 的项目结构</strong>，附带部分简介和原理。</p><p>Eureka 项目地址：<a href="https://github.com/Netflix/eureka" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/Netflix/eureka</a></p><ul><li>请注意下，不是 <code>spring-cloud-netflix-eureka-client</code> / <code>spring-cloud-netflix-eureka-server</code> 。</li><li>笔者 Fork 的代码仓库 <a href="https://github.com/YunaiV/eureka" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/YunaiV/eureka</a>，会随着这个系列的文章逐渐增加<strong>中文注释</strong>，可以先 Star 一下。</li></ul><p><strong>推荐 Spring Cloud 书籍</strong>：</p><ul><li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li><li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li><li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li><li>两书齐买，京东包邮。</li></ul><h2 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h2><p>Eureka 是 <a href="https://zh.wikipedia.org/wiki/Netflix" rel="external nofollow noopener noreferrer" target="_blank">Netflix</a> 开源的服务注册发现组件，分成 Client 和 Server 两部分。简化架构如下图：</p><p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/01.png" alt=""></p><ul><li>Eureka-Server ：通过 REST 协议暴露服务，提供应用服务的注册和发现的功能。</li><li>Application Provider ：应用服务提供者，内嵌 Eureka-Client ，通过它向 Eureka-Server 注册自身服务。</li><li>Application Consumer ：应用服务消费者，内嵌 Eureka-Client ，通过它从 Eureka-Server 获取服务列表。</li><li>请注意下，Application Provider 和 Application Consumer 强调扮演的角色，实际可以在同一 JVM 进程，即是服务的提供者，又是服务的消费者。</li></ul><h2 id="1-2-项目结构"><a href="#1-2-项目结构" class="headerlink" title="1.2 项目结构"></a>1.2 项目结构</h2><p>Eureka 项目结构如下：</p><p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/02.png" alt=""></p><p>❓❓❓不只 Eureka-Client 、 Eureka-Server ❓❓❓</p><p>淡定。我们一起来了解每个模块的功能和结构。</p><h1 id="2-eureka-client"><a href="#2-eureka-client" class="headerlink" title="2. eureka-client"></a>2. <code>eureka-client</code></h1><p><code>eureka-client</code> 模块为 Eureka-Client 的功能实现：</p><ul><li><code>com.netflix.appinfo</code> 包：Eureka-Client 的应用配置。此处的应用指的就是上文提到的 Application Provider，Application Consumer。</li><li><p><code>com.netflix.discovery</code> 包：Eureka-Client 的注册与发现相关功能。</p><ul><li><code>com.netflix.discovery.DiscoveryClient</code> 类：注册发现客户端实现类。</li><li><p><code>com.netflix.discovery.guice</code> 包：Eureka <strong>计划</strong>使用 <a href="https://github.com/google/guice" rel="external nofollow noopener noreferrer" target="_blank">Google Guice</a> 实现依赖注入，参见本文「5.1 <code>eureka-server-governator</code>」。一方面 Guice 是轻量级的依赖注入框架，另一方面避免和业务代码的 Spring 版本冲突。</p><blockquote><p>Guice (pronounced ‘juice’) is a lightweight dependency injection framework for Java 6 and above, brought to you by Google.</p></blockquote></li><li><p><code>com.netflix.discovery.converters</code> 包：Eureka 内部传输数据编解码转换器，支持 XML / JSON 格式。</p></li><li><code>com.netflix.discovery.endpoint</code> 包：目前该包正在重构，和下文的 <code>com.netflix.discovery.shared.dns</code> 和 <code>com.netflix.discovery.shared.resolver</code> 用途相近。</li><li><code>com.netflix.disvoery.provider</code> 包：目前仅有 DiscoveryJerseyProvider 类。该类声明自定义的 Jersey 请求和响应的序列化和反序列化实现。</li><li><code>com.netflix.disvoery.providers</code> 包：目前仅有 DefaultEurekaClientConfigProvider 类。该类实现 <code>javax.inject.Provider</code> 接口，设置 EurekaClientConfig ( Eureka 客户端配置 ) 的生成工厂。感兴趣的同学，可以点击<a href="http://blog.csdn.net/derekjiang/article/details/7231490" rel="external nofollow noopener noreferrer" target="_blank">《Google-Guice入门介绍》</a>搜索 <strong>Provider</strong> 关键字。</li><li><p><code>com.netflix.discovery.shared</code> 包：Eureka-Client 和 Eureka-Server 注册发现相关的共享重用的代码。下文你会看到，Eureka-Server 通过 <code>eureka-core</code> 模块实现，<code>eureka-core</code> 依赖 <code>eureka-client</code>。<strong>粗一看，我们会感觉 What ？Eureka-Server 代码依赖 Eureka-Client 代码</strong>！？这个和 Eureka-Server 多节点注册信息 P2P 同步的实现有关。一个 Eureka-Server 收到 Eureka-Client 注册请求后，Eureka-Server 会自己模拟 Eureka-Client 发送注册请求到其它的 Eureka-Server，因此部分实现代码就使用到了这个包，在 <a href="http://www.iocoder.cn/Eureka/server-cluster/?self">《Eureka 源码解析 —— Eureka-Server 集群同步》</a> 详细解析。</p><ul><li><code>com.netflix.discovery.shared.transport</code> 包：Eureka-Client 对 Eureka-Server RESTful 的 HTTP 客户端，基于 Jersey Client 实现。Jersey 在下文「2.1 <code>eureka-client-jersey2</code>」详细解析。</li><li><code>com.netflix.discovery.shared.dns</code> 包 ：DNS 解析器。</li><li><code>com.netflix.discovery.shared.resolver</code> 包：Eureka Endpoint 解析器。在 <a href="http://www.iocoder.cn/Eureka/end-point-and-resolver/?self">《Eureka 源码解析 —— EndPoint 与 解析器》</a> 有详细解析。</li></ul></li><li><p><code>com.netflix.discovery.util</code> 包 ：工具类。</p></li></ul></li></ul><h2 id="2-1-eureka-client-archaius2"><a href="#2-1-eureka-client-archaius2" class="headerlink" title="2.1 eureka-client-archaius2"></a>2.1 <code>eureka-client-archaius2</code></h2><p><a href="https://github.com/Netflix/archaius" rel="external nofollow noopener noreferrer" target="_blank">Archaius</a> 是 Netflix 开源的配置管理组件。</p><p>Archaius 目前有 1.x 和 2.x 版本，默认情况下，Eureka 使用 1.x 版本。从官方文档上来看，2.x 版本仍然在开发中。</p><blockquote><p>FROM <a href="https://github.com/YunaiV/eureka/blob/103e0875b08c9ff4abb85eaab672df2041b63558/eureka-client-archaius2/README.md" rel="external nofollow noopener noreferrer" target="_blank">eureka-client-archaius2 README</a><br>This is a version of eureka-client that has been ported to use Archaius 2.x as the backing configuration system. Please note that this client is still work in progress. This client is also only java8 compatible (as Archaius 2.x is only java8 compatible).</p></blockquote><h2 id="2-2-eureka-client-jersey2"><a href="#2-2-eureka-client-jersey2" class="headerlink" title="2.2 eureka-client-jersey2"></a>2.2 <code>eureka-client-jersey2</code></h2><p><a href="https://github.com/jersey/jersey" rel="external nofollow noopener noreferrer" target="_blank">Jersey</a> 是 JAX-RS（JSR311）开源参考实现，用于构建 RESTful Web Service。</p><ul><li>Eureka-Server 使用 <a href="https://github.com/jersey/jersey/tree/9fdb7e386dc56b33f569ab198caf818d7a18525d/core-server/" rel="external nofollow noopener noreferrer" target="_blank">Jersey Server</a> 创建 RESTful Server 。</li><li>Eureka-Client 使用 <a href="https://github.com/jersey/jersey/tree/9fdb7e386dc56b33f569ab198caf818d7a18525d/core-client/" rel="external nofollow noopener noreferrer" target="_blank">Jersey Client</a> 请求 Eureka-Server 。</li></ul><p>Jersey 目前有 1.x 和 2.x 版本，默认情况下，Eureka 使用 1.x 版本。从官方文档上来看，2.x 版本由社区实现，Netflix 自己暂未使用。</p><blockquote><p>FROM <a href="https://github.com/Netflix/eureka/tree/30a85dc31be1c9d399e4e6ec5150759fb8777edf/eureka-client-jersey2/" rel="external nofollow noopener noreferrer" target="_blank">eureka-client-jersey2 README</a><br>Please note that this jersey2 compatible Eureka client (eureka-client-jersey2) is created and maintained by the community. Netflix does not currently use this library internally.</p></blockquote><h1 id="3-eureka-core"><a href="#3-eureka-core" class="headerlink" title="3. eureka-core"></a>3. <code>eureka-core</code></h1><p><code>eureka-core</code> 模块为 Eureka-Server 的功能实现：</p><ul><li><code>com.netflix.eureka.EurekaBootStrap</code> 类：Eureka-Server 启动类。</li><li><code>com.netflix.eureka.aws</code> 包：与亚马逊 AWS 服务相关的类。由于笔者和大多数读者都对 AWS 暂不了解，本系列<a href="#">《Eureka 源码解析》</a>会跳过和 AWS 相关的代码。</li><li><code>com.netflix.eureka.cluster</code> 包：Eureka-Server 集群数据复制相关的代码。</li><li><code>com.netflix.eureka.lease</code> 包：应用注册后的<strong>租约</strong>管理( 注册 / 取消 / 续期 / 过期 )。</li><li><code>com.netflix.eureka.resousrces</code> 包：资源，基于 Jersey Server 实现，相当于 Spring MVC 的控制层代码。</li><li><code>com.netflix.eureka.transport</code> 包：Eureka-Server 对 Eureka-Server 的 RESTful HTTP 客户端，基于 <code>com.netflix.discovery.shared.transport</code> 封装实现。</li><li><code>com.netflix.eureka.util</code> 包：工具类。</li></ul><h2 id="3-1-eureka-core-jersey2"><a href="#3-1-eureka-core-jersey2" class="headerlink" title="3.1 eureka-core-jersey2"></a>3.1 <code>eureka-core-jersey2</code></h2><p>参见本文「2.1 <code>eureka-client-jersey2</code>」。</p><h1 id="4-eureka-resources"><a href="#4-eureka-resources" class="headerlink" title="4. eureka-resources"></a>4. <code>eureka-resources</code></h1><p><code>eureka-resources</code> 模块，使用 JSP 实现 Eureka-Server 的运维后台界面。项目结构如下图：</p><p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/03.png" alt=""></p><h1 id="5-eureka-server"><a href="#5-eureka-server" class="headerlink" title="5. eureka-server"></a>5. <code>eureka-server</code></h1><p><code>eureka-server</code> 模块，将 <code>eureka-client</code> + <code>eureka-core</code> + <code>eureka-resources</code> 三者打包成 Eureka-Server 的 <code>war</code> 包。项目结构如下图：</p><p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/04.png" alt=""></p><h2 id="5-1-eureka-server-governator"><a href="#5-1-eureka-server-governator" class="headerlink" title="5.1 eureka-server-governator"></a>5.1 <code>eureka-server-governator</code></h2><p><code>eureka-server-governator</code> 模块，使用 <a href="https://github.com/Netflix/governator" rel="external nofollow noopener noreferrer" target="_blank">Netflix Governator</a> 管理 Eureka-Server 的生命周期。</p><blockquote><p>FROM <a href="http://www.infoq.com/cn/news/2013/02/netflix-opensource" rel="external nofollow noopener noreferrer" target="_blank">http://www.infoq.com/cn/news/2013/02/netflix-opensource</a><br><strong>Governator</strong>，一款对 Google Guice 进行扩展的类库，提供了Classpath扫描及自动绑定、生命周期管理、成员属性验证等功能。</p></blockquote><p>目前该模块正在实现阶段。</p><blockquote><p>FROM <a href="https://github.com/Netflix/eureka/tree/30a85dc31be1c9d399e4e6ec5150759fb8777edf/eureka-server-governator/" rel="external nofollow noopener noreferrer" target="_blank">eureka-server-governator README</a><br>This server build is still experimental.</p></blockquote><h1 id="6-eureka-examples"><a href="#6-eureka-examples" class="headerlink" title="6. eureka-examples"></a>6. <code>eureka-examples</code></h1><p><code>eureka-examples</code> 模块，提供 Eureka-Client 使用例子。</p><h1 id="7-eureka-test-utils"><a href="#7-eureka-test-utils" class="headerlink" title="7. eureka-test-utils"></a>7. <code>eureka-test-utils</code></h1><p><code>eureka-test-utils</code> 模块，提供 Eureka 单元测试工具类。</p><h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>第一篇 Eureka 的文章，如果有地方写的不正确，还望指出，谢谢。</p><p>下一篇 Eureka 调试环境搭建。</p><p>更多 Eureka 内容，推荐阅读如下文章：</p><ul><li>携程 —— <a href="http://techshow.ctrip.com/archives/1699.html" rel="external nofollow noopener noreferrer" target="_blank">《深度剖析服务发现组件Netflix Eureka》</a></li><li>程序员DD —— <a href="http://blog.didispace.com/springcloud-sourcecode-eureka/" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud源码分析（一）Eureka》</a></li><li>王鸿飞 —— <a href="http://blog.spring-cloud.io/blog/sc-eureka.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud Netflix Eureka源码导读与原理分析》</a></li><li>许进 —— <a href="http://xujin.org/sc/sc-netflix-eureka/" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud Netflix之Eureka上篇》</a></li></ul></div><footer class="article-footer clearfix"><div class="article-categories"><span></span> <a class="article-category-link" href="/categories/Eureka/">Eureka</a></div><div class="article-share" id="share"><div data-url="http://www.iocoder.cn/Eureka/project-structure/" data-title="Eureka 源码解析 —— 项目结构简介 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix"></div></div></footer></article><nav class="article-nav clearfix"><div class="prev"><a href="/Eureka/build-debugging-environment/" title="Eureka 源码解析 —— 调试环境搭建"><strong>PREVIOUS:</strong><br><span>Eureka 源码解析 —— 调试环境搭建</span></a></div><div class="next"><a href="/TCC-Transaction/http-sample/" title="TCC-Transaction 源码分析 —— 项目实战"><strong>NEXT:</strong><br><span>TCC-Transaction 源码分析 —— 项目实战</span></a></div></nav></div></div><footer><div id="footer"><img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display:none"><p class="copyright">© 2017 <a href="http://www.iocoder.cn" target="_blank" title="王文斌">王文斌</a> && <span style="display:inline" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span> && <span style="display:inline" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span></p></div><div class="copyright">沪ICP备17037075号-1</div></footer><script src="/js/jquery-2.1.0.min.js"></script><script type="text/javascript">$(document).ready(function(){function e(){"number"==typeof window.innerWidth?n=window.innerWidth:document.documentElement&&document.documentElement.clientWidth&&(n=document.documentElement.clientWidth)}$(".navbar").click(function(){$("header nav").toggleClass("shownav")});var n=0,s=$("#main"),a=$("#asidepart"),o=$(".closeaside"),d=$(".openaside");$(window).resize(function(){e(),n>=1024?$("header nav").removeClass("shownav"):(s.removeClass("moveMain"),a.css("display","block").removeClass("fadeOut"),d.css("display","none"),$("#toc.toc-aside").css("display","none"))}),o.click(function(){a.addClass("fadeOut").css("display","none"),d.css("display","block").addClass("fadeIn"),s.addClass("moveMain")}),d.click(function(){d.css("display","none").removeClass("beforeFadeIn"),a.css("display","block").removeClass("fadeOut").addClass("fadeIn"),s.removeClass("moveMain")}),$(window).scroll(function(){d.css("top",Math.max(80,260-$(this).scrollTop()))})})</script><script type="text/javascript">$(document).ready(function(){var a=$(".article-content>iframe"),t=$(".article-content>embed"),n=$("#toc");$("article h2");ah=$("article h2"),ta=$("#toc.toc-aside"),o=$(".openaside"),c=$(".closeaside"),a.length>0&&a.wrap('<div class="video-container" />'),t.length>0&&t.wrap('<div class="video-container" />'),0==ah.length?n.css("display","none"):(c.click(function(){ta.css("display","block").addClass("fadeIn")}),o.click(function(){ta.css("display","none")}),$(window).scroll(function(){ta.css("top",Math.max(140,320-$(this).scrollTop()))}))})</script><script type="text/javascript">$(document).ready(function(){var t=$(".share"),a=t.attr("data-url"),e=encodeURIComponent(a),r=['<a href="#" class="overlay" id="qrcode"></a>','<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url='+e+'"/></div>','<a href="#textlogo" class="article-back-to-top" title="Top"></a>','<a href="https://www.facebook.com/sharer.php?u='+e+'" class="article-share-facebook" target="_blank" title="Facebook"></a>','<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>','<a href="https://twitter.com/intent/tweet?url='+e+'" class="article-share-twitter" target="_blank" title="Twitter"></a>','<a href="http://service.weibo.com/share/share.php?title='+t.attr("data-title")+"&url="+e+"&ralateUid="+t.attr("data-tsina")+'&searchPic=true&style=number" class="article-share-weibo" target="_blank" title="Weibo"></a>','<span title="Share to"></span>'].join("");t.append(r),$(".article-share-qrcode").click(function(){var t=$("#qrcode-pic").attr("data-src");$("#qrcode-pic").attr("src",t),$("#qrcode-pic").load(function(){$(".qrcode strong").text(" ")})})})</script><link rel="stylesheet" href="/alert/css/alert.css"><script src="/alert/js/alert.js"></script><script src="/js/jquery.cookie.js"></script><script src="/js/util.js"></script><script type="text/javascript">!function(e,a,t,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=a.createElement(t),s=a.getElementsByTagName(t)[0],o.async=1,o.src="//www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-107572620-1","auto"),ga("send","pageview")</script></body>
+2.1 eu">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-简介"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-项目结构"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 项目结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-eureka-client"><span class="toc-number">2.</span> <span class="toc-text">2. eureka-client</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-eureka-client-archaius2"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 eureka-client-archaius2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-eureka-client-jersey2"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 eureka-client-jersey2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-eureka-core"><span class="toc-number">3.</span> <span class="toc-text">3. eureka-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-eureka-core-jersey2"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 eureka-core-jersey2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-eureka-resources"><span class="toc-number">4.</span> <span class="toc-text">4. eureka-resources</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-eureka-server"><span class="toc-number">5.</span> <span class="toc-text">5. eureka-server</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-eureka-server-governator"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 eureka-server-governator</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-eureka-examples"><span class="toc-number">6.</span> <span class="toc-text">6. eureka-examples</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-eureka-test-utils"><span class="toc-number">7.</span> <span class="toc-text">7. eureka-test-utils</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">8.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>3</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>3</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+    </aside>
+</div>
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Eureka/project-structure/" title="Eureka 源码解析 —— 项目结构简介" itemprop="url">Eureka 源码解析 —— 项目结构简介</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="王文斌">王文斌</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2018-03-31T16:00:00.000Z" itemprop="datePublished">2018-04-01</time>-->
+    <!--更新日期:<time datetime="2017-10-17T14:12:44.000Z" itemprop="dateModified">2017-10-17</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/project-structure/">http://www.iocoder.cn/Eureka/project-structure/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Eureka 1.8.X 版本</strong>  </p>
+<ul>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">1. 概述</a><ul>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">1.1 简介</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">1.2 项目结构</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">2. eureka-client</a><ul>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">2.1 eureka-client-archaius2</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">2.2 eureka-client-jersey2</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">3. eureka-core</a><ul>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">3.1 eureka-core-jersey2</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">4. eureka-resources</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">5. eureka-server</a><ul>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">5.1 eureka-server-governator</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">6. eureka-examples</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">7. eureka-test-utils</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/project-structure/">666. 彩蛋</a></li>
+</ul>
+<hr>
+<p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
+<blockquote>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<ol>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li><strong>认真的</strong>源码交流微信群。</li>
+</ol>
+</blockquote>
+<hr>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Eureka 的项目结构</strong>，附带部分简介和原理。</p>
+<p>Eureka 项目地址：<a href="https://github.com/Netflix/eureka" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/Netflix/eureka</a></p>
+<ul>
+<li>请注意下，不是 <code>spring-cloud-netflix-eureka-client</code> / <code>spring-cloud-netflix-eureka-server</code> 。</li>
+<li>笔者 Fork 的代码仓库 <a href="https://github.com/YunaiV/eureka" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/YunaiV/eureka</a>，会随着这个系列的文章逐渐增加<strong>中文注释</strong>，可以先 Star 一下。</li>
+</ul>
+<p><strong>推荐 Spring Cloud 书籍</strong>：</p>
+<ul>
+<li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
+<li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li>
+<li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
+<li>两书齐买，京东包邮。</li>
+</ul>
+<h2 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h2><p>Eureka 是 <a href="https://zh.wikipedia.org/wiki/Netflix" rel="external nofollow noopener noreferrer" target="_blank">Netflix</a> 开源的服务注册发现组件，分成 Client 和 Server 两部分。简化架构如下图：</p>
+<p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/01.png" alt=""></p>
+<ul>
+<li>Eureka-Server ：通过 REST 协议暴露服务，提供应用服务的注册和发现的功能。</li>
+<li>Application Provider ：应用服务提供者，内嵌 Eureka-Client ，通过它向 Eureka-Server 注册自身服务。</li>
+<li>Application Consumer ：应用服务消费者，内嵌 Eureka-Client ，通过它从 Eureka-Server 获取服务列表。</li>
+<li>请注意下，Application Provider 和 Application Consumer 强调扮演的角色，实际可以在同一 JVM 进程，即是服务的提供者，又是服务的消费者。</li>
+</ul>
+<h2 id="1-2-项目结构"><a href="#1-2-项目结构" class="headerlink" title="1.2 项目结构"></a>1.2 项目结构</h2><p>Eureka 项目结构如下：</p>
+<p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/02.png" alt=""></p>
+<p>❓❓❓不只 Eureka-Client 、 Eureka-Server ❓❓❓</p>
+<p>淡定。我们一起来了解每个模块的功能和结构。</p>
+<h1 id="2-eureka-client"><a href="#2-eureka-client" class="headerlink" title="2. eureka-client"></a>2. <code>eureka-client</code></h1><p><code>eureka-client</code> 模块为 Eureka-Client 的功能实现：</p>
+<ul>
+<li><code>com.netflix.appinfo</code> 包：Eureka-Client 的应用配置。此处的应用指的就是上文提到的 Application Provider，Application Consumer。</li>
+<li><p><code>com.netflix.discovery</code> 包：Eureka-Client 的注册与发现相关功能。</p>
+<ul>
+<li><code>com.netflix.discovery.DiscoveryClient</code> 类：注册发现客户端实现类。</li>
+<li><p><code>com.netflix.discovery.guice</code> 包：Eureka <strong>计划</strong>使用 <a href="https://github.com/google/guice" rel="external nofollow noopener noreferrer" target="_blank">Google Guice</a> 实现依赖注入，参见本文「5.1 <code>eureka-server-governator</code>」。一方面 Guice 是轻量级的依赖注入框架，另一方面避免和业务代码的 Spring 版本冲突。</p>
+<blockquote>
+<p>Guice (pronounced ‘juice’) is a lightweight dependency injection framework for Java 6 and above, brought to you by Google. </p>
+</blockquote>
+</li>
+<li><p><code>com.netflix.discovery.converters</code> 包：Eureka 内部传输数据编解码转换器，支持 XML / JSON 格式。</p>
+</li>
+<li><code>com.netflix.discovery.endpoint</code> 包：目前该包正在重构，和下文的 <code>com.netflix.discovery.shared.dns</code> 和 <code>com.netflix.discovery.shared.resolver</code> 用途相近。</li>
+<li><code>com.netflix.disvoery.provider</code> 包：目前仅有 DiscoveryJerseyProvider 类。该类声明自定义的 Jersey 请求和响应的序列化和反序列化实现。</li>
+<li><code>com.netflix.disvoery.providers</code> 包：目前仅有 DefaultEurekaClientConfigProvider 类。该类实现 <code>javax.inject.Provider</code> 接口，设置 EurekaClientConfig ( Eureka 客户端配置 ) 的生成工厂。感兴趣的同学，可以点击<a href="http://blog.csdn.net/derekjiang/article/details/7231490" rel="external nofollow noopener noreferrer" target="_blank">《Google-Guice入门介绍》</a>搜索 <strong>Provider</strong> 关键字。</li>
+<li><p><code>com.netflix.discovery.shared</code> 包：Eureka-Client 和 Eureka-Server 注册发现相关的共享重用的代码。下文你会看到，Eureka-Server 通过 <code>eureka-core</code> 模块实现，<code>eureka-core</code> 依赖 <code>eureka-client</code>。<strong>粗一看，我们会感觉 What ？Eureka-Server 代码依赖 Eureka-Client 代码</strong>！？这个和 Eureka-Server 多节点注册信息 P2P 同步的实现有关。一个 Eureka-Server 收到 Eureka-Client 注册请求后，Eureka-Server 会自己模拟 Eureka-Client 发送注册请求到其它的 Eureka-Server，因此部分实现代码就使用到了这个包，在 <a href="http://www.iocoder.cn/Eureka/server-cluster/?self">《Eureka 源码解析 —— Eureka-Server 集群同步》</a> 详细解析。</p>
+<ul>
+<li><code>com.netflix.discovery.shared.transport</code> 包：Eureka-Client 对 Eureka-Server RESTful 的 HTTP 客户端，基于 Jersey Client 实现。Jersey 在下文「2.1 <code>eureka-client-jersey2</code>」详细解析。</li>
+<li><code>com.netflix.discovery.shared.dns</code> 包 ：DNS 解析器。</li>
+<li><code>com.netflix.discovery.shared.resolver</code> 包：Eureka Endpoint 解析器。在 <a href="http://www.iocoder.cn/Eureka/end-point-and-resolver/?self">《Eureka 源码解析 —— EndPoint 与 解析器》</a> 有详细解析。</li>
+</ul>
+</li>
+<li><p><code>com.netflix.discovery.util</code> 包 ：工具类。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-1-eureka-client-archaius2"><a href="#2-1-eureka-client-archaius2" class="headerlink" title="2.1 eureka-client-archaius2"></a>2.1 <code>eureka-client-archaius2</code></h2><p><a href="https://github.com/Netflix/archaius" rel="external nofollow noopener noreferrer" target="_blank">Archaius</a> 是 Netflix 开源的配置管理组件。</p>
+<p>Archaius 目前有 1.x 和 2.x 版本，默认情况下，Eureka 使用 1.x 版本。从官方文档上来看，2.x 版本仍然在开发中。</p>
+<blockquote>
+<p>FROM <a href="https://github.com/YunaiV/eureka/blob/103e0875b08c9ff4abb85eaab672df2041b63558/eureka-client-archaius2/README.md" rel="external nofollow noopener noreferrer" target="_blank">eureka-client-archaius2 README</a><br>This is a version of eureka-client that has been ported to use Archaius 2.x as the backing configuration system. Please note that this client is still work in progress. This client is also only java8 compatible (as Archaius 2.x is only java8 compatible).</p>
+</blockquote>
+<h2 id="2-2-eureka-client-jersey2"><a href="#2-2-eureka-client-jersey2" class="headerlink" title="2.2 eureka-client-jersey2"></a>2.2 <code>eureka-client-jersey2</code></h2><p><a href="https://github.com/jersey/jersey" rel="external nofollow noopener noreferrer" target="_blank">Jersey</a> 是 JAX-RS（JSR311）开源参考实现，用于构建 RESTful Web Service。</p>
+<ul>
+<li>Eureka-Server 使用 <a href="https://github.com/jersey/jersey/tree/9fdb7e386dc56b33f569ab198caf818d7a18525d/core-server/" rel="external nofollow noopener noreferrer" target="_blank">Jersey Server</a> 创建 RESTful Server 。</li>
+<li>Eureka-Client 使用 <a href="https://github.com/jersey/jersey/tree/9fdb7e386dc56b33f569ab198caf818d7a18525d/core-client/" rel="external nofollow noopener noreferrer" target="_blank">Jersey Client</a> 请求 Eureka-Server 。</li>
+</ul>
+<p>Jersey 目前有 1.x 和 2.x 版本，默认情况下，Eureka 使用 1.x 版本。从官方文档上来看，2.x 版本由社区实现，Netflix 自己暂未使用。</p>
+<blockquote>
+<p>FROM <a href="https://github.com/Netflix/eureka/tree/30a85dc31be1c9d399e4e6ec5150759fb8777edf/eureka-client-jersey2/" rel="external nofollow noopener noreferrer" target="_blank">eureka-client-jersey2 README</a><br>Please note that this jersey2 compatible Eureka client (eureka-client-jersey2) is created and maintained by the community. Netflix does not currently use this library internally.</p>
+</blockquote>
+<h1 id="3-eureka-core"><a href="#3-eureka-core" class="headerlink" title="3. eureka-core"></a>3. <code>eureka-core</code></h1><p><code>eureka-core</code> 模块为 Eureka-Server 的功能实现：</p>
+<ul>
+<li><code>com.netflix.eureka.EurekaBootStrap</code> 类：Eureka-Server 启动类。</li>
+<li><code>com.netflix.eureka.aws</code> 包：与亚马逊 AWS 服务相关的类。由于笔者和大多数读者都对 AWS 暂不了解，本系列<a href="#">《Eureka 源码解析》</a>会跳过和 AWS 相关的代码。</li>
+<li><code>com.netflix.eureka.cluster</code> 包：Eureka-Server 集群数据复制相关的代码。</li>
+<li><code>com.netflix.eureka.lease</code> 包：应用注册后的<strong>租约</strong>管理( 注册 / 取消 / 续期 / 过期 )。</li>
+<li><code>com.netflix.eureka.resousrces</code> 包：资源，基于 Jersey Server 实现，相当于 Spring MVC 的控制层代码。</li>
+<li><code>com.netflix.eureka.transport</code> 包：Eureka-Server 对 Eureka-Server 的 RESTful HTTP 客户端，基于 <code>com.netflix.discovery.shared.transport</code> 封装实现。</li>
+<li><code>com.netflix.eureka.util</code> 包：工具类。</li>
+</ul>
+<h2 id="3-1-eureka-core-jersey2"><a href="#3-1-eureka-core-jersey2" class="headerlink" title="3.1 eureka-core-jersey2"></a>3.1 <code>eureka-core-jersey2</code></h2><p>参见本文「2.1 <code>eureka-client-jersey2</code>」。</p>
+<h1 id="4-eureka-resources"><a href="#4-eureka-resources" class="headerlink" title="4. eureka-resources"></a>4. <code>eureka-resources</code></h1><p><code>eureka-resources</code> 模块，使用 JSP 实现 Eureka-Server 的运维后台界面。项目结构如下图：</p>
+<p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/03.png" alt=""></p>
+<h1 id="5-eureka-server"><a href="#5-eureka-server" class="headerlink" title="5. eureka-server"></a>5. <code>eureka-server</code></h1><p><code>eureka-server</code> 模块，将 <code>eureka-client</code> + <code>eureka-core</code> + <code>eureka-resources</code> 三者打包成 Eureka-Server 的 <code>war</code> 包。项目结构如下图：</p>
+<p><img src="http://www.iocoder.cn/images/Eureka/2018_04_01/04.png" alt=""></p>
+<h2 id="5-1-eureka-server-governator"><a href="#5-1-eureka-server-governator" class="headerlink" title="5.1 eureka-server-governator"></a>5.1 <code>eureka-server-governator</code></h2><p><code>eureka-server-governator</code> 模块，使用 <a href="https://github.com/Netflix/governator" rel="external nofollow noopener noreferrer" target="_blank">Netflix Governator</a> 管理 Eureka-Server 的生命周期。</p>
+<blockquote>
+<p>FROM <a href="http://www.infoq.com/cn/news/2013/02/netflix-opensource" rel="external nofollow noopener noreferrer" target="_blank">http://www.infoq.com/cn/news/2013/02/netflix-opensource</a><br><strong>Governator</strong>，一款对 Google Guice 进行扩展的类库，提供了Classpath扫描及自动绑定、生命周期管理、成员属性验证等功能。</p>
+</blockquote>
+<p>目前该模块正在实现阶段。</p>
+<blockquote>
+<p>FROM <a href="https://github.com/Netflix/eureka/tree/30a85dc31be1c9d399e4e6ec5150759fb8777edf/eureka-server-governator/" rel="external nofollow noopener noreferrer" target="_blank">eureka-server-governator README</a><br>This server build is still experimental.</p>
+</blockquote>
+<h1 id="6-eureka-examples"><a href="#6-eureka-examples" class="headerlink" title="6. eureka-examples"></a>6. <code>eureka-examples</code></h1><p><code>eureka-examples</code> 模块，提供 Eureka-Client 使用例子。</p>
+<h1 id="7-eureka-test-utils"><a href="#7-eureka-test-utils" class="headerlink" title="7. eureka-test-utils"></a>7. <code>eureka-test-utils</code></h1><p><code>eureka-test-utils</code> 模块，提供 Eureka 单元测试工具类。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>第一篇 Eureka 的文章，如果有地方写的不正确，还望指出，谢谢。</p>
+<p>下一篇 Eureka 调试环境搭建。</p>
+<p>更多 Eureka 内容，推荐阅读如下文章：</p>
+<ul>
+<li>携程 —— <a href="http://techshow.ctrip.com/archives/1699.html" rel="external nofollow noopener noreferrer" target="_blank">《深度剖析服务发现组件Netflix Eureka》</a></li>
+<li>程序员DD —— <a href="http://blog.didispace.com/springcloud-sourcecode-eureka/" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud源码分析（一）Eureka》</a></li>
+<li>王鸿飞 —— <a href="http://blog.spring-cloud.io/blog/sc-eureka.html" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud Netflix Eureka源码导读与原理分析》</a></li>
+<li>许进 —— <a href="http://xujin.org/sc/sc-netflix-eureka/" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud Netflix之Eureka上篇》</a></li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Eureka/">Eureka</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Eureka/project-structure/" data-title="Eureka 源码解析 —— 项目结构简介 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Eureka/build-debugging-environment/" title="Eureka 源码解析 —— 调试环境搭建">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Eureka 源码解析 —— 调试环境搭建</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/TCC-Transaction/http-sample/" title="TCC-Transaction 源码分析 —— 项目实战">
+ <strong>NEXT:</strong><br> 
+ <span>TCC-Transaction 源码分析 —— 项目实战
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2017 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="王文斌">王文斌</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+
