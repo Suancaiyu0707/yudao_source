@@ -102,14 +102,14 @@ Worker 实现 `rx.Subscription` **接口**，但是并未实现对应的方法�
 
 [`rx.schedulers.Schedulers`](https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/schedulers/Schedulers.java) ，默认调度器单例工厂，创建上图调度器工厂并进行管理。
 
-> 参考 [《ReactiveX文档中文翻译 —— Scheduler》](https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html#调度器的种类)
+> 参考 [《ReactiveX文档中文翻译 —— Scheduler》「调度器的种类」](https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html#调度器的种类)
 
 | 单例 | 类 | 说明 |
 | --- | --- | --- |
 | `Schedulers#io()` | CachedThreadScheduler | 用于 IO 密集型任务，如异步阻塞 IO 操作，这个调度器的线程池会根据需要增长 |
 | `Schedulers#computation()` | EventLoopsScheduler | 用于普通的计算任务，默认线程数等于处理器的数量 |
 | `Schedulers#from(Executor)` | ExecutorScheduler | 使用指定的 Executor 作为调度器 |
-| `Schedulers#immediate()` | ImmediateScheduler | 使用指定的 Executor 作为调度器 |
+| `Schedulers#immediate()` | ImmediateScheduler | 在当前线程立即开始执行任务 |
 | `Schedulers#newThread()` | NewThreadScheduler | 为每个任务创建一个新线程 |
 | `Schedulers#trampoline()` | TrampolineScheduler | 当其它排队的任务完成后，在当前线程排队开始执行 |
 
