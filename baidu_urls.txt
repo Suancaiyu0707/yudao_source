@@ -2,6 +2,7 @@ http://www.iocoder.cn/RxJava/observable-subscribe-on-scheduler/
 http://www.iocoder.cn/RxJava/scheduler/
 http://www.iocoder.cn/RxJava/blocking-observable/
 http://www.iocoder.cn/RxJava/observable-defer/
+http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/
 http://www.iocoder.cn/Hystrix/command-execute-first-run/
 http://www.iocoder.cn/Hystrix/command-execute-result-cache/
 http://www.iocoder.cn/Hystrix/command-execute-mode/
@@ -97,4 +98,3 @@ http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/
 http://www.iocoder.cn/RocketMQ/message-pull-and-consume-second/
 http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/
 http://www.iocoder.cn/RocketMQ/message-store/
-http://www.iocoder.cn/RocketMQ/message-send-and-receive/
