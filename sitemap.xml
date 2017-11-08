@@ -2,16 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-fourth-fallback/</loc>
+    <loc>http://www.iocoder.cn/Hystrix/command-collapser-execute/</loc>
     
-    <lastmod>2017-11-06T10:48:47.000Z</lastmod>
+    <lastmod>2017-11-08T12:23:33.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-mode/</loc>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-first-run/</loc>
     
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
+    <lastmod>2017-11-08T10:02:39.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-third-timeout/</loc>
+    
+    <lastmod>2017-11-08T09:55:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-result-cache/</loc>
+    
+    <lastmod>2017-11-08T09:51:47.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-fourth-fallback/</loc>
+    
+    <lastmod>2017-11-06T10:48:47.000Z</lastmod>
     
   </url>
   
@@ -23,28 +44,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-third-timeout/</loc>
-    
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-result-cache/</loc>
-    
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-first-run/</loc>
-    
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
+    
+    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-mode/</loc>
     
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
     
@@ -394,6 +401,20 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
@@ -408,21 +429,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -457,13 +464,6 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
-    
-    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/TCC-Transaction/transaction-repository/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
@@ -472,6 +472,13 @@
   
   <url>
     <loc>http://www.iocoder.cn/TCC-Transaction/console/</loc>
+    
+    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -506,6 +513,13 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/distributed-id/</loc>
+    
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
@@ -528,13 +542,6 @@
   
   <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
-    
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/distributed-id/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
