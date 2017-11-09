@@ -25,6 +25,29 @@ if (page.archive){
   <!--<% } %>-->
 <!--</div>-->
 
+<div id="main" class="archive-part clearfix">
+  <div id="archive-page">
+
+<% page.posts.each(function(item){ if(page.category==null){%>
+  <%- partial('_partial/article', {item: item, index: true,desc: false}) %>
+<%   }}); %>
+
+<% page.posts.sort('date', 'asc').each(function(item){ if(page.category!=null){%>
+<%- partial('_partial/article', {item: item, index: true,desc: false}) %>
+<%   }}); %>
+
+<% if (page.total > 1){ %>
+  <nav id="page-nav" class="clearfix archive-nav">
+    <%- paginator({
+      prev_text: '&laquo; Prev',
+      next_text: 'Next &raquo;'
+    }) %>
+  </nav>
+<% } %>
+  </div>
+</div>
+
+
 <div class="archive-title" id="asidepart">
     <!--<div class="closeaside"><a class="closebutton" href="#" title="<%= __('hidesidebar') %>"></a></div>-->
     <aside class="clearfix">
@@ -57,26 +80,4 @@ if (page.archive){
         <%- partial('../_widget/' + widget) %>
         <% }); %>
     </aside>
-</div>
-
-<div id="main" class="archive-part clearfix">
-  <div id="archive-page">
-
-<% page.posts.each(function(item){ if(page.category==null){%>
-  <%- partial('_partial/article', {item: item, index: true,desc: false}) %>
-<%   }}); %>
-
-<% page.posts.sort('date', 'asc').each(function(item){ if(page.category!=null){%>
-<%- partial('_partial/article', {item: item, index: true,desc: false}) %>
-<%   }}); %>
-
-<% if (page.total > 1){ %>
-  <nav id="page-nav" class="clearfix archive-nav">
-    <%- paginator({
-      prev_text: '&laquo; Prev',
-      next_text: 'Next &raquo;'
-    }) %>
-  </nav>
-<% } %>
-  </div>
 </div>
