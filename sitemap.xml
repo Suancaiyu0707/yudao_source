@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
+    
+    <lastmod>2017-11-22T04:34:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Happylifeplat-TCC/good-collection/</loc>
     
     <lastmod>2017-11-18T09:09:59.000Z</lastmod>
@@ -26,6 +33,20 @@
     <loc>http://www.iocoder.cn/link_url/</loc>
     
     <lastmod>2017-11-13T06:20:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-second/</loc>
+    
+    <lastmod>2017-11-11T15:23:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-first/</loc>
+    
+    <lastmod>2017-11-11T15:16:11.000Z</lastmod>
     
   </url>
   
@@ -72,13 +93,6 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
-    
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/Hystrix/build-debugging-environment/</loc>
     
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
@@ -87,6 +101,13 @@
   
   <url>
     <loc>http://www.iocoder.cn/Hystrix/command-execute-mode/</loc>
+    
+    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
     
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
     
@@ -429,6 +450,20 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-schedule-and-retry/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
@@ -443,21 +478,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -485,13 +506,6 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-repository/</loc>
-    
-    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/TCC-Transaction/transaction-recovery/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
@@ -514,6 +528,13 @@
   
   <url>
     <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
+    
+    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-repository/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -548,13 +569,6 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
-    
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
@@ -562,7 +576,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
@@ -570,6 +584,13 @@
   
   <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/sql-route-1/</loc>
+    
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     

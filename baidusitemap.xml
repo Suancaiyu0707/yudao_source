@@ -4,6 +4,21 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
+    <lastmod>2017-11-22T04:34:55.000Z</lastmod>
+    <data>
+        <display>
+        <title>中文详细注释的开源项目</title>
+        <pubTime>2017-01-01T16:00:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/Happylifeplat-TCC/good-collection/</loc>
     <lastmod>2017-11-18T09:09:59.000Z</lastmod>
     <data>
@@ -67,6 +82,42 @@
         
          
            
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-second/</loc>
+    <lastmod>2017-11-11T15:23:48.000Z</lastmod>
+    <data>
+        <display>
+        <title>TiKV 源码解析 —— 调试环境搭建（二）之运行服务实例</title>
+        <pubTime>2019-08-04T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="TiKV" url="http://www.iocoder.cn/categories/TiKV/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-first/</loc>
+    <lastmod>2017-11-11T15:16:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>TiKV 源码解析 —— 调试环境搭建（一）之运行单元测试</title>
+        <pubTime>2019-07-31T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="TiKV" url="http://www.iocoder.cn/categories/TiKV/"/>
+          
         </display>
     </data>
     </url>
@@ -181,24 +232,6 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    <data>
-        <display>
-        <title>Hystrix 源码解析 —— 命令执行（二）之执行隔离策略</title>
-        <pubTime>2018-10-24T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Hystrix" url="http://www.iocoder.cn/categories/Hystrix/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.iocoder.cn/Hystrix/build-debugging-environment/</loc>
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
     <data>
@@ -223,6 +256,24 @@
         <display>
         <title>Hystrix 源码解析 —— 执行命令方式</title>
         <pubTime>2018-10-09T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Hystrix" url="http://www.iocoder.cn/categories/Hystrix/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
+    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
+    <data>
+        <display>
+        <title>Hystrix 源码解析 —— 命令执行（二）之执行隔离策略</title>
+        <pubTime>2018-10-24T16:00:00.000Z</pubTime>
         
          
            
@@ -1099,6 +1150,42 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    <data>
+        <display>
+        <title>RocketMQ 源码分析 —— Message 顺序发送与消费</title>
+        <pubTime>2017-05-12T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="RocketMQ" url="http://www.iocoder.cn/categories/RocketMQ/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    <data>
+        <display>
+        <title>RocketMQ 源码分析 —— 高可用</title>
+        <pubTime>2017-05-13T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="RocketMQ" url="http://www.iocoder.cn/categories/RocketMQ/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/RocketMQ/message-schedule-and-retry/</loc>
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     <data>
@@ -1135,48 +1222,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/message-send-and-consume-orderly/</loc>
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    <data>
-        <display>
-        <title>RocketMQ 源码分析 —— Message 顺序发送与消费</title>
-        <pubTime>2017-05-12T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="RocketMQ" url="http://www.iocoder.cn/categories/RocketMQ/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/</loc>
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     <data>
         <display>
         <title>RocketMQ 源码分析 —— Store 初始化与关闭</title>
         <pubTime>2017-05-11T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="RocketMQ" url="http://www.iocoder.cn/categories/RocketMQ/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    <data>
-        <display>
-        <title>RocketMQ 源码分析 —— 高可用</title>
-        <pubTime>2017-05-13T16:00:00.000Z</pubTime>
         
          
            
@@ -1236,24 +1287,6 @@
            
              
               <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-repository/</loc>
-    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
-    <data>
-        <display>
-        <title>TCC-Transaction 源码分析 —— 事务存储器</title>
-        <pubTime>2018-02-14T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="TCC-Transaction" url="http://www.iocoder.cn/categories/TCC-Transaction/"/>
           
         </display>
     </data>
@@ -1321,6 +1354,24 @@
         <display>
         <title>TCC-Transaction 源码分析 —— 项目实战</title>
         <pubTime>2018-03-14T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="TCC-Transaction" url="http://www.iocoder.cn/categories/TCC-Transaction/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-repository/</loc>
+    <lastmod>2017-10-12T06:43:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>TCC-Transaction 源码分析 —— 事务存储器</title>
+        <pubTime>2018-02-14T16:00:00.000Z</pubTime>
         
          
            
@@ -1405,24 +1456,6 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    <data>
-        <display>
-        <title>Sharding-JDBC 源码分析 —— SQL 改写</title>
-        <pubTime>2017-08-09T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     <data>
@@ -1441,12 +1474,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     <data>
         <display>
-        <title>Sharding-JDBC 源码分析 —— SQL 解析（四）之插入SQL</title>
-        <pubTime>2017-07-28T16:00:00.000Z</pubTime>
+        <title>Sharding-JDBC 源码分析 —— SQL 改写</title>
+        <pubTime>2017-08-09T16:00:00.000Z</pubTime>
         
          
            
@@ -1465,6 +1498,24 @@
         <display>
         <title>Sharding-JDBC 源码分析 —— SQL 路由（一）之分库分表配置</title>
         <pubTime>2017-08-03T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Sharding-JDBC" url="http://www.iocoder.cn/categories/Sharding-JDBC/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    <data>
+        <display>
+        <title>Sharding-JDBC 源码分析 —— SQL 解析（四）之插入SQL</title>
+        <pubTime>2017-07-28T16:00:00.000Z</pubTime>
         
          
            

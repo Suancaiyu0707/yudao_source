@@ -1,3 +1,5 @@
+http://www.iocoder.cn/TiKV/build-debugging-environment-second/
+http://www.iocoder.cn/TiKV/build-debugging-environment-first/
 http://www.iocoder.cn/RxJava/observable-lift-operator/
 http://www.iocoder.cn/RxJava/observable-subscribe-on-scheduler/
 http://www.iocoder.cn/RxJava/scheduler/
@@ -47,8 +49,8 @@ http://www.iocoder.cn/Elastic-Job/cloud-job-failover/
 http://www.iocoder.cn/Elastic-Job/cloud-local-executor/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-second/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/
-http://www.iocoder.cn/Architecture/how-to-read-article/
 http://www.iocoder.cn/Architecture/books-recommended/
+http://www.iocoder.cn/Architecture/how-to-read-article/
 http://www.iocoder.cn/Elastic-Job/cloud-job-config/
 http://www.iocoder.cn/Elastic-Job/job-console/
 http://www.iocoder.cn/Architecture/how-to-read-source-code/
@@ -56,8 +58,8 @@ http://www.iocoder.cn/Elastic-Job/job-monitor/
 http://www.iocoder.cn/Elastic-Job/reconcile/
 http://www.iocoder.cn/Elastic-Job/job-listener/
 http://www.iocoder.cn/JUC/good-collection/
-http://www.iocoder.cn/Happylifeplat-TCC/good-collection/
 http://www.iocoder.cn/Dubbo/good-collection/
+http://www.iocoder.cn/Happylifeplat-TCC/good-collection/
 http://www.iocoder.cn/Elastic-Job/job-event-trace/
 http://www.iocoder.cn/Elastic-Job/job-failover/
 http://www.iocoder.cn/Elastic-Job/job-sharding/
@@ -96,5 +98,3 @@ http://www.iocoder.cn/MyCAT/sharding-result-merge-first/
 http://www.iocoder.cn/MyCAT/single-db-single-table-select/
 http://www.iocoder.cn/MyCAT/single-db-single-table-insert/
 http://www.iocoder.cn/MyCAT/build-debugging-environment/
-http://www.iocoder.cn/MyCAT/why-read-MyCAT-source-code/
-http://www.iocoder.cn/RocketMQ/message-transaction/
