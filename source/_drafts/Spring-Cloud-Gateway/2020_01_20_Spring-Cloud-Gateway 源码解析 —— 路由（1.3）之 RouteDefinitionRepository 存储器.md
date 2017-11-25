@@ -10,13 +10,13 @@ permalink: Spring-Cloud-Gateway/route-definition-locator-repository
 
 本文主要对 **RouteDefinitionRepository 的源码实现**。
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/01.jpeg)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/01.jpeg)
 
 * **蓝色**部分 ：RouteDefinitionRepository 。
 
 本文涉及到的类图如下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/02.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/02.png)
 
 * 下面我们来逐个类进行解析。
 
@@ -191,7 +191,7 @@ public InMemoryRouteDefinitionRepository inMemoryRouteDefinitionRepository() {
 
 比较干爽( 水更 )的一篇文章。
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/03.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/03.png)
 
 胖友，分享一波朋友圈可好！
 

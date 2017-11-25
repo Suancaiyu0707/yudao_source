@@ -266,7 +266,7 @@ public GatewayProperties gatewayProperties() {
 
 * 每个 `@Bean` 注解后的数字为 Bean 的**初始化顺序**。
 * 第 1 至 5 行 ：使用 GatewayProperties Bean ，创建一个类型为 `org.springframework.cloud.gateway.config.PropertiesRouteDefinitionLocator`  的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.2）之 PropertiesRouteDefinitionLocator 配置文件》「2. PropertiesRouteDefinitionLocator」](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties?self) 详细解析 PropertiesRouteDefinitionLocator 的代码实现。
-* 第 7 至 11 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.InMemoryRouteDefinitionRepository` 的 Bean 对象。在 [TODO 【3009】]() 详细解析 InMemoryRouteDefinitionRepository 的代码实现。
+* 第 7 至 11 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.InMemoryRouteDefinitionRepository` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.3）之 RouteDefinitionRepository 存储器》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository?self) 详细解析 InMemoryRouteDefinitionRepository 的代码实现。
 * 第 13 至 17 行 ：使用上面创建的 RouteDefinitionLocator 的 Bean **对象们**，创建一个类型为 `org.springframework.cloud.gateway.route.CompositeRouteDefinitionLocator` 的 Bean 对象。
     * 第 14 行的 `@Primary` 注解，用于下文注入类型为 RouteDefinitionLocator 的 Bean 对象时，使用该对象。点击 [《spring中少用的注解@primary解析》](http://blog.csdn.net/u013400939/article/details/52953804) 查看 `@Primary` 的详细介绍。
 
