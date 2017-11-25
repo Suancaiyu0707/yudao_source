@@ -6,13 +6,36 @@ permalink: Spring-Cloud-Gateway/route-definition-locator-intro
 
 ---
 
+摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [2. RouteDefinition](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [3. PredicateDefinition](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [4. FilterDefinition](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [5. RouteDefinitionLocator](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [6. CompositeRouteDefinitionLocator](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+- [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+---
+
 # 1. 概述
 
 本文主要对 **路由定义定位器 RouteDefinitionLocator 做整体的认识**。
 
 在 [《Spring-Cloud-Gateway 源码解析 —— 网关初始化》](http://www.iocoder.cn/Spring-Cloud-Gateway/init/?self) 中，我们看到路由相关的组件 RouteDefinitionLocator / RouteLocator 的初始化。涉及到的类比较多，我们用下图重新梳理下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/01.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/01.png)
 
 * **RouteDefinitionLocator** 负责读取路由配置( `org.springframework.cloud.gateway.route.RouteDefinition` ) 。从上图中我们可以看到，RouteDefinitionLocator **接口**有四种实现 ：
     * **PropertiesRouteDefinitionLocator** ，从**配置文件**( 例如，YML / Properties 等 ) 读取。在 [TODO 【3008】]() 详细解析。
@@ -70,7 +93,7 @@ public class RouteDefinition {
 * `filters` 属性，过滤器定义数组。在 Route 里，FilterDefinition 转换成 GatewayFilter 。
 * `uri` 属性，路由向的 URI 。
 * `order` 属性，顺序。当请求匹配到多个路由时，使用顺序**小**的。
-* [](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/03.png)
+* ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/03.png)
 
 -------
 
@@ -102,7 +125,7 @@ public RouteDefinition(String text) {
 }
 ```
 
-* `text` 参数，格式为 `${id}=${uri},${predicates[0]},${predicates[1]}...${predicates[n]}` 。举个例子, `"route001=http://127.0.0.1,Host=**.addrequestparameter.org,Path=/get"` 。创建的 RouteDefinition 如下图 ：[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/04.png)
+* `text` 参数，格式为 `${id}=${uri},${predicates[0]},${predicates[1]}...${predicates[n]}` 。举个例子, `"route001=http://127.0.0.1,Host=**.addrequestparameter.org,Path=/get"` 。创建的 RouteDefinition 如下图 ：![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/04.png)
 * `filters` 属性，需要通过调用 `RouteDefinition#setFilters(filters)` 方法进行设置。
 * `order` 属性，需要通过调用 `RouteDefinition#setOrder(order)` 方法进行设置。
 * `predicates` 属性，支持解析，但是如果此处**单个** PredicateDefinition 的 `args[i]` 存在**逗号**( `,` ) ，会被错误的分隔，例如说，`"Query=foo,bz"` 。
@@ -157,7 +180,7 @@ public PredicateDefinition(String text) {
 }
 ```
 
-* `text` 参数，格式为 `${name}=${args[0]},${args[1]}...${args[n]}` 。举个例子, `"Host=iocoder.cn"` 。创建的 PredicateDefinition 如下图 ：[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/05.png)
+* `text` 参数，格式为 `${name}=${args[0]},${args[1]}...${args[n]}` 。举个例子, `"Host=iocoder.cn"` 。创建的 PredicateDefinition 如下图 ：![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/05.png)
 
 # 4. FilterDefinition
 
@@ -211,7 +234,7 @@ public FilterDefinition(String text) {
 }
 ```
 
-* `text` 参数，格式为 `${name}=${args[0]},${args[1]}...${args[n]}` 。举个例子, `"AddRequestParameter=foo, bar"` 。创建的 FilterDefinition 如下图 ：[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/06.png)
+* `text` 参数，格式为 `${name}=${args[0]},${args[1]}...${args[n]}` 。举个例子, `"AddRequestParameter=foo, bar"` 。创建的 FilterDefinition 如下图 ：![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/06.png)
 
 # 5. RouteDefinitionLocator
 
@@ -228,7 +251,7 @@ public interface RouteDefinitionLocator {
 
 在上文中，我们也看到了 RouteDefinitionLocator 的多个实现类，类图如下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/07.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/07.png)
 
 * 本文只解析 CompositeRouteDefinitionLocator 的源码实现。其他的实现类会在后面文章详细解析。
 
@@ -266,7 +289,7 @@ FilterDefinition => GatewayFilter
 
 等等的转换，我们在后续路由相关的文章详细解析。
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/08.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/08.png)
 
 胖友，分享一波朋友圈可好！
 

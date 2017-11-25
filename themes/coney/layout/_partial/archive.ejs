@@ -25,7 +25,16 @@ if (page.archive){
   <!--<% } %>-->
 <!--</div>-->
 
+
 <div id="main" class="archive-part clearfix">
+
+    <section class="post" itemscope="" itemprop="blogPost">
+        <a data-date="Wed Jan 01 2020 00:00:00 GMT+0800" href="#" title=" 源码解析 —— 调试环境搭建" itemprop="url">
+            <h1 style="color: red;" itemprop="name"> 分类 ： <%= page.category %></h1>
+        </a>
+    </section>
+
+
   <div id="archive-page">
 
 <% page.posts.each(function(item){ if(page.category==null){%>

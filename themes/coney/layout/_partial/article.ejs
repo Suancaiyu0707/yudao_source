@@ -5,9 +5,10 @@
     <a data-date="<%= item.date %>" href="<%- config.root %><%- item.path %>" title="<%= item.title %>" itemprop="url">
   <% } %>
 
-        <time datetime="<%= date_xml(item.date) %>" itemprop="datePublished">
+
+        <time style="width: 1%" datetime="<%= date_xml(item.date) %>" itemprop="datePublished">
             <% item.categories.sort('name').each(function(item){ %>
-                <%- item.name %>
+
             <% }); %>
         </time>
 

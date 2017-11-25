@@ -180,9 +180,27 @@ function handleAlert() {
     };
 }
 
+function removeCategoriesPageTitle() {
+    // debugger;
+
+    var category = document.location.href.substring(document.location.href.lastIndexOf('/categories/') + '/categories/'.length).replace('/', '');
+    var els = $('.post a');
+    for (var i in els) {
+        var el = els[i];
+        if (!el || !el.getAttribute) {
+            continue
+        }
+
+        console.log(el);
+        el.setAttribute('title', el.getAttribute('title').replace(category, ''));
+    }
+}
+
 $(document).ready(function(){
     // debugger;
     // debugger;
+
+    removeCategoriesPageTitle();
 
     if (isDomainVIP()) {
         console.log('vip域名，跳转中');
@@ -219,4 +237,5 @@ $(document).ready(function(){
     // handleVIPURL();
 
     handleAlert();
+
 });
