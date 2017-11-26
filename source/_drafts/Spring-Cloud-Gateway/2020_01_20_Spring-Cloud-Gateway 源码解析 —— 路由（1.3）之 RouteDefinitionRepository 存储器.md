@@ -65,7 +65,7 @@ public interface RouteDefinitionWriter {
      * @param route 路由配置
      * @return Mono<Void>
      */
-	Mono<Void> save(Mono<RouteDefinition> route);
+    Mono<Void> save(Mono<RouteDefinition> route);
 
     /**
      * 删除路由配置
@@ -73,7 +73,7 @@ public interface RouteDefinitionWriter {
      * @param routeId 路由编号
      * @return Mono<Void>
      */
-	Mono<Void> delete(Mono<String> routeId);
+    Mono<Void> delete(Mono<String> routeId);
 }
 ```
 
@@ -106,31 +106,31 @@ public class InMemoryRouteDefinitionRepository implements RouteDefinitionReposit
      * 路由配置映射
      * key ：路由编号 {@link RouteDefinition#id}
      */
-	private final Map<String, RouteDefinition> routes = synchronizedMap(new LinkedHashMap<String, RouteDefinition>());
+    private final Map<String, RouteDefinition> routes = synchronizedMap(new LinkedHashMap<String, RouteDefinition>());
 
-	@Override
-	public Mono<Void> save(Mono<RouteDefinition> route) {
+    @Override
+    public Mono<Void> save(Mono<RouteDefinition> route) {
         return route.flatMap( r -> {
             routes.put(r.getId(), r);
-			return Mono.empty();
-		});
-	}
+            return Mono.empty();
+        });
+    }
 
-	@Override
-	public Mono<Void> delete(Mono<String> routeId) {
-		return routeId.flatMap(id -> {
-			if (routes.containsKey(id)) {
-				routes.remove(id);
-				return Mono.empty();
-			}
-			return Mono.error(new NotFoundException("RouteDefinition not found: "+routeId));
-		});
-	}
+    @Override
+    public Mono<Void> delete(Mono<String> routeId) {
+        return routeId.flatMap(id -> {
+            if (routes.containsKey(id)) {
+                routes.remove(id);
+                return Mono.empty();
+            }
+            return Mono.error(new NotFoundException("RouteDefinition not found: "+routeId));
+        });
+    }
 
-	@Override
-	public Flux<RouteDefinition> getRouteDefinitions() {
-		return Flux.fromIterable(routes.values());
-	}
+    @Override
+    public Flux<RouteDefinition> getRouteDefinitions() {
+        return Flux.fromIterable(routes.values());
+    }
 }
 ```
 
@@ -150,7 +150,7 @@ public class GatewayWebfluxEndpoint implements ApplicationEventPublisherAware {
     /**
      * 存储器 RouteDefinitionLocator 对象
      */
-	private RouteDefinitionWriter routeDefinitionWriter;
+    private RouteDefinitionWriter routeDefinitionWriter;
 
     // ... 省略代码
 

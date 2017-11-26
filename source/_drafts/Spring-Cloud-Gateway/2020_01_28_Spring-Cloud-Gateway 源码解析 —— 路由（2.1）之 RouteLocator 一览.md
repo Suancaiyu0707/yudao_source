@@ -12,7 +12,7 @@ permalink: Spring-Cloud-Gateway/route-locator-intro
 
 在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.1）之 RouteDefinitionLocator 一览》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/?self) 中，我们对 RouteLocator 对了简单的介绍 ：
 
-* [](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/01.png)
+* ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/01.png)
 * RouteLocator 可以直接**自定义**路由( `org.springframework.cloud.gateway.route.Route` ) ，也可以通过 RouteDefinitionRouteLocator 获取 RouteDefinition ，并转换成 Route 。 
 * RoutePredicateHandlerMapping 使用 RouteLocator 获得 Route 信息。
 
@@ -35,23 +35,23 @@ public class Route implements Ordered {
     /**
      * 路由编号
      */
-	private final String id;
+    private final String id;
     /**
      * 路由向的 URI
      */
-	private final URI uri;
+    private final URI uri;
     /**
      * 顺序
      */
-	private final int order;
+    private final int order;
     /**
      * 断言数组
      */
-	private final Predicate<ServerWebExchange> predicate;
+    private final Predicate<ServerWebExchange> predicate;
     /**
      * 过滤器数组
      */
-	private final List<GatewayFilter> gatewayFilters;
+    private final List<GatewayFilter> gatewayFilters;
 }
 ```
 
@@ -60,7 +60,7 @@ public class Route implements Ordered {
 * `filters` 属性，过滤器数组。
 * `uri` 属性，路由向的 URI 。
 * `order` 属性，顺序。当请求匹配到多个路由时，使用顺序**小**的。
-* [](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/03.png)
+* ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_10/03.png)
 
 -------
 
@@ -97,7 +97,7 @@ public interface RouteLocator {
 
 在上文中，我们也看到了 RouteLocator 的多个实现类，类图如下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_28/01.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_28/01.png)
 
 * 本文只解析 CompositeRouteLocator / CachingRouteLocator 的源码实现。其他的实现类会在后面文章详细解析。
 * 自定义的 RouteLocator ，通过**内部类**实现，类图暂时不好体现。
@@ -134,39 +134,39 @@ CachingRouteLocator 代码如下 ：
 ```Java
 public class CachingRouteLocator implements RouteLocator {
 
-	private final RouteLocator delegate;
+    private final RouteLocator delegate;
     /**
      * 路由缓存
      */
-	private final AtomicReference<List<Route>> cachedRoutes = new AtomicReference<>();
+    private final AtomicReference<List<Route>> cachedRoutes = new AtomicReference<>();
 
-	public CachingRouteLocator(RouteLocator delegate) {
-		this.delegate = delegate;
-		this.cachedRoutes.compareAndSet(null, collectRoutes());
-	}
+    public CachingRouteLocator(RouteLocator delegate) {
+        this.delegate = delegate;
+        this.cachedRoutes.compareAndSet(null, collectRoutes());
+    }
 
-	@Override
-	public Flux<Route> getRoutes() {
-		return Flux.fromIterable(this.cachedRoutes.get());
-	}
+    @Override
+    public Flux<Route> getRoutes() {
+        return Flux.fromIterable(this.cachedRoutes.get());
+    }
 
-	/**
-	 * Sets the new routes
-	 * @return old routes
-	 */
-	public Flux<Route> refresh() {
-		return Flux.fromIterable(this.cachedRoutes.getAndUpdate(
+    /**
+     * Sets the new routes
+     * @return old routes
+     */
+    public Flux<Route> refresh() {
+        return Flux.fromIterable(this.cachedRoutes.getAndUpdate(
 				routes -> CachingRouteLocator.this.collectRoutes()));
-	}
+    }
 
-	private List<Route> collectRoutes() {
-		List<Route> routes = this.delegate.getRoutes().collectList().block();
-		// 排序
-		AnnotationAwareOrderComparator.sort(routes);
-		return routes;
-	}
+    private List<Route> collectRoutes() {
+        List<Route> routes = this.delegate.getRoutes().collectList().block();
+        // 排序
+        AnnotationAwareOrderComparator.sort(routes);
+        return routes;
+    }
 
-	@EventListener(RefreshRoutesEvent.class)
+    @EventListener(RefreshRoutesEvent.class)
     /* for testing */ void handleRefresh() {
         refresh();
     }
@@ -192,15 +192,15 @@ public class GatewayWebfluxEndpoint implements ApplicationEventPublisherAware {
     // ... 省略其他代码
     
     /**
-     * 应用事件发布器
-     */
-	private ApplicationEventPublisher publisher;
+    * 应用事件发布器
+    */
+    private ApplicationEventPublisher publisher;
 	
-	@PostMapping("/refresh")
-	public Mono<Void> refresh() {
-	    this.publisher.publishEvent(new RefreshRoutesEvent(this));
-		return Mono.empty();
-	}
+    @PostMapping("/refresh")
+    public Mono<Void> refresh() {
+        this.publisher.publishEvent(new RefreshRoutesEvent(this));
+        return Mono.empty();
+    }
 
 }
 ```
