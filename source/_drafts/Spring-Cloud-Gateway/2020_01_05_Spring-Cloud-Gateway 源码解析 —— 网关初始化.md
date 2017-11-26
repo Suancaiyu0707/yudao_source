@@ -295,9 +295,9 @@ public GatewayProperties gatewayProperties() {
 ```
 
 * 每个 `@Bean` 注解后的数字为 Bean 的**初始化顺序**。
-* 第 1 至 7 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator` 的 Bean 对象。在 [TODO 【3011】]() 详细解析 RouteDefinitionRouteLocator 的代码实现。
+* 第 1 至 7 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（2.2）之 RouteDefinitionRouteLocator 路由配置》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-definition?self) 详细解析 RouteDefinitionRouteLocator 的代码实现。
     * 此处的 `routeDefinitionLocator` 参数，使用了 `@Primary` 注解的 CompositeRouteDefinitionLocator 的 Bean 对象。
-* 第 9 至 13 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.CachingRouteLocator` 的 Bean 对象。该 Bean 对象内嵌 `org.springframework.cloud.gateway.route.CompositeRouteLocator` 对象。在 [TODO 【3011】]() 详细解析 CachingRouteLocator / CompositeRouteLocator 的代码实现。
+* 第 9 至 13 行 ：创建一个类型为 `org.springframework.cloud.gateway.route.CachingRouteLocator` 的 Bean 对象。该 Bean 对象内嵌 `org.springframework.cloud.gateway.route.CompositeRouteLocator` 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（2.1）之 RouteLocator 一览》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-intro/?self) 详细解析 CachingRouteLocator / CompositeRouteLocator 的代码实现。
 
 -------
 

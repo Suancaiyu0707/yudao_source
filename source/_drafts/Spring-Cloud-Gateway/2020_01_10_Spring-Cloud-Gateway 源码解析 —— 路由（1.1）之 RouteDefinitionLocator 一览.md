@@ -39,7 +39,7 @@ permalink: Spring-Cloud-Gateway/route-definition-locator-intro
 
 * **RouteDefinitionLocator** 负责读取路由配置( `org.springframework.cloud.gateway.route.RouteDefinition` ) 。从上图中我们可以看到，RouteDefinitionLocator **接口**有四种实现 ：
     * **PropertiesRouteDefinitionLocator** ，从**配置文件**( 例如，YML / Properties 等 ) 读取。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.2）之 PropertiesRouteDefinitionLocator 配置文件》「2. PropertiesRouteDefinitionLocator」](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties?self) 详细解析。
-    * **RouteDefinitionRepository** ，从**存储器**( 例如，内存 / Redis / MySQL 等 )读取。在 [TODO 【3016】]() 详细解析。
+    * **RouteDefinitionRepository** ，从**存储器**( 例如，内存 / Redis / MySQL 等 )读取。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.3）之 RouteDefinitionRepository 存储器》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/?self) 详细解析。
     * **DiscoveryClientRouteDefinitionLocator** ，从**注册中心**( 例如，Eureka / Consul / Zookeeper / Etcd 等 )读取。在 [TODO 【3010】]() 详细解析。
     * **CompositeRouteDefinitionLocator** ，组合**多种** RouteDefinitionLocator 的实现，为 RouteDefinitionRouteLocator 提供**统一**入口。在 [本文](#) 详细解析。
     * 另外，**CachingRouteDefinitionLocator** 也是 RouteDefinitionLocator 的实现类，已经被 CachingRouteLocator 取代。
@@ -66,7 +66,7 @@ public class RouteDefinition {
 	@NotEmpty
 	private String id = UUID.randomUUID().toString();
     /**
-     * 断言定义数组
+     * 谓语定义数组
      */
 	@NotEmpty
 	@Valid
@@ -89,7 +89,7 @@ public class RouteDefinition {
 ```
 
 * `id` 属性，ID 编号，**唯一**。
-* `predicates` 属性，断言定义数组。**请求**通过 `predicates` 判断是否**匹配**。在 Route 里，PredicateDefinition 转换成 Predicate 。
+* `predicates` 属性，谓语定义数组。**请求**通过 `predicates` 判断是否**匹配**。在 Route 里，PredicateDefinition 转换成 Predicate 。
 * `filters` 属性，过滤器定义数组。在 Route 里，FilterDefinition 转换成 GatewayFilter 。
 * `uri` 属性，路由向的 URI 。
 * `order` 属性，顺序。当请求匹配到多个路由时，使用顺序**小**的。
@@ -132,14 +132,14 @@ public RouteDefinition(String text) {
 
 # 3. PredicateDefinition
 
-`org.springframework.cloud.gateway.handler.predicate.PredicateDefinition` ，断言定义。**请求**通过 `predicates` 判断是否**匹配**。代码如下 ：
+`org.springframework.cloud.gateway.handler.predicate.PredicateDefinition` ，谓语定义。**请求**通过 `predicates` 判断是否**匹配**。代码如下 ：
 
 ```Java
 @Validated
 public class PredicateDefinition {
 
     /**
-     * 断言定义名字
+     * 谓语定义名字
      */
     @NotNull
 	private String name;
@@ -150,7 +150,7 @@ public class PredicateDefinition {
 }
 ```
 
-* `name` 属性，断言定义名字。通过 `name` 对应到 `org.springframework.cloud.gateway.handler.predicate.RoutePredicateFactory` 的**实现类**。例如说，`name=Query` 对应到 QueryRoutePredicateFactory 。
+* `name` 属性，谓语定义名字。通过 `name` 对应到 `org.springframework.cloud.gateway.handler.predicate.RoutePredicateFactory` 的**实现类**。例如说，`name=Query` 对应到 QueryRoutePredicateFactory 。
 * `args` 属性，参数数组。例如，`name=Host` / `args={"_genkey_0" : "iocoder.cn"}` ，匹配请求的 `hostname` 为 `iocoder.cn` 。
 
 -------
