@@ -1,10 +1,46 @@
+title: Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂 
+date: 2020-02-15
+tags:
+categories: Spring-Cloud-Gateway
+permalink: Spring-Cloud-Gateway/handler-route-predicate-factory
+
+-------
+摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [2. RoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [3. AfterRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [4. BeforeRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [5. BetweenRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [6. CookieRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [7. HeaderRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [8. HostRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [9. MethodRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [10. PathRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [11. QueryRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [12. RemoteAddrRoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+- [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **RoutePredicateFactory 路由谓语工厂**。
 
 RoutePredicateFactory 涉及到的类在 `org.springframework.cloud.gateway.handler.predicate` 包下，如下图 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/01.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/01.png)
 
 Spring Cloud Gateway 创建 Route 对象时，使用 RoutePredicateFactory 创建 Predicate 对象。Predicate 对象可以赋值给 [`Route.predicate`](https://github.com/YunaiV/spring-cloud-gateway/blob/6bb8d6f93c289fd3a84c802ada60dd2bb57e1fb7/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/route/Route.java#L51) 属性，用于匹配**请求**对应的 Route 。
 
@@ -44,7 +80,7 @@ public interface RoutePredicateFactory extends ArgumentHints {
 
 RoutePredicateFactory **实现类**如下图 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/02.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/02.png)
 
 下面我们一个一个 RoutePredicateFactory 实现类理解。代码比较多，实际也比较简单。
 
@@ -318,7 +354,7 @@ RoutePredicateFactory **实现类**如下图 ：
      27: }
     ```
     * Tulpe 参数 ：`header` / `regexp` 。
-    * 第 20 行 ：指定 Cookie 正则匹配**指定值**。
+    * 第 20 行 ：指定 Header 正则匹配**指定值**。
 
 # 8. HostRoutePredicateFactory
 
@@ -636,4 +672,9 @@ RoutePredicateFactory **实现类**如下图 ：
 
 # 666. 彩蛋
 
+😈 代码好多，贴的手都抽了。嘿嘿，RemoteAddrRoutePredicateFactory 写的有点偷懒。
+
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/04.png)
+
+胖友，分享一波朋友圈可好！
 
