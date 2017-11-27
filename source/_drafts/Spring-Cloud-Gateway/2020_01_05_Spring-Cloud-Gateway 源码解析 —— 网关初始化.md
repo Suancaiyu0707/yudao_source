@@ -322,7 +322,7 @@ public GatewayProperties gatewayProperties() {
         ////@formatter:on
     }
     ```
-    * 在 [TODO 【3012】]() 详细解析 `org.springframework.cloud.gateway.route.Routes` 的代码实现。
+    * 在 [《Spring-Cloud-Gateway 源码解析 —— 路由（2.3）之 Java 自定义 RouteLocator》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/?self) 详细解析 `org.springframework.cloud.gateway.route.Routes` 的代码实现。
 
 * 使用 `RouteLocatorDsl#gateway()` 方法，创建 RouteLocator ，**该方式使用 Kotlin 实现**，**例子**代码如下 ：
 
@@ -341,7 +341,7 @@ public GatewayProperties gatewayProperties() {
     
     }
     ```
-    * 在 [TODO 【3013】]() 详细解析 `org.springframework.cloud.gateway.route.RouteLocatorDsl` 的代码实现。
+    * 在 [《Spring-Cloud-Gateway 源码解析 —— 路由（2.4）之 Kotlin 自定义 RouteLocator 》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-kotlin/?self) 详细解析 `org.springframework.cloud.gateway.route.RouteLocatorDsl` 的代码实现。
 
 ## 5.10 初始化 RoutePredicateHandlerMapping
 

@@ -31,7 +31,7 @@ permalink: Spring-Cloud-Gateway/route-locator-route-definition
 
 # 1. 概述
 
-本文主要对 **RouteDefinitionRouteLocator 的源码实现**。
+本文主要分享 **RouteDefinitionRouteLocator 的源码实现**。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_01/01.jpeg)
 
