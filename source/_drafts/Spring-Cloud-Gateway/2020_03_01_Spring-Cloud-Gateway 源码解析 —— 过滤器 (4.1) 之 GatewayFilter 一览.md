@@ -102,7 +102,7 @@ GatewayFilter 有三种类型的子类实现，我们下面每节介绍一种。
 
 * 第 13 至 19 行 ：定义了一个 GatewayFilter **内部实现类**。
 
-在 [TODO 【3020】]() ，我们会详细解析每个 GatewayFilterFactory 定义的GatewayFilter **内部实现类**。
+在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.2) 之 GatewayFilterFactory 过滤器工厂》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/?self) ，我们会详细解析每个 GatewayFilterFactory 定义的GatewayFilter **内部实现类**。
 
 ## 2.2 OrderedGatewayFilter
 
@@ -299,3 +299,4 @@ private static class DefaultGatewayFilterChain implements GatewayFilterChain {
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/03.png)
 
+胖友，分享一波朋友圈可好！

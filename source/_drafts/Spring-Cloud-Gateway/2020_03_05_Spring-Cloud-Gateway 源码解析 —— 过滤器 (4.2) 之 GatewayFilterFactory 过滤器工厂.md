@@ -1,3 +1,50 @@
+title: Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.2) 之 GatewayFilterFactory 过滤器工厂
+date: 2020-03-05
+tags:
+categories: Spring-Cloud-Gateway
+permalink: Spring-Cloud-Gateway/filter-factory
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [2. Header](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.1 AddRequestHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.2 RemoveRequestHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.3 AddResponseHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.4 RemoveResponseHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.5 SetResponseHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.6 RemoveNonProxyHeadersGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [2.7 SecureHeadersGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [3. Parameter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [3.1 AddRequestParameterGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [4. Path](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [4.1 RewritePathGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [4.2 PrefixPathGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [4.3 SetPathGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [5. Status](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [5.1 SetStatusGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [6. Redirect](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+  - [6.1 RedirectToGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [7. Hystrix](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [8. RateLimiter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+- [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
+
 # 1. 概述
 
 本文主要分享 **GatewayFilterFactory 的实现类**。
@@ -7,6 +54,15 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_05/01.png)
 
 下面我们开始逐块解析源码实现。
+
+-------
+
+**推荐 Spring Cloud 书籍**：
+
+* 请支持正版。下载盗版，**等于主动编写低级 BUG** 。
+* 程序猿DD —— [《Spring Cloud微服务实战》](https://union-click.jd.com/jdc?d=505Twi)
+* 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
+* 两书齐买，京东包邮。
 
 # 2. Header 
 
@@ -45,7 +101,7 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
      11: 		String value = args.getString(VALUE_KEY);
      12: 
      13: 		return (exchange, chain) -> { // GatewayFilter
-     14:             // 创建新的 ServerHttpRequest
+     14: 			// 创建新的 ServerHttpRequest
      15: 			ServerHttpRequest request = exchange.getRequest().mutate()
      16: 					.header(name, value)
      17: 					.build();
@@ -56,7 +112,6 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
      22: 	}
      23: }
     ```
-    
     * Tuple 参数 ：`name` / `value` 。
     * 第 14 至 17 行 ：创建**新**的 ServerHttpRequest 。
     * 第 19 至 20 行 ：创建**新**的 ServerWebExchange ，提交**过滤器链**继续过滤。
@@ -116,7 +171,7 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
      31: 					})
      32: 					.build();
      33: 
-     34:             // 创建新的 ServerWebExchange ，提交过滤器链继续过滤
+     34: 			// 创建新的 ServerWebExchange ，提交过滤器链继续过滤
      35: 			return chain.filter(exchange.mutate().request(request).build());
      36: 		};
      37: 	}
@@ -171,7 +226,6 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
      37: 	}
      38: }
     ```
-    
     * 第 26 至 33 行 ：添加响应 Secure 相关的 Header 。 
 
 # 3. Parameter
@@ -180,7 +234,7 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
 
 ## 3.1 AddRequestParameterGatewayFilterFactory
 
-类似 AddRequestHeaderGatewayFilterFactory ，不重复分享，点击 [《Spring Cloud Gateway —— SetStatus GatewayFilter Factory》](https://github.com/spring-cloud/spring-cloud-gateway/blob/9ffb0f18678460fda9b25c572c12f9054a62ca52/docs/src/main/asciidoc/spring-cloud-gateway.adoc#addrequestheader-gatewayfilter-factory) 查看官方文档。
+类似 AddRequestHeaderGatewayFilterFactory ，不重复分享，点击 [《Spring Cloud Gateway —— AddRequestParameter GatewayFilter Factory》](https://github.com/spring-cloud/spring-cloud-gateway/blob/9ffb0f18678460fda9b25c572c12f9054a62ca52/docs/src/main/asciidoc/spring-cloud-gateway.adoc#addrequestheader-gatewayfilter-factory) 查看官方文档。
 
 # 4. Path
 
@@ -304,55 +358,55 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
     
 * 代码 ：
 
-```Java
-  1: public class RedirectToGatewayFilterFactory implements GatewayFilterFactory {
-  2: 
-  3: 	public static final String STATUS_KEY = "status";
-  4: 	public static final String URL_KEY = "url";
-  5: 
-  6: 	@Override
-  7: 	public List<String> argNames() {
-  8: 		return Arrays.asList(STATUS_KEY, URL_KEY);
-  9: 	}
- 10: 
- 11: 	@Override
- 12: 	public GatewayFilter apply(Tuple args) {
- 13: 		String statusString = args.getRawString(STATUS_KEY);
- 14: 		String urlString = args.getString(URL_KEY);
- 15: 
- 16: 		// 解析 status ，并判断是否是 3XX 重定向状态
- 17: 		final HttpStatus httpStatus = parse(statusString);
- 18: 		Assert.isTrue(httpStatus.is3xxRedirection(), "status must be a 3xx code, but was " + statusString);
- 19: 		// 创建 URL
- 20: 		final URL url;
- 21: 		try {
- 22: 			url = URI.create(urlString).toURL();
- 23: 		} catch (MalformedURLException e) {
- 24: 			throw new IllegalArgumentException("Invalid url " + urlString, e);
- 25: 		}
- 26: 
- 27: 		return (exchange, chain) ->
- 28: 			chain.filter(exchange).then(Mono.defer(() -> { // After Filter
- 29: 				if (!exchange.getResponse().isCommitted()) {
- 30: 				    // 设置响应 Status
- 31: 					setResponseStatus(exchange, httpStatus);
- 32: 
- 33: 					// 设置响应 Header
- 34: 					final ServerHttpResponse response = exchange.getResponse();
- 35: 					response.getHeaders().set(HttpHeaders.LOCATION, url.toString());
- 36: 					return response.setComplete();
- 37: 				}
- 38: 				return Mono.empty();
- 39: 			}));
- 40: 	}
- 41: 
- 42: }
-```
-* 第 16 至 18 行 ：解析配置的 `statusString` ，并判断是否是 3XX 重定向状态码。
-* 第 19 至 25 行 ：解析配置的 `urlString` ，创建 URL 。
-* 第 28 行 ：调用 `#then(Mono)` 方法，实现 **After Filter** 逻辑。这里和 AddRequestHeaderGatewayFilterFactory 实现的 **Before Filter** 【方式】**不同**。
-* 第 29 至 37 行 ：**若响应未提交**，设置响应的状态码、响应的 Header ( `Location` ) 。
-* 第 38 行 ：**设置响应已提交**。
+    ```Java
+      1: public class RedirectToGatewayFilterFactory implements GatewayFilterFactory {
+      2: 
+      3: 	public static final String STATUS_KEY = "status";
+      4: 	public static final String URL_KEY = "url";
+      5: 
+      6: 	@Override
+      7: 	public List<String> argNames() {
+      8: 		return Arrays.asList(STATUS_KEY, URL_KEY);
+      9: 	}
+     10: 
+     11: 	@Override
+     12: 	public GatewayFilter apply(Tuple args) {
+     13: 		String statusString = args.getRawString(STATUS_KEY);
+     14: 		String urlString = args.getString(URL_KEY);
+     15: 
+     16: 		// 解析 status ，并判断是否是 3XX 重定向状态
+     17: 		final HttpStatus httpStatus = parse(statusString);
+     18: 		Assert.isTrue(httpStatus.is3xxRedirection(), "status must be a 3xx code, but was " + statusString);
+     19: 		// 创建 URL
+     20: 		final URL url;
+     21: 		try {
+     22: 			url = URI.create(urlString).toURL();
+     23: 		} catch (MalformedURLException e) {
+     24: 			throw new IllegalArgumentException("Invalid url " + urlString, e);
+     25: 		}
+     26: 
+     27: 		return (exchange, chain) ->
+     28: 			chain.filter(exchange).then(Mono.defer(() -> { // After Filter
+     29: 				if (!exchange.getResponse().isCommitted()) {
+     30: 				    // 设置响应 Status
+     31: 					setResponseStatus(exchange, httpStatus);
+     32: 
+     33: 					// 设置响应 Header
+     34: 					final ServerHttpResponse response = exchange.getResponse();
+     35: 					response.getHeaders().set(HttpHeaders.LOCATION, url.toString());
+     36: 					return response.setComplete();
+     37: 				}
+     38: 				return Mono.empty();
+     39: 			}));
+     40: 	}
+     41: 
+     42: }
+    ```
+    * 第 16 至 18 行 ：解析配置的 `statusString` ，并判断是否是 3XX 重定向状态码。
+    * 第 19 至 25 行 ：解析配置的 `urlString` ，创建 URL 。
+    * 第 28 行 ：调用 `#then(Mono)` 方法，实现 **After Filter** 逻辑。这里和 AddRequestHeaderGatewayFilterFactory 实现的 **Before Filter** 【方式】**不同**。
+    * 第 29 至 37 行 ：**若响应未提交**，设置响应的状态码、响应的 Header ( `Location` ) 。
+    * 第 38 行 ：**设置响应已提交**。
 
 # 7. Hystrix
 
@@ -364,4 +418,10 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
 
 # 666. 彩蛋
 
+恩，稍显啰嗦的一篇文章，后面会比较精彩，你懂的。
+
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_05/02.png)
+
+
+胖友，分享一波朋友圈可好！
 
