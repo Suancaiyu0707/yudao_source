@@ -1,10 +1,42 @@
+title: Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览  
+date: 2020-03-01
+tags:
+categories: Spring-Cloud-Gateway
+permalink: Spring-Cloud-Gateway/filter-intro
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+- [2. GatewyFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+  - [2.1 GatewayFilterFactory 内部类](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+  - [2.2 OrderedGatewayFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+  - [2.3 GatewayFilterAdapter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+- [3. GlobalFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+- [4. GatewayFilterChain](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+- [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要对 **过滤器 GatewayFilter 做整体的认识**。
 
 过滤器整体类图如下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/01.jpeg)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/01.png)
 
 是不是有点疑惑 GlobalFilter 与 GatewayFilter 的关系 ？且见本文分晓。
 
@@ -265,5 +297,5 @@ private static class DefaultGatewayFilterChain implements GatewayFilterChain {
 
 啦啦啦，终于到过滤器了。开森！
 
-
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/03.png)
 

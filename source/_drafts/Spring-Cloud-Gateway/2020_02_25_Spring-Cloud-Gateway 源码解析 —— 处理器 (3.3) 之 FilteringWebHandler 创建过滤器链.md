@@ -76,8 +76,8 @@ FilteringWebHandler 通过创建请求对应的 Route 对应的 GatewayFilterCha
  25: }
 ```
 
-* 本方法涉及到的过滤器 GlobalFilter / GatewayFilter / GatewayFilterAdapter / OrderedGatewayFilter 类，我们在 [TODO 【3019】]() 详细解析。
-* 本方法涉及到的过滤器链 GatewayFilterChain / DefaultGatewayFilterChain 类，我们在 [TODO 【3019】]() 详细解析。
+* 本方法涉及到的过滤器 GlobalFilter / GatewayFilter / GatewayFilterAdapter / OrderedGatewayFilter 类，我们在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self) 详细解析。
+* 本方法涉及到的过滤器链 GatewayFilterChain / DefaultGatewayFilterChain 类，我们在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self) 详细解析。
 * 第 11 行 ：从 `GATEWAY_ROUTE_ATTR` 获得 请求对应的 Route 。
 * 第 13 至 15 行 ：获得 GatewayFilter 数组，包含 `route.filters` 和 `globalFilters` 。
 * 第 19 行 ：排序获得的 GatewayFilter 数组。

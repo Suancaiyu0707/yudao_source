@@ -260,7 +260,7 @@ RouteDefinitionRouteLocator 构造方法，代码如下 ：
         * 第 27 至 31 行 ：调用 `#getTuple()` 方法，获得 Tuple 。该方法比较复杂，在 [「2.4 获得 Tuple」](#) 详细解析。
         * 第 33 行 ：创建 GatewayFilter 。
     * 第 35 行 ：获得 GatewayFilter 数组。
-* 第 37 至 40 行 ：将 GatewayFilter 数组**转换成** OrderedGatewayFilter 数组。在 [TODO 【3019】]() 详细解析。
+* 第 37 至 40 行 ：将 GatewayFilter 数组**转换成** OrderedGatewayFilter 数组。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self) 详细解析。
 * 第 42 行 ：返回 GatewayFilter **数组**。
 
 ## 2.4 获得 Tuple 
