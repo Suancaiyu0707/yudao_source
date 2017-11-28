@@ -188,6 +188,82 @@ public interface GlobalFilter {
 
 GlobalFilter 实现类如下类图 ：
 
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/02.png)
+
+* RoutingFilter
+    * NettyRoutingFilter
+    * WebClientHttpRoutingFilter
+    * WebsocketRoutingFilter
+    * ForwardRoutingFilter
+
+* 成对的 Filter
+    * NettyRoutingFilter / NettyRoutingFilter
+    * WebClientHttpRoutingFilter / WebClientWriteResponseFilter
+
+梳理 GlobalFilter 的顺序如下 ：
+
+
+| GlobalFilter | 顺序 | 文章 |
+| --- | --- | --- |
+| NettyWriteResponseFilter | -1 |  |
+| WebClientWriteResponseFilter | -1 |  |
+| RouteToRequestUrlFilter | 10000 |  |
+| LoadBalancerClientFilter | 10100 |  |
+| ForwardRoutingFilter | `Integer.MAX_VALUE` |  |
+| NettyRoutingFilter | `Integer.MAX_VALUE` |  |
+| WebClientHttpRoutingFilter | `Integer.MAX_VALUE` |  |
+| WebsocketRoutingFilter | `Integer.MAX_VALUE` |  |
+
+TODO 【3030】 
+
+# 4. GatewayFilterChain
+
+`org.springframework.cloud.gateway.filter.GatewayFilterChain` ，网关过滤器链**接口**。代码如下 ：
+
+```Java
+public interface GatewayFilterChain {
+
+	/**
+	 * Delegate to the next {@code WebFilter} in the chain.
+	 * @param exchange the current server exchange
+	 * @return {@code Mono<Void>} to indicate when request handling is complete
+	 */
+	Mono<Void> filter(ServerWebExchange exchange);
+
+}
+```
+
+* 从接口方法可以看到，和 [`javax.servlet.FilterChain`](https://tomcat.apache.org/tomcat-8.0-doc/servletapi/javax/servlet/FilterChain.html) 类似。
+
+-------
+
+`org.springframework.cloud.gateway.handler.FilteringWebHandler.GatewayFilterAdapter` ，网关过滤器**链默认实现类**。代码如下 ：
+
+```Java
+private static class DefaultGatewayFilterChain implements GatewayFilterChain {
+
+	private int index;
+	private final List<GatewayFilter> filters;
+
+	public DefaultGatewayFilterChain(List<GatewayFilter> filters) {
+		this.filters = filters;
+	}
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange) {
+		if (this.index < filters.size()) {
+			GatewayFilter filter = filters.get(this.index++);
+			return filter.filter(exchange, this);
+		} else {
+			return Mono.empty(); // complete
+		}
+	}
+}
+```
+
+# 666. 彩蛋
+
+啦啦啦，终于到过滤器了。开森！
 
 
 
