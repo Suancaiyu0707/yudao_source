@@ -199,7 +199,7 @@ RouteDefinitionRouteLocator 构造方法，代码如下 ：
 * 第 14 至 29 行 ：`#lookup()` 方法。
     * 第 16 至 19 行 ：获得 RoutePredicateFactory Bean 对象。
     * 第 21 至 26 行 ：调用 `#getTuple()` 方法，获得 Tuple 。该方法比较复杂，在 [「2.4 获得 Tuple」](#) 详细解析。
-    * 第 28 行 ：调用 `RoutePredicateFactory#apply(Tuple)` 方法，创建 Predicate 。在 [TODO 【3018】]() 详细解析。
+    * 第 28 行 ：调用 `RoutePredicateFactory#apply(Tuple)` 方法，创建 Predicate 。在 [《Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂 》](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/?self) 详细解析。
 
 -------
 

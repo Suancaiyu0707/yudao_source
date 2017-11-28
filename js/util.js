@@ -26,7 +26,9 @@ var alertMax=1024;if(count<alertMax){var hour=new Date().getHours();var numbers=
 +'<img width="400" src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" />'
 +'<p style="color: blue">抱歉，该弹窗每天弹出 '+alertMax+' 次。</p>','buttons':{'已关注，关闭窗口（公众号发送：【口令】屏蔽弹窗）':function(){doubi.close();}}});$.cookie(key,count+1,{expires:1,path:'/'});}
 setTimeout(explode,(count+1)*15000);};}
-$(document).ready(function(){if(isDomainVIP()){console.log('vip域名，跳转中');var search=location.search;if(search&&search.length>0){search+='&vip';}else{search+='?vip';}
+function removeCategoriesPageTitle(){var category=document.location.href.substring(document.location.href.lastIndexOf('/categories/')+'/categories/'.length).replace('/','');var els=$('.post a');for(var i in els){var el=els[i];if(!el||!el.getAttribute){continue}
+console.log(el);el.setAttribute('title',el.getAttribute('title').replace(category,''));}}
+$(document).ready(function(){removeCategoriesPageTitle();if(isDomainVIP()){console.log('vip域名，跳转中');var search=location.search;if(search&&search.length>0){search+='&vip';}else{search+='?vip';}
 window.location.href='http://www.iocoder.cn'+search;return;}
 var from=getFrom();if(isMobile()){console.log('手机端，不用弹窗');$('#authorInfo').remove();$('time').remove();return;}
 if(isVIP()){console.log('你是vip，不用弹窗');return;}

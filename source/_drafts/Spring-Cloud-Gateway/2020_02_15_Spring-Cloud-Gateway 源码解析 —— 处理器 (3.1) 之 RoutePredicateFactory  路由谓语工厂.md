@@ -5,6 +5,7 @@ categories: Spring-Cloud-Gateway
 permalink: Spring-Cloud-Gateway/handler-route-predicate-factory
 
 -------
+
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
@@ -231,12 +232,12 @@ RoutePredicateFactory **实现类**如下图 ：
      30: 	public static ZonedDateTime parseZonedDateTime(String dateString) {
      31: 		ZonedDateTime dateTime;
      32: 		try {
-     33: 		    // 数字
+     33: 			// 数字
      34: 			long epoch = Long.parseLong(dateString);
      35: 			dateTime = Instant.ofEpochMilli(epoch).atOffset(ZoneOffset.ofTotalSeconds(0))
      36: 					.toZonedDateTime();
      37: 		} catch (NumberFormatException e) {
-     38: 		    // 字符串
+     38: 			// 字符串
      39: 			// try ZonedDateTime instead
      40: 			dateTime = ZonedDateTime.parse(dateString);
      41: 		}
@@ -291,7 +292,7 @@ RoutePredicateFactory **实现类**如下图 ：
      16: 		return exchange -> {
      17: 			List<HttpCookie> cookies = exchange.getRequest().getCookies().get(name);
      18: 			for (HttpCookie cookie : cookies) {
-     19: 			    // 正则匹配
+     19: 				// 正则匹配
      20: 				if (cookie.getValue().matches(regexp)) {
      21: 					return true;
      22: 				}
@@ -343,7 +344,7 @@ RoutePredicateFactory **实现类**如下图 ：
      16: 		return exchange -> {
      17: 			List<String> values = exchange.getRequest().getHeaders().get(header);
      18: 			for (String value : values) {
-     19:                 // 正则匹配
+     19: 				// 正则匹配
      20: 				if (value.matches(regexp)) {
      21: 					return true;
      22: 				}
@@ -500,7 +501,7 @@ RoutePredicateFactory **实现类**如下图 ：
      27: 			boolean match = pattern.matches(path);
      28: 			traceMatch("Pattern", pattern.getPatternString(), path, match);
      29: 			if (match) {
-     30: 			    // 解析 路径参数，例如 path=/foo/123 <=> /foo/{segment}
+     30: 				// 解析 路径参数，例如 path=/foo/123 <=> /foo/{segment}
      31: 				PathMatchInfo uriTemplateVariables = pattern.matchAndExtract(path);
      32: 				exchange.getAttributes().put(URI_TEMPLATE_VARIABLES_ATTRIBUTE, uriTemplateVariables);
      33: 				return true;
@@ -629,7 +630,7 @@ RoutePredicateFactory **实现类**如下图 ：
      17: 		return exchange -> {
      18: 			InetSocketAddress remoteAddress = exchange.getRequest().getRemoteAddress();
      19: 			if (remoteAddress != null) {
-     20: 			    // 来源 IP
+     20: 				// 来源 IP
      21: 				String hostAddress = remoteAddress.getAddress().getHostAddress();
      22: 				String host = exchange.getRequest().getURI().getHost();
      23: 				if (!hostAddress.equals(host)) {

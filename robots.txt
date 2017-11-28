@@ -7,7 +7,6 @@ Allow: /MyCAT/
 Allow: /Architecture/
 Allow: /Sharding-JDBC/
 Allow: /Elastic-Job/
-Allow: /TCC-Transaction/
 Disallow: /css/
 Disallow: /js/
 Disallow: /lib/

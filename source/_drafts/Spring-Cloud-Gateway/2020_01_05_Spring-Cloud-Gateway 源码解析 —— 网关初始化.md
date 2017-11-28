@@ -208,7 +208,7 @@ public FilteringWebHandler filteringWebHandler(List<GlobalFilter> globalFilters)
 }
 ```
 
-* 在 [TODO【3007】]() 详细解析 FilteringWebHandler 的代码实现。
+* 在 [《Spring-Cloud-Gateway 源码解析 —— 处理器 (3.3) 之 FilteringWebHandler 创建过滤器链 》](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/?self) 详细解析 FilteringWebHandler 的代码实现。
 
 
 ## 5.5 初始化 GatewayProperties
@@ -355,7 +355,7 @@ public RoutePredicateHandlerMapping routePredicateHandlerMapping(FilteringWebHan
 }
 ```
 
-* 在 [TODO 【3014】]() 详细解析 RoutePredicateHandlerMapping 的代码实现。
+* 在 [《Spring-Cloud-Gateway 源码解析 —— 处理器 (3.2) 之 RoutePredicateHandlerMapping 路由匹配 》](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-handler-mapping/?self) 详细解析 RoutePredicateHandlerMapping 的代码实现。
 
 ## 5.11 初始化 GatewayWebfluxEndpoint
 
