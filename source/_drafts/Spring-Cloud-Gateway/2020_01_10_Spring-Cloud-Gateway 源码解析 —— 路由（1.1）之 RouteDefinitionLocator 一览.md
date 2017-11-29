@@ -40,7 +40,7 @@ permalink: Spring-Cloud-Gateway/route-definition-locator-intro
 * **RouteDefinitionLocator** 负责读取路由配置( `org.springframework.cloud.gateway.route.RouteDefinition` ) 。从上图中我们可以看到，RouteDefinitionLocator **接口**有四种实现 ：
     * **PropertiesRouteDefinitionLocator** ，从**配置文件**( 例如，YML / Properties 等 ) 读取。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.2）之 PropertiesRouteDefinitionLocator 配置文件》「2. PropertiesRouteDefinitionLocator」](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties?self) 详细解析。
     * **RouteDefinitionRepository** ，从**存储器**( 例如，内存 / Redis / MySQL 等 )读取。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.3）之 RouteDefinitionRepository 存储器》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/?self) 详细解析。
-    * **DiscoveryClientRouteDefinitionLocator** ，从**注册中心**( 例如，Eureka / Consul / Zookeeper / Etcd 等 )读取。在 [TODO 【3010】]() 详细解析。
+    * **DiscoveryClientRouteDefinitionLocator** ，从**注册中心**( 例如，Eureka / Consul / Zookeeper / Etcd 等 )读取。在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.4）之 DiscoveryClientRouteDefinitionLocator 注册中心》](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-discover-client/?self) 详细解析。
     * **CompositeRouteDefinitionLocator** ，组合**多种** RouteDefinitionLocator 的实现，为 RouteDefinitionRouteLocator 提供**统一**入口。在 [本文](#) 详细解析。
     * 另外，**CachingRouteDefinitionLocator** 也是 RouteDefinitionLocator 的实现类，已经被 CachingRouteLocator 取代。
 * **RouteLocator** 可以直接**自定义**路由( `org.springframework.cloud.gateway.route.Route` ) ，也可以通过 RouteDefinitionRouteLocator 获取 RouteDefinition ，并转换成 Route 。

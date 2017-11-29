@@ -1,4 +1,4 @@
-title: Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂 
+title: Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂
 date: 2020-02-15
 tags:
 categories: Spring-Cloud-Gateway
