@@ -6,6 +6,26 @@ permalink: Spring-Cloud-Gateway/filter-netty-routing
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
+- [2. NettyRoutingFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
+- [3. NettyWriteResponseFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
+- [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **NettyRoutingFilter 的代码实现**。
@@ -16,9 +36,9 @@ NettyWriteResponseFilter ，与 NettyRoutingFilter **成对使用**的网关过�
 
 大体流程如下 ：
 
-[](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_28/01.png)
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_28/01.png)
 
-另外，Spring Cloud Gateway 实现了 WebClientHttpRoutingFilter / WebClientWriteResponseFilter ，功能上和 NettyRoutingFilter / NettyWriteResponseFilter **相同**，差别在于基于 `org.springframework.cloud.gateway.filter.WebClient` 实现的 HttpClient 请求后端 Http 服务。在 [TODO 【3023】]() ，我们会详细解析。
+另外，Spring Cloud Gateway 实现了 WebClientHttpRoutingFilter / WebClientWriteResponseFilter ，功能上和 NettyRoutingFilter / NettyWriteResponseFilter **相同**，差别在于基于 `org.springframework.cloud.gateway.filter.WebClient` 实现的 HttpClient 请求后端 Http 服务。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.8) 之 WebClientHttpRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing?self) ，我们会详细解析。
 
 -------
 
@@ -42,7 +62,9 @@ public class NettyRoutingFilter implements GlobalFilter, Ordered {
 
 	public NettyRoutingFilter(HttpClient httpClient) {
 		this.httpClient = httpClient;
-	}}
+	}
+
+}
 ```
 
 * `httpClient` 属性，基于 **Netty** 实现的 HttpClient 。通过该属性，**请求后端的 Http 服务**。
@@ -155,14 +177,13 @@ public int getOrder() {
 * 第 18 行 ：创建 **Netty Request Method** 对象。`request#getMethod()` 返回的不是 `io.netty.handler.codec.http.HttpMethod` ，所以需要进行转换。
 * 第 21 行 ：获得 `url` 。
 * 第 24 至 25 行 ：创建  **Netty Request Header** 对象( `io.netty.handler.codec.http.DefaultHttpHeaders` )，将请求的 Header 设置给它。
-* ---------- 第 28 至 50 行 ：调用 `HttpClient#request(HttpMethod, String, Function)` 方法，请求后端 Http 服务。
+* --------- 第 28 至 50 行 ：调用 `HttpClient#request(HttpMethod, String, Function)` 方法，请求后端 Http 服务。
 * 第 29 至 31 行 ：创建 **Netty Request** 对象( `reactor.ipc.netty.http.client.HttpClientRequest` )。
     * 第 29 行 ：TODO 【3024】 NettyPipeline.SendOptions::flushOnEach
     * 第 30 行 ：设置请求失败( 后端服务返回响应状体码 `>= 400 ` )时，不抛出异常。相关代码如下 ：
 
         ```Java
         // HttpClientOperations#checkResponseCode(HttpResponse response)
-            
         // ... 省略无关代码
         
         if (code >= 400) {
@@ -178,21 +199,22 @@ public int getOrder() {
         		return false;
         	}
         	return true;
-        }
-        
-        ```    
+        } 
+        ```
         * 通过设置 `clientError = false` ，第 51 行可以调用 `Mono#doNext(Consumer)` 方法，**统一订阅处理**返回的 `reactor.ipc.netty.http.client.HttpClientResponse` 对象。
+    
     * 第 31 行 ：设置 **Netty Request** 对象的 Header 。
+
 * 第 34 至 44 行 ：【TODO 3025】目前是一个 BUG ，在 2.0.x 版本修复。见 [FormIntegrationTests#formUrlencodedWorks()](FormIntegrationTests) 单元测试的注释说明。
 * 第 47 至 50 行 ：请求后端的 Http 服务。
     * 第 47 行 ：发送请求 Header 。
     * 第 48 至 50 行 ：发送请求 Body 。其中中间的 `#map(...)` 的过程为 `Flux<DataBuffer> => ByteBuffer => Flux<DataBuffer>` 。
 
-* ---------- 第 51 至 65 行 ：请求后端 Http 服务**完成**，将 **Netty Response** 赋值给响应 `response` 。
+* --------- 第 51 至 65 行 ：请求后端 Http 服务**完成**，将 **Netty Response** 赋值给响应 `response` 。
 * 第 53 至 57 行 ：创建 `org.springframework.http.HttpHeaders` 对象，将 **Netty Response Header** 设置给它，而后设置回给响应 `response` 。
 * 第 60 行 ：设置响应 `response` 的状态码。
 * 第 65 行 ：设置 **Netty Response** 到 `CLIENT_RESPONSE_ATTR` 。后续 NettyWriteResponseFilter 将 **Netty Response** 写回给客户端。
-* ---------- 第 66 行 ：提交过滤器链继续过滤。
+* --------- 第 66 行 ：提交过滤器链继续过滤。
 
 # 3. NettyWriteResponseFilter
 
@@ -249,6 +271,7 @@ public int getOrder() {
 
 下一篇 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.8) 之 WebClientHttpRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing) 走起！
 
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_28/02.png)
 
-
+胖友，分享一波朋友圈可好！
 

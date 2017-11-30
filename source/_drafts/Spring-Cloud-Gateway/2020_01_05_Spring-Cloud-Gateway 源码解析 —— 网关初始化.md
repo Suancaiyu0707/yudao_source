@@ -160,8 +160,8 @@ RequestRateLimiterGatewayFilterFactory 基于 RedisRateLimiter 实现网关的**
 * 第 10 至 16 行 ：创建一个类型为 `java.util.Objects.Consumer` 的 Bean 对象。该 Consumer 会将传入类型为 `reactor.ipc.netty.options.HttpClientOptions.Builder` 的参数 `opts` ，设置 `opts` 的 `poolResources` 属性。
     * 调用 `PoolResources.elastic("proxy")` 方法，创建 `name` 属性为 `"proxy"` 的 `reactor.ipc.netty.resources.PoolResources` 。其中 `"proxy"` 用于实际使用时，打印日志的**标记**。
 * 第 4 至 8 行 ：创建一个类型为 `reactor.ipc.netty.http.client.HttpClient` 的 Bean 对象。该 HttpClient 使用 Netty 实现的 Client 。
-* 第 18 至 21 行 ：使用 HttpClient Bean ，创建一个类型为 `org.springframework.cloud.gateway.filter.NettyRoutingFilter` 的 Bean 对象。在 [TODO 【3003】]() 详细解析 NettyRoutingFilter 的代码实现。
-* 第 23 至 26 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.NettyWriteResponseFilter` 的 Bean 对象。在 [TODO 【3003】]() 详细解析 NettyWriteResponseFilter 的代码实现。
+* 第 18 至 21 行 ：使用 HttpClient Bean ，创建一个类型为 `org.springframework.cloud.gateway.filter.NettyRoutingFilter` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/?self) 详细解析 NettyRoutingFilter 的代码实现。
+* 第 23 至 26 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.NettyWriteResponseFilter` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/?self) 详细解析 NettyWriteResponseFilter 的代码实现。
 * 第 28 至 31 行 ：创建一个类型为 `org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient` 的 Bean 对象，用于下文 WebsocketRoutingFilter 的 Bean 对象创建。
 
 ## 5.3 初始化 GlobalFilter
