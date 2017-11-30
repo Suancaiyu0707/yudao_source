@@ -83,7 +83,7 @@ Spring Cloud Gateway 2.x 基于 Spring WebFlux 实现。
 
 `org.springframework.cloud.gateway.config.GatewayLoadBalancerClientAutoConfiguration` ，初始化 LoadBalancerClientFilter ，点击 [链接](https://github.com/YunaiV/spring-cloud-gateway/blob/382a4cd98fbb8ac53a83a5559bacb0f885838074/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/config/GatewayLoadBalancerClientAutoConfiguration.java) 查看代码。
 
-在 [TODO 【3001】]() 详细解析 LoadBalancerClientFilter 的代码实现。
+在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/?self) 详细解析 LoadBalancerClientFilter 的代码实现。
 
 # 4. GatewayRedisAutoConfiguration
 

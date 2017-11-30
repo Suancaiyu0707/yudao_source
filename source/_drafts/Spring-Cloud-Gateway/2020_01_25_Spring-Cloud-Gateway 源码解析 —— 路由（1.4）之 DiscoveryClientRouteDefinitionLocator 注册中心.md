@@ -168,7 +168,7 @@ public class GatewaySampleApplication {
 * 第 13 行 ：调用 `discoveryClient` 获取注册在注册中心的服务列表。
 * 第 14 行 ：遍历服务列表，生成对应的 RouteDefinition 数组。
 * 第 16 行 ：设置 `RouteDefinition.id` 。
-* 第 18 行 ：设置 `RouteDefinition.uri` ，格式为 `lb://${serviceId}` 。在 LoadBalancerClientFilter 会根据 `lb://` 前缀过滤处理，负载均衡，选择最终调用的服务地址，在 [TODO 【3001】]() 详细解析。
+* 第 18 行 ：设置 `RouteDefinition.uri` ，格式为 `lb://${serviceId}` 。在 LoadBalancerClientFilter 会根据 `lb://` 前缀过滤处理，负载均衡，选择最终调用的服务地址，在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/?self) 详细解析。
 * 第 27 至 32 行 ：使用 PathRoutePredicateFactory 创建 Path 匹配断言。
     * 例如服务的 `serviceId = spring.application.name = juejin-sample` ，通过**网关** `http://${gateway}/${serviceId}/some_api` 访问**服务** `http://some_api` 。
     * PathRoutePredicateFactory 在 [《Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂》「10. PathRoutePredicateFactory」](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/?self) 有详细解析。
