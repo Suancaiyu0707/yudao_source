@@ -193,9 +193,9 @@ RequestRateLimiterGatewayFilterFactory 基于 RedisRateLimiter 实现网关的**
 
 * 每个 `@Bean` 注解后的数字为 Bean 的**初始化顺序**。
 * 第 1 至 4 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter`  的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.3) 之 RouteToRequestUrlFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-route-to-request/?self) 详细解析 RouteToRequestUrlFilter 的代码实现。
-* 第 6 至 10 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.ForwardRoutingFilter` 的 Bean 对象。在 [TODO 【3005】]() 详细解析 ForwardRoutingFilter 的代码实现。
+* 第 6 至 10 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.ForwardRoutingFilter` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/?self) 详细解析 ForwardRoutingFilter 的代码实现。
 * 第 12 至 15 行 ：创建一个类型为 `org.springframework.web.reactive.socket.server.WebSocketService` 的 Bean 对象。
-* 第 17 至 20 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.WebsocketRoutingFilter` 的 Bean 对象。在 [TODO 【3006】]() 详细解析 WebsocketRoutingFilter 的代码实现。
+* 第 17 至 20 行 ：创建一个类型为 `org.springframework.cloud.gateway.filter.WebsocketRoutingFilter` 的 Bean 对象。在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebsocketRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-websocket-routing/?self) 详细解析 WebsocketRoutingFilter 的代码实现。
 
 ## 5.4 初始化 FilteringWebHandler
 
