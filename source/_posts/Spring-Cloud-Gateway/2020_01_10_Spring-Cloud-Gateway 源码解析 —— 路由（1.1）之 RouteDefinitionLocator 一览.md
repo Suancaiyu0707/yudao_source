@@ -8,6 +8,8 @@ permalink: Spring-Cloud-Gateway/route-definition-locator-intro
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
 - [2. RouteDefinition](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)
 - [3. PredicateDefinition](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/)

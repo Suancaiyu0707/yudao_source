@@ -8,6 +8,8 @@ permalink: Spring-Cloud-Gateway/route-locator-route-custom-java
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/)
 - [2. Routes](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/)
 - [3. RoutePredicates](http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/)

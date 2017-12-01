@@ -6,6 +6,8 @@ permalink: Spring-Cloud-Gateway/init
 
 ---
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/init/)
@@ -89,7 +91,7 @@ Spring Cloud Gateway 2.x 基于 Spring WebFlux 实现。
 
 `org.springframework.cloud.gateway.config.GatewayRedisAutoConfiguration` ，初始化 RedisRateLimiter 。
 
-RequestRateLimiterGatewayFilterFactory 基于 RedisRateLimiter 实现网关的**限流**功能，在 [TODO 【3002】]() 详细解析相关的代码实现。
+RequestRateLimiterGatewayFilterFactory 基于 RedisRateLimiter 实现网关的**限流**功能，在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.10) 之 RequestRateLimiterGatewayFilterFactory 请求限流》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-request-rate-limiter/?self) 详细解析相关的代码实现。
 
 # 5. GatewayAutoConfiguration
 

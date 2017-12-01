@@ -6,6 +6,8 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 
 -------
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 - [1. 依赖工具](http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/)

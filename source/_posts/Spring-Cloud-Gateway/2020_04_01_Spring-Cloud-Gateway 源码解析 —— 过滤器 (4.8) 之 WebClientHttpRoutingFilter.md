@@ -8,6 +8,8 @@ permalink: Spring-Cloud-Gateway/filter-web-client-http-routing
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/)
 - [2. 环境配置](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/)
 - [3. WebClientHttpRoutingFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/)
@@ -65,7 +67,9 @@ public class WebClientHttpRoutingFilter implements GlobalFilter, Ordered {
 
 	public WebClientHttpRoutingFilter(WebClient webClient) {
 		this.webClient = webClient;
-	}}
+	}
+
+}
 ```
 
 * `webClient` 属性，默认情况下，使用 `org.springframework.web.reactive.function.client.DefaultWebClient` 实现类。通过该属性，**请求后端的 Http 服务**。

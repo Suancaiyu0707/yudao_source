@@ -8,6 +8,8 @@ permalink: Spring-Cloud-Gateway/filter-load-balancer-client
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/)
 - [2. 环境搭建](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/)
 - [3. LoadBalancerClientFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/)

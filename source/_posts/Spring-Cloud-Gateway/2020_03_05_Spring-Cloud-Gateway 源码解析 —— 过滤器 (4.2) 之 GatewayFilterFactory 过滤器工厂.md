@@ -8,6 +8,8 @@ permalink: Spring-Cloud-Gateway/filter-factory
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
 - [2. Header](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
   - [2.1 AddRequestHeaderGatewayFilterFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/)
@@ -410,11 +412,11 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
 
 # 7. Hystrix
 
-熔断相关 GatewayFilter，我们在 [《TODO【3021】》]() 详细解析。
+熔断相关 GatewayFilter，我们在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.9) 之 HystrixGatewayFilterFactory 熔断》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/?self) 详细解析。
 
 # 8. RateLimiter
 
-限流相关 GatewayFilter，我们在 [《TODO【3002】》]() 详细解析。
+限流相关 GatewayFilter，我们在 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.10) 之 RequestRateLimiterGatewayFilterFactory 请求限流》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-request-rate-limiter/?self) 详细解析。
 
 # 666. 彩蛋
 
