@@ -27,7 +27,7 @@ permalink: Spring-MVC/good-collection
 # 1. 【zhisheng】Spring-MVC 源码解析
 
 * 作者 ：zhisheng
-* 博客 ：https://muyinchen.github.io
+* 博客 ：http://www.54tianzhisheng.cn
 * 目录 ：
     * [《看透 Spring MVC 源代码分析与实践 —— 网站基础知识》](http://www.54tianzhisheng.cn/2017/07/14/Spring-MVC01/) 
     * [《看透 Spring MVC 源代码分析与实践 —— 俯视 Spring MVC》](http://www.54tianzhisheng.cn/2017/07/14/Spring-MVC02/) 
