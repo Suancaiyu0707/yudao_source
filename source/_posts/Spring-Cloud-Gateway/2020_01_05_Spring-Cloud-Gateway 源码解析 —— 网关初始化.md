@@ -6,7 +6,7 @@ permalink: Spring-Cloud-Gateway/init
 
 ---
 
-**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+**本文主要基于 Spring-Cloud-Gateway 2.0.X M4**  
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
@@ -379,7 +379,7 @@ protected static class GatewayActuatorConfiguration {
 }
 ```
 
-* 在 [TODO 【3015】]() 详细解析 GatewayWebfluxEndpoint 的代码实现。
+* 在 [《Spring-Cloud-Gateway 源码解析 —— 网关管理 HTTP API》](http://www.iocoder.cn/Spring-Cloud-Gateway/manager-http-api/?self) 详细解析 GatewayWebfluxEndpoint 的代码实现。
 
 # 666. 彩蛋
 

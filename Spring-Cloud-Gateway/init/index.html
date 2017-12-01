@@ -16,7 +16,7 @@
     
     <meta name="author" content="芋道源码">
     
-    <meta name="description" content="本文主要基于 Spring-Cloud-Gateway 2.0.x M4  
+    <meta name="description" content="本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 1. 概述
@@ -135,7 +135,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-01-04T16:00:00.000Z" itemprop="datePublished">2020-01-05</time>-->
-    <!--更新日期:<time datetime="2017-12-01T14:00:23.000Z" itemprop="dateModified">2017-12-01</time>-->
+    <!--更新日期:<time datetime="2017-12-01T16:42:35.000Z" itemprop="dateModified">2017-12-02</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -143,7 +143,7 @@
 	<div class="article-content">
 		
 		
-		<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.x M4</strong>  </p>
+		<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
 <p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/init/">http://www.iocoder.cn/Spring-Cloud-Gateway/init/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/init/">1. 概述</a></li>
@@ -313,7 +313,7 @@
 <h2 id="5-11-初始化-GatewayWebfluxEndpoint"><a href="#5-11-初始化-GatewayWebfluxEndpoint" class="headerlink" title="5.11 初始化 GatewayWebfluxEndpoint"></a>5.11 初始化 GatewayWebfluxEndpoint</h2><p>创建一个类型为 <code>org.springframework.cloud.gateway.actuate.GatewayWebfluxEndpoint</code> 的 Bean 对象，提供<strong>管理</strong>网关的 HTTP API ，代码如下 ：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@ManagementContextConfiguration</span></div><div class="line"><span class="meta">@ConditionalOnProperty</span>(value = <span class="string">"management.gateway.enabled"</span>, matchIfMissing = <span class="keyword">true</span>)</div><div class="line"><span class="meta">@ConditionalOnClass</span>(Health.class)</div><div class="line"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">GatewayActuatorConfiguration</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> GatewayWebfluxEndpoint <span class="title">gatewayWebfluxEndpoint</span><span class="params">(RouteDefinitionLocator routeDefinitionLocator, List&lt;GlobalFilter&gt; globalFilters,</span></span></div><div class="line"><span class="function"><span class="params">										</span></span></div><div class="line"><span class="function"><span class="params">        List&lt;GatewayFilterFactory&gt; GatewayFilters, RouteDefinitionWriter routeDefinitionWriter,</span></span></div><div class="line"><span class="function"><span class="params">														 RouteLocator routeLocator)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> GatewayWebfluxEndpoint(routeDefinitionLocator, globalFilters, GatewayFilters, routeDefinitionWriter, routeLocator);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>在 <a href="">TODO 【3015】</a> 详细解析 GatewayWebfluxEndpoint 的代码实现。</li>
+<li>在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/manager-http-api/?self">《Spring-Cloud-Gateway 源码解析 —— 网关管理 HTTP API》</a> 详细解析 GatewayWebfluxEndpoint 的代码实现。</li>
 </ul>
 <h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>是不是内心里面有种感觉，“劳资看了一堆构造函数”？</p>
 <p>嘿嘿嘿，后面咱一篇一篇走起！</p>
@@ -470,7 +470,7 @@
             
 		
             
-			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>23</sup></a></li>
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
             
 		
             

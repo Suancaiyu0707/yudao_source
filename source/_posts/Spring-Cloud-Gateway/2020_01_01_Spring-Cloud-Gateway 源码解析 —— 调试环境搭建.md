@@ -6,7 +6,7 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 
 -------
 
-**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+**本文主要基于 Spring-Cloud-Gateway 2.0.X M4**  
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
@@ -49,7 +49,7 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 
 使用 `IntelliJ IDEA` 从 `Fork` 出来的仓库拉取代码。
 
-**如果** `master` 分支处于 `1.x` 版本，请使用 `IntelliJ IDEA` 切换到 `2.0.x` 分支。
+**如果** `master` 分支处于 `1.x` 版本，请使用 `IntelliJ IDEA` 切换到 `2.0.X` 分支。
 
 在项目路径下，在**命令行**执行 `mvn package -Dmaven.test.skip=true` 命令，`Maven` 会下载依赖包，可能会花费一些时间，耐心等待下。其间可能会出现因为网络原因( 我相信你懂的 )，可能会出现失败的情况，淡定，重新执行上述命令直到成功。此刻，你就是一个 `while(true)` 的小强。
 
@@ -80,3 +80,6 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 
 对了，这是一个系列文，所以，千万不要错过。
 
+在送一波真彩蛋 ：
+
+![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_01/02.png)

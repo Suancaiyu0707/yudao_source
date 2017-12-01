@@ -16,7 +16,7 @@
     
     <meta name="author" content="芋道源码">
     
-    <meta name="description" content="本文主要基于 Spring-Cloud-Gateway 2.0.x M4  
+    <meta name="description" content="本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 1. 依赖工具
@@ -135,7 +135,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2019-12-31T16:00:00.000Z" itemprop="datePublished">2020-01-01</time>-->
-    <!--更新日期:<time datetime="2017-12-01T14:00:16.000Z" itemprop="dateModified">2017-12-01</time>-->
+    <!--更新日期:<time datetime="2017-12-01T16:48:33.000Z" itemprop="dateModified">2017-12-02</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -143,7 +143,7 @@
 	<div class="article-content">
 		
 		
-		<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.x M4</strong>  </p>
+		<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
 <p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/">http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/build-debugging-environment/">1. 依赖工具</a></li>
@@ -179,7 +179,7 @@
 </ul>
 <h1 id="2-源码拉取"><a href="#2-源码拉取" class="headerlink" title="2. 源码拉取"></a>2. 源码拉取</h1><p>从官方仓库 <a href="https://github.com/spring-cloud/spring-cloud-gateway.git" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/spring-cloud/spring-cloud-gateway.git</a> <code>Fork</code> 出属于自己的仓库。为什么要 <code>Fork</code> ？既然开始阅读、调试源码，我们可能会写一些注释，有了自己的仓库，可以进行自由的提交。😈</p>
 <p>使用 <code>IntelliJ IDEA</code> 从 <code>Fork</code> 出来的仓库拉取代码。</p>
-<p><strong>如果</strong> <code>master</code> 分支处于 <code>1.x</code> 版本，请使用 <code>IntelliJ IDEA</code> 切换到 <code>2.0.x</code> 分支。</p>
+<p><strong>如果</strong> <code>master</code> 分支处于 <code>1.x</code> 版本，请使用 <code>IntelliJ IDEA</code> 切换到 <code>2.0.X</code> 分支。</p>
 <p>在项目路径下，在<strong>命令行</strong>执行 <code>mvn package -Dmaven.test.skip=true</code> 命令，<code>Maven</code> 会下载依赖包，可能会花费一些时间，耐心等待下。其间可能会出现因为网络原因( 我相信你懂的 )，可能会出现失败的情况，淡定，重新执行上述命令直到成功。此刻，你就是一个 <code>while(true)</code> 的小强。</p>
 <p>执行完命令后，在 <code>IntelliJ IDEA</code> 的 <code>Maven Projects</code> 视图看到<strong>部分依赖库处于报错状态</strong>，将 <code>Profiles</code> 的 <code>spring</code> 勾选上，如下图所示：</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_01/01.png" alt=""></p>
@@ -193,6 +193,8 @@
 <p>使用浏览器访问 <code>http://127.0.0.1:8080/image/webp</code> 地址，我们会看到一张 <strong>“狼”</strong> 图。恭喜你，调试环境已经搭建完成。为什么会返回一张图片呢，答案在 <code>GatewaySampleApplication#customRouteLocator()</code> 方法的路由配置。</p>
 <h1 id="4-彩蛋"><a href="#4-彩蛋" class="headerlink" title="4. 彩蛋"></a>4. 彩蛋</h1><p>胖友，分享一波朋友圈可好！</p>
 <p>对了，这是一个系列文，所以，千万不要错过。</p>
+<p>在送一波真彩蛋 ：</p>
+<p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_01/02.png" alt=""></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -345,7 +347,7 @@
             
 		
             
-			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>23</sup></a></li>
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
             
 		
             

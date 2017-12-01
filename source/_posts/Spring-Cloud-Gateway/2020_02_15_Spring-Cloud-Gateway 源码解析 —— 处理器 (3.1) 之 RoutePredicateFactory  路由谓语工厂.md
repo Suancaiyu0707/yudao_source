@@ -8,7 +8,7 @@ permalink: Spring-Cloud-Gateway/handler-route-predicate-factory
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
-**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+**本文主要基于 Spring-Cloud-Gateway 2.0.X M4**  
 
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)
 - [2. RoutePredicateFactory](http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/)

@@ -8,7 +8,7 @@ permalink: Spring-Cloud-Gateway/filter-netty-routing
 
 摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
-**本文主要基于 Spring-Cloud-Gateway 2.0.x M4**  
+**本文主要基于 Spring-Cloud-Gateway 2.0.X M4**  
 
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
 - [2. NettyRoutingFilter](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/)
@@ -207,7 +207,7 @@ public int getOrder() {
     
     * 第 31 行 ：设置 **Netty Request** 对象的 Header 。
 
-* 第 34 至 44 行 ：【TODO 3025】目前是一个 BUG ，在 2.0.x 版本修复。见 [FormIntegrationTests#formUrlencodedWorks()](FormIntegrationTests) 单元测试的注释说明。
+* 第 34 至 44 行 ：【TODO 3025】目前是一个 BUG ，在 2.0.X 版本修复。见 [FormIntegrationTests#formUrlencodedWorks()](FormIntegrationTests) 单元测试的注释说明。
 * 第 47 至 50 行 ：请求后端的 Http 服务。
     * 第 47 行 ：发送请求 Header 。
     * 第 48 至 50 行 ：发送请求 Body 。其中中间的 `#map(...)` 的过程为 `Flux<DataBuffer> => ByteBuffer => Flux<DataBuffer>` 。
