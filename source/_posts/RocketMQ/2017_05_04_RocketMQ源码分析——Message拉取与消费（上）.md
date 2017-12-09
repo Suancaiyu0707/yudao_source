@@ -10,28 +10,28 @@ permalink: RocketMQ/message-pull-and-consume-first
 
 **本文主要基于 RocketMQ 4.0.x 正式版**  
 
-- [1、概述](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [2、ConsumeQueue 结构](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [3、ConsumeQueue 存储](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [ReputMessageService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-		- [DefaultMessageStore#doDispatch(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-		- [ConsumeQueue#putMessagePositionInfoWrapper(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [FlushConsumeQueueService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [4、Broker 提供[拉取消息]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [PullMessageRequestHeader](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [PullMessageProcessor#processRequest(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [MessageStore#getMessage(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [DefaultMessageFilter#isMessageMatched(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [PullRequestHoldService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [PullMessageProcessor#executeRequestWhenWakeup(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [5、Broker 提供[更新消费进度]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [BrokerController#initialize(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [ConfigManager](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-		- [MixAll#string2File(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [ConsumerOffsetManager](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [6、Broker 提供[发回消息]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-	- [SendMessageProcessor#consumerSendMsgBack(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
-- [7、结尾](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）
+- [1、概述](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [2、ConsumeQueue 结构](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [3、ConsumeQueue 存储](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [ReputMessageService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+		- [DefaultMessageStore#doDispatch(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+		- [ConsumeQueue#putMessagePositionInfoWrapper(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [FlushConsumeQueueService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [4、Broker 提供[拉取消息]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [PullMessageRequestHeader](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [PullMessageProcessor#processRequest(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [MessageStore#getMessage(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [DefaultMessageFilter#isMessageMatched(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [PullRequestHoldService](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [PullMessageProcessor#executeRequestWhenWakeup(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [5、Broker 提供[更新消费进度]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [BrokerController#initialize(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [ConfigManager](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+		- [MixAll#string2File(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [ConsumerOffsetManager](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [6、Broker 提供[发回消息]接口](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+	- [SendMessageProcessor#consumerSendMsgBack(...)](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
+- [7、结尾](http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/)
 
 -------
 

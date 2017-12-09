@@ -19,7 +19,9 @@
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 本文主要基于 RocketMQ 4.0.x 正式版  
 
-[1、概述](http://www.iocoder.cn/">
+1、概述
+2、ConsumeQueue 结构
+3、Cons">
     
 
     
@@ -100,6 +102,8 @@
                 
                 <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
                 
+                <li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li>
+                
                 <li><a href="/link_url">友链</a></li>
                 
                 <!--<li>-->
@@ -134,7 +138,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2017-05-03T16:00:00.000Z" itemprop="datePublished">2017-05-04</time>-->
-    <!--更新日期:<time datetime="2017-10-12T06:48:48.000Z" itemprop="dateModified">2017-10-12</time>-->
+    <!--更新日期:<time datetime="2017-12-09T03:36:16.000Z" itemprop="dateModified">2017-12-09</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -145,40 +149,40 @@
 		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 RocketMQ 4.0.x 正式版</strong>  </p>
 <ul>
-<li>[1、概述](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[2、ConsumeQueue 结构](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[3、ConsumeQueue 存储](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[ReputMessageService](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[DefaultMessageStore#doDispatch(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[ConsumeQueue#putMessagePositionInfoWrapper(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">1、概述</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">2、ConsumeQueue 结构</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">3、ConsumeQueue 存储</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">ReputMessageService</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">DefaultMessageStore#doDispatch(…)</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">ConsumeQueue#putMessagePositionInfoWrapper(…)</a></li>
 </ul>
 </li>
-<li>[FlushConsumeQueueService](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">FlushConsumeQueueService</a></li>
 </ul>
 </li>
-<li>[4、Broker 提供[拉取消息]接口](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[PullMessageRequestHeader](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[PullMessageProcessor#processRequest(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[MessageStore#getMessage(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[DefaultMessageFilter#isMessageMatched(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[PullRequestHoldService](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[PullMessageProcessor#executeRequestWhenWakeup(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">4、Broker 提供[拉取消息]接口</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">PullMessageRequestHeader</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">PullMessageProcessor#processRequest(…)</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">MessageStore#getMessage(…)</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">DefaultMessageFilter#isMessageMatched(…)</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">PullRequestHoldService</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">PullMessageProcessor#executeRequestWhenWakeup(…)</a></li>
 </ul>
 </li>
-<li>[5、Broker 提供[更新消费进度]接口](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[BrokerController#initialize(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
-<li>[ConfigManager](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[MixAll#string2File(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">5、Broker 提供[更新消费进度]接口</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">BrokerController#initialize(…)</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">ConfigManager</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">MixAll#string2File(…)</a></li>
 </ul>
 </li>
-<li>[ConsumerOffsetManager](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">ConsumerOffsetManager</a></li>
 </ul>
 </li>
-<li>[6、Broker 提供[发回消息]接口](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a><ul>
-<li>[SendMessageProcessor#consumerSendMsgBack(…)](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">6、Broker 提供[发回消息]接口</a><ul>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">SendMessageProcessor#consumerSendMsgBack(…)</a></li>
 </ul>
 </li>
-<li>[7、结尾](<a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）">http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/）</a></li>
+<li><a href="http://www.iocoder.cn/RocketMQ/message-pull-and-consume-first/">7、结尾</a></li>
 </ul>
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
@@ -692,6 +696,10 @@
 		
             
 			    <li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>3</sup></a></li>
             
 		
             

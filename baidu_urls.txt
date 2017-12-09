@@ -73,8 +73,8 @@ http://www.iocoder.cn/Elastic-Job/cloud-job-failover/
 http://www.iocoder.cn/Elastic-Job/cloud-local-executor/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-second/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/
-http://www.iocoder.cn/Architecture/how-to-read-article/
 http://www.iocoder.cn/Architecture/books-recommended/
+http://www.iocoder.cn/Architecture/how-to-read-article/
 http://www.iocoder.cn/Elastic-Job/cloud-job-config/
 http://www.iocoder.cn/Elastic-Job/job-console/
 http://www.iocoder.cn/Spring-MVC/good-collection/
@@ -85,8 +85,8 @@ http://www.iocoder.cn/Elastic-Job/reconcile/
 http://www.iocoder.cn/Spring-Security/good-collection/
 http://www.iocoder.cn/Elastic-Job/job-listener/
 http://www.iocoder.cn/JUC/good-collection/
-http://www.iocoder.cn/Dubbo/good-collection/
 http://www.iocoder.cn/Happylifeplat-TCC/good-collection/
+http://www.iocoder.cn/Dubbo/good-collection/
 http://www.iocoder.cn/Elastic-Job/job-event-trace/
 http://www.iocoder.cn/Elastic-Job/job-failover/
 http://www.iocoder.cn/Elastic-Job/job-sharding/
