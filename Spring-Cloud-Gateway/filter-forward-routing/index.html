@@ -17,10 +17,10 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4
 
 1. 概述
-2. Route">
+2. RouteTo">
     
 
     
@@ -145,8 +145,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
+		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">2. RouteToRequestUrlFilter</a></li>
@@ -155,23 +155,25 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>ForwardRoutingFilter 的代码实现</strong>。</p>
+<h1>1. 概述</h1>
+<p>本文主要分享 <strong>ForwardRoutingFilter 的代码实现</strong>。</p>
 <p>RouteToRequestUrlFilter ，转发<strong>路由</strong>网关过滤器。其根据 <code>forward://</code> 前缀( Scheme )过滤处理，<strong>将请求转发到当前网关实例本地接口</strong>。</p>
 <p>举个例子，配置 RouteDefinition 路由定义如下 ：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  application:</span></div><div class="line"><span class="attr">      name:</span> <span class="string">juejin-gateway</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">forward_sample</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">forward:///globalfilters</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/globalfilters</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">PrefixPath=/application/gateway</span></div></pre></td></tr></table></figure>
+<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  application:</span></div><div class="line"><span class="attr">      name:</span> <span class="string">juejin-gateway</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">forward_sample</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">forward:///globalfilters</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/globalfilters</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">PrefixPath=/application/gateway</span></div></pre></td></tr></table></figure></p>
 <ul>
 <li>我们假定网关端口为 <code>8080</code> 。</li>
-<li>当请求 <code>http://127.0.0.1:8080/globalfilters</code> 接口，Spring Cloud Gateway 处理过程如下 ：<ul>
+<li>当请求 <code>http://127.0.0.1:8080/globalfilters</code> 接口，Spring Cloud Gateway 处理过程如下 ：
+<ul>
 <li>匹配到路由 Route (<code>id = forward_sample</code>) 。</li>
 <li><strong>配置</strong>的 PrefixPathGatewayFilterFactory 将请求<strong>改写</strong>成 <code>http://127.0.0.1:8080/application/gateway/globalfilters</code> 。</li>
 <li>ForwardRoutingFilter 判断有 <code>forward://</code> 前缀( Scheme )，过滤处理，将请求<strong>转发</strong>给 DispatcherHandler 。</li>
@@ -189,30 +191,44 @@
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1 id="2-RouteToRequestUrlFilter"><a href="#2-RouteToRequestUrlFilter" class="headerlink" title="2. RouteToRequestUrlFilter"></a>2. RouteToRequestUrlFilter</h1><p><code>org.springframework.cloud.gateway.filter.ForwardRoutingFilter</code> ，代码如下 ：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForwardRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(ForwardRoutingFilter.class);</div><div class="line"> <span class="number">4</span>: </div><div class="line"> <span class="number">5</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> DispatcherHandler dispatcherHandler;</div><div class="line"> <span class="number">6</span>: </div><div class="line"> <span class="number">7</span>: 	<span class="function"><span class="keyword">public</span> <span class="title">ForwardRoutingFilter</span><span class="params">(DispatcherHandler dispatcherHandler)</span> </span>&#123;</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">this</span>.dispatcherHandler = dispatcherHandler;</div><div class="line"> <span class="number">9</span>: 	&#125;</div><div class="line"><span class="number">10</span>: </div><div class="line"><span class="number">11</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">12</span>: 	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="number">13</span>: 		<span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line"><span class="number">14</span>: 	&#125;</div><div class="line"><span class="number">15</span>: </div><div class="line"><span class="number">16</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">17</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"><span class="number">18</span>: 	    <span class="comment">// 获得 requestUrl</span></div><div class="line"><span class="number">19</span>: 		URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 		<span class="comment">// 判断是否能够处理</span></div><div class="line"><span class="number">22</span>: 		String scheme = requestUrl.getScheme();</div><div class="line"><span class="number">23</span>: 		<span class="keyword">if</span> (isAlreadyRouted(exchange) || !scheme.equals(<span class="string">"forward"</span>)) &#123;</div><div class="line"><span class="number">24</span>: 			<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">25</span>: 		&#125;</div><div class="line"><span class="number">26</span>: </div><div class="line"><span class="number">27</span>: 		<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">28</span>: 		setAlreadyRouted(exchange);</div><div class="line"><span class="number">29</span>: </div><div class="line"><span class="number">30</span>: 		<span class="comment">//<span class="doctag">TODO:</span> translate url?</span></div><div class="line"><span class="number">31</span>: </div><div class="line"><span class="number">32</span>: 		<span class="keyword">if</span> (log.isTraceEnabled()) &#123;</div><div class="line"><span class="number">33</span>: 			log.trace(<span class="string">"Forwarding to URI: "</span>+requestUrl);</div><div class="line"><span class="number">34</span>: 		&#125;</div><div class="line"><span class="number">35</span>: </div><div class="line"><span class="number">36</span>: 		<span class="comment">// DispatcherHandler 匹配并转发到当前网关实例本地接口</span></div><div class="line"><span class="number">37</span>: 		<span class="keyword">return</span> <span class="keyword">this</span>.dispatcherHandler.handle(exchange);</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure>
+<h1>2. RouteToRequestUrlFilter</h1>
+<p><code>org.springframework.cloud.gateway.filter.ForwardRoutingFilter</code> ，代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForwardRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(ForwardRoutingFilter.class);</div><div class="line"> <span class="number">4</span>: </div><div class="line"> <span class="number">5</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> DispatcherHandler dispatcherHandler;</div><div class="line"> <span class="number">6</span>: </div><div class="line"> <span class="number">7</span>: 	<span class="function"><span class="keyword">public</span> <span class="title">ForwardRoutingFilter</span><span class="params">(DispatcherHandler dispatcherHandler)</span> </span>&#123;</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">this</span>.dispatcherHandler = dispatcherHandler;</div><div class="line"> <span class="number">9</span>: 	&#125;</div><div class="line"><span class="number">10</span>: </div><div class="line"><span class="number">11</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">12</span>: 	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="number">13</span>: 		<span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line"><span class="number">14</span>: 	&#125;</div><div class="line"><span class="number">15</span>: </div><div class="line"><span class="number">16</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">17</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"><span class="number">18</span>: 	    <span class="comment">// 获得 requestUrl</span></div><div class="line"><span class="number">19</span>: 		URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 		<span class="comment">// 判断是否能够处理</span></div><div class="line"><span class="number">22</span>: 		String scheme = requestUrl.getScheme();</div><div class="line"><span class="number">23</span>: 		<span class="keyword">if</span> (isAlreadyRouted(exchange) || !scheme.equals(<span class="string">"forward"</span>)) &#123;</div><div class="line"><span class="number">24</span>: 			<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">25</span>: 		&#125;</div><div class="line"><span class="number">26</span>: </div><div class="line"><span class="number">27</span>: 		<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">28</span>: 		setAlreadyRouted(exchange);</div><div class="line"><span class="number">29</span>: </div><div class="line"><span class="number">30</span>: 		<span class="comment">//<span class="doctag">TODO:</span> translate url?</span></div><div class="line"><span class="number">31</span>: </div><div class="line"><span class="number">32</span>: 		<span class="keyword">if</span> (log.isTraceEnabled()) &#123;</div><div class="line"><span class="number">33</span>: 			log.trace(<span class="string">"Forwarding to URI: "</span>+requestUrl);</div><div class="line"><span class="number">34</span>: 		&#125;</div><div class="line"><span class="number">35</span>: </div><div class="line"><span class="number">36</span>: 		<span class="comment">// DispatcherHandler 匹配并转发到当前网关实例本地接口</span></div><div class="line"><span class="number">37</span>: 		<span class="keyword">return</span> <span class="keyword">this</span>.dispatcherHandler.handle(exchange);</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure></p>
 <ul>
-<li>实现 <strong>GlobalFilter</strong> 接口。</li>
-<li><code>#getOrder()</code> 方法，返回顺序为 <code>Integer.MAX_VALUE</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</li>
-<li>第 19 行 ：获得 <code>requestUrl</code> 。</li>
-<li><p>第 22 至 25 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p>
+<li>
+<p>实现 <strong>GlobalFilter</strong> 接口。</p>
+</li>
+<li>
+<p><code>#getOrder()</code> 方法，返回顺序为 <code>Integer.MAX_VALUE</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</p>
+</li>
+<li>
+<p>第 19 行 ：获得 <code>requestUrl</code> 。</p>
+</li>
+<li>
+<p>第 22 至 25 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p>
 <ul>
-<li><code>forward://</code> 前缀( Scheme ) 。</li>
-<li><p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p>
-  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li>
+<p><code>forward://</code> 前缀( Scheme ) 。</p>
+</li>
+<li>
+<p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
 <li>x</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>第 28 行 ：设置该请求已经被处理。代码如下 ：</p>
-  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li>
+<p>第 28 行 ：设置该请求已经被处理。代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 </li>
-<li><p>第 37 行 ：将请求<strong>转发</strong>给 DispatcherHandler 。DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong>。</p>
+<li>
+<p>第 37 行 ：将请求<strong>转发</strong>给 DispatcherHandler 。DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong>。</p>
 </li>
 </ul>
-<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>一开始想错了 ForwardRoutingFilter 了的用途，调试许久，后面看了官方提供的示例 <code>org.springframework.cloud.gateway.test.ForwardTests</code> ，豁然开朗。</p>
+<h1>666. 彩蛋</h1>
+<p>一开始想错了 ForwardRoutingFilter 了的用途，调试许久，后面看了官方提供的示例 <code>org.springframework.cloud.gateway.test.ForwardTests</code> ，豁然开朗。</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_20/01.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好！</p>
   
@@ -264,7 +280,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-RouteToRequestUrlFilter"><span class="toc-number">2.</span> <span class="toc-text">2. RouteToRequestUrlFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. RouteToRequestUrlFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -360,6 +376,10 @@
 		
             
 			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
             
 		
             

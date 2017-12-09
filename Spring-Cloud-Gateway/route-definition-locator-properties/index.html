@@ -17,9 +17,9 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4
 
-1">
+1. ">
     
 
     
@@ -144,8 +144,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/">http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
+		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/">2. PropertiesRouteDefinitionLocator</a></li>
@@ -155,17 +155,18 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要对 <strong>PropertiesRouteDefinitionLocator 的源码实现</strong>。</p>
+<h1>1. 概述</h1>
+<p>本文主要对 <strong>PropertiesRouteDefinitionLocator 的源码实现</strong>。</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_15/01.jpeg" alt=""></p>
 <ul>
 <li><strong>蓝色</strong>部分 ：PropertiesRouteDefinitionLocator 。</li>
@@ -178,33 +179,38 @@
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1 id="2-PropertiesRouteDefinitionLocator"><a href="#2-PropertiesRouteDefinitionLocator" class="headerlink" title="2. PropertiesRouteDefinitionLocator"></a>2. PropertiesRouteDefinitionLocator</h1><p><code>org.springframework.cloud.gateway.config.PropertiesRouteDefinitionLocator</code> ，从<strong>配置文件</strong>( 例如，YML / Properties 等 ) 读取路由配置。代码如下 ：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PropertiesRouteDefinitionLocator</span> <span class="keyword">implements</span> <span class="title">RouteDefinitionLocator</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> GatewayProperties properties;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">PropertiesRouteDefinitionLocator</span><span class="params">(GatewayProperties properties)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.properties = properties;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> Flux&lt;RouteDefinition&gt; <span class="title">getRouteDefinitions</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> Flux.fromIterable(<span class="keyword">this</span>.properties.getRoutes());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1>2. PropertiesRouteDefinitionLocator</h1>
+<p><code>org.springframework.cloud.gateway.config.PropertiesRouteDefinitionLocator</code> ，从<strong>配置文件</strong>( 例如，YML / Properties 等 ) 读取路由配置。代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PropertiesRouteDefinitionLocator</span> <span class="keyword">implements</span> <span class="title">RouteDefinitionLocator</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> GatewayProperties properties;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">PropertiesRouteDefinitionLocator</span><span class="params">(GatewayProperties properties)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.properties = properties;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> Flux&lt;RouteDefinition&gt; <span class="title">getRouteDefinitions</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> Flux.fromIterable(<span class="keyword">this</span>.properties.getRoutes());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
 <li><code>#getRouteDefinitions()</code> 方法，从 <strong>GatewayProperties</strong> 获取路由配置数组。</li>
 </ul>
-<h1 id="3-GatewayProperties"><a href="#3-GatewayProperties" class="headerlink" title="3. GatewayProperties"></a>3. GatewayProperties</h1><p><code>org.springframework.cloud.gateway.config.GatewayProperties</code> ，从配置文件<strong>读取</strong> ：</p>
+<h1>3. GatewayProperties</h1>
+<p><code>org.springframework.cloud.gateway.config.GatewayProperties</code> ，从配置文件<strong>读取</strong> ：</p>
 <ul>
 <li>路由配置</li>
 <li><strong>默认</strong>过滤器配置。当 RouteDefinition =&gt; Route 时，会将过滤器配置添加到<strong>每个</strong> Route 。</li>
 </ul>
 <p>GatewayProperties 代码如下 ：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span>(<span class="string">"spring.cloud.gateway"</span>)</div><div class="line"><span class="meta">@Validated</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GatewayProperties</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line"><span class="comment">	 * List of Routes</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="meta">@NotNull</span></div><div class="line">	<span class="meta">@Valid</span></div><div class="line">	<span class="keyword">private</span> List&lt;RouteDefinition&gt; routes = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line"><span class="comment">	 * List of filter definitions that are applied to every route.</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="keyword">private</span> List&lt;FilterDefinition&gt; defaultFilters = loadDefaults();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> ArrayList&lt;FilterDefinition&gt; <span class="title">loadDefaults</span><span class="params">()</span> </span>&#123;</div><div class="line">		ArrayList&lt;FilterDefinition&gt; defaults = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		FilterDefinition definition = <span class="keyword">new</span> FilterDefinition();</div><div class="line">		definition.setName(normalizeFilterName(RemoveNonProxyHeadersGatewayFilterFactory.class));</div><div class="line">		defaults.add(definition);</div><div class="line">		<span class="keyword">return</span> defaults;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@ConfigurationProperties</span>(<span class="string">"spring.cloud.gateway"</span>)</div><div class="line"><span class="meta">@Validated</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GatewayProperties</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line"><span class="comment">	 * List of Routes</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="meta">@NotNull</span></div><div class="line">	<span class="meta">@Valid</span></div><div class="line">	<span class="keyword">private</span> List&lt;RouteDefinition&gt; routes = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line"><span class="comment">	 * List of filter definitions that are applied to every route.</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="keyword">private</span> List&lt;FilterDefinition&gt; defaultFilters = loadDefaults();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> ArrayList&lt;FilterDefinition&gt; <span class="title">loadDefaults</span><span class="params">()</span> </span>&#123;</div><div class="line">		ArrayList&lt;FilterDefinition&gt; defaults = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		FilterDefinition definition = <span class="keyword">new</span> FilterDefinition();</div><div class="line">		definition.setName(normalizeFilterName(RemoveNonProxyHeadersGatewayFilterFactory.class));</div><div class="line">		defaults.add(definition);</div><div class="line">		<span class="keyword">return</span> defaults;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
-<li><p><code>routes</code> 属性，路由配置。通过 <code>spring.cloud.gateway.routes</code> 配置。以 YAML 配置文件举例子 ： </p>
-  <figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="bullet">      -</span> <span class="string">host_example_to_httpbin=$&#123;test.uri&#125;,</span> <span class="string">Host=**.example.org</span></div><div class="line"></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">host_foo_path_headers_to_httpbin</span></div><div class="line"><span class="attr">        uri:</span> <span class="string">$&#123;test.uri&#125;</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Host=**.foo.org</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/headers</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Method=GET</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Header=X-Request-Id,</span> <span class="string">\d+</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Query=foo,</span> <span class="string">ba.</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Query=baz</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Cookie=chocolate,</span> <span class="string">ch.p</span></div><div class="line"><span class="bullet">        -</span> <span class="string">After=1900-01-20T17:42:47.789-07:00[America/Denver]</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">AddResponseHeader=X-Response-Foo,</span> <span class="string">Bar</span></div><div class="line"></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">add_request_header_test</span></div><div class="line"><span class="attr">        uri:</span> <span class="string">$&#123;test.uri&#125;</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Host=**.addrequestheader.org</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/headers</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">AddRequestHeader=X-Request-Foo,</span> <span class="string">Bar</span></div></pre></td></tr></table></figure>
+<li>
+<p><code>routes</code> 属性，路由配置。通过 <code>spring.cloud.gateway.routes</code> 配置。以 YAML 配置文件举例子 ：</p>
+<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="bullet">      -</span> <span class="string">host_example_to_httpbin=$&#123;test.uri&#125;,</span> <span class="string">Host=**.example.org</span></div><div class="line"></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">host_foo_path_headers_to_httpbin</span></div><div class="line"><span class="attr">        uri:</span> <span class="string">$&#123;test.uri&#125;</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Host=**.foo.org</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/headers</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Method=GET</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Header=X-Request-Id,</span> <span class="string">\d+</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Query=foo,</span> <span class="string">ba.</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Query=baz</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Cookie=chocolate,</span> <span class="string">ch.p</span></div><div class="line"><span class="bullet">        -</span> <span class="string">After=1900-01-20T17:42:47.789-07:00[America/Denver]</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">AddResponseHeader=X-Response-Foo,</span> <span class="string">Bar</span></div><div class="line"></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">add_request_header_test</span></div><div class="line"><span class="attr">        uri:</span> <span class="string">$&#123;test.uri&#125;</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Host=**.addrequestheader.org</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/headers</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">AddRequestHeader=X-Request-Foo,</span> <span class="string">Bar</span></div></pre></td></tr></table></figure></p>
 <ul>
 <li>更多例子，点击 <a href="https://github.com/YunaiV/spring-cloud-gateway/blob/382a4cd98fbb8ac53a83a5559bacb0f885838074/spring-cloud-gateway-core/src/test/resources/application.yml#L15" rel="external nofollow noopener noreferrer" target="_blank">application.yml</a> 查看。</li>
 </ul>
 </li>
-<li><p><code>defaultFilters</code> 属性，<strong>默认</strong>过滤器配置。通过 <code>spring.cloud.gateway.default-filters</code> 配置。以 YAML 配置文件举例子 ：</p>
-  <figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      default-filters:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">AddResponseHeader=X-Response-Default-Foo,</span> <span class="string">Default-Bar</span></div><div class="line"><span class="bullet">      -</span> <span class="string">PrefixPath=/httpbin</span></div></pre></td></tr></table></figure>
+<li>
+<p><code>defaultFilters</code> 属性，<strong>默认</strong>过滤器配置。通过 <code>spring.cloud.gateway.default-filters</code> 配置。以 YAML 配置文件举例子 ：</p>
+<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      default-filters:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">AddResponseHeader=X-Response-Default-Foo,</span> <span class="string">Default-Bar</span></div><div class="line"><span class="bullet">      -</span> <span class="string">PrefixPath=/httpbin</span></div></pre></td></tr></table></figure></p>
 <ul>
 <li>更多例子，点击 <a href="https://github.com/YunaiV/spring-cloud-gateway/blob/382a4cd98fbb8ac53a83a5559bacb0f885838074/spring-cloud-gateway-core/src/test/resources/application.yml#L10" rel="external nofollow noopener noreferrer" target="_blank">application.yml</a> 查看。</li>
 </ul>
 </li>
 </ul>
-<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>TODO 【3017】 与 Spring Cloud Config 结合</p>
+<h1>666. 彩蛋</h1>
+<p>TODO 【3017】 与 Spring Cloud Config 结合</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_15/02.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好！</p>
   
@@ -256,7 +262,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PropertiesRouteDefinitionLocator"><span class="toc-number">2.</span> <span class="toc-text">2. PropertiesRouteDefinitionLocator</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-GatewayProperties"><span class="toc-number">3.</span> <span class="toc-text">3. GatewayProperties</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. PropertiesRouteDefinitionLocator</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. GatewayProperties</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -352,6 +358,10 @@
 		
             
 			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
             
 		
             

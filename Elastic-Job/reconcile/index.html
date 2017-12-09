@@ -151,7 +151,7 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Elastic-Job/reconcile/">http://www.iocoder.cn/Elastic-Job/reconcile/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 http://www.iocoder.cn/Elastic-Job/reconcile/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文基于 Elastic-Job V2.1.5 版本分享</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/Elastic-Job/reconcile/">1. 概述</a></li>
@@ -161,17 +161,18 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Elastic-Job-Lite 自诊断修复</strong>。</p>
+<h1>1. 概述</h1>
+<p>本文主要分享 <strong>Elastic-Job-Lite 自诊断修复</strong>。</p>
 <blockquote>
 <p>在分布式的场景下由于网络、时钟等原因，可能导致 Zookeeper 的数据与真实运行的作业产生不一致，这种不一致通过正向的校验无法完全避免。需要另外启动一个线程定时校验注册中心数据与真实作业状态的一致性，即维持 Elastic-Job 的<strong>最终一致性</strong>。</p>
 </blockquote>
@@ -181,32 +182,42 @@
 <li>在 Elastic-Job-lite 里，调解分布式作业不一致状态服务( ReconcileService ) 实现了<strong>自诊断修复</strong>功能。</li>
 </ul>
 <blockquote>
-<p>你行好事会因为得到赞赏而愉悦<br>同理，开源项目贡献者会因为 Star 而更加有动力<br>为 Elastic-Job 点赞！<a href="https://github.com/dangdangdotcom/elastic-job/stargazers" rel="external nofollow noopener noreferrer" target="_blank">传送门</a></p>
+<p>你行好事会因为得到赞赏而愉悦<br>
+同理，开源项目贡献者会因为 Star 而更加有动力<br>
+为 Elastic-Job 点赞！<a href="https://github.com/dangdangdotcom/elastic-job/stargazers" rel="external nofollow noopener noreferrer" target="_blank">传送门</a></p>
 </blockquote>
-<h1 id="2-ReconcileService"><a href="#2-ReconcileService" class="headerlink" title="2. ReconcileService"></a>2. ReconcileService</h1><p>ReconcileService，调解分布式作业不一致状态服务。</p>
+<h1>2. ReconcileService</h1>
+<p>ReconcileService，调解分布式作业不一致状态服务。</p>
 <p>ReconcileService 继承 Google Guava AbstractScheduledService 抽象类，实现 <code>#scheduler()</code>、<code>#runOneIteration()</code> 方法，达到<strong>周期性</strong>校验注册中心数据与真实作业状态的一致性。</p>
 <p><strong><code>#scheduler()</code> 方法实现如下</strong>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ReconcileService.java</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> Scheduler <span class="title">scheduler</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> Scheduler.newFixedDelaySchedule(<span class="number">0</span>, <span class="number">1</span>, TimeUnit.MINUTES);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ReconcileService.java</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> Scheduler <span class="title">scheduler</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> Scheduler.newFixedDelaySchedule(<span class="number">0</span>, <span class="number">1</span>, TimeUnit.MINUTES);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
 <li>每 1 分钟会调用一次 <code>#runOneIteration()</code> 方法进行校验。</li>
 <li>Google Guava AbstractScheduledService 相关的知识，有兴趣的同学可以自己 Google 学习哟。</li>
 </ul>
 <p><strong><code>#runOneIteration()</code> 方法实现如下</strong>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ReconcileService.java</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">runOneIteration</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   LiteJobConfiguration config = configService.load(<span class="keyword">true</span>);</div><div class="line">   <span class="keyword">int</span> reconcileIntervalMinutes = <span class="keyword">null</span> == config ? -<span class="number">1</span> : config.getReconcileIntervalMinutes();</div><div class="line">   <span class="keyword">if</span> (reconcileIntervalMinutes &gt; <span class="number">0</span> &amp;&amp; (System.currentTimeMillis() - lastReconcileTime &gt;= reconcileIntervalMinutes * <span class="number">60</span> * <span class="number">1000</span>)) &#123; <span class="comment">// 校验是否达到校验周期</span></div><div class="line">       <span class="comment">// 设置最后校验时间</span></div><div class="line">       lastReconcileTime = System.currentTimeMillis();</div><div class="line">       <span class="keyword">if</span> (leaderService.isLeaderUntilBlock() <span class="comment">// 主作业节点才可以执行</span></div><div class="line">               &amp;&amp; !shardingService.isNeedSharding() <span class="comment">// 当前作业不需要重新分片</span></div><div class="line">               &amp;&amp; shardingService.hasShardingInfoInOfflineServers()) &#123; <span class="comment">// 查询是包含有分片节点的不在线服务器</span></div><div class="line">           log.warn(<span class="string">"Elastic Job: job status node has inconsistent value,start reconciling..."</span>);</div><div class="line">           <span class="comment">// 设置需要重新分片的标记</span></div><div class="line">           shardingService.setReshardingFlag();</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ReconcileService.java</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">runOneIteration</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   LiteJobConfiguration config = configService.load(<span class="keyword">true</span>);</div><div class="line">   <span class="keyword">int</span> reconcileIntervalMinutes = <span class="keyword">null</span> == config ? -<span class="number">1</span> : config.getReconcileIntervalMinutes();</div><div class="line">   <span class="keyword">if</span> (reconcileIntervalMinutes &gt; <span class="number">0</span> &amp;&amp; (System.currentTimeMillis() - lastReconcileTime &gt;= reconcileIntervalMinutes * <span class="number">60</span> * <span class="number">1000</span>)) &#123; <span class="comment">// 校验是否达到校验周期</span></div><div class="line">       <span class="comment">// 设置最后校验时间</span></div><div class="line">       lastReconcileTime = System.currentTimeMillis();</div><div class="line">       <span class="keyword">if</span> (leaderService.isLeaderUntilBlock() <span class="comment">// 主作业节点才可以执行</span></div><div class="line">               &amp;&amp; !shardingService.isNeedSharding() <span class="comment">// 当前作业不需要重新分片</span></div><div class="line">               &amp;&amp; shardingService.hasShardingInfoInOfflineServers()) &#123; <span class="comment">// 查询是包含有分片节点的不在线服务器</span></div><div class="line">           log.warn(<span class="string">"Elastic Job: job status node has inconsistent value,start reconciling..."</span>);</div><div class="line">           <span class="comment">// 设置需要重新分片的标记</span></div><div class="line">           shardingService.setReshardingFlag();</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
 <li>通过作业配置，设置<strong>修复作业服务器不一致状态服务调度间隔时间</strong>属性( <code>LiteJobConfiguration.reconcileIntervalMinutes</code> )。</li>
 <li>调用 <code>ShardingService#setReshardingFlag()</code> 方法，设置需要重新分片的标记。这个也是 ReconcileService 最本质的行为，有了这个标记后，作业会重新进行分片，<strong>达到作业节点本地分片数据与 Zookeeper 数据一致</strong>。作业分片逻辑，在<a href="http://www.iocoder.cn/Elastic-Job/job-sharding/?self">《Elastic-Job-Lite 源码分析 —— 作业分片》</a>有详细解析。</li>
-<li><p>调解分布式作业不一致状态服务一共有三个条件：</p>
+<li>调解分布式作业不一致状态服务一共有三个条件：
 <ul>
-<li>调用 <code>LeaderService#isLeaderUntilBlock()</code> 方法，判断当前作业节点是否为主节点。在<a href="http://www.iocoder.cn/Elastic-Job/election/?self">《Elastic-Job-Lite 源码分析 —— 主节点选举》</a>有详细解析。</li>
-<li>调用 <code>ShardingService#isNeedSharding()</code> 方法，判断当前作业是否需要重分片。如果需要重新分片，就不要重复设置当前作业需要重新分片的标记。</li>
-<li><p>调用 <code>ShardingService#hasShardingInfoInOfflineServers()</code> 方法，查询是否包含有分片节点的不在线服务器。<strong>永久</strong>数据节点 <code>/${JOB_NAME}/sharding/${ITEM_INDEX}/instance</code> 存储分配的作业节点主键( <code>${JOB_INSTANCE_ID}</code> )， <strong>不会</strong>随着作业节点因为各种原因断开后会话超时移除，而<strong>临时</strong>数据节点<code>/${JOB_NAME}/instances/${JOB_INSTANCE_ID}</code> <strong>会</strong>随着作业节点因为各种原因断开后超时会话超时移除。当查询到包含有分片节点的不在线的作业节点，设置需要重新分片的标记后进行重新分片，将其持有的作业分片分配给其它在线的作业节点。</p>
-  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ShardingService.java</span></div><div class="line"> <span class="comment">/**</span></div><div class="line"><span class="comment"> * 查询是包含有分片节点的不在线服务器.</span></div><div class="line"><span class="comment"> * </span></div><div class="line"><span class="comment"> * <span class="doctag">@return</span> 是包含有分片节点的不在线服务器</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasShardingInfoInOfflineServers</span><span class="params">()</span> </span>&#123;</div><div class="line">    List&lt;String&gt; onlineInstances = jobNodeStorage.getJobNodeChildrenKeys(InstanceNode.ROOT); <span class="comment">// `/$&#123;JOB_NAME&#125;/instances/$&#123;JOB_INSTANCE_ID&#125;`</span></div><div class="line">    <span class="keyword">int</span> shardingTotalCount = configService.load(<span class="keyword">true</span>).getTypeConfig().getCoreConfig().getShardingTotalCount();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; shardingTotalCount; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (!onlineInstances.contains(jobNodeStorage.getJobNodeData(ShardingNode.getInstanceNode(i)))) &#123; <span class="comment">// `/$&#123;JOB_NAME&#125;/sharding/$&#123;ITEM_INDEX&#125;/instance`</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li>
+<p>调用 <code>LeaderService#isLeaderUntilBlock()</code> 方法，判断当前作业节点是否为主节点。在<a href="http://www.iocoder.cn/Elastic-Job/election/?self">《Elastic-Job-Lite 源码分析 —— 主节点选举》</a>有详细解析。</p>
+</li>
+<li>
+<p>调用 <code>ShardingService#isNeedSharding()</code> 方法，判断当前作业是否需要重分片。如果需要重新分片，就不要重复设置当前作业需要重新分片的标记。</p>
+</li>
+<li>
+<p>调用 <code>ShardingService#hasShardingInfoInOfflineServers()</code> 方法，查询是否包含有分片节点的不在线服务器。<strong>永久</strong>数据节点 <code>/${JOB_NAME}/sharding/${ITEM_INDEX}/instance</code> 存储分配的作业节点主键( <code>${JOB_INSTANCE_ID}</code> )， <strong>不会</strong>随着作业节点因为各种原因断开后会话超时移除，而<strong>临时</strong>数据节点<code>/${JOB_NAME}/instances/${JOB_INSTANCE_ID}</code> <strong>会</strong>随着作业节点因为各种原因断开后超时会话超时移除。当查询到包含有分片节点的不在线的作业节点，设置需要重新分片的标记后进行重新分片，将其持有的作业分片分配给其它在线的作业节点。</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// ShardingService.java</span></div><div class="line"> <span class="comment">/**</span></div><div class="line"><span class="comment"> * 查询是包含有分片节点的不在线服务器.</span></div><div class="line"><span class="comment"> * </span></div><div class="line"><span class="comment"> * <span class="doctag">@return</span> 是包含有分片节点的不在线服务器</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasShardingInfoInOfflineServers</span><span class="params">()</span> </span>&#123;</div><div class="line">    List&lt;String&gt; onlineInstances = jobNodeStorage.getJobNodeChildrenKeys(InstanceNode.ROOT); <span class="comment">// `/$&#123;JOB_NAME&#125;/instances/$&#123;JOB_INSTANCE_ID&#125;`</span></div><div class="line">    <span class="keyword">int</span> shardingTotalCount = configService.load(<span class="keyword">true</span>).getTypeConfig().getCoreConfig().getShardingTotalCount();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; shardingTotalCount; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (!onlineInstances.contains(jobNodeStorage.getJobNodeData(ShardingNode.getInstanceNode(i)))) &#123; <span class="comment">// `/$&#123;JOB_NAME&#125;/sharding/$&#123;ITEM_INDEX&#125;/instance`</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 </li>
 </ul>
 </li>
 </ul>
-<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>芋道君：【动作：一脚踢开旁白君】，这是对前面解析的主节点选举和作业分片的复习！不是水更！<br>旁白君：你承认水…【动作：芋道君又来一记千年杀】</p>
+<h1>666. 彩蛋</h1>
+<p>芋道君：【动作：一脚踢开旁白君】，这是对前面解析的主节点选举和作业分片的复习！不是水更！<br>
+旁白君：你承认水...【动作：芋道君又来一记千年杀】</p>
 <p><img src="http://www.iocoder.cn/images/Elastic-Job/2017_11_28/02.png" alt=""></p>
 <p>道友，赶紧上车，分享一波朋友圈！</p>
   
@@ -258,7 +269,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-ReconcileService"><span class="toc-number">2.</span> <span class="toc-text">2. ReconcileService</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. ReconcileService</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -354,6 +365,10 @@
 		
             
 			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
             
 		
             
