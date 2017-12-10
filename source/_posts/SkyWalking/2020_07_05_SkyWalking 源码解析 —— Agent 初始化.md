@@ -4,7 +4,34 @@ tags:
 categories: SkyWalking
 permalink: SkyWalking/agent-init
 
----
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/agent-init/)
+- [2. SkyWalkingAgent](http://www.iocoder.cn/SkyWalking/agent-init/)
+- [3. SnifferConfigInitializer](http://www.iocoder.cn/SkyWalking/agent-init/)
+  - [3.1 Config](http://www.iocoder.cn/SkyWalking/agent-init/)
+  - [3.2 RemoteDownstreamConfig](http://www.iocoder.cn/SkyWalking/agent-init/)
+- [4. Plugin](http://www.iocoder.cn/SkyWalking/agent-init/)
+  - [4.1 PluginBootstrap](http://www.iocoder.cn/SkyWalking/agent-init/)
+  - [4.2 PluginFinder](http://www.iocoder.cn/SkyWalking/agent-init/)
+- [5. ServiceManager](http://www.iocoder.cn/SkyWalking/agent-init/)
+  - [5.1 BootService](http://www.iocoder.cn/SkyWalking/agent-init/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/agent-init/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
 
 # 1. 概述
 
@@ -36,7 +63,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 
 在看具体代码实现之前，我们先看下 `org.skywalking.apm.agent.core.conf` 包的大体结构 ：
 
-![](../../../images/SkyWalking/2020_07_05/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/02.png)
 
 配置类有 Config 和 RemoteDownstreamConfig 两种。从命名上可以看出 ：
 
@@ -47,7 +74,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 
 [`#initialize()`](https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/SnifferConfigInitializer.java#L56) 方法，初始化 Agent 本地配置，代码如下 ：
 
-* 第 59 至 67 行 ：从配置文件( `agent.config` ) 加载配置。配置文件所在**固定**路径为 `${AGENT_PACKAGE_PATH}/config/agent.config` ，其中 `${AGENT_PACKAGE_PATH}` 通过 [`org.skywalking.apm.agent.core.boot.AgentPackagePath`](https://github.com/YunaiV/skywalking/blob/c51dbc997348111674dbeedb71d22b0414936cdb/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/AgentPackagePath.java#L31) 初始化。Agent 整理目录如下图 ：![](../../../images/SkyWalking/2020_07_05/01.png)
+* 第 59 至 67 行 ：从配置文件( `agent.config` ) 加载配置。配置文件所在**固定**路径为 `${AGENT_PACKAGE_PATH}/config/agent.config` ，其中 `${AGENT_PACKAGE_PATH}` 通过 [`org.skywalking.apm.agent.core.boot.AgentPackagePath`](https://github.com/YunaiV/skywalking/blob/c51dbc997348111674dbeedb71d22b0414936cdb/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/AgentPackagePath.java#L31) 初始化。Agent 整理目录如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/01.png)
 * 第 70 至 74 行 ：从环境变量**覆盖**配置。环境变量 **Key** 需以 `"skywalking."` 开头。例如，`Config.Agent.APPLICATION_CODE` 在 `agent.config` 为 `agent.application_code` ，环境变量为 `skywalking.agent.application_code` 。另外，环境变量包括 JVM 进程的和系统的。
 * 第 77 至 82 行 ：校验配置是否正确加载。
 
@@ -57,7 +84,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 
 打开 [Config](https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/Config.java#L32) ，我们会看到拆分了 Agent / Collector / Jvm / Buffer / Dictionary / Logging / Plugin 七个小类。如下图 ：
 
-![](../../../images/SkyWalking/2020_07_05/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/03.png)
 
 本文暂不对配置项详细解析，胖友可以看下每个属性的英文注释。
 
@@ -67,7 +94,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 
 打开 [RemoteDownstreamConfig](https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/RemoteDownstreamConfig.java) ，我们会看到拆分了 Agent / Collector 两小类。如下图 ：
 
-![](../../../images/SkyWalking/2020_07_05/04.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/04.png)
 
 本文暂不对配置项详细解析，胖友可以看下每个属性的英文注释。
 
@@ -75,7 +102,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 
 SkyWalking Agent 提供了多种插件，实现不同框架的**透明**接入 SkyWalking 。在 [《官方文档 —— supported list》](https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-supported-list) 里，有目前的插件列表。
 
-另外，在 `apm-sniffer/apm-sdk-plugin` 目录下，有插件的实现代码 ：![](../../../images/SkyWalking/2020_07_05/05.png)
+另外，在 `apm-sniffer/apm-sdk-plugin` 目录下，有插件的实现代码 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/05.png)
 
 本小节会分享的较为简单，在 [《TODO 【4000】》]() 详细解析。
 
@@ -88,7 +115,7 @@ SkyWalking Agent 提供了多种插件，实现不同框架的**透明**接入 S
 * 第 47 行 ：初始化 AgentClassLoader 。
 * 第 50 至 56 行 ：获得插件**路径**数组。
 * 第 59 至 66 行 ：获得插件**定义**( [`org.skywalking.apm.agent.core.plugin.PluginDefine`](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginDefine.java) )数组。
-* 第 69 至 82 行 ：创建**类增强插件定义**( [`org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine`](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java) )对象数组。不同插件通过实现 AbstractClassEnhancePluginDefine **抽象类**，定义不同框架的**切面**，**记录调用链路**。以 Spring 插件为例子，如下是相关类图 ：![](../../../images/SkyWalking/2020_07_05/06.png)
+* 第 69 至 82 行 ：创建**类增强插件定义**( [`org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine`](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java) )对象数组。不同插件通过实现 AbstractClassEnhancePluginDefine **抽象类**，定义不同框架的**切面**，**记录调用链路**。以 Spring 插件为例子，如下是相关类图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/06.png)
 
 ## 4.2 PluginFinder
 
@@ -120,7 +147,7 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 
 BootService 目前有**七个**实现类，在后续的文章，我们会解析相关实现。
 
-![](../../../images/SkyWalking/2020_07_05/07.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/07.png)
 
 # 666. 彩蛋
 
@@ -128,7 +155,7 @@ BootService 目前有**七个**实现类，在后续的文章，我们会解析�
 
 嗯，送一发妹子。
 
-![](../../../images/SkyWalking/2020_07_05/08.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/08.png)
 
 胖友，分享个朋友圈可好？
 
