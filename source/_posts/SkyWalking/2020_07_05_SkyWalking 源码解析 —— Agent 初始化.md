@@ -113,7 +113,7 @@ SkyWalking Agent 提供了多种插件，实现不同框架的**透明**接入 S
 [`#loadPlugins()`](https://github.com/YunaiV/skywalking/blob/130f0a5a3438663b393e53ba2cca02a8d13c258a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginBootstrap.java#L45) 方法，代码如下 ：
 
 * 第 47 行 ：初始化 AgentClassLoader 。
-* 第 50 至 56 行 ：获得插件**路径**数组。
+* 第 50 至 56 行 ：获得插件**定义路径**数组。
 * 第 59 至 66 行 ：获得插件**定义**( [`org.skywalking.apm.agent.core.plugin.PluginDefine`](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginDefine.java) )数组。
 * 第 69 至 82 行 ：创建**类增强插件定义**( [`org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine`](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java) )对象数组。不同插件通过实现 AbstractClassEnhancePluginDefine **抽象类**，定义不同框架的**切面**，**记录调用链路**。以 Spring 插件为例子，如下是相关类图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/06.png)
 
