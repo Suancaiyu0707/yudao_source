@@ -79,7 +79,7 @@ permalink: SkyWalking/build-debugging-environment
 
 考虑到可能我们会在 Agent 上增加代码注释，这样每次不得不重新编译 Agent 。可以配置如下图，自动编译 Agent ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_01/07.png)
 
-* `-T 1C -pl apm-sniffer/apm-agent -am clean  package -Dmaven.test.skip=true -Dmaven.compile.fork=true` 。
+* `-T 1C clean  package -Dmaven.test.skip=true -Dmaven.compile.fork=true` 。
 
 -------
 

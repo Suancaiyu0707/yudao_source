@@ -25,9 +25,9 @@
 
 
 
-🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：
+🙂🙂🙂关注微信公众号：【芋道源码】有福利：  
 
-R">
+Roc">
     
 
     
@@ -152,7 +152,7 @@ R">
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
 <li><a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">2. 读写锁</a></li>
@@ -161,20 +161,19 @@ R">
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>Eureka 注册中心的那把读写锁</strong>，让我瘙痒难耐，却不得其解。在某次意外的抠脚的一刻( 笔者不抽烟，如果抽烟的话，此处应该就不是抠脚了 )，突然顿悟，爽，这好比... 比喻有点猥琐，笔者就省略 100 字。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Eureka 注册中心的那把读写锁</strong>，让我瘙痒难耐，却不得其解。在某次意外的抠脚的一刻( 笔者不抽烟，如果抽烟的话，此处应该就不是抠脚了 )，突然顿悟，爽，这好比… 比喻有点猥琐，笔者就省略 100 字。</p>
 <p>不瞎比比，上代码：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractInstanceRegistry</span> <span class="keyword">implements</span> <span class="title">InstanceRegistry</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantReadWriteLock readWriteLock = <span class="keyword">new</span> ReentrantReadWriteLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock read = readWriteLock.readLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock write = readWriteLock.writeLock();</div><div class="line"></div><div class="line">    <span class="comment">// ... 省略其他代码</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractInstanceRegistry</span> <span class="keyword">implements</span> <span class="title">InstanceRegistry</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantReadWriteLock readWriteLock = <span class="keyword">new</span> ReentrantReadWriteLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock read = readWriteLock.readLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock write = readWriteLock.writeLock();</div><div class="line"></div><div class="line">    <span class="comment">// ... 省略其他代码</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><strong>推荐 Spring Cloud 书籍</strong>：</p>
 <ul>
 <li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
@@ -182,8 +181,7 @@ R">
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1>2. 读写锁</h1>
-<p>我们把设计到读写锁的方法整理如下：</p>
+<h1 id="2-读写锁"><a href="#2-读写锁" class="headerlink" title="2. 读写锁"></a>2. 读写锁</h1><p>我们把设计到读写锁的方法整理如下：</p>
 <table>
 <thead>
 <tr>
@@ -254,7 +252,7 @@ R">
 <hr>
 <p><strong>先解释 A + C</strong> ：</p>
 <p>我们来回想下，在 Eureka 应用集合一致性哈希码的公式：<code>appsHashCode = ${status}_${count}_</code> 。( 不了解的同学可以加载下 <a href="http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/">《Eureka 源码解析 —— 应用实例注册发现（七）之增量获取》「 2. 应用集合一致性哈希码 」</a> )</p>
-<p><s>应用实例的数量和状态都会影响<strong>哈希码</strong>的计算结果。也就是说，上述<strong>前六个</strong>( 包括不使用锁的 <code>#renew(...)</code> 方法 )方法的调用都会影响哈希码。</s></p>
+<p><del>应用实例的数量和状态都会影响<strong>哈希码</strong>的计算结果。也就是说，上述<strong>前六个</strong>( 包括不使用锁的 <code>#renew(...)</code> 方法 )方法的调用都会影响哈希码。</del></p>
 <p>我们把目光移向唯一使用<strong>写锁</strong>的 <code>#getApplicationDeltasFromMultipleRegions(...)</code> 方法，该方法执行过程中，需要保证 <code>recentlyChangedQueue</code> 和 <code>registry</code> 共享变量的<strong>应用实例的状态一致</strong>，不然返回的增量应用实例集合的状态是不准确的。此时能够达到该效果，必须让 <code>#getApplicationDeltasFromMultipleRegions(...)</code> 和前六个方法<strong>互斥</strong>。方案如下：</p>
 <ul>
 <li>a. 全部 <code>synchronized</code></li>
@@ -276,8 +274,7 @@ R">
 <hr>
 <p>TODO [0029] 读写锁</p>
 <p>笔者路上突然又想了问题，可能不是上述原因，可能和 ResponseCache 有关系，参见 <code>#invalidateCache(...)</code> 方法的每次调用。也就是说，这个读写锁是针对 ResponseCache 的读写锁。</p>
-<h1>666. 彩蛋</h1>
-<p>开森 ！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>开森 ！</p>
 <p>本来以为需要跟 Eureka 官方提交 issue 提问，并且做好了获得不到答案的准备，结果无意中的抠脚( 请允许我热爱抠脚给我带来的灵感 )解答了自己的疑惑。</p>
 <p>岁月是把纠结而又萌萌哒的锁，你不知道你的困扰，哪天不经意的被打开。</p>
 <p>愿大喜大悲，不枉仅知的这一生。</p>
@@ -330,7 +327,7 @@ R">
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 读写锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-读写锁"><span class="toc-number">2.</span> <span class="toc-text">2. 读写锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -429,7 +426,7 @@ R">
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>2</sup></a></li>
             
 		
             

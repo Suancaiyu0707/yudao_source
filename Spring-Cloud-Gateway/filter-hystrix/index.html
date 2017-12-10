@@ -17,11 +17,11 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
 
 1. 概述
 2. 环境搭建
-3. Hystrix">
+3. Hystr">
     
 
     
@@ -146,8 +146,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/">http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/">2. 环境搭建</a></li>
@@ -158,18 +158,17 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>HystrixGatewayFilterFactory 的代码实现</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>HystrixGatewayFilterFactory 的代码实现</strong>。</p>
 <p>在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.2) 之 GatewayFilterFactory 过滤器工厂》</a> 一文中，我们看到 Spring Cloud Gateway 提供了多种 GatewayFilterFactory 的实现，而 HystrixGatewayFilterFactory 也是其中的一种。</p>
 <p>通过 HystrixGatewayFilterFactory ，可以创建 HystrixGatewayFilter ( 实际是内部匿名类，为了表述方便，下面继续这么称呼 ) 。</p>
 <p>HystrixGatewayFilter 使用 <a href="https://github.com/Netflix/Hystrix" rel="external nofollow noopener noreferrer" target="_blank">Hystrix</a> ，实现基于 <strong>Route</strong> 级别的熔断功能。</p>
@@ -182,80 +181,50 @@
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1>2. 环境搭建</h1>
-<p>第一步，以 <code>spring-cloud-gateway-sample</code> 项目为基础，在 <code>pom.xml</code> 文件添加依赖库。</p>
-<p><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="2-环境搭建"><a href="#2-环境搭建" class="headerlink" title="2. 环境搭建"></a>2. 环境搭建</h1><p>第一步，以 <code>spring-cloud-gateway-sample</code> 项目为基础，在 <code>pom.xml</code> 文件添加依赖库。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <p>第二步，在 <code>application.yml</code> 配置<strong>一个</strong> RouteDefinition 。</p>
-<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">default_path_to_httpbin</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">http://127.0.0.1:8081</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/**</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Hystrix=myCommandName</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">default_path_to_httpbin</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">http://127.0.0.1:8081</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/**</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Hystrix=myCommandName</span></div></pre></td></tr></table></figure>
 <ul>
 <li><code>- Hystrix=myCommandName</code> ，配置 HystrixGatewayFilterFactory ，并以 <code>myCommandName</code> 为 <strong>Hystrix Command 名字</strong>。</li>
 </ul>
 <p>第三步，配置完成，启动 <code>spring-cloud-gateway-sample</code> 项目。</p>
-<h1>3. HystrixGatewayFilterFactory</h1>
-<p><code>org.springframework.cloud.gateway.filter.factory.HystrixGatewayFilterFactory</code> ，熔断网关过滤器<strong>工厂</strong>。代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixGatewayFilterFactory</span> <span class="keyword">implements</span> <span class="title">GatewayFilterFactory</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">4</span>: 	<span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">argNames</span><span class="params">()</span> </span>&#123;</div><div class="line"> <span class="number">5</span>: 		<span class="keyword">return</span> Arrays.asList(NAME_KEY);</div><div class="line"> <span class="number">6</span>: 	&#125;</div><div class="line"> <span class="number">7</span>: </div><div class="line"> <span class="number">8</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">9</span>: 	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Tuple args)</span> </span>&#123;</div><div class="line"><span class="number">10</span>: 		<span class="comment">//<span class="doctag">TODO:</span> if no name is supplied, generate one from command id (useful for default filter)</span></div><div class="line"><span class="number">11</span>: 		<span class="keyword">final</span> String commandName = args.getString(NAME_KEY);</div><div class="line"><span class="number">12</span>: 		<span class="keyword">final</span> HystrixCommandGroupKey groupKey = HystrixCommandGroupKey.Factory.asKey(getClass().getSimpleName());</div><div class="line"><span class="number">13</span>: 		<span class="keyword">final</span> HystrixCommandKey commandKey = HystrixCommandKey.Factory.asKey(commandName);</div><div class="line"><span class="number">14</span>: </div><div class="line"><span class="number">15</span>: 		<span class="keyword">final</span> HystrixObservableCommand.Setter setter = HystrixObservableCommand.Setter</div><div class="line"><span class="number">16</span>: 				.withGroupKey(groupKey)</div><div class="line"><span class="number">17</span>: 				.andCommandKey(commandKey);</div><div class="line"><span class="number">18</span>: </div><div class="line"><span class="number">19</span>: 		<span class="keyword">return</span> (exchange, chain) -&gt; &#123;</div><div class="line"><span class="number">20</span>: 			RouteHystrixCommand command = <span class="keyword">new</span> RouteHystrixCommand(setter, exchange, chain);</div><div class="line"><span class="number">21</span>: </div><div class="line"><span class="number">22</span>: 			<span class="keyword">return</span> Mono.create(s -&gt; &#123;</div><div class="line"><span class="number">23</span>: 			    <span class="comment">// 使用 Hystrix Command Observable 订阅</span></div><div class="line"><span class="number">24</span>: 				Subscription sub = command.toObservable().subscribe(s::success, s::error, s::success);</div><div class="line"><span class="number">25</span>: 				<span class="comment">// Mono 取消时，取消 Hystrix Command Observable 的订阅，结束 Hystrix Command 的执行</span></div><div class="line"><span class="number">26</span>: 				s.onCancel(sub::unsubscribe);</div><div class="line"><span class="number">27</span>: 			&#125;).onErrorResume((Function&lt;Throwable, Mono&lt;Void&gt;&gt;) throwable -&gt; &#123;</div><div class="line"><span class="number">28</span>: 				<span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> HystrixRuntimeException) &#123;</div><div class="line"><span class="number">29</span>: 					HystrixRuntimeException e = (HystrixRuntimeException) throwable;</div><div class="line"><span class="number">30</span>: 					<span class="keyword">if</span> (e.getFailureType() == TIMEOUT) &#123; <span class="comment">//<span class="doctag">TODO:</span> optionally set status</span></div><div class="line"><span class="number">31</span>: 						setResponseStatus(exchange, HttpStatus.GATEWAY_TIMEOUT);</div><div class="line"><span class="number">32</span>: 						<span class="keyword">return</span> exchange.getResponse().setComplete();</div><div class="line"><span class="number">33</span>: 					&#125;</div><div class="line"><span class="number">34</span>: 				&#125;</div><div class="line"><span class="number">35</span>: 				<span class="keyword">return</span> Mono.empty();</div><div class="line"><span class="number">36</span>: 			&#125;).then();</div><div class="line"><span class="number">37</span>: 		&#125;;</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure></p>
+<h1 id="3-HystrixGatewayFilterFactory"><a href="#3-HystrixGatewayFilterFactory" class="headerlink" title="3. HystrixGatewayFilterFactory"></a>3. HystrixGatewayFilterFactory</h1><p><code>org.springframework.cloud.gateway.filter.factory.HystrixGatewayFilterFactory</code> ，熔断网关过滤器<strong>工厂</strong>。代码如下 ：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixGatewayFilterFactory</span> <span class="keyword">implements</span> <span class="title">GatewayFilterFactory</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">4</span>: 	<span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">argNames</span><span class="params">()</span> </span>&#123;</div><div class="line"> <span class="number">5</span>: 		<span class="keyword">return</span> Arrays.asList(NAME_KEY);</div><div class="line"> <span class="number">6</span>: 	&#125;</div><div class="line"> <span class="number">7</span>: </div><div class="line"> <span class="number">8</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">9</span>: 	<span class="function"><span class="keyword">public</span> GatewayFilter <span class="title">apply</span><span class="params">(Tuple args)</span> </span>&#123;</div><div class="line"><span class="number">10</span>: 		<span class="comment">//<span class="doctag">TODO:</span> if no name is supplied, generate one from command id (useful for default filter)</span></div><div class="line"><span class="number">11</span>: 		<span class="keyword">final</span> String commandName = args.getString(NAME_KEY);</div><div class="line"><span class="number">12</span>: 		<span class="keyword">final</span> HystrixCommandGroupKey groupKey = HystrixCommandGroupKey.Factory.asKey(getClass().getSimpleName());</div><div class="line"><span class="number">13</span>: 		<span class="keyword">final</span> HystrixCommandKey commandKey = HystrixCommandKey.Factory.asKey(commandName);</div><div class="line"><span class="number">14</span>: </div><div class="line"><span class="number">15</span>: 		<span class="keyword">final</span> HystrixObservableCommand.Setter setter = HystrixObservableCommand.Setter</div><div class="line"><span class="number">16</span>: 				.withGroupKey(groupKey)</div><div class="line"><span class="number">17</span>: 				.andCommandKey(commandKey);</div><div class="line"><span class="number">18</span>: </div><div class="line"><span class="number">19</span>: 		<span class="keyword">return</span> (exchange, chain) -&gt; &#123;</div><div class="line"><span class="number">20</span>: 			RouteHystrixCommand command = <span class="keyword">new</span> RouteHystrixCommand(setter, exchange, chain);</div><div class="line"><span class="number">21</span>: </div><div class="line"><span class="number">22</span>: 			<span class="keyword">return</span> Mono.create(s -&gt; &#123;</div><div class="line"><span class="number">23</span>: 			    <span class="comment">// 使用 Hystrix Command Observable 订阅</span></div><div class="line"><span class="number">24</span>: 				Subscription sub = command.toObservable().subscribe(s::success, s::error, s::success);</div><div class="line"><span class="number">25</span>: 				<span class="comment">// Mono 取消时，取消 Hystrix Command Observable 的订阅，结束 Hystrix Command 的执行</span></div><div class="line"><span class="number">26</span>: 				s.onCancel(sub::unsubscribe);</div><div class="line"><span class="number">27</span>: 			&#125;).onErrorResume((Function&lt;Throwable, Mono&lt;Void&gt;&gt;) throwable -&gt; &#123;</div><div class="line"><span class="number">28</span>: 				<span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> HystrixRuntimeException) &#123;</div><div class="line"><span class="number">29</span>: 					HystrixRuntimeException e = (HystrixRuntimeException) throwable;</div><div class="line"><span class="number">30</span>: 					<span class="keyword">if</span> (e.getFailureType() == TIMEOUT) &#123; <span class="comment">//<span class="doctag">TODO:</span> optionally set status</span></div><div class="line"><span class="number">31</span>: 						setResponseStatus(exchange, HttpStatus.GATEWAY_TIMEOUT);</div><div class="line"><span class="number">32</span>: 						<span class="keyword">return</span> exchange.getResponse().setComplete();</div><div class="line"><span class="number">33</span>: 					&#125;</div><div class="line"><span class="number">34</span>: 				&#125;</div><div class="line"><span class="number">35</span>: 				<span class="keyword">return</span> Mono.empty();</div><div class="line"><span class="number">36</span>: 			&#125;).then();</div><div class="line"><span class="number">37</span>: 		&#125;;</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>
-<p><code>#argNames()</code> 方法，定义了 Tuple 参数的 Key 为 <code>name</code> 。</p>
+<li><code>#argNames()</code> 方法，定义了 Tuple 参数的 Key 为 <code>name</code> 。</li>
+<li><code>#apply()</code> 方法，创建 HystrixGatewayFilter 对象。</li>
+<li>第 11 行 ：从 Tuple 参数获得 Hystrix Command 名字，例如上面举例的 RouteDefinition 时，<code>commandName = myCommandName</code> 。</li>
+<li>第 12 行 ：创建 Hystrix Command 分组 Key 为 <code>HystrixGatewayFilterFactory</code> 。</li>
+<li>第 13 行 ：创建 Hystrix Command Key 为 <code>commandName</code> 。</li>
+<li>第 15 至 17 行 ：创建 HystrixObservableCommand.Setter 对象。</li>
+<li>——— 第 19 至 37 行 ：<strong>创建 HystrixGatewayFilter 对象并返回</strong>。</li>
+<li><p>第 20 行 ：创建 RouteHystrixCommand 对象。代码如下 ：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RouteHystrixCommand</span> <span class="keyword">extends</span> <span class="title">HystrixObservableCommand</span>&lt;<span class="title">Void</span>&gt; </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> ServerWebExchange exchange;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> GatewayFilterChain chain;</div><div class="line"></div><div class="line">	RouteHystrixCommand(Setter setter, ServerWebExchange exchange, GatewayFilterChain chain) &#123;</div><div class="line">		<span class="keyword">super</span>(setter);</div><div class="line">		<span class="keyword">this</span>.exchange = exchange;</div><div class="line">		<span class="keyword">this</span>.chain = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> Observable&lt;Void&gt; <span class="title">construct</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> RxReactiveStreams.toObservable(<span class="keyword">this</span>.chain.filter(<span class="keyword">this</span>.exchange));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
-<li>
-<p><code>#apply()</code> 方法，创建 HystrixGatewayFilter 对象。</p>
-</li>
-<li>
-<p>第 11 行 ：从 Tuple 参数获得 Hystrix Command 名字，例如上面举例的 RouteDefinition 时，<code>commandName = myCommandName</code> 。</p>
-</li>
-<li>
-<p>第 12 行 ：创建 Hystrix Command 分组 Key 为 <code>HystrixGatewayFilterFactory</code> 。</p>
-</li>
-<li>
-<p>第 13 行 ：创建 Hystrix Command Key 为 <code>commandName</code> 。</p>
-</li>
-<li>
-<p>第 15 至 17 行 ：创建 HystrixObservableCommand.Setter 对象。</p>
-</li>
-<li>
-<p>--------- 第 19 至 37 行 ：<strong>创建 HystrixGatewayFilter 对象并返回</strong>。</p>
-</li>
-<li>
-<p>第 20 行 ：创建 RouteHystrixCommand 对象。代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RouteHystrixCommand</span> <span class="keyword">extends</span> <span class="title">HystrixObservableCommand</span>&lt;<span class="title">Void</span>&gt; </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> ServerWebExchange exchange;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> GatewayFilterChain chain;</div><div class="line"></div><div class="line">	RouteHystrixCommand(Setter setter, ServerWebExchange exchange, GatewayFilterChain chain) &#123;</div><div class="line">		<span class="keyword">super</span>(setter);</div><div class="line">		<span class="keyword">this</span>.exchange = exchange;</div><div class="line">		<span class="keyword">this</span>.chain = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> Observable&lt;Void&gt; <span class="title">construct</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> RxReactiveStreams.toObservable(<span class="keyword">this</span>.chain.filter(<span class="keyword">this</span>.exchange));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</li>
-<li>
-<p>第 22 至 26 行 ：调用 <code>Mono#create(Consumer&lt;MonoSink&lt;T&gt;&gt;)</code> 方法，创建 Mono 对象。点击 <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#create-java.util.function.Consumer-" rel="external nofollow noopener noreferrer" target="_blank">传送门</a> 查看该方法详细说明。因为 Hystrix 基于 RxJava ，而 GatewayFilter 基于 Reactor ( Mono 是其内部的一个类 )，通过这个方法，实现订阅的适配。<strong>未来，会实现 <a href="https://github.com/Netflix/Hystrix/issues/1089#issuecomment-180512000" rel="external nofollow noopener noreferrer" target="_blank">HystrixMonoCommand</a> 替换 HystrixObservableCommand ，从而统一订阅，去除适配代码</strong>。</p>
+<li><p>第 22 至 26 行 ：调用 <code>Mono#create(Consumer&lt;MonoSink&lt;T&gt;&gt;)</code> 方法，创建 Mono 对象。点击 <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#create-java.util.function.Consumer-" rel="external nofollow noopener noreferrer" target="_blank">传送门</a> 查看该方法详细说明。因为 Hystrix 基于 RxJava ，而 GatewayFilter 基于 Reactor ( Mono 是其内部的一个类 )，通过这个方法，实现订阅的适配。<strong>未来，会实现 <a href="https://github.com/Netflix/Hystrix/issues/1089#issuecomment-180512000" rel="external nofollow noopener noreferrer" target="_blank">HystrixMonoCommand</a> 替换 HystrixObservableCommand ，从而统一订阅，去除适配代码</strong>。</p>
 <ul>
 <li>第 24 行 ：1）调用 <code>RouteHystrixCommand#toObservable()</code> 方法，内部会调用 <code>RouteHystrixCommand#construct()</code> 方法，获得执行 <code>this.chain.filter(this.exchange)</code> 的 Observable 。2）订阅 Observable ：成功或完成时，调用 <code>Mono#success(Object)</code> 方法，目前创建的 Mono 上没有相关的订阅；<strong>异常时</strong>，调用 <code>Mono#error(Object)</code> 方法，目前创建的 Mono 上调用 <code>Mongo#onErrorResume(Function&lt;Throwable, Mono&lt;Void&gt;&gt;))</code> 方法，进行订阅。</li>
 <li>第 26 行 ：Mono 取消时，取消 Hystrix Command Observable 的订阅，结束 Hystrix Command 的执行。</li>
 </ul>
 </li>
-<li>
-<p>第 27 至 34 行 ：当 Hystrix Command <strong>执行超时</strong>时，设置响应 504 状态码，并回写客户端<strong>响应</strong>( <code>exchange.getResponse().setComplete()</code> ) 。</p>
-</li>
-<li>
-<p>第 35 行 ：<strong>当 Hystrix Command 发生其他异常时，例如断路器打开，返回 <code>Mono.empty()</code> ，最终返回客户端 200 状态码，内容为空</strong>。</p>
-</li>
-<li>
-<p>第 36 行 ：调用 <code>Mono#then()</code> 方法，<strong>参数为空</strong>，返回空 Mono ，不再向后发射数据。</p>
-</li>
+<li>第 27 至 34 行 ：当 Hystrix Command <strong>执行超时</strong>时，设置响应 504 状态码，并回写客户端<strong>响应</strong>( <code>exchange.getResponse().setComplete()</code> ) 。</li>
+<li>第 35 行 ：<strong>当 Hystrix Command 发生其他异常时，例如断路器打开，返回 <code>Mono.empty()</code> ，最终返回客户端 200 状态码，内容为空</strong>。</li>
+<li>第 36 行 ：调用 <code>Mono#then()</code> 方法，<strong>参数为空</strong>，返回空 Mono ，不再向后发射数据。</li>
 </ul>
-<h1>4. 注意事项</h1>
-<ol>
-<li>
-<p>目前 Hystrix Command 执行超时时，返回客户端 504 状态码，如果使用 JSON 格式作为数据返回，则需要修改下该 HystrixGatewayFilter 的代码实现。</p>
-</li>
-<li>
-<p>Hystrix 配置参数，目前只能<strong>全局</strong>配置，例如说 Hystrix 执行超时时间，配置如下 ：</p>
-<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">hystrix:</span></div><div class="line"><span class="attr">  command:</span></div><div class="line"><span class="attr">    default:</span></div><div class="line"><span class="attr">      execution:</span></div><div class="line"><span class="attr">        isolation:</span></div><div class="line"><span class="attr">          thread:</span></div><div class="line"><span class="attr">            timeoutInMilliseconds:</span> <span class="number">10000</span></div></pre></td></tr></table></figure></p>
+<h1 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h1><ol>
+<li>目前 Hystrix Command 执行超时时，返回客户端 504 状态码，如果使用 JSON 格式作为数据返回，则需要修改下该 HystrixGatewayFilter 的代码实现。</li>
+<li><p>Hystrix 配置参数，目前只能<strong>全局</strong>配置，例如说 Hystrix 执行超时时间，配置如下 ：</p>
+ <figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">hystrix:</span></div><div class="line"><span class="attr">  command:</span></div><div class="line"><span class="attr">    default:</span></div><div class="line"><span class="attr">      execution:</span></div><div class="line"><span class="attr">        isolation:</span></div><div class="line"><span class="attr">          thread:</span></div><div class="line"><span class="attr">            timeoutInMilliseconds:</span> <span class="number">10000</span></div></pre></td></tr></table></figure>
 <ul>
 <li>如果想实现 Route / URL 级别的 Hystrix 配置参数，则需要修改下该 HystrixGatewayFilter 的代码实现。</li>
 <li><a href="https://github.com/Netflix/Hystrix/wiki/Configuration#contents" rel="external nofollow noopener noreferrer" target="_blank">《Hystrix —— Configuration》</a> ，Hystrix 配置项，需要自取。</li>
 </ul>
 </li>
-<li>
-<p>当 Hystrix 熔断时，最终返回客户端 200 状态码，内容为空，此处建议该 HystrixGatewayFilter 的代码实现。</p>
+<li><p>当 Hystrix 熔断时，最终返回客户端 200 状态码，内容为空，此处建议该 HystrixGatewayFilter 的代码实现。</p>
 </li>
 </ol>
-<h1>666. 彩蛋</h1>
-<p>嘿嘿嘿，写完熔断，准备限流过滤器走起。鸡冻！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>嘿嘿嘿，写完熔断，准备限流过滤器走起。鸡冻！</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_05/01.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好！</p>
   
@@ -307,7 +276,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. HystrixGatewayFilterFactory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-环境搭建"><span class="toc-number">2.</span> <span class="toc-text">2. 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-HystrixGatewayFilterFactory"><span class="toc-number">3.</span> <span class="toc-text">3. HystrixGatewayFilterFactory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-注意事项"><span class="toc-number">4.</span> <span class="toc-text">4. 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -406,7 +375,7 @@
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>2</sup></a></li>
             
 		
             

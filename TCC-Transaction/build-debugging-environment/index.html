@@ -17,11 +17,11 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 TCC-Transaction 1.2.3.3 正式版
+本文主要基于 TCC-Transaction 1.2.3.3 正式版  
 
 1. 依赖工具
 2. 源码拉取
-3.">
+">
     
 
     
@@ -146,8 +146,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 TCC-Transaction 1.2.3.3 正式版</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/">http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 TCC-Transaction 1.2.3.3 正式版</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/">1. 依赖工具</a></li>
 <li><a href="http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/">2. 源码拉取</a></li>
@@ -160,30 +160,27 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 依赖工具</h1>
-<ul>
+<h1 id="1-依赖工具"><a href="#1-依赖工具" class="headerlink" title="1. 依赖工具"></a>1. 依赖工具</h1><ul>
 <li>Maven</li>
 <li>Git</li>
 <li>JDK</li>
 <li>MySQL</li>
 <li>IntelliJ IDEA</li>
 </ul>
-<h1>2. 源码拉取</h1>
-<p>从官方仓库 <a href="https://github.com/changmingxie/tcc-transaction.git" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/changmingxie/tcc-transaction.git</a> <code>Fork</code> 出属于自己的仓库。为什么要 <code>Fork</code> ？既然开始阅读、调试源码，我们可能会写一些注释，有了自己的仓库，可以进行自由的提交。😈</p>
+<h1 id="2-源码拉取"><a href="#2-源码拉取" class="headerlink" title="2. 源码拉取"></a>2. 源码拉取</h1><p>从官方仓库 <a href="https://github.com/changmingxie/tcc-transaction.git" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/changmingxie/tcc-transaction.git</a> <code>Fork</code> 出属于自己的仓库。为什么要 <code>Fork</code> ？既然开始阅读、调试源码，我们可能会写一些注释，有了自己的仓库，可以进行自由的提交。😈</p>
 <p>使用 <code>IntelliJ IDEA</code> 从 <code>Fork</code> 出来的仓库拉取代码。拉取完成后，<code>Maven</code> 会下载依赖包，可能会花费一些时间，耐心等待下。</p>
 <p>本文基于 <code>master-1.2.x</code> 分支。</p>
-<h1>3. 初始化数据库</h1>
-<p>官方提供了两个 Demo 项目例子：</p>
+<h1 id="3-初始化数据库"><a href="#3-初始化数据库" class="headerlink" title="3. 初始化数据库"></a>3. 初始化数据库</h1><p>官方提供了两个 Demo 项目例子：</p>
 <ul>
 <li>tcc-transaction-dubbo-sample</li>
 <li>tcc-transaction-http-sample</li>
@@ -198,34 +195,26 @@
 </ul>
 <p>笔者使用 Navicat 进行数据库脚本执行。使用方式为：Navicat 菜单 Connection -&gt; Execute SQL File，选择脚本文件，逐个执行。</p>
 <p>目前数据库脚本未使用 <code>USE</code> 语句选择对应数据库，每个脚本都需要进行添加。以 <code>create_db_cap.sql</code> 举例子：</p>
-<p><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`tcc_cap`</span> <span class="comment">/*!40100 DEFAULT CHARACTER SET utf8 */</span>;</div><div class="line"><span class="comment">-- 新增 USE</span></div><div class="line"><span class="keyword">USE</span> <span class="string">`tcc_cap`</span>;</div></pre></td></tr></table></figure></p>
-<h1>4. 启动 capital 项目</h1>
-<ol>
-<li>
-<p>修改项目下 <code>jdbc.properties</code> 文件，<strong>填写成你的数据库地址</strong>。</p>
-</li>
-<li>
-<p>使用 IDEA 配置 Tomcat 进行启动。这里要注意下：</p>
-<p><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line">// appcontext-service-provider.xml</div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"httpServer"</span></span></div><div class="line"><span class="tag">     <span class="attr">class</span>=<span class="string">"org.springframework.remoting.support.SimpleHttpServerFactoryBean"</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"contexts"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">util:map</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"/remoting/CapitalTradeOrderService"</span> <span class="attr">value-ref</span>=<span class="string">"capitalTradeOrderServiceExporter"</span>/&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"/remoting/CapitalAccountService"</span> <span class="attr">value-ref</span>=<span class="string">"capitalAccountServiceExporter"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">util:map</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"port"</span> <span class="attr">value</span>=<span class="string">"8081"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`tcc_cap`</span> <span class="comment">/*!40100 DEFAULT CHARACTER SET utf8 */</span>;</div><div class="line"><span class="comment">-- 新增 USE</span></div><div class="line"><span class="keyword">USE</span> <span class="string">`tcc_cap`</span>;</div></pre></td></tr></table></figure>
+<h1 id="4-启动-capital-项目"><a href="#4-启动-capital-项目" class="headerlink" title="4. 启动 capital 项目"></a>4. 启动 capital 项目</h1><ol>
+<li>修改项目下 <code>jdbc.properties</code> 文件，<strong>填写成你的数据库地址</strong>。</li>
+<li><p>使用 IDEA 配置 Tomcat 进行启动。这里要注意下：</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><div class="line">// appcontext-service-provider.xml</div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"httpServer"</span></span></div><div class="line"><span class="tag">     <span class="attr">class</span>=<span class="string">"org.springframework.remoting.support.SimpleHttpServerFactoryBean"</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"contexts"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">util:map</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"/remoting/CapitalTradeOrderService"</span> <span class="attr">value-ref</span>=<span class="string">"capitalTradeOrderServiceExporter"</span>/&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"/remoting/CapitalAccountService"</span> <span class="attr">value-ref</span>=<span class="string">"capitalAccountServiceExporter"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">util:map</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"port"</span> <span class="attr">value</span>=<span class="string">"8081"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
 <ul>
 <li>默认开启 8081 端口提供接口服务。所以配置 Tomcat 的端口不能再使用 8081，避免冲突。例如，笔者使用 18081。</li>
 </ul>
 </li>
-<li>
-<p>访问 <code>http://127.0.0.1:18081/</code>，看到 &quot;hello tcc transacton http sample capital&quot;，代表项目启动完成。<strong><code>18081</code> 为你填写的 Tomcat 端口</strong>。</p>
+<li><p>访问 <code>http://127.0.0.1:18081/</code>，看到 “hello tcc transacton http sample capital”，代表项目启动完成。<strong><code>18081</code> 为你填写的 Tomcat 端口</strong>。</p>
 </li>
 </ol>
-<h1>5. 启动 redpacket 项目</h1>
-<p>同 tcc-transaction-http-capital 项目。</p>
-<h1>6. 启动 order 项目</h1>
-<ol>
+<h1 id="5-启动-redpacket-项目"><a href="#5-启动-redpacket-项目" class="headerlink" title="5. 启动 redpacket 项目"></a>5. 启动 redpacket 项目</h1><p>同 tcc-transaction-http-capital 项目。</p>
+<h1 id="6-启动-order-项目"><a href="#6-启动-order-项目" class="headerlink" title="6. 启动 order 项目"></a>6. 启动 order 项目</h1><ol>
 <li>修改项目下 <code>jdbc.properties</code> 文件，<strong>填写成你的数据库地址</strong>。</li>
 <li>使用 IDEA 配置 Tomcat 进行启动。</li>
-<li>访问 <code>http://127.0.0.1:8080/</code>，看到 &quot;sample 说明...&quot;，代表项目启动完成。<strong><code>8080</code> 为你填写的 Tomcat 端口</strong>。</li>
-<li>点击 [商品列表链接] -&gt; [购买] -&gt; [支付]，如果看到 &quot;支付成功&quot; 或者 &quot;支付失败&quot;，恭喜你🎉，你已经成功搭建完你的调试环境。愉快的开始玩耍把。</li>
+<li>访问 <code>http://127.0.0.1:8080/</code>，看到 “sample 说明…”，代表项目启动完成。<strong><code>8080</code> 为你填写的 Tomcat 端口</strong>。</li>
+<li>点击 [商品列表链接] -&gt; [购买] -&gt; [支付]，如果看到 “支付成功” 或者 “支付失败”，恭喜你🎉，你已经成功搭建完你的调试环境。愉快的开始玩耍把。</li>
 </ol>
-<h1>666. 彩蛋</h1>
-<p>调试环境搭建是阅读源码的第一步，如果你碰到无法搭建成功的情况，请给笔者公众号( <strong>芋道源码</strong> )留言。笔者会给你 1:1 的高级( <strong>搞基</strong> )支持。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>调试环境搭建是阅读源码的第一步，如果你碰到无法搭建成功的情况，请给笔者公众号( <strong>芋道源码</strong> )留言。笔者会给你 1:1 的高级( <strong>搞基</strong> )支持。</p>
 <p>另外这是一个系列文，本系列更新 TCC-Transaction ，下一个系列更新 ByteTCC 。嗨皮不？！</p>
 <p><img src="http://www.iocoder.cn/images/TCC-Transaction/2018_02_01/01.png" alt=""></p>
 <p>道友，赶紧上车，分享一波朋友圈！</p>
@@ -278,7 +267,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 依赖工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 源码拉取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. 初始化数据库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 启动 capital 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. 启动 redpacket 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6. 启动 order 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-依赖工具"><span class="toc-number">1.</span> <span class="toc-text">1. 依赖工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-源码拉取"><span class="toc-number">2.</span> <span class="toc-text">2. 源码拉取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-初始化数据库"><span class="toc-number">3.</span> <span class="toc-text">3. 初始化数据库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-启动-capital-项目"><span class="toc-number">4.</span> <span class="toc-text">4. 启动 capital 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-启动-redpacket-项目"><span class="toc-number">5.</span> <span class="toc-text">5. 启动 redpacket 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-启动-order-项目"><span class="toc-number">6.</span> <span class="toc-text">6. 启动 order 项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">7.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -377,7 +366,7 @@
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>1</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>2</sup></a></li>
             
 		
             
