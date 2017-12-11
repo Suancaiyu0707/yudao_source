@@ -305,7 +305,26 @@ OK ，下面我们开始看看代码是如何实现的。
 
 ### 4.1.2 ClassEnhancePluginDefine
 
+`org.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassEnhancePluginDefine` ，SkyWalking 类增强插件定义**抽象类**。它注重在**增强**( Enhance )的抽象与实现。包括如下 ：
 
+* 静态方法、构造方法、实例方法的**增强**
+* 静态方法、构造方法、实例方法的**拦截切面**
+
+-------
+
+拦截切面，在 [「4.2 InterceptPoint」](#) 有相关解析。
+
+[`#getStaticMethodsInterceptPoints()`](TODO) **抽象**方法，获得 StaticMethodsInterceptPoint **数组**。  
+[`#getConstructorsInterceptPoints()`](TODO) **抽象**方法，获得 ConstructorInterceptPoint **数组**。  
+[`#getInstanceMethodsInterceptPoints()`](TODO) **抽象**方法，获得 InstanceMethodsInterceptPoint **数组**。
+
+-------
+
+[`#enhance(...)`](TODO) 方法，增强静态方法、构造方法、实例方法。
+
+#### 4.1.2.1 增强静态方法
+
+#### 4.1.2.2 增强构造方法和实例方法
 
 ### 4.1.3
 
