@@ -4,6 +4,42 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/NeiTui/hangzhou/</loc>
+    <lastmod>2017-12-12T15:24:12.000Z</lastmod>
+    <data>
+        <display>
+        <title>源码圈内推 —— 杭州</title>
+        <pubTime>2017-01-01T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="工作内推" url="http://www.iocoder.cn/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Security/good-collection/</loc>
+    <lastmod>2017-12-12T15:21:04.000Z</lastmod>
+    <data>
+        <display>
+        <title>Spring-Security 源码解析 —— 精品合集</title>
+        <pubTime>2017-11-24T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Spring-Security" url="http://www.iocoder.cn/categories/Spring-Security/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/SkyWalking/agent-plugin-system/</loc>
     <lastmod>2017-12-12T09:06:50.000Z</lastmod>
     <data>
@@ -28,24 +64,6 @@
         <display>
         <title>源码圈内推 —— 上海</title>
         <pubTime>2017-01-02T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="工作内推" url="http://www.iocoder.cn/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/NeiTui/hangzhou/</loc>
-    <lastmod>2017-12-11T17:21:02.000Z</lastmod>
-    <data>
-        <display>
-        <title>源码圈内推 —— 杭州</title>
-        <pubTime>2017-01-01T16:00:00.000Z</pubTime>
         
          
            
@@ -256,30 +274,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.1）之 RouteDefinitionLocator 一览</title>
-        <pubTime>2020-01-09T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/</loc>
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    <data>
-        <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂</title>
-        <pubTime>2020-02-14T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.3）之 RouteDefinitionRepository 存储器</title>
+        <pubTime>2020-01-19T16:00:00.000Z</pubTime>
         
          
            
@@ -346,12 +346,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-websocket-routing/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter</title>
-        <pubTime>2020-03-24T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter</title>
+        <pubTime>2020-03-19T16:00:00.000Z</pubTime>
         
          
            
@@ -418,66 +418,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡</title>
-        <pubTime>2020-03-14T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/</loc>
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    <data>
-        <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.3）之 RouteDefinitionRepository 存储器</title>
-        <pubTime>2020-01-19T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</loc>
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    <data>
-        <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter</title>
-        <pubTime>2020-03-19T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/</loc>
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    <data>
-        <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.2）之 PropertiesRouteDefinitionLocator 配置文件</title>
-        <pubTime>2020-01-14T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.1）之 RouteDefinitionLocator 一览</title>
+        <pubTime>2020-01-09T16:00:00.000Z</pubTime>
         
          
            
@@ -508,12 +454,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.9) 之 HystrixGatewayFilterFactory 熔断</title>
-        <pubTime>2020-04-04T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡</title>
+        <pubTime>2020-03-14T16:00:00.000Z</pubTime>
         
          
            
@@ -526,12 +472,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.8) 之 WebClientHttpRoutingFilter</title>
-        <pubTime>2020-03-31T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 路由（1.2）之 PropertiesRouteDefinitionLocator 配置文件</title>
+        <pubTime>2020-01-14T16:00:00.000Z</pubTime>
         
          
            
@@ -562,12 +508,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.2) 之 GatewayFilterFactory 过滤器工厂</title>
-        <pubTime>2020-03-04T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.9) 之 HystrixGatewayFilterFactory 熔断</title>
+        <pubTime>2020-04-04T16:00:00.000Z</pubTime>
         
          
            
@@ -580,12 +526,30 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-websocket-routing/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter</title>
-        <pubTime>2020-03-27T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter</title>
+        <pubTime>2020-03-24T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-factory/</loc>
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.2) 之 GatewayFilterFactory 过滤器工厂</title>
+        <pubTime>2020-03-04T16:00:00.000Z</pubTime>
         
          
            
@@ -616,12 +580,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-kotlin/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/</loc>
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Cloud-Gateway 源码解析 —— 路由（2.4）之 Kotlin 自定义 RouteLocator</title>
-        <pubTime>2020-02-09T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter</title>
+        <pubTime>2020-03-27T16:00:00.000Z</pubTime>
         
          
            
@@ -634,17 +598,53 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/Spring-Security/good-collection/</loc>
-    <lastmod>2017-12-01T14:22:15.000Z</lastmod>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/</loc>
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     <data>
         <display>
-        <title>Spring-Security 源码解析 —— 精品合集</title>
-        <pubTime>2017-11-24T16:00:00.000Z</pubTime>
+        <title>Spring-Cloud-Gateway 源码解析 —— 处理器 (3.1) 之 RoutePredicateFactory  路由谓语工厂</title>
+        <pubTime>2020-02-14T16:00:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="Spring-Security" url="http://www.iocoder.cn/categories/Spring-Security/"/>
+              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/</loc>
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.8) 之 WebClientHttpRoutingFilter</title>
+        <pubTime>2020-03-31T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-kotlin/</loc>
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>Spring-Cloud-Gateway 源码解析 —— 路由（2.4）之 Kotlin 自定义 RouteLocator</title>
+        <pubTime>2020-02-09T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Spring-Cloud-Gateway" url="http://www.iocoder.cn/categories/Spring-Cloud-Gateway/"/>
           
         </display>
     </data>
