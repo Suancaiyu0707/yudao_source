@@ -6,6 +6,40 @@ permalink: SkyWalking/agent-plugin-system
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-plugin-system/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+- [2. 插件的加载](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [2.1 AgentClassLoader](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [2.2 PluginResourcesResolver](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [2.3 PluginCfg](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [2.4 AbstractClassEnhancePluginDefine](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [2.5 小结](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+- [3. 插件的匹配](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [3.1 InstrumentDebuggingClass](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [3.2 ClassMatch](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [3.3 PluginFinder](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+- [4. 插件的拦截](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [4.1 ClassEnhancePluginDefine](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [4.2 InterceptPoint](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [4.3 Interceptor](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [4.4 Inter](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+  - [4.5 小结](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Agent 插件体系**。主要涉及三个流程 ：
@@ -18,7 +52,7 @@ permalink: SkyWalking/agent-plugin-system
 
 本文涉及到的类主要在 [`org.skywalking.apm.agent.core.plugin`](https://github.com/YunaiV/skywalking/tree/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin) 包里，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/01.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/01.png)
 
 每个流程会涉及到较多的类，我们会贯穿着解析代码实现。
 
@@ -26,7 +60,7 @@ permalink: SkyWalking/agent-plugin-system
 
 在 [《SkyWalking 源码分析 —— Agent 初始化》](http://www.iocoder.cn/SkyWalking/agent-init/?self) 一文中，Agent 初始化时，调用 `PluginBootstrap#loadPlugins()` 方法，加载所有的插件。整体流程如下图 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/03.png)
 
 [`PluginBootstrap#loadPlugins()`](https://github.com/YunaiV/skywalking/blob/130f0a5a3438663b393e53ba2cca02a8d13c258a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginBootstrap.java#L45) 方法，代码如下 ：
 
@@ -106,7 +140,7 @@ public static AgentClassLoader initDefaultLoader() throws AgentPackageNotFoundEx
 
 ## 2.2 PluginResourcesResolver
 
-`org.skywalking.apm.agent.core.plugin.PluginResourcesResolver` ，插件资源解析器，读取所有插件的定义文件。插件定义文件必须以 `skywalking-plugin.def` **命名**，例如 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/02.png)
+`org.skywalking.apm.agent.core.plugin.PluginResourcesResolver` ，插件资源解析器，读取所有插件的定义文件。插件定义文件必须以 `skywalking-plugin.def` **命名**，例如 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/02.png)
 
 [`#getResources()`](https://github.com/YunaiV/skywalking/blob/d4a6ba291419ab90379a3d1c423b747f682f857f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginResourcesResolver.java#L45) 方法，获得插件定义路径数组，代码如下 ：
 
@@ -127,7 +161,7 @@ spring-mvc-annotation-4.x=org.skywalking.apm.plugin.spring.mvc.v4.define.Invocab
 
 ## 2.4 AbstractClassEnhancePluginDefine
 
-`org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine` ，类增强插件定义**抽象基类**。不同插件通过实现 AbstractClassEnhancePluginDefine **抽象类**，定义不同框架的**切面**，**记录调用链路**。以 Spring 插件为例子，如下是相关类图 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_05/06.png)
+`org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine` ，类增强插件定义**抽象基类**。不同插件通过实现 AbstractClassEnhancePluginDefine **抽象类**，定义不同框架的**切面**，**记录调用链路**。以 Spring 插件为例子，如下是相关类图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/06.png)
 
 PluginDefine 对象的 `defineClass` 属性，即对应不同插件对AbstractClassEnhancePluginDefine 的**实现类**。所以在 [`PluginBootstrap#loadPlugins()`](https://github.com/YunaiV/skywalking/blob/130f0a5a3438663b393e53ba2cca02a8d13c258a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginBootstrap.java#L45) 方法的【**第 74 行**】，我们看到通过该属性，创建创建**类增强插件定义**对象。
 
@@ -196,7 +230,7 @@ TODO 详细入口
 
 ## 3.1 InstrumentDebuggingClass
 
-`org.skywalking.apm.agent.InstrumentDebuggingClass` ，Instrument 调试类，用于将被 JavaAgent 修改的**所有**类存储到 `${JAVA_AGENT_PACKAGE}/debugger` 目录下。需要配置 `agent.is_open_debugging_class = true` ，效果如下图 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/04.png)
+`org.skywalking.apm.agent.InstrumentDebuggingClass` ，Instrument 调试类，用于将被 JavaAgent 修改的**所有**类存储到 `${JAVA_AGENT_PACKAGE}/debugger` 目录下。需要配置 `agent.is_open_debugging_class = true` ，效果如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/04.png)
 
 代码比较简单，胖友点击 [InstrumentDebuggingClass](https://github.com/YunaiV/skywalking/blob/b68162306b4db7adfd4a2c2891a205b7085f38f0/apm-sniffer/apm-agent/src/main/java/org/skywalking/apm/agent/InstrumentDebuggingClass.java) 理解。
 
@@ -208,7 +242,7 @@ TODO 详细入口
 
 `org.skywalking.apm.agent.core.plugin.match.ClassMatch` ，类匹配**接口**。目前子类如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/05.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/05.png)
 
 * [NameMatch](https://github.com/YunaiV/skywalking/blob/b68162306b4db7adfd4a2c2891a205b7085f38f0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/match/NameMatch.java#L28) ：基于**完整的类名**进行匹配，例如：`"com.alibaba.dubbo.monitor.support.MonitorFilter"` 。
 * [IndirectMatch](https://github.com/YunaiV/skywalking/blob/b68162306b4db7adfd4a2c2891a205b7085f38f0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/match/IndirectMatch.java) ：**间接**匹配**接口**。相比 NameMatch 来说，确实比较 "委婉" 🙂 。
@@ -255,11 +289,11 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 
 下面，我们来看看本小节会涉及到的类。如图所示：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/06.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/06.png)
 
 看起来类比想象的多？梳理之，结果如图 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/07.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/07.png)
 
 * 根据方法类型的不同，使用不同 ClassEnhancePluginDefine 的实现类。其中，构造方法和静态方法使用相同的实现类。
 * 相比上面提到**拦截**会涉及到的元素，多了一个 **Inter** ？如下是官方的说明 ：
@@ -270,7 +304,7 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 
 整体类图如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/08.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/08.png)
 
 * AbstractClassEnhancePluginDefine ：SkyWalking 类增强插件定义**抽象基类**。
 * ClassEnhancePluginDefine ：SkyWalking 类增强插件定义**抽象类**。
@@ -278,7 +312,7 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 
 整体流程如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_10/09.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/09.png)
 
 OK ，下面我们开始看看代码是如何实现的。
 
@@ -324,9 +358,41 @@ OK ，下面我们开始看看代码是如何实现的。
 
 #### 4.1.2.1 增强静态方法
 
+调用 [`#enhanceClass(...)`](TODO) 方法，增强静态方法，代码如下 ：
+
+* 第 206 至 210 行 ：调用 `#getStaticMethodsInterceptPoints()` 方法，获得 StaticMethodsInterceptPoint 数组。若为**空**，不进行增强。
+* 第 212 至 238 行 ：**遍历** StaticMethodsInterceptPoint 数组，逐个增强StaticMethodsInterceptPoint 对应的静态方法。
+    * 第 214 至 218 行 ：获得拦截器的**类名**。拦截器的实例，在 **Inter 类**里获取。
+    * 第 221 至 229 行 ：当 `StaticMethodsInterceptPoint#isOverrideArgs()` 方法返回 `true` 时，使用 StaticMethodsInterWithOverrideArgs 处理拦截逻辑。在 TODO 详细解析
+    * 第 230 至 236 行 ：当 `StaticMethodsInterceptPoint#isOverrideArgs()` 方法返回 `false` 时，使用 StaticMethodsInter 处理拦截逻辑，在 TODO 详细解析
+
+TODO Morph
+
 #### 4.1.2.2 增强构造方法和实例方法
 
-### 4.1.3
+调用 [`#enhanceInstance()`](TODO) 方法，增强构造方法和实例方法，代码如下 ：
+
+* 第 92 至 110 行 ：调用 `#getConstructorsInterceptPoints()` / `#getInstanceMethodsInterceptPoints()`  方法，获得 ConstructorInterceptPoint / InstanceMethodsInterceptPoint 数组。若**都**为**空**，不进行增强。
+* 第 112 至 128 行 ：使用 `byte-buddy` ，为目标 Java 类**"自动"**实现 [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance`](https://github.com/OpenSkywalking/skywalking/blob/15328202b8b7df89a609885d9110361ff29ce668/apm-sniffer/apm-agent-core/src/main/java/org/apache/skywalking/apm/agent/core/plugin/interceptor/enhance/EnhancedInstance.java#L25) 接口。这样，目标 Java 类就有一个私有变量，拦截器在执行过程中，可以存储状态到该私有变量。这里如果暂时不理解**没关系**，后面分享每个插件的实现时，会有实际的例子，更易懂。
+* ---------- 构造方法 ----------
+* 第 130 至 143 行 ：**遍历** ConstructorInterceptPoint 数组，逐个增强 ConstructorInterceptPoint 对应的构造方法。使用 ConstructorInter 处理拦截逻辑，在 TODO 详细解析
+* ---------- 构造方法 ----------
+* 第 145 至 175 行 ：**遍历** InstanceMethodsInterceptPoint 数组，逐个增强 InstanceMethodsInterceptPoint 对应的静态方法。
+    * 第 151 至 154 行 ：获得拦截器的**类名**。拦截器的实例，在 **Inter 类**里获取。
+    * 第 156 至 165 行 ：当 `InstanceMethodsInterceptPoint#isOverrideArgs()` 方法返回 `true` 时，使用 InstMethodsInterWithOverrideArgs 处理拦截逻辑。在 TODO 详细解析
+    * 第 166 至 173 行 ：当 `InstanceMethodsInterceptPoint#isOverrideArgs()` 方法返回 `false` 时，使用 InstMethodsInter 处理拦截逻辑，在 TODO 详细解析
+
+### 4.1.3 ClassStaticMethodsEnhancePluginDefine
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassStaticMethodsEnhancePluginDefine`](https://github.com/YunaiV/skywalking/blob/c7c800bba485dcb9d532d6cb5686df273ae53d6d/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/interceptor/enhance/ClassStaticMethodsEnhancePluginDefine.java) ，类**增强静态方法**的插件定义**抽象类**，和本文 [「4.1.2.1 增强静态方法」](#) 对应。
+
+实现 `#getConstructorsInterceptPoints()` / `#getInstanceMethodsInterceptPoints()` **抽象**方法，返回空，表示不增强构造方法和实例方法。**即只增强静态方法**。
+
+### 4.1.4 ClassInstanceMethodsEnhancePluginDefine
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassInstanceMethodsEnhancePluginDefine`](https://github.com/YunaiV/skywalking/blob/c7c800bba485dcb9d532d6cb5686df273ae53d6d/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/interceptor/enhance/ClassInstanceMethodsEnhancePluginDefine.java) ，类**增强构造方法和实例方法**的插件定义**抽象类**，和本文 [「4.1.2.2 增强构造方法和实例方法」](#) 对应。
+
+实现 `#getStaticMethodsInterceptPoints()` **抽象**方法，返回空，表示不增强静态方法。**即只增强构造方法和实例方法**。
 
 ## 4.2 InterceptPoint
 
@@ -339,5 +405,120 @@ OK ，下面我们开始看看代码是如何实现的。
 XXXInterceptPoint **接口**，对应一个 `net.bytebuddy.matcher.ElementMatcher`  和一个拦截器。
 
 代码比较简单，胖友自己查看。
+
+## 4.3 Interceptor
+
+在开始分享 **Inter** 之前，我们先来看看 Interceptor 相关接口。如下图所见：
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/10.png)
+
+* InstanceConstructorInterceptor ，构造方法拦截器**接口**。
+* *AroundInterceptor*
+    * StaticMethodsAroundInterceptor ，静态方法拦截器**接口**。
+    * InstanceMethodsAroundInterceptor ，实例方法拦截器**接口**。
+    * 接口方法基本一致，下面 Inter 逻辑也基本一致。
+
+在 [「4. 2 InterceptPoint」](#) 里，我们看到 `#getXXXInterceptor()` 方法返回的拦截器类名，需要通过 [`org.skywalking.apm.agent.core.plugin.loader.InterceptorInstanceLoader`](TODO) 加载与创建拦截器实例。
+
+## 4.4 Inter
+
+我们先来看 Inter 的定义 ：
+
+> In this class, it provide a bridge between byte-buddy and sky-walking plugin.
+
+根据方法类型，将 Inter 整理如下 ：
+
+| 方法类型 |  |  |
+| --- | --- | --- |
+| 构造方法 | ConstructorInter |  |
+| 实例方法 | InstMethodsInter | InstMethodsInterWithOverrideArgs |
+| 静态方法 | StaticMethodsInter | StaticMethodsInterWithOverrideArgs|
+
+### 4.4.1 构造方法 Inter
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.ConstructorInter`](TODO) ，构造方法 Inter 。
+
+ConstructorInter [**构造方法**](TODO)，调用 `InterceptorInstanceLoader#load(String, classLoader)` 方法，加载构造方法拦截器。
+
+[`#intercept(Object)`](TODO) 方法，**在构造方法执行完成后进行拦截**，调用 `InstanceConstructorInterceptor#onConstruct(...)` 方法。
+
+**为什么没有 ConstructorInterWithOverrideArgs**？`InstanceConstructorInterceptor#onConstruct(...)` 方法，是**在构造方法执行完成后进行调用拦截**，OverrideArgs 用于在调用方法之前，**改变传入方法的参数**。所以，在此处暂时没这块需要，因而没有 ConstructorInterWithOverrideArgs 。
+
+### 4.4.2 实例方法 Inter
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.InstMethodsInter`](TODO) ，实例方法 Inter 。
+
+ConstructorInter [**构造方法**](TODO)，调用 `InterceptorInstanceLoader#load(String, classLoader)` 方法，加载实例方法拦截器。
+
+[`#intercept(...)`](TODO) 方法，**Before-After** 方式拦截实例方法，代码如下 ：
+
+* 第 79 至 86 行 ：调用 `InstanceMethodsAroundInterceptor#beforeMethod(...)` 方法，执行在实例方法之前的逻辑。
+    * [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.MethodInterceptResult`](TODO) ，方法拦截器执行结果。当调用 [`MethodInterceptResult#defineReturnValue(Object)`](todo) 方法，设置执行结果，并标记不再继续执行。
+* 第 90 至 92 行 ：当 MethodInterceptResult 已经有执行结果，**不再执行原有方法，直接返回结果**。
+* 第 94 至 96 行 ：调用 `Callable#call()` 方法，执行原有实例方法。
+* 第 97 至 105 行 ：调用 `InstanceMethodsAroundInterceptor#handleMethodException(...)` 方法，处理异常。
+* 第 107 至 113 行 ：调用 `InstanceMethodsAroundInterceptor#afterMethod(...)` 方法，执行后置逻辑。
+
+-------
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.InstMethodsInterWithOverrideArgs`](TODO) ，**覆写参数**的实例方法 Inter 。
+
+不太理解**覆写参数**？有这样一个场景，`InstanceMethodsAroundInterceptor#beforeMethod(...)` 方法里，我们修改了方法参数，并且希望原有实例方法执行时，**使用的是修改了的方法参数**，此时，就需要使用 InstMethodsInterWithOverrideArgs 。
+
+[`InstMethodsInterWithOverrideArgs#intercept(...)`](TODO) 方法，总体逻辑和 InstMethodsInter 是一致的，下面我们来看看差异点 ：
+
+* 第 76 行 ：方法参数类型是 [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.OverrideCallable`](TODO)，并且带有 [`net.bytebuddy.implementation.bind.annotation.@Morph`](https://github.com/raphw/byte-buddy/blob/188366ace6e16ec167a00b144c9048d78495165f/byte-buddy-dep/src/main/java/net/bytebuddy/implementation/bind/annotation/Morph.java) 注解。
+* 第 96 行 ：调用 [`OverrideCallable#call(args)`](todo) 方法，使用被前置方法修改过的参数，执行原有实例方法。
+
+先来瞅瞅 `@Morph` 注解的定义 ：
+
+> This annotation instructs Byte Buddy to inject a proxy class that calls a method's super method with explicit arguments.  
+> 
+> For this, the {@link Morph.Binder} needs to be installed for an interface type that takes an argument of the array type {@link java.lang.Object} and returns a non-array type of {@link java.lang.Object}. 
+> 
+> This is an alternative to using the {@link net.bytebuddy.implementation.bind.annotation.SuperCall} or {@link net.bytebuddy.implementation.bind.annotation.DefaultCall} annotations which call a super method using the same arguments as the intercepted method was invoked with.
+
+简单的来说 ：
+
+* `@Morph` 注解，注入一个代理对象，该对象会使用传入的参数，调用被代理的方法。例如在 InstMethodsInterWithOverrideArgs 里，调用 `OverrideCallable#call(args)` 方法，会调用原有实例方法。
+* 需要使用 `Morph.Binder` 设置一个接口，并且该接口的方法定义为 `Object methodName(Object[])` 。在 InstMethodsInterWithOverrideArgs 使用的是  [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.OverrideCallable`](TODO) 接口。另外，调用 `Morph.Binder#install(Class<?>)` 方法的代码如下 ：
+
+    ```Java
+    // ClassEnhancePluginDefine.java 
+    // `#enhanceInstance(...)` 方法
+    newClassBuilder =
+        newClassBuilder.method(not(isStatic()).and(instanceMethodsInterceptPoint.getMethodsMatcher())) // 匹配
+            .intercept( // 拦截
+                MethodDelegation.withDefaultConfiguration()
+                    .withBinders(
+                        Morph.Binder.install(OverrideCallable.class) // 覆写参数
+                    )
+                    .to(new InstMethodsInterWithOverrideArgs(interceptor, classLoader))
+            );
+    ```
+
+### 4.4.3 静态方法 Inter
+
+[`org.skywalking.apm.agent.core.plugin.interceptor.enhance.StaticMethodsInter`](todo) 和 [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.StaticMethodsInterWithOverrideArgs`](todo) 和**实例方法 Inter**基本一致，胖友可以自己捋一捋，笔者就不瞎比比了。
+
+## 4.5 小结
+
+总的来说，涉及到的组件，如下图 ：
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/11.png)
+
+胖友再梳理梳理。
+
+# 666. 彩蛋
+
+写完，蛮嗨皮😜。
+
+近期最认真的一篇文章，没有之一，满足。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/12.png)
+
+胖友，分享个朋友圈可好？
+
+
 
 
