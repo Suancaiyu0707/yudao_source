@@ -21,9 +21,8 @@
 1. 概述
 2. SkyWalkingAgent
 3. SnifferConfigInitializer
-
 3.1 Config
-3.2 Remote">
+3.2 RemoteD">
     
 
     
@@ -140,7 +139,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-07-04T16:00:00.000Z" itemprop="datePublished">2020-07-05</time>-->
-    <!--更新日期:<time datetime="2017-12-10T09:35:02.000Z" itemprop="dateModified">2017-12-10</time>-->
+    <!--更新日期:<time datetime="2017-12-10T17:39:07.000Z" itemprop="dateModified">2017-12-11</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -148,24 +147,21 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-init/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/agent-init/">http://www.iocoder.cn/SkyWalking/agent-init/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">2. SkyWalkingAgent</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">3. SnifferConfigInitializer</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">3. SnifferConfigInitializer</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">3.1 Config</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">3.2 RemoteDownstreamConfig</a></li>
 </ul>
 </li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">4. Plugin</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">4. Plugin</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">4.1 PluginBootstrap</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">4.2 PluginFinder</a></li>
 </ul>
 </li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">5. ServiceManager</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">5. ServiceManager</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-init/">5.1 BootService</a></li>
 </ul>
 </li>
@@ -174,44 +170,41 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>SkyWalking Agent 启动初始化的过程</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Agent 启动初始化的过程</strong>。</p>
 <p>SkyWalking Agent 基于 <strong>JavaAgent</strong> 机制，实现应用<strong>透明</strong>接入 SkyWalking 。关于 JavaAgent 机制，笔者推荐如下两篇文章 ：</p>
 <ul>
 <li><a href="https://www.ibm.com/developerworks/cn/java/j-lo-jse61/index.html" rel="external nofollow noopener noreferrer" target="_blank">《Instrumentation 新功能》</a></li>
 <li><a href="http://www.infoq.com/cn/articles/javaagent-illustrated" rel="external nofollow noopener noreferrer" target="_blank">《JVM源码分析之javaagent原理完全解读》</a></li>
 </ul>
 <blockquote>
-<p>友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。</p>
-<p>笔者练手的 JavaAgent 项目地址 ：https://github.com/YunaiV/learning/tree/master/javaagent01</p>
+<p>友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。 </p>
+<p>笔者练手的 JavaAgent 项目地址 ：<a href="https://github.com/YunaiV/learning/tree/master/javaagent01" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/YunaiV/learning/tree/master/javaagent01</a></p>
 </blockquote>
-<h1>2. SkyWalkingAgent</h1>
-<p><code>org.skywalking.apm.agent.SkyWalkingAgent</code> ，在 <code>apm-sniffer/apm-agent</code> Maven 模块项目里，SkyWalking Agent <strong>启动入口</strong>。为什么说它是启动入口呢？在 <code>apm-sniffer/apm-agent</code> 的 <a href="https://github.com/OpenSkywalking/skywalking/blob/23133f7d97d17b471f69e7214a01885ebcd2e882/apm-sniffer/apm-agent/pom.xml#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>pom.xml</code></a> 文件的【第 73 行】，我们可以看到 SkyWalkingAgent 被配置成 JavaAgent 的 <strong>PremainClass</strong> 。</p>
+<h1 id="2-SkyWalkingAgent"><a href="#2-SkyWalkingAgent" class="headerlink" title="2. SkyWalkingAgent"></a>2. SkyWalkingAgent</h1><p><code>org.skywalking.apm.agent.SkyWalkingAgent</code> ，在 <code>apm-sniffer/apm-agent</code> Maven 模块项目里，SkyWalking Agent <strong>启动入口</strong>。为什么说它是启动入口呢？在 <code>apm-sniffer/apm-agent</code> 的 <a href="https://github.com/OpenSkywalking/skywalking/blob/23133f7d97d17b471f69e7214a01885ebcd2e882/apm-sniffer/apm-agent/pom.xml#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>pom.xml</code></a> 文件的【第 73 行】，我们可以看到 SkyWalkingAgent 被配置成 JavaAgent 的 <strong>PremainClass</strong> 。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/c51dbc997348111674dbeedb71d22b0414936cdb/apm-sniffer/apm-agent/src/main/java/org/skywalking/apm/agent/SkyWalkingAgent.java#L54" rel="external nofollow noopener noreferrer" target="_blank"><code>#premain(...)</code></a> 方法，代码如下 ：</p>
 <ul>
 <li>第 58 行 ：调用 <code>SnifferConfigInitializer#initialize()</code> 方法，初始化 Agent 配置。</li>
-<li>第 61 行 ：调用 <code>PluginBootstrap#loadPlugins()</code> 方法，加载 Agent 插件们。而后，创建 PluginFinder 。</li>
+<li>第 61 行 ：调用 <code>PluginBootstrap#loadPlugins()</code> 方法，加载 Agent 插件们。而后，创建 PluginFinder 。 </li>
 <li>第 64 行 ：调用 <code>ServiceManager#boot()</code> 方法，初始化 Agent 服务管理。在这过程中，Agent 服务们会被初始化。</li>
 <li>第 79 至 133 行 ：基于 <a href="https://github.com/raphw/byte-buddy" rel="external nofollow noopener noreferrer" target="_blank">byte-buddy</a> ，初始化 Instrumentation 的 <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/instrument/ClassFileTransformer.html" rel="external nofollow noopener noreferrer" target="_blank"><code>java.lang.instrument.ClassFileTransformer</code></a> 。</li>
 </ul>
-<h1>3. SnifferConfigInitializer</h1>
-<p><code>org.skywalking.apm.agent.core.conf.SnifferConfigInitializer</code> ，Agent 配置初始化器。</p>
+<h1 id="3-SnifferConfigInitializer"><a href="#3-SnifferConfigInitializer" class="headerlink" title="3. SnifferConfigInitializer"></a>3. SnifferConfigInitializer</h1><p><code>org.skywalking.apm.agent.core.conf.SnifferConfigInitializer</code> ，Agent 配置初始化器。</p>
 <p>在看具体代码实现之前，我们先看下 <code>org.skywalking.apm.agent.core.conf</code> 包的大体结构 ：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/02.png" alt=""></p>
 <p>配置类有 Config 和 RemoteDownstreamConfig 两种。从命名上可以看出 ：</p>
 <ul>
 <li>Config 为 Agent <strong>本地</strong>配置类，使用 SnifferConfigInitializer 进行初始化。</li>
-<li>RemoteDownstreamConfig 为 Agent <strong>远程</strong>配置类，从 <a href="https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-%E9%83%A8%E7%BD%B2Collector" rel="external nofollow noopener noreferrer" target="_blank">Collector Server</a> 读取。</li>
+<li>RemoteDownstreamConfig 为 Agent <strong>远程</strong>配置类，从 <a href="https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-%E9%83%A8%E7%BD%B2Collector" rel="external nofollow noopener noreferrer" target="_blank">Collector Server</a> 读取。 </li>
 </ul>
 <hr>
 <p><a href="https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/SnifferConfigInitializer.java#L56" rel="external nofollow noopener noreferrer" target="_blank"><code>#initialize()</code></a> 方法，初始化 Agent 本地配置，代码如下 ：</p>
@@ -220,67 +213,52 @@
 <li>第 70 至 74 行 ：从环境变量<strong>覆盖</strong>配置。环境变量 <strong>Key</strong> 需以 <code>&quot;skywalking.&quot;</code> 开头。例如，<code>Config.Agent.APPLICATION_CODE</code> 在 <code>agent.config</code> 为 <code>agent.application_code</code> ，环境变量为 <code>skywalking.agent.application_code</code> 。另外，环境变量包括 JVM 进程的和系统的。</li>
 <li>第 77 至 82 行 ：校验配置是否正确加载。</li>
 </ul>
-<h2>3.1 Config</h2>
-<p><code>org.skywalking.apm.agent.core.conf.Config</code> ，Agent 本地配置类。</p>
+<h2 id="3-1-Config"><a href="#3-1-Config" class="headerlink" title="3.1 Config"></a>3.1 Config</h2><p><code>org.skywalking.apm.agent.core.conf.Config</code> ，Agent 本地配置类。</p>
 <p>打开 <a href="https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/Config.java#L32" rel="external nofollow noopener noreferrer" target="_blank">Config</a> ，我们会看到拆分了 Agent / Collector / Jvm / Buffer / Dictionary / Logging / Plugin 七个小类。如下图 ：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/03.png" alt=""></p>
 <p>本文暂不对配置项详细解析，胖友可以看下每个属性的英文注释。</p>
-<h2>3.2 RemoteDownstreamConfig</h2>
-<p><code>org.skywalking.apm.agent.core.conf.RemoteDownstreamConfig</code> ，Agent 远程配置类。</p>
+<h2 id="3-2-RemoteDownstreamConfig"><a href="#3-2-RemoteDownstreamConfig" class="headerlink" title="3.2 RemoteDownstreamConfig"></a>3.2 RemoteDownstreamConfig</h2><p><code>org.skywalking.apm.agent.core.conf.RemoteDownstreamConfig</code> ，Agent 远程配置类。</p>
 <p>打开 <a href="https://github.com/YunaiV/skywalking/blob/cea46a7e93437bbb16db2bfe0fae5c6fcf733fc2/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/RemoteDownstreamConfig.java" rel="external nofollow noopener noreferrer" target="_blank">RemoteDownstreamConfig</a> ，我们会看到拆分了 Agent / Collector 两小类。如下图 ：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/04.png" alt=""></p>
 <p>本文暂不对配置项详细解析，胖友可以看下每个属性的英文注释。</p>
-<h1>4. Plugin</h1>
-<p>SkyWalking Agent 提供了多种插件，实现不同框架的<strong>透明</strong>接入 SkyWalking 。在 <a href="https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-supported-list" rel="external nofollow noopener noreferrer" target="_blank">《官方文档 —— supported list》</a> 里，有目前的插件列表。</p>
+<h1 id="4-Plugin"><a href="#4-Plugin" class="headerlink" title="4. Plugin"></a>4. Plugin</h1><p>SkyWalking Agent 提供了多种插件，实现不同框架的<strong>透明</strong>接入 SkyWalking 。在 <a href="https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-supported-list" rel="external nofollow noopener noreferrer" target="_blank">《官方文档 —— supported list》</a> 里，有目前的插件列表。</p>
 <p>另外，在 <code>apm-sniffer/apm-sdk-plugin</code> 目录下，有插件的实现代码 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/05.png" alt=""></p>
 <p>本小节会分享的较为简单，在 <a href="">《TODO 【4000】》</a> 详细解析。</p>
-<h2>4.1 PluginBootstrap</h2>
-<p><code>org.skywalking.apm.agent.core.plugin.PluginBootstrap</code> ，插件引导程序类，创建需要加载的插件对象数组。</p>
+<h2 id="4-1-PluginBootstrap"><a href="#4-1-PluginBootstrap" class="headerlink" title="4.1 PluginBootstrap"></a>4.1 PluginBootstrap</h2><p><code>org.skywalking.apm.agent.core.plugin.PluginBootstrap</code> ，插件引导程序类，创建需要加载的插件对象数组。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/130f0a5a3438663b393e53ba2cca02a8d13c258a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginBootstrap.java#L45" rel="external nofollow noopener noreferrer" target="_blank"><code>#loadPlugins()</code></a> 方法，代码如下 ：</p>
 <ul>
 <li>第 47 行 ：初始化 AgentClassLoader 。</li>
-<li>第 50 至 56 行 ：获得插件<strong>路径</strong>数组。</li>
+<li>第 50 至 56 行 ：获得插件<strong>定义路径</strong>数组。</li>
 <li>第 59 至 66 行 ：获得插件<strong>定义</strong>( <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginDefine.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.plugin.PluginDefine</code></a> )数组。</li>
 <li>第 69 至 82 行 ：创建<strong>类增强插件定义</strong>( <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine</code></a> )对象数组。不同插件通过实现 AbstractClassEnhancePluginDefine <strong>抽象类</strong>，定义不同框架的<strong>切面</strong>，<strong>记录调用链路</strong>。以 Spring 插件为例子，如下是相关类图 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/06.png" alt=""></li>
 </ul>
-<h2>4.2 PluginFinder</h2>
-<p><code>org.skywalking.apm.agent.core.plugin.PluginFinder</code> ，插件发现者。其提供 <a href="https://github.com/YunaiV/skywalking/blob/09c654af33081e56547cb8b3b9e0c8525ddce32f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginFinder.java#L80" rel="external nofollow noopener noreferrer" target="_blank"><code>#find(...)</code></a> 方法，获得<strong>类增强插件定义</strong>( <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine</code></a> )对象。</p>
+<h2 id="4-2-PluginFinder"><a href="#4-2-PluginFinder" class="headerlink" title="4.2 PluginFinder"></a>4.2 PluginFinder</h2><p><code>org.skywalking.apm.agent.core.plugin.PluginFinder</code> ，插件发现者。其提供 <a href="https://github.com/YunaiV/skywalking/blob/09c654af33081e56547cb8b3b9e0c8525ddce32f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginFinder.java#L80" rel="external nofollow noopener noreferrer" target="_blank"><code>#find(...)</code></a> 方法，获得<strong>类增强插件定义</strong>( <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/AbstractClassEnhancePluginDefine.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.plugin.AbstractClassEnhancePluginDefine</code></a> )对象。</p>
 <p>PluginFinder <strong><a href="https://github.com/YunaiV/skywalking/blob/09c654af33081e56547cb8b3b9e0c8525ddce32f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginFinder.java#L56" rel="external nofollow noopener noreferrer" target="_blank">构造方法</a></strong>，代码如下 ：</p>
 <ul>
-<li>第 57 至 77 行 ：循环 AbstractClassEnhancePluginDefine 对象数组，添加到 <code>nameMatchDefine</code> / <code>signatureMatchDefine</code> 属性，方便 <code>#find(...)</code> 方法查找 AbstractClassEnhancePluginDefine 对象。
-<ul>
+<li>第 57 至 77 行 ：循环 AbstractClassEnhancePluginDefine 对象数组，添加到 <code>nameMatchDefine</code> / <code>signatureMatchDefine</code> 属性，方便 <code>#find(...)</code> 方法查找 AbstractClassEnhancePluginDefine 对象。<ul>
 <li>第 65 至 72 行 ：处理 NameMatch 为匹配的 AbstractClassEnhancePluginDefine 对象，添加到 <code>nameMatchDefine</code>  属性。</li>
 <li>第 74 至 76 行 ：处理<strong>非</strong> NameMatch 为匹配的 AbstractClassEnhancePluginDefine 对象，添加到 <code>signatureMatchDefine</code> 属性。</li>
 </ul>
 </li>
 </ul>
-<h1>5. ServiceManager</h1>
-<p><code>org.skywalking.apm.agent.core.boot.ServiceManager</code> ，<a href="https://github.com/YunaiV/skywalking/blob/09c654af33081e56547cb8b3b9e0c8525ddce32f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/BootService.java" rel="external nofollow noopener noreferrer" target="_blank">BootService</a> 管理器。负责管理、初始化 BootService 实例们。</p>
+<h1 id="5-ServiceManager"><a href="#5-ServiceManager" class="headerlink" title="5. ServiceManager"></a>5. ServiceManager</h1><p><code>org.skywalking.apm.agent.core.boot.ServiceManager</code> ，<a href="https://github.com/YunaiV/skywalking/blob/09c654af33081e56547cb8b3b9e0c8525ddce32f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/BootService.java" rel="external nofollow noopener noreferrer" target="_blank">BootService</a> 管理器。负责管理、初始化 BootService 实例们。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L45" rel="external nofollow noopener noreferrer" target="_blank"><code>#boot()</code></a> 方法，代码如下 ：</p>
 <ul>
-<li>
-<p>第 47 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L72" rel="external nofollow noopener noreferrer" target="_blank"><code>#loadAllServices()</code></a> 方法，加载所有 BootService 实现类的实例数组。ServiceManager 基于 SPI (Service Provider Interface) 机制，在 <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/resources/META-INF/services/org.skywalking.apm.agent.core.boot.BootService" rel="external nofollow noopener noreferrer" target="_blank">/resources/META-INF.services/org.skywalking.apm.agent.core.boot.BootService</a> 文件里，定义了所有 BootService 的实现类。如果胖友对 SPI 机制不熟悉，可以看下如下文章 ：</p>
+<li><p>第 47 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L72" rel="external nofollow noopener noreferrer" target="_blank"><code>#loadAllServices()</code></a> 方法，加载所有 BootService 实现类的实例数组。ServiceManager 基于 SPI (Service Provider Interface) 机制，在 <a href="https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/resources/META-INF/services/org.skywalking.apm.agent.core.boot.BootService" rel="external nofollow noopener noreferrer" target="_blank">/resources/META-INF.services/org.skywalking.apm.agent.core.boot.BootService</a> 文件里，定义了所有 BootService 的实现类。如果胖友对 SPI 机制不熟悉，可以看下如下文章 ：</p>
 <ul>
-<li><a href="http://www.jianshu.com/p/32d3e108f30a" rel="external nofollow noopener noreferrer" target="_blank">《SPI 和 ServiceLoader》</a></li>
-<li><a href="http://www.jianshu.com/p/46aa69643c97" rel="external nofollow noopener noreferrer" target="_blank">《跟我学Dubbo系列之Java SPI机制简介》</a></li>
+<li><a href="http://www.jianshu.com/p/32d3e108f30a" rel="external nofollow noopener noreferrer" target="_blank">《SPI 和 ServiceLoader》</a> </li>
+<li><a href="http://www.jianshu.com/p/46aa69643c97" rel="external nofollow noopener noreferrer" target="_blank">《跟我学Dubbo系列之Java SPI机制简介》</a> </li>
 </ul>
 </li>
-<li>
-<p>第 50 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L82" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeBoot()</code></a> 方法，调用每个 <code>BootService#beforeBoot()</code> 方法。</p>
+<li><p>第 50 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L82" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeBoot()</code></a> 方法，调用每个 <code>BootService#beforeBoot()</code> 方法。</p>
 </li>
-<li>
-<p>第 52 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L92" rel="external nofollow noopener noreferrer" target="_blank"><code>#startup()</code></a> 方法，调用每个 <code>BootService#boot()</code> 方法。</p>
-</li>
-<li>
-<p>第 54 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L102" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterBoot()</code></a> 方法，调用每个 <code>BootService#afterBoot()</code> 方法。</p>
-</li>
+<li>第 52 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L92" rel="external nofollow noopener noreferrer" target="_blank"><code>#startup()</code></a> 方法，调用每个 <code>BootService#boot()</code> 方法。</li>
+<li>第 54 行 ：调用 <a href="https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L102" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterBoot()</code></a> 方法，调用每个 <code>BootService#afterBoot()</code> 方法。</li>
 </ul>
-<h2>5.1 BootService</h2>
-<p><code>org.skywalking.apm.agent.core.boot.BootService</code> ，Agent 启动服务<strong>接口</strong>，定义了 <code>#beforeBoot()</code> / <code>#boot()</code> / <code>#afterBoot()</code> / <code>#shutdown()</code> 接口方法。</p>
+<h2 id="5-1-BootService"><a href="#5-1-BootService" class="headerlink" title="5.1 BootService"></a>5.1 BootService</h2><p><code>org.skywalking.apm.agent.core.boot.BootService</code> ，Agent 启动服务<strong>接口</strong>，定义了 <code>#beforeBoot()</code> / <code>#boot()</code> / <code>#afterBoot()</code> / <code>#shutdown()</code> 接口方法。</p>
 <p>BootService 目前有<strong>七个</strong>实现类，在后续的文章，我们会解析相关实现。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/07.png" alt=""></p>
-<h1>666. 彩蛋</h1>
-<p>每次写初始化相关的文章，写少了，怕太水；写多了，又怕太复杂。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>每次写初始化相关的文章，写少了，怕太水；写多了，又怕太复杂。</p>
 <p>嗯，送一发妹子。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/08.png" alt=""></p>
 <p>胖友，分享个朋友圈可好？</p>
@@ -307,6 +285,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev">
+ <a href="/SkyWalking/agent-plugin-system/" title="SkyWalking 源码分析 —— Agent 插件体系">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  SkyWalking 源码分析 —— Agent 插件体系</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/SkyWalking/build-debugging-environment/" title="SkyWalking 源码分析 —— 调试环境搭建">
@@ -325,7 +311,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. SkyWalkingAgent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. SnifferConfigInitializer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Config</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 RemoteDownstreamConfig</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. Plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 PluginBootstrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 PluginFinder</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. ServiceManager</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 BootService</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-SkyWalkingAgent"><span class="toc-number">2.</span> <span class="toc-text">2. SkyWalkingAgent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-SnifferConfigInitializer"><span class="toc-number">3.</span> <span class="toc-text">3. SnifferConfigInitializer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Config"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Config</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-RemoteDownstreamConfig"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 RemoteDownstreamConfig</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Plugin"><span class="toc-number">4.</span> <span class="toc-text">4. Plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-PluginBootstrap"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 PluginBootstrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-PluginFinder"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 PluginFinder</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-ServiceManager"><span class="toc-number">5.</span> <span class="toc-text">5. ServiceManager</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-BootService"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 BootService</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">6.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
@@ -424,7 +410,7 @@
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>2</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>3</sup></a></li>
             
 		
             
