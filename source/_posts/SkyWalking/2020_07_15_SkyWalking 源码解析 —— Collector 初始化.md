@@ -6,6 +6,31 @@ permalink: SkyWalking/collector-init
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-init/)
+- [2. CollectorBootStartUp](http://www.iocoder.cn/SkyWalking/collector-init/)
+- [2. ApplicationConfigLoader](http://www.iocoder.cn/SkyWalking/collector-init/)
+- [3. ModuleManager](http://www.iocoder.cn/SkyWalking/collector-init/)
+  - [3.1 Module](http://www.iocoder.cn/SkyWalking/collector-init/)
+  - [3.2 ModuleProvider](http://www.iocoder.cn/SkyWalking/collector-init/)
+  - [3.3 Service](http://www.iocoder.cn/SkyWalking/collector-init/)
+  - [3.4 BootstrapFlow](http://www.iocoder.cn/SkyWalking/collector-init/)
+- [4. Module 实现类简介](http://www.iocoder.cn/SkyWalking/collector-init/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Collector 启动初始化的过程**。在分享的过程中，我们会**简单**介绍 Collector 每个模块及其用途。
@@ -13,7 +38,7 @@ permalink: SkyWalking/collector-init
 ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](../../../images/SkyWalking/2020_07_15/01.png)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/01.png)
 
 # 2. CollectorBootStartUp
 
@@ -31,7 +56,7 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 在看具体代码实现之前，我们先了解下 ApplicationConfiguration 整体类结构。如下图所示 ：
 
-[](../../../images/SkyWalking/2020_07_15/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/02.png)
 
 * Collector 使用组件管理器( ModuleManager )，管理**多个**组件( [Module](https://github.com/YunaiV/skywalking/blob/c633c1f0e143d1df2457926ab239350a642f7be2/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java) )。
     * 一个组件有多种组件服务提供者( [ModuleProvider](https://github.com/YunaiV/skywalking/blob/c633c1f0e143d1df2457926ab239350a642f7be2/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java) )，**同时**一个组件只允许使用**一个**组件服务提供者。这块下面会有代码解析说明。
@@ -63,13 +88,13 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 * 第 77 至 80 行 ：校验**在配置中**的 Module 实现类的实例都创建了，否则抛出异常。
 * 第 84 行 ：调用 `BootstrapFlow#start(...)` 方法，执行 Module 启动逻辑。[「3.4 BootstrapFlow」](#) 详细解析。
 * 第 86 行 ：调用 `BootstrapFlow#notifyAfterCompleted()` 方法，执行 Module 启动完成，通知 ModuleProvider 。[「3.4 BootstrapFlow」](#) 详细解析。
-* 总的来说，Module 初始化的过程，可以理解成三个阶段，如下图所示 ：[](../../../images/SkyWalking/2020_07_15/03.png)
+* 总的来说，Module 初始化的过程，可以理解成三个阶段，如下图所示 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/03.png)
 
 ## 3.1 Module
 
-`org.skywalking.apm.collector.core.module.Module` ，组件**抽象类**。通过实现 Module 抽象类，实现不同功能的组件。目前 Collector 的 Module 实现类如下图 ：[](../../../images/SkyWalking/2020_07_15/04.png)
+`org.skywalking.apm.collector.core.module.Module` ，组件**抽象类**。通过实现 Module 抽象类，实现不同功能的组件。目前 Collector 的 Module 实现类如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/04.png)
 
-[`#name()`](https://github.com/YunaiV/skywalking/blob/204a9e658dd95cc8ee5d4e65d7ca1ed58f3a71da/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java#L50) **抽象**方法，获得组件名。目前组件名有 ：[](../../../images/SkyWalking/2020_07_15/05.png)
+[`#name()`](https://github.com/YunaiV/skywalking/blob/204a9e658dd95cc8ee5d4e65d7ca1ed58f3a71da/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java#L50) **抽象**方法，获得组件名。目前组件名有 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/05.png)
 
 [`#providers()`](https://github.com/YunaiV/skywalking/blob/204a9e658dd95cc8ee5d4e65d7ca1ed58f3a71da/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java#L110) 方法，获得 ModuleProvider 数组。实际上，一个 Module **同时**只能有一个 ModuleProvider ，参见 [`#provider()`](https://github.com/YunaiV/skywalking/blob/204a9e658dd95cc8ee5d4e65d7ca1ed58f3a71da/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java#L114) 方法。
 
@@ -84,9 +109,9 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 ## 3.2 ModuleProvider
 
-`org.skywalking.apm.collector.core.module.ModuleProvider` ，组件服务提供者**抽象类**。通过实现 ModuleProvider 抽象类，实现不同功能的组件服务提供者。目前 Collector 的 ModuleProvider 实现类如下图 ：[](../../../images/SkyWalking/2020_07_15/06.png)
+`org.skywalking.apm.collector.core.module.ModuleProvider` ，组件服务提供者**抽象类**。通过实现 ModuleProvider 抽象类，实现不同功能的组件服务提供者。目前 Collector 的 ModuleProvider 实现类如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/06.png)
 
-[`#name()`](https://github.com/YunaiV/skywalking/blob/3fb837104a111ff94abef9c871c814fb60c18340/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java#L64) **抽象**方法，获得组件服务提供者名。目前组件服务提供者名有 ：[](../../../images/SkyWalking/2020_07_15/07.png)
+[`#name()`](https://github.com/YunaiV/skywalking/blob/3fb837104a111ff94abef9c871c814fb60c18340/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java#L64) **抽象**方法，获得组件服务提供者名。目前组件服务提供者名有 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/07.png)
 
 [`#module()`](https://github.com/YunaiV/skywalking/blob/3fb837104a111ff94abef9c871c814fb60c18340/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java#L69) **抽象**方法，获得 ModuleProvider 对应的 Module **类**。注意，ModuleProvider 的名字可以重复，例如上图的 `jetty` ，通过对应的 Module **类**来区分。
 
@@ -117,15 +142,15 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 ## 3.3 Service
 
-`org.skywalking.apm.collector.core.module.Service` ，服务**接口**。通过实现 Service 接口，实现不同功能的服务。目前 Collector 的 Service 实现类如下图 ：[](../../../images/SkyWalking/2020_07_15/08.png)
+`org.skywalking.apm.collector.core.module.Service` ，服务**接口**。通过实现 Service 接口，实现不同功能的服务。目前 Collector 的 Service 实现类如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/08.png)
 
 这里有一点要注意下，实际上 Module 是与 Service **"直接"** 一对多的关系。中间 有一层 ModuleProvider 存在的原因是，相同 Module 可以有多种 ModuleProvider 实现，而 ModuleProvider 提供提供相同功能的 Service ，但是实现不同。
 
 以 `apm-collector-storage` 举例子，如下图所示 ：
 
-[](../../../images/SkyWalking/2020_07_15/09.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/09.png)
 
-* StorageModuleEsProvider / StorageModuleH2Provider 分别基于 ES / H2 实现，其提供存储相同数据的不同实现。例如 ：[](../../../images/SkyWalking/2020_07_15/10.png)
+* StorageModuleEsProvider / StorageModuleH2Provider 分别基于 ES / H2 实现，其提供存储相同数据的不同实现。例如 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/10.png)
 
 这也是为什么有 `Module#services()` 和 `#requiredCheck(Class<? extends Service>[])` 这样的方法涉及的原因。
 
@@ -155,4 +180,13 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
 
 TODO 【4001】Module 实现文章链接 
 
+# 666. 彩蛋
+
+可能要进入特别忙碌的一段时间，不确定 SkyWalking 文章后续的更新频率。
+
+继续加油。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/11.png)
+
+胖友，分享个朋友圈可好？
 

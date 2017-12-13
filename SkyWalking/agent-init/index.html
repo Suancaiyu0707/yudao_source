@@ -139,7 +139,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-07-04T16:00:00.000Z" itemprop="datePublished">2020-07-05</time>-->
-    <!--更新日期:<time datetime="2017-12-10T17:39:07.000Z" itemprop="dateModified">2017-12-11</time>-->
+    <!--更新日期:<time datetime="2017-12-13T18:28:30.000Z" itemprop="dateModified">2017-12-14</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -223,7 +223,7 @@
 <p>本文暂不对配置项详细解析，胖友可以看下每个属性的英文注释。</p>
 <h1 id="4-Plugin"><a href="#4-Plugin" class="headerlink" title="4. Plugin"></a>4. Plugin</h1><p>SkyWalking Agent 提供了多种插件，实现不同框架的<strong>透明</strong>接入 SkyWalking 。在 <a href="https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-supported-list" rel="external nofollow noopener noreferrer" target="_blank">《官方文档 —— supported list》</a> 里，有目前的插件列表。</p>
 <p>另外，在 <code>apm-sniffer/apm-sdk-plugin</code> 目录下，有插件的实现代码 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_07_05/05.png" alt=""></p>
-<p>本小节会分享的较为简单，在 <a href="">《TODO 【4000】》</a> 详细解析。</p>
+<p>本小节会分享的较为简单，在 <a href="http://www.iocoder.cn/SkyWalking/agent-plugin-system/?self">《SkyWalking 源码分析 —— Agent 插件体系》</a> 详细解析。</p>
 <h2 id="4-1-PluginBootstrap"><a href="#4-1-PluginBootstrap" class="headerlink" title="4.1 PluginBootstrap"></a>4.1 PluginBootstrap</h2><p><code>org.skywalking.apm.agent.core.plugin.PluginBootstrap</code> ，插件引导程序类，创建需要加载的插件对象数组。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/130f0a5a3438663b393e53ba2cca02a8d13c258a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/PluginBootstrap.java#L45" rel="external nofollow noopener noreferrer" target="_blank"><code>#loadPlugins()</code></a> 方法，代码如下 ：</p>
 <ul>
@@ -410,7 +410,7 @@
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>3</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>4</sup></a></li>
             
 		
             

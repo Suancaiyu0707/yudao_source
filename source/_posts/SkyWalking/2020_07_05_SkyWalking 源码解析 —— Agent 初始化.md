@@ -104,7 +104,7 @@ SkyWalking Agent 提供了多种插件，实现不同框架的**透明**接入 S
 
 另外，在 `apm-sniffer/apm-sdk-plugin` 目录下，有插件的实现代码 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/05.png)
 
-本小节会分享的较为简单，在 [《TODO 【4000】》]() 详细解析。
+本小节会分享的较为简单，在 [《SkyWalking 源码分析 —— Agent 插件体系》](http://www.iocoder.cn/SkyWalking/agent-plugin-system/?self) 详细解析。
 
 ## 4.1 PluginBootstrap
 
