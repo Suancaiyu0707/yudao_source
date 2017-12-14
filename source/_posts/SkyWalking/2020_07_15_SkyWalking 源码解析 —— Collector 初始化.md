@@ -152,6 +152,10 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 * StorageModuleEsProvider / StorageModuleH2Provider 分别基于 ES / H2 实现，其提供存储相同数据的不同实现。例如 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/10.png)
 
+一般 `collector-xxx-define` 的 `service` 包下，会定义当前模块提供的 Service 接口，如下图所示 ：
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/12.png)
+
 这也是为什么有 `Module#services()` 和 `#requiredCheck(Class<? extends Service>[])` 这样的方法涉及的原因。
 
 另外，如下是 Service 接口的解释：
