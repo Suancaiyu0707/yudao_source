@@ -6,6 +6,37 @@ permalink: SkyWalking/collector-cluster-module
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-cluster-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+- [2. collector-cluster-define](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [2.1 ClusterModule](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [2.2 ModuleRegisterService](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [2.3 ModuleListenerService](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [2.4 DataMonitor](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+- [3. collector-cluster-zookeeper-provider](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [3.1 ClusterModuleZookeeperProvider](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [3.2 ZookeeperModuleRegisterService](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [3.3 ZookeeperModuleListenerService](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [3.4 ClusterZKDataMonitor](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+  - [3.5 ZookeeperClient](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+- [4. collector-cluster-standalone-provider](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+- [5. collector-cluster-redis-provider](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Collector Cluster Module**，负责集群的管理，即 Collector 节点的注册于发现。
@@ -15,11 +46,11 @@ permalink: SkyWalking/collector-cluster-module
 Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](http://www.iocoder.cn/images/SkyWalking/2020_07_20/01.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/01.jpeg)
 
 下面我们来看看整体的项目结构，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/02.png)
 
 * `collector-cluster-define` ：定义集群管理接口。
 * `collector-cluster-standalone-provider` ：基于 H2 的 集群管理实现。**该实现是单机版，建议仅用于 SkyWalking 快速上手，生产环境不建议使用**。
@@ -32,9 +63,9 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 `collector-cluster-define` ：定义集群管理接口。项目结构如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/03.png)
 
-* 交互如下图 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/04.png)
+* 交互如下图 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/04.png)
 
 * ModuleListenerService 暴露给其他 Module 注册监听器 ( ClusterModuleListener ) 到 DataMonitor 。
 * ModuleRegisterService 暴露给其他 Module 注册组件登记( ModuleRegistration ) 到 DataMonitor 。
@@ -56,7 +87,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 ### 2.2.1 ModuleRegistration
 
-`org.skywalking.apm.collector.cluster.ModuleRegistration` ，模块注册信息**抽象类**。不同 Module 通过实现 ModuleRegistration ，将它们注册到 ModuleRegisterService。目前子类如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/05.png)
+`org.skywalking.apm.collector.cluster.ModuleRegistration` ，模块注册信息**抽象类**。不同 Module 通过实现 ModuleRegistration ，将它们注册到 ModuleRegisterService。目前子类如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/05.png)
 
 [`#buildValue()`](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-define/src/main/java/org/skywalking/apm/collector/cluster/ModuleRegistration.java) **抽象**方法，获得模块注册信息( [Value](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-define/src/main/java/org/skywalking/apm/collector/cluster/ModuleRegistration.java#L30) )。
 
@@ -68,7 +99,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 ### 2.3.1 ClusterModuleListener
 
-`org.skywalking.apm.collector.cluster.ClusterModuleListener` ，集群组件监听器**抽象类**。目前子类如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/06.png)
+`org.skywalking.apm.collector.cluster.ClusterModuleListener` ，集群组件监听器**抽象类**。目前子类如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/11.png)
 
 [**构造方法**](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-define/src/main/java/org/skywalking/apm/collector/cluster/ClusterModuleListener.java#L36)，创建地址数组( `addresses` )。该数组的读写方法如下：
 
@@ -82,7 +113,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 ## 2.4 DataMonitor
 
-`org.skywalking.apm.collector.cluster.DataMonitor` ，数据监**视**器**接口**。通过实现 DataMonitor 接口，基于不同的存储器实现注册发现。目前子类如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/06.png)
+`org.skywalking.apm.collector.cluster.DataMonitor` ，数据监**视**器**接口**。通过实现 DataMonitor 接口，基于不同的存储器实现注册发现。目前子类如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/06.png)
 
 [`#register(path, registration)`](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-define/src/main/java/org/skywalking/apm/collector/cluster/DataMonitor.java#L40) **接口**方法，注册模块注册信息。
 
@@ -98,7 +129,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 # 3. collector-cluster-zookeeper-provider
 
-`collector-cluster-zookeeper-provider` ，基于 Zookeeper 的集群管理实现。项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/07.png)
+`collector-cluster-zookeeper-provider` ，基于 Zookeeper 的集群管理实现。项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/07.png)
 
 实际使用时，通过 `application.yml` 配置如下：
 
@@ -153,7 +184,7 @@ cluster:
 
 `org.skywalking.apm.collector.cluster.zookeeper.ClusterZKDataMonitor` ，基于 Zookeeper 的数据监视器**实现类**。
 
-在看具体代码实现之前，我们先来看看 Zookeeper 是如何存储数据的，如下图所示 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/08.png)
+在看具体代码实现之前，我们先来看看 Zookeeper 是如何存储数据的，如下图所示 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/08.png)
 
 * 紫色部分，通过调用 [`#createPath(path)`](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-zookeeper-provider/src/main/java/org/skywalking/apm/collector/cluster/zookeeper/ClusterZKDataMonitor.java#L172) 方法，顺着路径，逐层创建**持久**节点。
 * 黄色部分，通过调用 [`#setData(path)`](https://github.com/YunaiV/skywalking/blob/20d38d7fcbbaac65e10eb8d256881fc9c0cedd87/apm-collector/apm-collector-cluster/collector-cluster-zookeeper-provider/src/main/java/org/skywalking/apm/collector/cluster/zookeeper/ClusterZKDataMonitor.java#L184) 方法，创建**临时**节点，设置 Collector 模块地址。若 Collector 集群有 N 个节点，则此处会有 N 个**临时**节点。
@@ -207,7 +238,7 @@ cluster:
 
 # 4. collector-cluster-standalone-provider
 
-`collector-cluster-standalone-provider.ClusterStandaloneDataMonitor` ，基于 H2 的 集群管理实现。**该实现是单机版，建议仅用于 SkyWalking 快速上手，生产环境不建议使用**。项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/09.png)
+`collector-cluster-standalone-provider.ClusterStandaloneDataMonitor` ，基于 H2 的 集群管理实现。**该实现是单机版，建议仅用于 SkyWalking 快速上手，生产环境不建议使用**。项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/09.png)
 
 大体实现和 `collector-cluster-zookeeper-provider` 差不多，差异在对 DataMonitor 的实现类 ClusterStandaloneDataMonitor 上。
 
@@ -224,7 +255,7 @@ cluster:
 
 有一种硬生生把很简单的东西，写的很复杂的感觉。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_07_20/10.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/10.png)
 
 胖友，分享个朋友圈可好？
 

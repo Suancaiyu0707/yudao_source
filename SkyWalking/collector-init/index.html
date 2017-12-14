@@ -138,7 +138,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-07-14T16:00:00.000Z" itemprop="datePublished">2020-07-15</time>-->
-    <!--更新日期:<time datetime="2017-12-13T18:27:44.000Z" itemprop="dateModified">2017-12-14</time>-->
+    <!--更新日期:<time datetime="2017-12-14T02:49:23.000Z" itemprop="dateModified">2017-12-14</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -267,6 +267,8 @@
 <ul>
 <li>StorageModuleEsProvider / StorageModuleH2Provider 分别基于 ES / H2 实现，其提供存储相同数据的不同实现。例如 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_07_15/10.png" alt=""></li>
 </ul>
+<p>一般 <code>collector-xxx-define</code> 的 <code>service</code> 包下，会定义当前模块提供的 Service 接口，如下图所示 ：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_15/12.png" alt=""></p>
 <p>这也是为什么有 <code>Module#services()</code> 和 <code>#requiredCheck(Class&lt;? extends Service&gt;[])</code> 这样的方法涉及的原因。</p>
 <p>另外，如下是 Service 接口的解释：</p>
 <blockquote>
@@ -311,6 +313,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev">
+ <a href="/SkyWalking/collector-cluster-module/" title="SkyWalking 源码分析 —— Collector Cluster 集群管理">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  SkyWalking 源码分析 —— Collector Cluster 集群管理</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/SkyWalking/agent-plugin-system/" title="SkyWalking 源码分析 —— Agent 插件体系">
@@ -428,7 +438,7 @@
             
 		
             
-			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>4</sup></a></li>
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>5</sup></a></li>
             
 		
             
