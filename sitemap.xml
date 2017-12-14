@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
+    
+    <lastmod>2017-12-14T16:44:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/</loc>
     
     <lastmod>2017-12-14T16:41:13.000Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://www.iocoder.cn/SkyWalking/collector-client-component/</loc>
     
     <lastmod>2017-12-14T14:44:42.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
-    
-    <lastmod>2017-12-14T14:09:46.000Z</lastmod>
     
   </url>
   

@@ -4,6 +4,24 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
+    <lastmod>2017-12-14T16:44:25.000Z</lastmod>
+    <data>
+        <display>
+        <title>SkyWalking 源码分析 —— Collector 初始化</title>
+        <pubTime>2020-07-14T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="SkyWalking" url="http://www.iocoder.cn/categories/SkyWalking/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/</loc>
     <lastmod>2017-12-14T16:41:13.000Z</lastmod>
     <data>
@@ -64,24 +82,6 @@
         <display>
         <title>SkyWalking 源码分析 —— Collector Client Component 客户端组件</title>
         <pubTime>2020-07-24T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="SkyWalking" url="http://www.iocoder.cn/categories/SkyWalking/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
-    <lastmod>2017-12-14T14:09:46.000Z</lastmod>
-    <data>
-        <display>
-        <title>SkyWalking 源码分析 —— Collector 初始化</title>
-        <pubTime>2020-07-14T16:00:00.000Z</pubTime>
         
          
            
