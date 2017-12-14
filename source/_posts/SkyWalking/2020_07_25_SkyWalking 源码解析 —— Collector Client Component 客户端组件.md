@@ -34,6 +34,8 @@ permalink: SkyWalking/collector-client-component
 
 本文主要分享 **SkyWalking Collector Client Component 客户端组件**。Collector 通过客户端，和其他服务进行通信，例如 Elastic Search 、Zookeeper 、H2 等等。
 
+Client Component 在 SkyWalking 架构图处于如下位置( **红框** ) ：
+
 > FROM https://github.com/apache/incubating-skywalking  
 > ![](http://www.iocoder.cn/images/SkyWalking/2020_07_25/01.jpeg)
 

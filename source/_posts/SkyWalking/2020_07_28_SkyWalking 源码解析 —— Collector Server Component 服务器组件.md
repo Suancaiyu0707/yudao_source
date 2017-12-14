@@ -37,6 +37,8 @@ permalink: SkyWalking/collector-server-component
 
 本文主要分享 **SkyWalking Collector Server Component 服务器组件**。Collector 通过服务器，提供 API 接口给调用方，例如 Agent 、WebUI 。
 
+Server Component 在 SkyWalking 架构图处于如下位置( **红框** ) ：
+
 > FROM https://github.com/apache/incubating-skywalking  
 > ![](http://www.iocoder.cn/images/SkyWalking/2020_07_25/01.jpeg)
 
@@ -103,6 +105,8 @@ GRPCHandler 无任何接口方法。
 [`#start()`](https://github.com/YunaiV/skywalking/blob/3c964d8b5678cf6f715dc252e6fe48ba87d0f9e9/apm-collector/apm-collector-component/server-component/src/main/java/org/skywalking/apm/collector/server/jetty/JettyServer.java#L80) **实现**方法，启动服务器。
 
 [`#addHandler(handler)`](https://github.com/YunaiV/skywalking/blob/3c964d8b5678cf6f715dc252e6fe48ba87d0f9e9/apm-collector/apm-collector-component/server-component/src/main/java/org/skywalking/apm/collector/server/jetty/JettyServer.java#L72) **实现**方法，使用 ServerHandler 创建 `org.eclipse.jetty.servlet.ServletHolder` 对象，并调用 `ServletContextHandler#addServlet(servlet, pathSpec)` 方法进行添加。
+
+目前，JettyServer 使用在 [`collector-agent-jetty-provider`](https://github.com/YunaiV/skywalking/tree/3c964d8b5678cf6f715dc252e6fe48ba87d0f9e9/apm-collector/apm-collector-agent-jetty/collector-agent-jetty-provider) / [`collector-ui-jetty-provider`](https://github.com/YunaiV/skywalking/tree/3c964d8b5678cf6f715dc252e6fe48ba87d0f9e9/apm-collector/apm-collector-ui/collector-ui-jetty-provider) 项目。
 
 ## 3.2 JettyHandler
 
