@@ -73,7 +73,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 ## 2.1 ClusterModule
 
-`org.skywalking.apm.collector.cluster.ClusterModule` ，实现 [Module](https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java) 抽象类， 集群管理 Module 。
+`org.skywalking.apm.collector.cluster.ClusterModule` ，实现 [Module](https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java) 抽象类，集群管理 Module 。
 
 [`#name()`](https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-cluster/collector-cluster-define/src/main/java/org/skywalking/apm/collector/cluster/ClusterModule.java#L33) **实现**方法，返回模块名为 `"cluster"` 。
 
