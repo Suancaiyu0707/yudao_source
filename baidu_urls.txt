@@ -1,3 +1,4 @@
+http://www.iocoder.cn/SkyWalking/collector-naming-server/
 http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/
 http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/
 http://www.iocoder.cn/SkyWalking/collector-server-component/
@@ -97,4 +98,3 @@ http://www.iocoder.cn/JUC/good-collection/
 http://www.iocoder.cn/Dubbo/good-collection/
 http://www.iocoder.cn/Happylifeplat-TCC/good-collection/
 http://www.iocoder.cn/Elastic-Job/job-event-trace/
-http://www.iocoder.cn/Elastic-Job/job-failover/

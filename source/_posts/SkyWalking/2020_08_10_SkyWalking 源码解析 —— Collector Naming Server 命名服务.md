@@ -4,6 +4,33 @@ tags:
 categories: SkyWalking
 permalink: SkyWalking/collector-naming-server
 
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-naming-server/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+- [2. Collector Naming Server](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [2.1 NamingModule](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [2.2 NamingModuleJettyProvider](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [2.3 NamingHandlerRegisterService](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [2.4 配置文件](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+- [3. CollectorDiscoveryService](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [3.1 CollectorDiscoveryService](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+  - [3.2 配置文件](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
 -------
 
 # 1. 概述
@@ -21,11 +48,11 @@ Agent 通过 Collector Naming Server 调用 Collector Agent Server 的 API ，�
 Naming Server 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](http://www.iocoder.cn/images/SkyWalking/2020_08_10/01.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/01.jpeg)
 
 下面我们来看看整体的项目结构，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/02.png)
 
 # 2. Collector Naming Server
 
@@ -68,7 +95,7 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 
 `org.skywalking.apm.collector.naming.service.NamingHandlerRegisterService` ，继承 [Service](https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Service.java) 接口，命名处理器注册服务**接口**。
 
-[`#register(ServerHandler)`](https://github.com/YunaiV/skywalking/blob/8eece7df8a9174067793f0714b8b71d09f142312/apm-collector/apm-collector-naming/collector-naming-define/src/main/java/org/skywalking/apm/collector/naming/service/NamingHandlerRegisterService.java#L36) **接口**方法，注册 Server 请求处理器。Collector Agent Server 会调用该方法，将其实现的 用于 Naming 的 ServerHandler 进行注册。如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_08_05/03.png)
+[`#register(ServerHandler)`](https://github.com/YunaiV/skywalking/blob/8eece7df8a9174067793f0714b8b71d09f142312/apm-collector/apm-collector-naming/collector-naming-define/src/main/java/org/skywalking/apm/collector/naming/service/NamingHandlerRegisterService.java#L36) **接口**方法，注册 Server 请求处理器。Collector Agent Server 会调用该方法，将其实现的 用于 Naming 的 ServerHandler 进行注册。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/03.png)
 
 ### 2.3.1 NamingJettyHandlerRegisterService
 
@@ -100,7 +127,7 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 
 配置文件如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/02.png)
 
 * 配置 Naming Server 启动在 10800 端口。
 * Naming Server **内嵌**在 Collector Server 。通过启动多个 Collector Server 节点，形成 Naming Server 集群。Agent 配置多个 Naming Server 地址。
@@ -135,7 +162,7 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 
 配置文件如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/05.png)
 
 * 生产环境使用时，**推荐** Agent 配置多个 Naming Server 地址。
 
@@ -147,7 +174,7 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 
 有点"丧"。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_05/06.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/06.png)
 
 胖友，分享一波朋友圈可好！
 
