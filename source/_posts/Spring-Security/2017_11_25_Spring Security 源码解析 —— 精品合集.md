@@ -29,7 +29,7 @@ permalink: Spring-Security/good-collection
 * 作者 ：徐靖峰
 * 博客 ：https://www.cnkirito.moe/
 * 目录 ：
-    * [《Spring Security(一)--Architecture Overview》](https://www.cnkirito.moe/2017/09/19/spring-security-1/) 
+    * [《Spring Security(一)--Architecture Overview》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483860&idx=1&sn=a0d4de91cd9e97b6a0a752f75c172434&chksm=fa497e65cd3ef773b729f36a9adab379d492ae859e34a48ba86be687e487762d346ecce5f129#rd) 
     * [《Spring Security(二)--Guides》](https://www.cnkirito.moe/2017/09/20/spring-security-2/) 
     * [《Spring Security(三)--核心配置解读》](https://www.cnkirito.moe/2017/09/20/spring-security-3/) 
     * [《Spring Security(四)--核心过滤器源码分析》](https://www.cnkirito.moe/2017/09/30/spring-security-4/) 
