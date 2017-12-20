@@ -139,7 +139,7 @@ public void createServiceReferenceGraph() {
 | 第一步 | Graph | WayToNode |  |
 | 第二步 | WayToNode | Node |  |
 | 第三步 | Node | NodeProcessor |  |
-| 第四步 | NodeProcessor | Next | 根据具体实现，若到 Next ，重复第二步 |
+| 第四步 | NodeProcessor | Next | 根据具体实现，若到 Next ，重复第一步 |
 
 [](http://www.iocoder.cn/images/SkyWalking/2020_08_15/09.png)
 
@@ -167,14 +167,121 @@ public void createServiceReferenceGraph() {
 
 [`NodeProcessor#process(input, next)`](todo) **接口**方法，以 [`AbstractWorker#process(input, next)`](todo) **实现**方法举例子，代码如下：
 
-* 第 56 行：将方法参数 `next` 赋值给 `this.next` 属性。`this.next` 属性，用于封装的 `#onNext(OUTPUT)` 方法，提交数据给当前 Node 的 Next ( 下面的 Node 们 )继续处理数据。
-* 第 59 行：调用 [`#onWork`](todo) **抽象**方法，处理数据。当 AbstractWorker **抽象类**的实现类需要继续讲数据提交给 Next 时，需要在 `#onWork` 方法里，调用 `#onNext(OUTPUT)` 方法，例如 [`ApplicationRegisterRemoteWorker#onWork(Application)`](todo) 。
+* 第 64 行：将方法参数 `next` 赋值给 `this.next` 属性。`this.next` 属性，用于封装的 `#onNext(OUTPUT)` 方法，提交数据给当前 Node 的 Next ( 下面的 Node 们 )继续处理数据。
+* 第 67 行：调用 [`#onWork`](todo) **抽象**方法，处理数据。当 AbstractWorker **抽象类**的实现类需要继续讲数据提交给 Next 时，需要在 `#onWork` 方法里，调用 `#onNext(OUTPUT)` 方法，例如 [`ApplicationRegisterRemoteWorker#onWork(Application)`](todo) 。
 
 -------
 
 **第四步**
 
-[`Next#execute(Input)`](todo) 方法，**循环** WayToNode 数组，输入数据给 WayNode ，相当于"**重回**"【第二步】。
+[`Next#execute(Input)`](todo) 方法，**循环** WayToNode 数组，输入数据给 WayNode ，相当于"**重回**"【第一步】。
 
 # 3. apm-collector-stream
+
+在文章的开头，我们提到了 `apm-collector-stream` 模块，在 `graph` 包的基础上，提供**异步**、**跨节点**等等的流式处理的封装。主要在 WayToNode 、NodeProcessor 的实现类上做文章。
+
+## 3.1 WayToNode 实现类
+
+整体类图如下：
+
+[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/10.png)
+
+### 3.1.1 WorkerRef
+
+[`org.skywalking.apm.collector.stream.worker.base.WorkerRef`](todo) ，Worker 引用**抽象类**。
+
+在 `apm-collector-stream` 模块里，我们会发现类的命名从 Node / NodeProcessor 转向了 Worker ？**这是为什么呢**？关于这一点，我们特意~~采访~~( 请教 )了官方大佬。
+
+> Worker 更具业务含义  
+> Node / Processor 更偏技术含义
+
+目前，WorkerRef 无具体的方法。
+
+### 3.1.2 LocalAsyncWorkerRef
+
+`org.skywalking.apm.collector.stream.worker.base.LocalAsyncWorkerRef` ，异步 Worker 引用**实现类**，提供了**异步**的流式处理封装。
+
+我们回到 [「2.2 Graph 创建」](#) 的【第一步】。
+
+[`LocalAsyncWorkerRef#in(INPUT)`](todo) 方法，代码如下：
+
+* `queueEventHandler` 属性，队列事件处理器。在 [TODO【4004】](todo) 我们会详细解析它的代码实现，这里只简单介绍下。
+* 第 47 行：将输入的数据，作为"**事件**"，提交到队列事件处理器中，不再执行后续逻辑。此后，队列事件处理器，会在**后台**处理到该"**事件**"( 数据 )，回调 [`LocalAsyncWorkerRef#execute`](todo) 方法，从而提交数据到 Worker ( Node )。详细参见 [DisruptorEventHandler#onEvent(...)](todo) 方法。
+
+**那么为什么会回调呢**？LocalAsyncWorkerRef 实现了 [`org.skywalking.apm.collector.queue.base.QueueExecutor`](todo) 接口，它自身被设置到 QueueEventHandler 中， 作为"**事件**"的执行器。
+
+整体流程如下：[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/11.png)
+
+### 3.1.3 RemoteWorkerRef
+
+`org.skywalking.apm.collector.stream.worker.base.RemoteWorkerRef` ，远程 Worker 引用**实现类**，提供了**远程跨节点**的流式处理的封装。
+
+我们再回到 [「2.2 Graph 创建」](#) 的【第一步】。
+
+[`RemoteWorkerRef#in(INPUT)`](todo) 方法，代码如下：
+
+* `remoteSenderService` 属性，远程发送服务。在 [TODO【4005】](todo) 我们会详细解析它的代码实现，这里只简单介绍下。
+* `remoteWorker` 属性，远程 Worker 。在下文会详细分享它的实现。
+* 第 56 行：调用 `RemoteSenderService#send(...)` 方法，根据远程 Worker 的 [Selector 选择器](todo)，选择一个 Worker 进行发送。
+* 第 58 至 60 行：当选择的 Worker 为本地模式( [Mode](todo) )时，调用 `#out(INPUT)` 方法，提交数据到本地的 Worker ( Node )。
+
+## 3.2 NodeProcessor 实现类
+
+整体类图如下：
+
+[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/12.png)
+
+* [`org.skywalking.apm.collector.stream.worker.base.Provider`](todo) ，Worker 供应者**接口**，用于创建 Worker 和 WorkerRef 对象的**工厂**。
+
+### 3.2.1 AbstractWorker
+
+AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解析。
+
+[`org.skywalking.apm.collector.stream.worker.base.AbstractWorker`](todo) ，Worker 供应者**抽象类**，定义了 [`#workerInstance(ModuleManager)`](todo) **抽象**方法，用于创建 Worker 对象。
+
+### 3.2.2 AbstractLocalAsyncWorker
+
+`org.skywalking.apm.collector.stream.worker.base.AbstractLocalAsyncWorker` ，异步 Worker **抽象类**。
+
+目前，AbstractLocalAsyncWorker 无具体的方法。
+
+实际使用时，继承 AbstractLocalAsyncWorker 类，实现 `#work(INPUT)` 方法，例如：[ApplicationRegisterSerialWorker](todo) 。
+
+-------
+
+`org.skywalking.apm.collector.stream.worker.base.AbstractLocalAsyncWorkerProvider` ，LocalAsyncWorker 供应者**抽象类**。
+
+* [`queueCreatorService`](todo) 属性，队列创建服务，用于创建 QueueEventHandler 对象。
+* [`#queueSize()`](todo) **抽象**方法，声明队列大小。
+* [`#create(WorkerCreateListener)`]() **实现**方法，创建 AbstractLocalAsyncWorker 和 LocalAsyncWorkerRef 对象。
+    * 第 51 行：创建 AbstractLocalAsyncWorker **实现类**的对象。参见 [ApplicationRegisterSerialWorker.Factory#workerInstance(ModuleManager)](todo) 方法。
+    * 第 54 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [TODO 【4006】](todo) 详细解析。
+    * 第 57 行：创建 LocalAsyncWorkerRef 对象。
+    * 第 60 行：调用 `QueueCreatorService#create(...)` 方法，创建 QueueEventHandler 对象，**并设置 LocalAsyncWorkerRef 作为它的执行器**。
+    * 第 63 行：设置 LocalAsyncWorkerRef 的 QueueEventHandler 属性。
+
+### 3.2.3 AbstractRemoteWorker
+
+`org.skywalking.apm.collector.stream.worker.base.AbstractRemoteWorker` ，远程 Worker **抽象类**，定义了 [`#selector()`](todo) **抽象**方法，获得选择器。RemoteSenderService 根据选择器，调用 [`RemoteClientSelector#select(...)`]() 方法，选择好远程节点，而后进行发送数据。
+
+实际使用时，继承 AbstractLocalAsyncWorker 类，实现 `#work(INPUT)` 方法，例如：[ApplicationRegisterRemoteWorker](todo) 。
+
+-------
+
+`org.skywalking.apm.collector.stream.worker.base.AbstractRemoteWorker` ，AbstractRemoteWorker 供应者**抽象类**。
+
+* [`remoteSenderService`](todo) 属性，远程发送服务。
+* [`#create(WorkerCreateListener)`]() **实现**方法，创建 AbstractRemoteWorker 和 RemoteWorkerRef 对象。
+    * 第 58 行：创建 AbstractRemoteWorker **实现类**的对象。参见 [ApplicationRegisterRemoteWorker.Factory#workerInstance(ModuleManager)](todo) 方法。
+    * 第 61 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [TODO 【4006】](todo) 详细解析。
+    * 第 64 行：创建 RemoteWorkerRef 对象。
+
+# 666. 彩蛋
+
+呼呼，蛮嗨皮的。卡了一个周末，差点又堕落了。
+
+[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/13.png)
+
+胖友，分享一波朋友圈可好！
+
 
