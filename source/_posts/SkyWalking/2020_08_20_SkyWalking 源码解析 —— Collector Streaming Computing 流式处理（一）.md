@@ -1,5 +1,5 @@
 title: SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）
-date: 2020-08-15
+date: 2020-08-20
 tags:
 categories: SkyWalking
 permalink: SkyWalking/collector-streaming-first
@@ -34,22 +34,22 @@ permalink: SkyWalking/collector-streaming-first
 
 本文主要分享 **Collector Streaming 流式处理**。主要包含如下部分：
 
-* `apm-collector-core` 模块的 `graph` 包，提供**最精简**、**单节点**的流式处理的封装。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/01.png)
+* `apm-collector-core` 模块的 `graph` 包，提供**最精简**、**单节点**的流式处理的封装。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/01.png)
 
-* `apm-collector-stream` 模块，在 `graph` 包的基础上，提供**异步**、**跨节点**等等的流式处理的封装。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/02.png)
+* `apm-collector-stream` 模块，在 `graph` 包的基础上，提供**异步**、**跨节点**等等的流式处理的封装。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/02.png)
 
 > 免打脸大保健：笔者对流式处理非常不了解，本文可能是一本正经的胡说八道。考虑到笔者是靠脸吃饭（颜值我只服我红雷哥），所以读者老爷请爱护下笔者。
 
 Collector Streaming 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/03.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/03.jpeg)
 
 OK，下面来一本正经的代码走起！
 
 # 2. apm-collector-core/graph
 
-整体类图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/04.png)
+整体类图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/04.png)
 
 看起来略复杂，不要方，我们先来看一个流式大数据处理框架 Apache Storm 的说明：
 
@@ -62,13 +62,13 @@ OK，下面来一本正经的代码走起！
     * NodeProcessor ：Node 处理器，处理**数据**。
     * Next ：包含 WayToNode 数组，即 Node 提交**数据**给 Next 的 Node **数组**的**方式**。
 
-整体交互流程如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/05.png)
+整体交互流程如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/05.png)
 
 * **粉色**箭头：当数据进来时，提交给 Grpah 。按照定义的拓扑图，使用 NodeWay 提交给 Node ，NodeProcessor 进行处理。
 * **蓝色**箭头：当 NodeProcessor 处理完成后，Next **逐个**使用 NodeWay **数组**提交给下面的 Node ，继续处理。
     * ps ：**注意**，这块流程，根据不同的 NodeProcessor 的实现类会有不同，**蓝色**箭头的过程，只是**其中的一种**，下面会详细解析。
 
-整体顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/06.png)
+整体顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/06.png)
 
 * DirectWay 是 WayToNode **接口**的一种实现，正如其名，**直接**提交数据给 Node 。在 [「3. apm-collector-stream」](#) 会看到其他实现，例如提交到其他服务器节点的 Node，从而实现跨服务器节点的流式处理。
 * AbstractWorker 在 `apm-collector-stream` 模块，是 NodeProcessor **接口**的一种实现，处理提交给 Node 的数据。在 `#onWork(message)` **抽象**方法里，子类可以实现该方法，根据自身需求，是否调用 `#onNext(message)` 方法，Next 逐个使用 NodeWay 数组提交给下面的 Node ，继续处理。
@@ -82,7 +82,7 @@ OK，下面来一本正经的代码走起！
 
 ## 2.1 Graph 创建
 
-创建 Graph 的顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png)
+创建 Graph 的顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/07.png)
 
 * 第一步，调用 `GraphManager#createIfAbsent(graphId, input)` 方法( `input` 参数没用 )，创建一个 Graph 对象。
 * 第二步，调用 `Graph#addNode(WayToNode)` 方法，创建该 Graph 的**首个** Node 对象。
@@ -155,7 +155,7 @@ public void createServiceReferenceGraph() {
 
 ## 2.2 Graph 启动
 
-创建 Graph 的顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/08.png)
+创建 Graph 的顺序图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/08.png)
 
 
 | 数据流向 | FROM | TO | 逻辑 |
@@ -165,7 +165,7 @@ public void createServiceReferenceGraph() {
 | 第三步 | Node | NodeProcessor |  |
 | 第四步 | NodeProcessor | Next | 根据具体实现，若到 Next ，重复第一步 |
 
-![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/09.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/09.png)
 
 -------
 
@@ -208,7 +208,7 @@ public void createServiceReferenceGraph() {
 
 整体类图如下：
 
-![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/10.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/10.png)
 
 ### 3.1.1 WorkerRef
 
@@ -234,7 +234,7 @@ public void createServiceReferenceGraph() {
 
 **那么为什么会回调呢**？LocalAsyncWorkerRef 实现了 [`org.skywalking.apm.collector.queue.base.QueueExecutor`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueExecutor.java) 接口，它自身被设置到 QueueEventHandler 中， 作为"**事件**"的执行器。
 
-整体流程如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/11.png)
+整体流程如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/11.png)
 
 ### 3.1.3 RemoteWorkerRef
 
@@ -253,7 +253,7 @@ public void createServiceReferenceGraph() {
 
 整体类图如下：
 
-![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/12.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/12.png)
 
 * [`org.skywalking.apm.collector.stream.worker.base.Provider`](todo) ，Worker 供应者**接口**，用于创建 Worker 和 WorkerRef 对象的**工厂**。
 
@@ -304,7 +304,7 @@ AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解
 
 呼呼，蛮嗨皮的。卡了一个周末，差点又堕落了。
 
-![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/13.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/13.png)
 
 胖友，分享一波朋友圈可好！
 
