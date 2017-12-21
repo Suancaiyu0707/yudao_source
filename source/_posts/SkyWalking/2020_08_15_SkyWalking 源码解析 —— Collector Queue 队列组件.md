@@ -6,6 +6,35 @@ permalink: SkyWalking/collector-queue-module
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-queue-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+- [2. collector-queue-define](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.1 QueueModule](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.2 QueueCreatorService](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.3 MessageHolder](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.4 QueueEventHandler](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.5 DaemonThreadFactory](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+- [3. collector-queue-disruptor-provider](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [3.1 QueueModuleDisruptorProvider](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [2.2 DisruptorQueueCreatorService](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+  - [3.3 DisruptorEventHandler](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+- [4. collector-queue-datacarrier-provider](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Collector Queue Module**，队列组件。该组件被 Collector Streaming Module 流式处理使用，提供**异步**执行的特性。
@@ -15,11 +44,11 @@ permalink: SkyWalking/collector-queue-module
 Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](http://www.iocoder.cn/images/SkyWalking/2020_08_15/01.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/01.jpeg)
 
 下面我们来看看整体的项目结构，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/02.png)
 
 * `collector-queue-define` ：定义队列组件接口。
 * `collector-queue-datacarrier-provider` ：基于 [apm-datacarrier](https://github.com/YunaiV/skywalking/tree/master/apm-commons/apm-datacarrier) 的队列组件实现。*目前暂未完成*。
@@ -33,7 +62,7 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 `collector-queue-define` ：定义队列组件接口。项目结构如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/03.png)
 
 ## 2.1 QueueModule
 
@@ -72,7 +101,7 @@ LocalAsyncWorkerRef 实现 QueueEventHandler 接口，在 [《SkyWalking 源码�
 
 `collector-queue-disruptor-provider` ，基于 [Disruptor](https://github.com/LMAX-Exchange/disruptor) 的队列组件实现。
 
-项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/04.png)
+项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/04.png)
 
 **默认配置**，在 [`application-default.yml`](https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-core/src/main/resources/application-default.yml#L7) **已经**配置如下：
 
@@ -132,9 +161,9 @@ queue:
 
 * FROM [《环形缓冲器》](https://zh.wikipedia.org/wiki/%E7%92%B0%E5%BD%A2%E7%B7%A9%E8%A1%9D%E5%8D%80#Linux.E5.86.85.E6.A0.B8.E7.9A.84kfifo)
 
-> [](http://www.iocoder.cn/images/SkyWalking/2020_08_15/05.png)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/05.png)
 
-* `SingleProducerSequencer#hasAvailableCapacity(requiredCapacity)` 方法，代码如下：[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/06.png)
+* `SingleProducerSequencer#hasAvailableCapacity(requiredCapacity)` 方法，代码如下：![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/06.png)
 
 ## 3.3 DisruptorEventHandler
 
@@ -161,7 +190,7 @@ queue:
 
 不容易，回家看《蜘蛛侠》。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png)
 
 胖友，分享一波朋友圈可好。
 
