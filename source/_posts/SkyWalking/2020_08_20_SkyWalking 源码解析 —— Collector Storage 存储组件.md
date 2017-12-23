@@ -1,3 +1,44 @@
+title: SkyWalking 源码分析 —— Collector Storage 存储组件
+date: 2020-08-20
+tags:
+categories: SkyWalking
+permalink: SkyWalking/collector-storage-module
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-storage-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+- [2. apm-collector-core](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [2.1 Table](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [2.2 TableDefine](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [2.3 Data](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+- [3. collector-storage-define](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [3.1 StorageModule](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [3.2 table 包](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [3.3 StorageInstaller](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [3.4 dao 包](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+- [4. collector-storage-h2-provider](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+- [5. collector-storage-es-provider](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [5.1 StorageModuleEsProvider](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [5.2 define 包](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [5.3 dao 包](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+  - [5.4 DataTTLKeeperTimer](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Collector Storage 存储组件**。顾名思义，负责将调用链路、应用、应用实例等等信息存储到存储器，例如，ES 、H2 。
@@ -5,11 +46,11 @@
 > 友情提示：建议先阅读 [《SkyWalking 源码分析 —— Collector 初始化》](http://www.iocoder.cn/SkyWalking/collector-init/?self) ，以了解 Collector 组件体系。
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](http://www.iocoder.cn/images/SkyWalking/2020_08_20/01.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/01.jpeg)
 
 下面我们来看看整体的项目结构，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/02.png)
 
 * `apm-collector-core` 的 `data` 和 `define` **包** ：数据的抽象。 
 * `collector-storage-define` ：定义存储组件接口。
@@ -20,9 +61,9 @@
 
 # 2. apm-collector-core
 
-`apm-collector-core` 的 `data` 和 `define` **包**，如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/03.png)
+`apm-collector-core` 的 `data` 和 `define` **包**，如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/03.png)
 
-我们对类进行梳理分类，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/04.png)
+我们对类进行梳理分类，如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/04.png)
 
 * Table ：Data 和 TableDefine 之间的桥梁，每个 Table 定义了该表的**表名**，**字段名们**。
 * TableDefine ：Table 的详细定义，包括**表名**，**字段定义**( ColumnDefine )们。在下文中，[StorageInstaller](https://github.com/apache/incubator-skywalking/blob/15328202b8b7df89a609885d9110361ff29ce668/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/apache/skywalking/apm/collector/storage/StorageInstaller.java) 会基于 TableDefine 初始化表的相关信息。
@@ -45,7 +86,7 @@
 * [`columnDefines`](https://github.com/YunaiV/skywalking/blob/beebd8f8f419ca0b25dc086c71a9b1c580a083d4/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/data/TableDefine.java#L38) 属性，ColumnDefine数组。
 * [`#initialize()`](https://github.com/YunaiV/skywalking/blob/578ea4f66f11bdfe5dcda25f574a1ed57ca47d24/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/data/TableDefine.java#L48) **抽象**方法，初始化表定义。例如：[ApplicationEsTableDefine](https://github.com/YunaiV/skywalking/blob/578ea4f66f11bdfe5dcda25f574a1ed57ca47d24/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/define/ApplicationEsTableDefine.java#L38) 。
 
-不同的存储组件实现，有不同的 TableDefine 实现类，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/05.png)
+不同的存储组件实现，有不同的 TableDefine 实现类，如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/05.png)
 
 * ElasticSearchTableDefine ：基于 Elasticsearch 的表定义**抽象类**，在 `collector-storage-es-provider` 的 [`define`](https://github.com/YunaiV/skywalking/tree/beebd8f8f419ca0b25dc086c71a9b1c580a083d4/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/define) **包**下，我们可以看到**所有** ES 的 TableDefine 类。
 
@@ -62,11 +103,11 @@
 
 ### 2.2.2 Loader
 
-涉及到的类如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/06.png)
+涉及到的类如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/06.png)
 
 [`org.skywalking.apm.collector.core.data.StorageDefineLoader`](https://github.com/YunaiV/skywalking/blob/0aa5e6a49c1f29b43824ebabf6bb7d76b80e3eb7/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/data/StorageDefineLoader.java) ，调用 [`org.skywalking.apm.collector.core.define.DefinitionLoader`](https://github.com/YunaiV/skywalking/blob/0aa5e6a49c1f29b43824ebabf6bb7d76b80e3eb7/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/define/DefinitionLoader.java) ，从 [`org.skywalking.apm.collector.core.data.StorageDefinitionFile`](https://github.com/YunaiV/skywalking/blob/0aa5e6a49c1f29b43824ebabf6bb7d76b80e3eb7/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/data/StorageDefinitionFile.java) 中，加载 TableDefine 实现类数组。
 
-另外，在 `collector-storage-es-provider` 和 `collector-storage-h2-provider` 里都有 `storage.define` 文件，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/07.png)
+另外，在 `collector-storage-es-provider` 和 `collector-storage-h2-provider` 里都有 `storage.define` 文件，如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/07.png)
 
 * StorageDefinitionFile 声明了读取该文件。
 * **注意**，DefinitionLoader 在加载时，两个文件都会被读取，最终在 `StorageInstaller#defineFilter(List<TableDefine>)` 方法，进行过滤。
@@ -106,7 +147,7 @@
 
 `collector-cluster-define` ：定义存储组件接口。项目结构如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/08.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/08.png)
 
 ## 3.1 StorageModule
 
@@ -140,7 +181,7 @@
     * **继承**系统的 DAO 接口。
     * 被 `collector-storage-xxx-provider` 的 `dao` 包**实现**。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/09.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/09.png)
 
 ### 3.4.1 系统 DAO
 
@@ -209,7 +250,7 @@
 
 # 4. collector-storage-h2-provider
 
-`collector-storage-h2-provider` ，基于 H2 的存储组件实现。项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/11.png)
+`collector-storage-h2-provider` ，基于 H2 的存储组件实现。项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/12.png)
 
 **该实现是单机版，建议仅用于 SkyWalking 快速上手，生产环境不建议使用**。
 
@@ -217,7 +258,7 @@
 
 # 5. collector-storage-es-provider
 
-`collector-storage-es-provider` ，基于 ES 的存储组件实现。项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/10.png)
+`collector-storage-es-provider` ，基于 ES 的存储组件实现。项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/10.png)
 
 实际使用时，通过 `application.yml` 配置如下：
 
@@ -388,7 +429,7 @@ storage:
 
 胖友望见谅。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_08_20/11.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/11.png)
 
 胖友，分享一波朋友圈可好。
 
