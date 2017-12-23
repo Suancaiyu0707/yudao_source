@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/SkyWalking/collector-storage-module/</loc>
+    
+    <lastmod>2017-12-23T04:16:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
     
     <lastmod>2017-12-23T03:37:14.000Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
     
     <lastmod>2017-12-23T02:38:48.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/SkyWalking/collector-storage-module/</loc>
-    
-    <lastmod>2017-12-23T02:30:08.000Z</lastmod>
     
   </url>
   

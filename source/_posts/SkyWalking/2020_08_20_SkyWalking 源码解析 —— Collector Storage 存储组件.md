@@ -341,15 +341,17 @@ storage:
     * MemoryMetricEsTableDefine
     * MemoryPoolMetricEsTableDefine
 * 2 s
-    * ApplicationEsTableDefine
-    * InstanceEsTableDefine
-    * InstPerformanceEsTableDefine
+    * InstPerformanceEsTableDefine 
     * NodeComponentEsTableDefine
     * NodeMappingEsTableDefine
     * NodeReferenceEsTableDefine
     * ServiceEntryEsTableDefine
-    * ServiceNameEsTableDefine
     * ServiceReferenceEsTableDefine
+* 2 s && [WriteRequest.RefreshPolicy.IMMEDIATE](https://static.javadoc.io/org.elasticsearch/elasticsearch/5.0.0/org/elasticsearch/action/support/WriteRequest.RefreshPolicy.html#IMMEDIATE)
+    * 【WriteRequest.RefreshPolicy.IMMEDIATE】参见 [`ApplicationEsRegisterDAO#save(Application)`](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ApplicationEsRegisterDAO.java#L60) 方法
+    * ApplicationEsTableDefine
+    * InstanceEsTableDefine
+    * ServiceNameEsTableDefine
 * 5 s
     * GlobalTraceEsTableDefine
     * SegmentCostEsTableDefine
