@@ -365,13 +365,20 @@ storage:
 `org.skywalking.apm.collector.storage.es.base.define.ElasticSearchStorageInstaller` ，实现 StorageInstaller 抽象类， 基于 ES 存储安装器实现类。
 
 * [`#defineFilter(List<TableDefine>)`](https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L53) **实现**方法，过滤数组中，非 ElasticSearchTableDefine 的元素。
-* [`#createTable(Client, TableDefine)`](https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L63) **实现**方法，创建 Elasticsearch 索引。文档数据结构如下：
-    * `_id` ：数据编号，String 类型。
-    * `_type` ：`"type"` 。
-    * `_index` ：TableDefine 定义的**表名**。
+* [`#createTable(Client, TableDefine)`](https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L63) **实现**方法，创建 Elasticsearch 索引。
+    * 文档数据结构如下：
+        * `_id` ：数据编号，String 类型。
+        * `_type` ：`"type"` 。
+        * `_index` ：TableDefine 定义的**表名**。
+        * `source`  ：Data 数据。
+    * 了解 Elasticsearch 的胖友可能有和笔者一样的疑惑，网络上很多文章把 `_index` 类比成关系数据库的 DB ，`_type` 类比成关系数据库的 Table ，和 SkyWalking 目前使用的方式**不一致**？
+        * SkyWalking [彭勇升](https://github.com/peng-yongsheng) ：`_index`和 `_type` 是 ES 特有的，考虑其他数据库接入，所以没有用他这个特性。
+        * SkyWalking QQ交流群( 392443393 ) ，[小心](#) 群友 ：`_type` 本来就没做物理隔离，Lucene 层面也不存在，ES 6.x 已经废弃了。
+        * [《Elasticsearch 6.0 将移除 Type》](https://elasticsearch.cn/article/158)
 * [`#deleteTable(Client, TableDefine)`](https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L131) **实现**方法，删除 Elasticsearch 索引。
 * [`#isExists(Client, TableDefine)`](https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L141) **实现**方法，判断 Elasticsearch 索引是否存在。
 * 在方法里，笔者添加了一些 API 的说明，不熟悉的胖友，可以仔细阅读理解。
+
 
 ## 5.3 dao 包
 

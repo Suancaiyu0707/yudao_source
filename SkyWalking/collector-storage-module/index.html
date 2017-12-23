@@ -139,7 +139,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-08-19T16:00:00.000Z" itemprop="datePublished">2020-08-20</time>-->
-    <!--更新日期:<time datetime="2017-12-23T04:16:52.000Z" itemprop="dateModified">2017-12-23</time>-->
+    <!--更新日期:<time datetime="2017-12-23T08:48:00.000Z" itemprop="dateModified">2017-12-23</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -565,10 +565,20 @@
 <p><code>org.skywalking.apm.collector.storage.es.base.define.ElasticSearchStorageInstaller</code> ，实现 StorageInstaller 抽象类， 基于 ES 存储安装器实现类。</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>#defineFilter(List&lt;TableDefine&gt;)</code></a> <strong>实现</strong>方法，过滤数组中，非 ElasticSearchTableDefine 的元素。</li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L63" rel="external nofollow noopener noreferrer" target="_blank"><code>#createTable(Client, TableDefine)</code></a> <strong>实现</strong>方法，创建 Elasticsearch 索引。文档数据结构如下：<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L63" rel="external nofollow noopener noreferrer" target="_blank"><code>#createTable(Client, TableDefine)</code></a> <strong>实现</strong>方法，创建 Elasticsearch 索引。<ul>
+<li>文档数据结构如下：<ul>
 <li><code>_id</code> ：数据编号，String 类型。</li>
 <li><code>_type</code> ：<code>&quot;type&quot;</code> 。</li>
 <li><code>_index</code> ：TableDefine 定义的<strong>表名</strong>。</li>
+<li><code>source</code>  ：Data 数据。</li>
+</ul>
+</li>
+<li>了解 Elasticsearch 的胖友可能有和笔者一样的疑惑，网络上很多文章把 <code>_index</code> 类比成关系数据库的 DB ，<code>_type</code> 类比成关系数据库的 Table ，和 SkyWalking 目前使用的方式<strong>不一致</strong>？<ul>
+<li>SkyWalking <a href="https://github.com/peng-yongsheng" rel="external nofollow noopener noreferrer" target="_blank">彭勇升</a> ：<code>_index</code>和 <code>_type</code> 是 ES 特有的，考虑其他数据库接入，所以没有用他这个特性。</li>
+<li>SkyWalking QQ交流群( 392443393 ) ，<a href="#">小心</a> 群友 ：<code>_type</code> 本来就没做物理隔离，Lucene 层面也不存在，ES 6.x 已经废弃了。</li>
+<li><a href="https://elasticsearch.cn/article/158" rel="external nofollow noopener noreferrer" target="_blank">《Elasticsearch 6.0 将移除 Type》</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/222024defff2d1a7647dbeb5811cad146c49a604/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/base/define/ElasticSearchStorageInstaller.java#L131" rel="external nofollow noopener noreferrer" target="_blank"><code>#deleteTable(Client, TableDefine)</code></a> <strong>实现</strong>方法，删除 Elasticsearch 索引。</li>
