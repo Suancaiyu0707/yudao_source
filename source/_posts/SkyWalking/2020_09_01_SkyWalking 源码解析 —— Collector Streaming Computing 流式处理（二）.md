@@ -6,9 +6,36 @@ permalink: SkyWalking/collector-streaming-second
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-streaming-second/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+- [2. Data](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [2.1 Collection](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [2.2 DataCollection](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [2.3 Window](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [2.4 DataCache](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+- [3. AggregationWorker](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+- [4. PersistenceWorker](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [4.1 WorkerCreateListener](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+  - [4.2 PersistenceTimer](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
-本文接 [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self) ，主要分享 **Collector Streaming 流式处理的第二部分**。主要包含如下部分：[](http://www.iocoder.cn/images/SkyWalking/2020_09_01/01.png)
+本文接 [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self) ，主要分享 **Collector Streaming 流式处理的第二部分**。主要包含如下部分：![](http://www.iocoder.cn/images/SkyWalking/2020_09_01/01.png)
 
 * AggregationWorker ：聚合处理数据，后提交 Data 到 Next 节点们处理。
 * PersistenceWorker ：聚合处理数据，后存储 Data 。
@@ -20,7 +47,7 @@ AggregationWorker 和 PersistenceWorker ，都先**聚合**处理数据，在进
 * `org.skywalking.apm.collector.core.cache` ：接口
 * `org.skywalking.apm.collector.stream.worker.impl.data` ：实现
 
-类图如下：[](http://www.iocoder.cn/images/SkyWalking/2020_09_01/02.png)
+类图如下：![](http://www.iocoder.cn/images/SkyWalking/2020_09_01/02.png)
 
 * Collection ：数据采集，提供有读、写**两个状态**的数据容器。
 * Window ：窗口( 😈这个解释怪怪的 )，内有**两个 Collection**。
@@ -176,7 +203,7 @@ Worker 在创建时，会调用 [`WorkerCreateListener#addWorker`](https://githu
 
 呼呼，终于把流式处理给写完了，如果写的不详细或者不合适的，胖友看到麻烦告知笔者，谢谢。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_01/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_01/03.png)
 
 胖友，分享一波朋友圈可好。
 

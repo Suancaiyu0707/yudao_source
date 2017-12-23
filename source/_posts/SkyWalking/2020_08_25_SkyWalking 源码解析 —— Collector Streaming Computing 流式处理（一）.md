@@ -279,7 +279,7 @@ AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解
 * [`#queueSize()`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/AbstractLocalAsyncWorkerProvider.java#L40) **抽象**方法，声明队列大小。
 * [`#create(WorkerCreateListener)`]() **实现**方法，创建 AbstractLocalAsyncWorker 和 LocalAsyncWorkerRef 对象。
     * 第 51 行：创建 AbstractLocalAsyncWorker **实现类**的对象。参见 [ApplicationRegisterSerialWorker.Factory#workerInstance(ModuleManager)](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/ApplicationRegisterSerialWorker.java#L90) 方法。
-    * 第 54 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [TODO 【4006】](todo) 详细解析。
+    * 第 54 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「4.1 WorkerCreateListener」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self) 详细解析。
     * 第 57 行：创建 LocalAsyncWorkerRef 对象。
     * 第 60 行：调用 `QueueCreatorService#create(...)` 方法，创建 QueueEventHandler 对象，**并设置 LocalAsyncWorkerRef 作为它的执行器**。
     * 第 63 行：设置 LocalAsyncWorkerRef 的 QueueEventHandler 属性。
@@ -297,7 +297,7 @@ AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解
 * [`remoteSenderService`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/AbstractRemoteWorkerProvider.java#L40) 属性，远程发送服务。
 * [`#create(WorkerCreateListener)`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/AbstractRemoteWorkerProvider.java#L56) **实现**方法，创建 AbstractRemoteWorker 和 RemoteWorkerRef 对象。
     * 第 58 行：创建 AbstractRemoteWorker **实现类**的对象。参见 [ApplicationRegisterRemoteWorker.Factory#workerInstance(ModuleManager)](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/ApplicationRegisterRemoteWorker.java#L61) 方法。
-    * 第 61 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [TODO 【4006】](todo) 详细解析。
+    * 第 61 行：添加 AbstractLocalAsyncWorker 到 WorkerCreateListener ( Worker 创建监听器 )。WorkerCreateListener 在 [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「4.1 WorkerCreateListener」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self) 详细解析。
     * 第 64 行：创建 RemoteWorkerRef 对象。
 
 # 666. 彩蛋

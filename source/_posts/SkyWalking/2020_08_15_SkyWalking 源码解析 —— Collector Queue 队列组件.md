@@ -175,7 +175,7 @@ queue:
 * 实现 [`com.lmax.disruptor.EventHandler`](https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/EventHandler.java) 的 [`#onEvent(event, sequence, endOfBatch)`](https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L62) 接口方法，代码如下：
     * `endOfBatch` **方法参数**，标记该事件( 消息 )是否是 Disruptor **每次批处理**的最后一个事件。胖友可以参见 [《LMAX Disruptor - what determines the batch size?》](https://stackoverflow.com/questions/33716825/lmax-disruptor-what-determines-the-batch-size) 这篇文章，自己搭建一个 Demo 理解下该参数。
     * 第 66 行：调用 `MessageHolder#reset()` 方法，清空消息，因为在 Disruptor RingBuffer 里，事件( 消息 )对象是**重用**的，虽然后续发布事件( 消息 )可以进行**覆盖**，考虑到安全性进行清空。
-    * 第 69 行：设置消息为该批量的结尾( 最后一条 )。**为什么**？在 [《TODO 【4006】》]() 揭晓答案。
+    * 第 69 行：设置消息为该批量的结尾( 最后一条 )。**为什么**？在 [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「3. AggregationWorker」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self) 揭晓答案。
     * 第 72 行：调用 `QueueExecutor#execute(message)` 方法，执行处理消息。
 
 # 4. collector-queue-datacarrier-provider
