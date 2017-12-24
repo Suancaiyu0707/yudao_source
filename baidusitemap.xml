@@ -4,12 +4,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/SkyWalking/collector-cache-module/</loc>
-    <lastmod>2017-12-24T02:55:32.000Z</lastmod>
+    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
+    <lastmod>2017-12-24T03:14:49.000Z</lastmod>
     <data>
         <display>
-        <title>SkyWalking 源码分析 —— Collector Cache 存储组件</title>
-        <pubTime>2020-09-04T16:00:00.000Z</pubTime>
+        <title>SkyWalking 源码分析 —— Collector 初始化</title>
+        <pubTime>2020-07-14T16:00:00.000Z</pubTime>
         
          
            
@@ -22,12 +22,12 @@
 
     
   <url>
-    <loc>http://www.iocoder.cn/SkyWalking/collector-init/</loc>
-    <lastmod>2017-12-24T02:53:44.000Z</lastmod>
+    <loc>http://www.iocoder.cn/SkyWalking/collector-cache-module/</loc>
+    <lastmod>2017-12-24T03:14:40.000Z</lastmod>
     <data>
         <display>
-        <title>SkyWalking 源码分析 —— Collector 初始化</title>
-        <pubTime>2020-07-14T16:00:00.000Z</pubTime>
+        <title>SkyWalking 源码分析 —— Collector Cache 缓存组件</title>
+        <pubTime>2020-09-04T16:00:00.000Z</pubTime>
         
          
            

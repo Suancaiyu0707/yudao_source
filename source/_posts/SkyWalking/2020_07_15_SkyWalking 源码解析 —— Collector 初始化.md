@@ -185,7 +185,7 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
 * Naming Module ：[《SkyWalking 源码分析 —— Collector Naming Server 命名服务》](http://www.iocoder.cn/SkyWalking/collector-naming-server/?self)
 * UI Module ：
 * Queue Module ：[《SkyWalking 源码分析 —— Collector Queue 队列组件》](http://www.iocoder.cn/SkyWalking/collector-queue-module/?self)
-* Cache Module ：[《SkyWalking 源码分析 —— Collector Cache 存储组件》](http://www.iocoder.cn/SkyWalking/collector-cache-module/?self)
+* Cache Module ：[《SkyWalking 源码分析 —— Collector Cache 缓存组件》](http://www.iocoder.cn/SkyWalking/collector-cache-module/?self)
 * Cluster Module ：[《SkyWalking 源码分析 —— Collector Cluster 集群管理》](http://www.iocoder.cn/SkyWalking/collector-cluster-module/?self)
 * Component Libraries ：[《SkyWalking 源码分析 —— Collector Client Component 客户端组件》](http://www.iocoder.cn/SkyWalking/collector-client-component/?self) 、[《SkyWalking 源码分析 —— Collector Server Component 服务器组件》](http://www.iocoder.cn/SkyWalking/collector-server-component/?self)
 * Core ：

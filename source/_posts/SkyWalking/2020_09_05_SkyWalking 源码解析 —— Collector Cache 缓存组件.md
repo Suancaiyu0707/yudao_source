@@ -1,4 +1,4 @@
-title: SkyWalking 源码分析 —— Collector Cache 存储组件
+title: SkyWalking 源码分析 —— Collector Cache 缓存组件
 date: 2020-09-05
 tags:
 categories: SkyWalking
