@@ -56,8 +56,6 @@ Cluster Module 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 
 下面，我们从**接口到实现**的顺序进行分享。
 
-
-
 # 2. collector-queue-define
 
 `collector-queue-define` ：定义队列组件接口。项目结构如下 ：
