@@ -244,7 +244,7 @@ public void createServiceReferenceGraph() {
 
 [`RemoteWorkerRef#in(INPUT)`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/RemoteWorkerRef.java#L53) 方法，代码如下：
 
-* `remoteSenderService` 属性，远程发送服务。在 [TODO【4005】](todo) 我们会详细解析它的代码实现，这里只简单介绍下。
+* `remoteSenderService` 属性，远程发送服务。在 [《SkyWalking 源码分析 —— Collector Remote 远程通信服务》「3.2 GRPCRemoteSenderService」](http://www.iocoder.cn/SkyWalking/collector-remote-module?self) 我们会详细解析它的代码实现，这里只简单介绍下。
 * `remoteWorker` 属性，远程 Worker 。在下文会详细分享它的实现。
 * 第 56 行：调用 `RemoteSenderService#send(...)` 方法，根据远程 Worker 的 [Selector 选择器](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-remote/collector-remote-define/src/main/java/org/skywalking/apm/collector/remote/service/Selector.java)，选择一个 Worker 进行发送。
 * 第 58 至 60 行：当选择的 Worker 为本地模式( [Mode](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-remote/collector-remote-define/src/main/java/org/skywalking/apm/collector/remote/service/RemoteSenderService.java#L36) )时，调用 `#out(INPUT)` 方法，提交数据到本地的 Worker ( Node )。

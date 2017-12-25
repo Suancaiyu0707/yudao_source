@@ -6,20 +6,55 @@ permalink: SkyWalking/collector-remote-module
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-remote-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+- [2. collector-remote-define](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.1 RemoteModule](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.2 RemoteSenderService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.3 RemoteClientService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.4 RemoteClient](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.5 CommonRemoteDataRegisterService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.6 RemoteSerializeService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [2.7 RemoteSerializeService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+- [3. collector-remote-grpc-provider](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.1 RemoteModuleGRPCProvider](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.2 GRPCRemoteSenderService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.3 GRPCRemoteClientService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.4 GRPCRemoteClient](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.5 RemoteCommonServiceHandler](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.6 GRPCRemoteSerializeService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+  - [3.7 GRPCRemoteDeserializeService](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+- [4. collector-remote-grpc-provider](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **SkyWalking Collector Remote 远程通信服务**。该服务用于 Collector 集群内部通信。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/04.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/04.png)
 
 目前集群内部通信的目的，跨节点的流式处理。Remote Module **应用**在 SkyWalking 架构图如下位置( **红框** ) ：
 
 > FROM https://github.com/apache/incubating-skywalking  
-> [](http://www.iocoder.cn/images/SkyWalking/2020_09_10/01.jpeg)
+> ![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/01.jpeg)
 
 下面我们来看看整体的项目结构，如下图所示 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/02.png)
 
 * `collector-remote-define` ：定义远程通信接口。
 * `collector-remote-kafka-provider` ：基于 Kafka 的远程通信实现。*目前暂未完成*。
@@ -31,11 +66,11 @@ permalink: SkyWalking/collector-remote-module
 
 `collector-remote-define` ：定义远程通信接口。项目结构如下 ：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/03.png)
 
 整体流程如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/05.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/05.png)
 
 我们按照整个流程的处理顺序，逐个解析涉及到的类与接口。
 
@@ -119,7 +154,7 @@ CommonRemoteDataRegisterService 实现了 RemoteDataInstanceCreatorGetter 接口
 
 `collector-remote-grpc-provider` ，基于 [Google gRPC](https://grpc.io/) 的远程通信实现。
 
-项目结构如下 ：[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/06.png)
+项目结构如下 ：![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/06.png)
 
 **默认配置**，在 [`application-default.yml`](https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-core/src/main/resources/application-default.yml#L14) **已经**配置如下：
 
@@ -175,7 +210,7 @@ remote:
 
 ## 3.2.2 负载均衡
 
-RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-define/src/main/java/org/skywalking/apm/collector/remote/service/Selector.java#L26) ) ，提供不同的客户端选择( [`org.skywalking.apm.collector.remote.grpc.service.selector.RemoteClientSelector`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/selector/RemoteClientSelector.java) )实现 ：[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/07.png)
+RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-define/src/main/java/org/skywalking/apm/collector/remote/service/Selector.java#L26) ) ，提供不同的客户端选择( [`org.skywalking.apm.collector.remote.grpc.service.selector.RemoteClientSelector`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/selector/RemoteClientSelector.java) )实现 ：![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/07.png)
 
 * [`hashCodeSelector`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteSenderService.java#L53) 属性，[HashCodeSelector](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/selector/HashCodeSelector.java) ，基于数据的哈希码。
 * [`foreverFirstSelector`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteSenderService.java#L54) 属性，[ForeverFirstSelector](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/selector/ForeverFirstSelector.java) ，基于客户端数组的顺序，选择第一个。
@@ -199,7 +234,7 @@ RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.co
 `org.skywalking.apm.collector.remote.grpc.service.GRPCRemoteClient` ，实现 RemoteClient **接口**，基于 gRPC 的远程客户端实现类。
 
 * [`client`](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L48) 属性，GRPCClient 对象。相比来说，GRPCRemoteClient 偏业务的封装，内部调用 GRPCClient 对象。
-* [`carrier`](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L52) 属性，DataCarrier 对象，本地消息队列。GRPCRemoteClient 在被调用发送数据时，先提交到本地队列，异步消费进行发送到远程 Collector 节点。DataCarrier 在 [TODO 【4006】]() 详细解析。
+* [`carrier`](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L52) 属性，DataCarrier 对象，本地消息队列。GRPCRemoteClient 在被调用发送数据时，先提交到本地队列，异步消费进行发送到远程 Collector 节点。DataCarrier 在 [《SkyWalking 源码分析 —— DataCarrier 异步处理库》](http://www.iocoder.cn/SkyWalking/data-carrier/?self) 详细解析。
     * 第 63 行：调用 `DataCarrier#consume(IConsumer, num)` 方法，设置消费者为 RemoteMessageConsumer 对象。
 
 -------
@@ -207,7 +242,7 @@ RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.co
 [`#push(graphId, nodeId, data)`](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L70) **实现**方法，**异步**发送消息到远程 Collector 。
 
 * 第 73 行：调用 `RemoteDataIDGetter#getRemoteDataId(Class<? extends Data>)` 方法，获得**数据协议编号**。
-* 第 76 至 80 行：创建传输数据( RemoteMessage.Builder ) 对象。RemoteMessage 通过 [Protobuf](https://github.com/google/protobuf) 创建定义，如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/08.png)
+* 第 76 至 80 行：创建传输数据( RemoteMessage.Builder ) 对象。RemoteMessage 通过 [Protobuf](https://github.com/google/protobuf) 创建定义，如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/08.png)
 * 第 83 行：调用 `DataCarrier#produce(data)` 方法，发送数据到本地队列。 
 
 [RemoteMessageConsumer](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L93) ，**批量**消费本地队列的数据，逐条发送数据到远程 Collector 节点。
@@ -221,7 +256,7 @@ RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.co
 
 `org.skywalking.apm.collector.remote.grpc.handler.RemoteCommonServiceHandler` ，实现 `org.skywalking.apm.collector.server.grpc.GRPCHandler` 接口，继承 RemoteCommonServiceGrpc.RemoteCommonServiceImplBase **抽象类**，远程通信通用逻辑处理器。
 
-其中，RemoteCommonServiceGrpc.RemoteCommonServiceImplBase 在 `RemoteCommonService.proto` 文件的定义如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/09.png)
+其中，RemoteCommonServiceGrpc.RemoteCommonServiceImplBase 在 `RemoteCommonService.proto` 文件的定义如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/09.png)
 
 [`#call(StreamObserver<Empty>)`](https://github.com/YunaiV/skywalking/blob/ece7d2e156d4434edcc6ef08a5ed79e2a7b39fa1/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/handler/RemoteCommonServiceHandler.java#L55) **实现**方法，代码如下：
 
@@ -244,13 +279,15 @@ RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.co
 
 *目前暂未完成*。
 
+TODO 【4005】collector-remote-grpc-provider
+
 # 666. 彩蛋
 
 写的有丢丢烦躁，不清晰或者错误的地方，胖友望见谅。
 
 欢迎微信我一起交流。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_09_10/10.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/10.png)
 
 胖友，分享一波朋友圈可好。
 
