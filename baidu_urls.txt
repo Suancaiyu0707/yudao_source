@@ -1,3 +1,6 @@
+http://www.iocoder.cn/SkyWalking/agent-dictionary/
+http://www.iocoder.cn/SkyWalking/register/
+http://www.iocoder.cn/SkyWalking/agent-remote-manager/
 http://www.iocoder.cn/SkyWalking/data-carrier/
 http://www.iocoder.cn/SkyWalking/collector-remote-module/
 http://www.iocoder.cn/SkyWalking/collector-cache-module/
@@ -79,8 +82,8 @@ http://www.iocoder.cn/Eureka/eureka-client-init-first/
 http://www.iocoder.cn/Eureka/build-debugging-environment/
 http://www.iocoder.cn/Eureka/project-structure/
 http://www.iocoder.cn/TCC-Transaction/http-sample/
-http://www.iocoder.cn/TCC-Transaction/dubbo-support/
 http://www.iocoder.cn/TCC-Transaction/console/
+http://www.iocoder.cn/TCC-Transaction/dubbo-support/
 http://www.iocoder.cn/TCC-Transaction/transaction-recovery/
 http://www.iocoder.cn/TCC-Transaction/transaction-repository/
 http://www.iocoder.cn/TCC-Transaction/tcc-core/
@@ -95,6 +98,3 @@ http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Elastic-Job/cloud-job-config/
 http://www.iocoder.cn/Elastic-Job/job-console/
 http://www.iocoder.cn/Spring-MVC/good-collection/
-http://www.iocoder.cn/Architecture/how-to-read-source-code/
-http://www.iocoder.cn/Elastic-Job/job-monitor/
-http://www.iocoder.cn/Spring/good-collection/

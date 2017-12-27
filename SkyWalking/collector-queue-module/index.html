@@ -1,7 +1,621 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E"><meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0"><meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214"><meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1"><meta name="sogou_site_verification" content="MpPsku240L"><title>SkyWalking 源码分析 —— Collector Queue 队列组件 | 芋道源码 —— 纯源码解析BLOG</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1"><meta name="author" content="芋道源码"><meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-queue-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>SkyWalking 源码分析 —— Collector Queue 队列组件 | 芋道源码 —— 纯源码解析BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="芋道源码">
+    
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-queue-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 1. 概述
 2. collector-queue-define
-
 2.1 QueueModule
-2.2 QueueCreat"><meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表"><link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml"><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/css/style.css"><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="//hm.baidu.com/hm.js?9e70e3362807c1bd185a79655b307027";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script>!function(){var t="http:"==document.location.protocol?"http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";document.write('<script src="'+t+'" id="sozz"><\/script>')}()</script><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head></html><body><header><div><div id="textlogo"><h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1><a class="blog-motto">愿半生编码，如一生老友！</a></div><div class="navbar"><a class="navbutton navmobile" href="#" title="菜单"></a></div><nav class="animated"><ul><ul><li><a href="/">文章</a></li><li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li><li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li><li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li><li><a href="/link_url">友链</a></li></ul></ul></nav></div></header><div id="container"><div id="main" class="post" itemscope="" itemprop="blogPost"><article itemprop="articleBody"><header class="article-info clearfix"><h1 itemprop="name"><a href="/SkyWalking/collector-queue-module/" title="SkyWalking 源码分析 —— Collector Queue 队列组件" itemprop="url">SkyWalking 源码分析 —— Collector Queue 队列组件</a></h1><p class="article-author"></p><p class="article-time">总阅读量:<span id="busuanzi_value_page_pv"></span>次</p></header><div class="article-content"><p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-queue-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p><ul><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">1. 概述</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2. collector-queue-define</a><ul><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.1 QueueModule</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.2 QueueCreatorService</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.3 MessageHolder</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.4 QueueEventHandler</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.5 DaemonThreadFactory</a></li></ul></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3. collector-queue-disruptor-provider</a><ul><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3.1 QueueModuleDisruptorProvider</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.2 DisruptorQueueCreatorService</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3.3 DisruptorEventHandler</a></li></ul></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">4. collector-queue-datacarrier-provider</a></li><li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">666. 彩蛋</a></li></ul><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Collector Queue Module</strong>，队列组件。该组件被 Collector Streaming Module 流式处理使用，提供<strong>异步</strong>执行的特性。</p><blockquote><p>友情提示：建议先阅读 <a href="http://www.iocoder.cn/SkyWalking/collector-init/?self">《SkyWalking 源码分析 —— Collector 初始化》</a> ，以了解 Collector 组件体系。</p></blockquote><p>Cluster Module 在 SkyWalking 架构图处于如下位置( <strong>红框</strong> ) ：</p><blockquote><p>FROM https://github.com/apache/incubating-skywalking<br><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/01.jpeg" alt=""></p></blockquote><p>下面我们来看看整体的项目结构，如下图所示 ：</p><p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/02.png" alt=""></p><ul><li><code>collector-queue-define</code> ：定义队列组件接口。</li><li><code>collector-queue-datacarrier-provider</code> ：基于 <a href="https://github.com/YunaiV/skywalking/tree/master/apm-commons/apm-datacarrier" rel="external nofollow noopener noreferrer" target="_blank">apm-datacarrier</a> 的队列组件实现。<em>目前暂未完成</em>。</li><li><code>collector-queue-zookeeper-provider</code> ：基于 <a href="https://github.com/LMAX-Exchange/disruptor" rel="external nofollow noopener noreferrer" target="_blank">Disruptor</a> 的队列组件实现。</li></ul><p>下面，我们从<strong>接口到实现</strong>的顺序进行分享。</p><h1>2. collector-queue-define</h1><p><code>collector-queue-define</code> ：定义队列组件接口。项目结构如下 ：</p><p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/03.png" alt=""></p><h2>2.1 QueueModule</h2><p><code>org.skywalking.apm.collector.queue.QueueModule</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java" rel="external nofollow noopener noreferrer" target="_blank">Module</a> 抽象类，队列 Module 。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/QueueModule.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回模块名为 <code>&quot;queue&quot;</code> 。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/QueueModule.java#L37" rel="external nofollow noopener noreferrer" target="_blank"><code>#services()</code></a> <strong>实现</strong>方法，返回 Service 类名：QueueCreatorService 。</p><h2>2.2 QueueCreatorService</h2><p><code>org.skywalking.apm.collector.queue.service.QueueCreatorService</code> ，继承 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Service.java" rel="external nofollow noopener noreferrer" target="_blank">Service</a> 接口，队列创建服务<strong>接口</strong>。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/service/QueueCreatorService.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>接口</strong>方法，创建队列处理器。</p><ul><li>一般情况下，实现该接口方法，调用 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueCreator.java#L35" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueCreator#create(queueSize, executor)</code></a> 方法，创建队列处理器。</li></ul><h2>2.3 MessageHolder</h2><p><code>org.skywalking.apm.collector.queue.base.MessageHolder</code> ，消息持有者。</p><ul><li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/MessageHolder.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>message</code></a> 属性，持有的消息。</li><li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/MessageHolder.java#L46" rel="external nofollow noopener noreferrer" target="_blank"><code>#reset()</code></a> 方法，<strong>清空</strong>消息。为什么会有这个方法，下文胖友会看到。</li></ul><h2>2.4 QueueEventHandler</h2><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueEventHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueEventHandler</code></a>，队列处理器<strong>接口</strong>。它定义了 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueEventHandler.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>#tell(message)</code></a> <strong>接口</strong>方法，输入消息给自己。最终，QueueEventHandler 会&quot;<strong>提交</strong>&quot;消息给 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueExecutor.java#L28" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueExecutor</code></a>，执行处理该消息。</p><p>LocalAsyncWorkerRef 实现 QueueEventHandler 接口，在 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「3.1.2 LocalAsyncWorkerRef」</a> 有详细解析。</p><h2>2.5 DaemonThreadFactory</h2><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/DaemonThreadFactory.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.DaemonThreadFactory</code></a>，守护进程线程<strong>工厂</strong>，被用于创建消息处理器的线程。</p><h1>3. collector-queue-disruptor-provider</h1><p><code>collector-queue-disruptor-provider</code> ，基于 <a href="https://github.com/LMAX-Exchange/disruptor" rel="external nofollow noopener noreferrer" target="_blank">Disruptor</a> 的队列组件实现。</p><p>项目结构如下 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/04.png" alt=""></p><p><strong>默认配置</strong>，在 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-core/src/main/resources/application-default.yml#L7" rel="external nofollow noopener noreferrer" target="_blank"><code>application-default.yml</code></a> <strong>已经</strong>配置如下：</p><p></p><figure class="highlight"><table><tr><td class="code"><pre><div class="line">queue:</div><div class="line">  disruptor:</div></pre></td></tr></table></figure><p></p><h2>3.1 QueueModuleDisruptorProvider</h2><p><code>org.skywalking.apm.collector.queue.disruptor.CQueueModuleDisruptorProvider</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java" rel="external nofollow noopener noreferrer" target="_blank">ModuleProvider</a> <strong>抽象类</strong>，基于 Disruptor 的队列服务提供者。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L35" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回组件服务提供者名为 <code>&quot;disruptor&quot;</code> 。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>module()</code></a> <strong>实现</strong>方法，返回组件类为 QueueModule 。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L55" rel="external nofollow noopener noreferrer" target="_blank"><code>#requiredModules()</code></a> <strong>实现</strong>方法，返回依赖组件为空。</p><hr><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>#prepare(Properties)</code></a> <strong>实现</strong>方法，执行准备阶段逻辑。</p><ul><li>第 44 行 ：创建 DisruptorQueueCreatorService 对象，并调用 <code>#registerServiceImplementation()</code> <strong>父类</strong>方法，注册到 <code>services</code> 。</li></ul><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><code>#start()</code></a> <strong>实现</strong>方法，方法为空。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L51" rel="external nofollow noopener noreferrer" target="_blank"><code>#notifyAfterCompleted()</code></a> <strong>实现</strong>方法，方法为空。</p><h2>2.2 DisruptorQueueCreatorService</h2><p><code>org.skywalking.apm.collector.queue.disruptor.service.DisruptorQueueCreatorService</code> ，实现 QueueCreatorService <strong>接口</strong>，基于 Disruptor 的队列创建服务<strong>实现类</strong>。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/service/DisruptorQueueCreatorService.java#L42" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>实现</strong>方法，调用 <code>DisruptorQueueCreator#register(queueSize, executor)</code> 方法，创建队列处理器。</p><h3>3.2.1 DisruptorQueueCreator</h3><blockquote><p>友情提示：如果胖友对 Disruptor 暂时不了解，建议先使用 Disruptor 写个小 Demo 。</p><p>如下是笔者阅读的文章：</p><ul><li><a href="http://colobu.com/2014/08/01/3-steps-to-create-a-disruptor-application/" rel="external nofollow noopener noreferrer" target="_blank">《三步创建Disruptor应用》</a></li><li><a href="http://ifeve.com/disruptor-getting-started/" rel="external nofollow noopener noreferrer" target="_blank">《Disruptor入门》</a></li><li><a href="http://ifeve.com/dissecting-disruptor-whats-so-special/" rel="external nofollow noopener noreferrer" target="_blank">《剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处》</a></li></ul></blockquote><p><code>org.skywalking.apm.collector.queue.disruptor.base.DisruptorQueueCreator</code> ，实现 QueueCreator <strong>接口</strong>，基于 Disruptor 的队列创建器<strong>实现类</strong>。</p><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorQueueCreator.java#L41" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>实现</strong>方法，代码如下：</p><ul><li>第 42 至 45 行：<strong>校验</strong>队列大小为 2 的指数，否则创建 Disruptor 对象会报 <code>&quot;bufferSize must be a power of 2&quot;</code> 的异常，参见 <a href="https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/AbstractSequencer.java#L50" rel="external nofollow noopener noreferrer" target="_blank">AbstractSequencer</a> 的代码。</li><li>第 49 行：<strong>创建</strong> Disruptor 对象。<ul><li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/MessageHolderFactory.java#L29" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.disruptor.base.MessageHolderFactory</code></a> ，MessageHolder <strong>工厂</strong>。</li></ul></li><li>第 51 至 64 行：设置 Disruptor 对象的<strong>默认异常处理器</strong>。</li><li>第 67 至 70 行：创建 DisruptorEventHandler 对象，并设置为 Disruptor 对象的<strong>事件处理器</strong>。</li><li>第 74 行：<strong>启动</strong> Disruptor 对象。</li></ul><p><strong>为什么 Disruptor 要求队列大小为 2 的指数呢</strong>？如下是相关资料，感兴趣的同学可以看看( 可跳过 )：</p><ul><li>FROM <a href="https://zh.wikipedia.org/wiki/%E7%92%B0%E5%BD%A2%E7%B7%A9%E8%A1%9D%E5%8D%80#Linux.E5.86.85.E6.A0.B8.E7.9A.84kfifo" rel="external nofollow noopener noreferrer" target="_blank">《环形缓冲器》</a></li></ul><blockquote><p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/05.png" alt=""></p></blockquote><ul><li><code>SingleProducerSequencer#hasAvailableCapacity(requiredCapacity)</code> 方法，代码如下：<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/06.png" alt=""></li></ul><h2>3.3 DisruptorEventHandler</h2><p><code>org.skywalking.apm.collector.queue.disruptor.base.DisruptorEventHandler</code> ，基于 Disruptor 的队列处理器<strong>实现类</strong>。</p><ul><li><a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>ringBuffer</code></a> 属性，Disruptor RingBuffer 对象。</li><li><a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/c%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0ollector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><code>executor</code></a> 属性，执行器。</li><li>实现 <code>org.skywalking.apm.collector.queue.base.QueueEventHandler</code> <strong>接口</strong> 的 <a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L80" rel="external nofollow noopener noreferrer" target="_blank"><code>#tell(message)</code></a> 接口方法，标准的 Disruptor 发布事件的代码。</li><li>实现 <a href="https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/EventHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>com.lmax.disruptor.EventHandler</code></a> 的 <a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L62" rel="external nofollow noopener noreferrer" target="_blank"><code>#onEvent(event, sequence, endOfBatch)</code></a> 接口方法，代码如下：<ul><li><code>endOfBatch</code> <strong>方法参数</strong>，标记该事件( 消息 )是否是 Disruptor <strong>每次批处理</strong>的最后一个事件。胖友可以参见 <a href="https://stackoverflow.com/questions/33716825/lmax-disruptor-what-determines-the-batch-size" rel="external nofollow noopener noreferrer" target="_blank">《LMAX Disruptor - what determines the batch size?》</a> 这篇文章，自己搭建一个 Demo 理解下该参数。</li><li>第 66 行：调用 <code>MessageHolder#reset()</code> 方法，清空消息，因为在 Disruptor RingBuffer 里，事件( 消息 )对象是<strong>重用</strong>的，虽然后续发布事件( 消息 )可以进行<strong>覆盖</strong>，考虑到安全性进行清空。</li><li>第 69 行：设置消息为该批量的结尾( 最后一条 )。<strong>为什么</strong>？在 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「3. AggregationWorker」</a> 揭晓答案。</li><li>第 72 行：调用 <code>QueueExecutor#execute(message)</code> 方法，执行处理消息。</li></ul></li></ul><h1>4. collector-queue-datacarrier-provider</h1><p><code>collector-queue-datacarrier-provider</code> ：基于 <a href="https://github.com/YunaiV/skywalking/tree/master/apm-commons/apm-datacarrier" rel="external nofollow noopener noreferrer" target="_blank">apm-datacarrier</a> 的队列组件实现。</p><p><em>目前暂未完成</em>。</p><h1>666. 彩蛋</h1><p>在地铁里，夹缝中写代码( 😈 当然有座位 )。</p><p>不容易，回家看《蜘蛛侠》。</p><p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png" alt=""></p><p>胖友，分享一波朋友圈可好。</p></div><footer class="article-footer clearfix"><div class="article-categories"><span></span> <a class="article-category-link" href="/categories/SkyWalking/">SkyWalking</a></div><div class="article-share" id="share"><div data-url="http://www.iocoder.cn/SkyWalking/collector-queue-module/" data-title="SkyWalking 源码分析 —— Collector Queue 队列组件 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix"></div></div></footer></article><nav class="article-nav clearfix"><div class="prev"><a href="/SkyWalking/collector-storage-module/" title="SkyWalking 源码分析 —— Collector Storage 存储组件"><strong>PREVIOUS:</strong><br><span>SkyWalking 源码分析 —— Collector Storage 存储组件</span></a></div><div class="next"><a href="/SkyWalking/collector-naming-server/" title="SkyWalking 源码分析 —— Collector Naming Server 命名服务"><strong>NEXT:</strong><br><span>SkyWalking 源码分析 —— Collector Naming Server 命名服务</span></a></div></nav></div><div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div><div id="toc" class="toc-aside"><strong class="toc-title">文章目录</strong><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. collector-queue-define</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 QueueModule</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 QueueCreatorService</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 MessageHolder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 QueueEventHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 DaemonThreadFactory</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. collector-queue-disruptor-provider</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 QueueModuleDisruptorProvider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 DisruptorQueueCreatorService</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 DisruptorQueueCreator</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 DisruptorEventHandler</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. collector-queue-datacarrier-provider</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol></div><div id="asidepart"><aside class="clearfix"><div id="authorInfo"><div><img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"></div><div class="social-list"></div></div><div class="categorieslist"><p class="asidetitle">微信公众号福利：芋道源码</p><ul><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">0. 阅读源码葵花宝典</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">2. 您对于源码的疑问每条留言都将得到认真回复</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">3. 新的源码解析文章实时收到通知，每周六十点更新</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群</a></li></ul></div><div class="categorieslist"><p class="asidetitle">分类</p><ul><li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li><li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li><li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li><li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li><li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li><li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li><li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li><li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li><li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li><li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li><li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li><li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li><li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li><li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>17</sup></a></li><li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li><li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li><li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li><li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li><li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li><li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li><li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>3</sup></a></li><li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li></ul></div></aside></div></div><footer><div id="footer"><img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display:none"><p class="copyright">© 2017 <a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a> && <span style="display:inline" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span> && <span style="display:inline" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span></p></div><div class="copyright">沪ICP备17037075号-1</div></footer><script src="/js/jquery-2.1.0.min.js"></script><script type="text/javascript">$(document).ready(function(){function e(){"number"==typeof window.innerWidth?n=window.innerWidth:document.documentElement&&document.documentElement.clientWidth&&(n=document.documentElement.clientWidth)}$(".navbar").click(function(){$("header nav").toggleClass("shownav")});var n=0,s=$("#main"),a=$("#asidepart"),o=$(".closeaside"),d=$(".openaside");$(window).resize(function(){e(),n>=1024?$("header nav").removeClass("shownav"):(s.removeClass("moveMain"),a.css("display","block").removeClass("fadeOut"),d.css("display","none"),$("#toc.toc-aside").css("display","none"))}),o.click(function(){a.addClass("fadeOut").css("display","none"),d.css("display","block").addClass("fadeIn"),s.addClass("moveMain")}),d.click(function(){d.css("display","none").removeClass("beforeFadeIn"),a.css("display","block").removeClass("fadeOut").addClass("fadeIn"),s.removeClass("moveMain")}),$(window).scroll(function(){d.css("top",Math.max(80,260-$(this).scrollTop()))})})</script><script type="text/javascript">$(document).ready(function(){var a=$(".article-content>iframe"),t=$(".article-content>embed"),n=$("#toc");$("article h2");ah=$("article h2"),ta=$("#toc.toc-aside"),o=$(".openaside"),c=$(".closeaside"),a.length>0&&a.wrap('<div class="video-container" />'),t.length>0&&t.wrap('<div class="video-container" />'),0==ah.length?n.css("display","none"):(c.click(function(){ta.css("display","block").addClass("fadeIn")}),o.click(function(){ta.css("display","none")}),$(window).scroll(function(){ta.css("top",Math.max(140,320-$(this).scrollTop()))}))})</script><script type="text/javascript">$(document).ready(function(){var t=$(".share"),a=t.attr("data-url"),e=encodeURIComponent(a),r=['<a href="#" class="overlay" id="qrcode"></a>','<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url='+e+'"/></div>','<a href="#textlogo" class="article-back-to-top" title="Top"></a>','<a href="https://www.facebook.com/sharer.php?u='+e+'" class="article-share-facebook" target="_blank" title="Facebook"></a>','<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>','<a href="https://twitter.com/intent/tweet?url='+e+'" class="article-share-twitter" target="_blank" title="Twitter"></a>','<a href="http://service.weibo.com/share/share.php?title='+t.attr("data-title")+"&url="+e+"&ralateUid="+t.attr("data-tsina")+'&searchPic=true&style=number" class="article-share-weibo" target="_blank" title="Weibo"></a>','<span title="Share to"></span>'].join("");t.append(r),$(".article-share-qrcode").click(function(){var t=$("#qrcode-pic").attr("data-src");$("#qrcode-pic").attr("src",t),$("#qrcode-pic").load(function(){$(".qrcode strong").text(" ")})})})</script><link rel="stylesheet" href="/alert/css/alert.css"><script src="/alert/js/alert.js"></script><script src="/js/jquery.cookie.js"></script><script src="/js/util.js"></script><script type="text/javascript">!function(e,a,t,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=a.createElement(t),s=a.getElementsByTagName(t)[0],o.async=1,o.src="//www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-107572620-1","auto"),ga("send","pageview")</script></body>
+2.2 QueueCreato">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/SkyWalking/collector-queue-module/" title="SkyWalking 源码分析 —— Collector Queue 队列组件" itemprop="url">SkyWalking 源码分析 —— Collector Queue 队列组件</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="芋道源码">芋道源码</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2020-08-14T16:00:00.000Z" itemprop="datePublished">2020-08-15</time>-->
+    <!--更新日期:<time datetime="2017-12-24T01:26:00.000Z" itemprop="dateModified">2017-12-24</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">http://www.iocoder.cn/SkyWalking/collector-queue-module/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">1. 概述</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2. collector-queue-define</a><ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.1 QueueModule</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.2 QueueCreatorService</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.3 MessageHolder</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.4 QueueEventHandler</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.5 DaemonThreadFactory</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3. collector-queue-disruptor-provider</a><ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3.1 QueueModuleDisruptorProvider</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">2.2 DisruptorQueueCreatorService</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">3.3 DisruptorEventHandler</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">4. collector-queue-datacarrier-provider</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-queue-module/">666. 彩蛋</a></li>
+</ul>
+<hr>
+<p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
+<blockquote>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<ol>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li><strong>认真的</strong>源码交流微信群。</li>
+</ol>
+</blockquote>
+<hr>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Collector Queue Module</strong>，队列组件。该组件被 Collector Streaming Module 流式处理使用，提供<strong>异步</strong>执行的特性。</p>
+<blockquote>
+<p>友情提示：建议先阅读 <a href="http://www.iocoder.cn/SkyWalking/collector-init/?self">《SkyWalking 源码分析 —— Collector 初始化》</a> ，以了解 Collector 组件体系。</p>
+</blockquote>
+<p>Cluster Module 在 SkyWalking 架构图处于如下位置( <strong>红框</strong> ) ：</p>
+<blockquote>
+<p>FROM <a href="https://github.com/apache/incubating-skywalking" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/apache/incubating-skywalking</a><br><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/01.jpeg" alt=""></p>
+</blockquote>
+<p>下面我们来看看整体的项目结构，如下图所示 ：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/02.png" alt=""></p>
+<ul>
+<li><code>collector-queue-define</code> ：定义队列组件接口。</li>
+<li><code>collector-queue-datacarrier-provider</code> ：基于 <a href="https://github.com/YunaiV/skywalking/tree/master/apm-commons/apm-datacarrier" rel="external nofollow noopener noreferrer" target="_blank">apm-datacarrier</a> 的队列组件实现。<em>目前暂未完成</em>。</li>
+<li><code>collector-queue-zookeeper-provider</code> ：基于 <a href="https://github.com/LMAX-Exchange/disruptor" rel="external nofollow noopener noreferrer" target="_blank">Disruptor</a> 的队列组件实现。</li>
+</ul>
+<p>下面，我们从<strong>接口到实现</strong>的顺序进行分享。</p>
+<h1 id="2-collector-queue-define"><a href="#2-collector-queue-define" class="headerlink" title="2. collector-queue-define"></a>2. collector-queue-define</h1><p><code>collector-queue-define</code> ：定义队列组件接口。项目结构如下 ：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/03.png" alt=""></p>
+<h2 id="2-1-QueueModule"><a href="#2-1-QueueModule" class="headerlink" title="2.1 QueueModule"></a>2.1 QueueModule</h2><p><code>org.skywalking.apm.collector.queue.QueueModule</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java" rel="external nofollow noopener noreferrer" target="_blank">Module</a> 抽象类，队列 Module 。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/QueueModule.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回模块名为 <code>&quot;queue&quot;</code> 。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/QueueModule.java#L37" rel="external nofollow noopener noreferrer" target="_blank"><code>#services()</code></a> <strong>实现</strong>方法，返回 Service 类名：QueueCreatorService 。</p>
+<h2 id="2-2-QueueCreatorService"><a href="#2-2-QueueCreatorService" class="headerlink" title="2.2 QueueCreatorService"></a>2.2 QueueCreatorService</h2><p><code>org.skywalking.apm.collector.queue.service.QueueCreatorService</code> ，继承 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Service.java" rel="external nofollow noopener noreferrer" target="_blank">Service</a> 接口，队列创建服务<strong>接口</strong>。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/service/QueueCreatorService.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>接口</strong>方法，创建队列处理器。</p>
+<ul>
+<li>一般情况下，实现该接口方法，调用 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueCreator.java#L35" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueCreator#create(queueSize, executor)</code></a> 方法，创建队列处理器。</li>
+</ul>
+<h2 id="2-3-MessageHolder"><a href="#2-3-MessageHolder" class="headerlink" title="2.3 MessageHolder"></a>2.3 MessageHolder</h2><p><code>org.skywalking.apm.collector.queue.base.MessageHolder</code> ，消息持有者。</p>
+<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/MessageHolder.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>message</code></a> 属性，持有的消息。</li>
+<li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/MessageHolder.java#L46" rel="external nofollow noopener noreferrer" target="_blank"><code>#reset()</code></a> 方法，<strong>清空</strong>消息。为什么会有这个方法，下文胖友会看到。</li>
+</ul>
+<h2 id="2-4-QueueEventHandler"><a href="#2-4-QueueEventHandler" class="headerlink" title="2.4 QueueEventHandler"></a>2.4 QueueEventHandler</h2><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueEventHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueEventHandler</code></a>，队列处理器<strong>接口</strong>。它定义了 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueEventHandler.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>#tell(message)</code></a> <strong>接口</strong>方法，输入消息给自己。最终，QueueEventHandler 会”<strong>提交</strong>“消息给 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/QueueExecutor.java#L28" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.QueueExecutor</code></a>，执行处理该消息。</p>
+<p>LocalAsyncWorkerRef 实现 QueueEventHandler 接口，在 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「3.1.2 LocalAsyncWorkerRef」</a> 有详细解析。</p>
+<h2 id="2-5-DaemonThreadFactory"><a href="#2-5-DaemonThreadFactory" class="headerlink" title="2.5 DaemonThreadFactory"></a>2.5 DaemonThreadFactory</h2><p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-define/src/main/java/org/skywalking/apm/collector/queue/base/DaemonThreadFactory.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.base.DaemonThreadFactory</code></a>，守护进程线程<strong>工厂</strong>，被用于创建消息处理器的线程。</p>
+<h1 id="3-collector-queue-disruptor-provider"><a href="#3-collector-queue-disruptor-provider" class="headerlink" title="3. collector-queue-disruptor-provider"></a>3. collector-queue-disruptor-provider</h1><p><code>collector-queue-disruptor-provider</code> ，基于 <a href="https://github.com/LMAX-Exchange/disruptor" rel="external nofollow noopener noreferrer" target="_blank">Disruptor</a> 的队列组件实现。</p>
+<p>项目结构如下 ：<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/04.png" alt=""></p>
+<p><strong>默认配置</strong>，在 <a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-core/src/main/resources/application-default.yml#L7" rel="external nofollow noopener noreferrer" target="_blank"><code>application-default.yml</code></a> <strong>已经</strong>配置如下：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">queue:</div><div class="line">  disruptor:</div></pre></td></tr></table></figure>
+<h2 id="3-1-QueueModuleDisruptorProvider"><a href="#3-1-QueueModuleDisruptorProvider" class="headerlink" title="3.1 QueueModuleDisruptorProvider"></a>3.1 QueueModuleDisruptorProvider</h2><p><code>org.skywalking.apm.collector.queue.disruptor.CQueueModuleDisruptorProvider</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java" rel="external nofollow noopener noreferrer" target="_blank">ModuleProvider</a> <strong>抽象类</strong>，基于 Disruptor 的队列服务提供者。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L35" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回组件服务提供者名为 <code>&quot;disruptor&quot;</code> 。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>module()</code></a> <strong>实现</strong>方法，返回组件类为 QueueModule 。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L55" rel="external nofollow noopener noreferrer" target="_blank"><code>#requiredModules()</code></a> <strong>实现</strong>方法，返回依赖组件为空。</p>
+<hr>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>#prepare(Properties)</code></a> <strong>实现</strong>方法，执行准备阶段逻辑。</p>
+<ul>
+<li>第 44 行 ：创建 DisruptorQueueCreatorService 对象，并调用 <code>#registerServiceImplementation()</code> <strong>父类</strong>方法，注册到 <code>services</code> 。</li>
+</ul>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><code>#start()</code></a> <strong>实现</strong>方法，方法为空。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/QueueModuleDisruptorProvider.java#L51" rel="external nofollow noopener noreferrer" target="_blank"><code>#notifyAfterCompleted()</code></a> <strong>实现</strong>方法，方法为空。</p>
+<h2 id="2-2-DisruptorQueueCreatorService"><a href="#2-2-DisruptorQueueCreatorService" class="headerlink" title="2.2 DisruptorQueueCreatorService"></a>2.2 DisruptorQueueCreatorService</h2><p><code>org.skywalking.apm.collector.queue.disruptor.service.DisruptorQueueCreatorService</code> ，实现 QueueCreatorService <strong>接口</strong>，基于 Disruptor 的队列创建服务<strong>实现类</strong>。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/service/DisruptorQueueCreatorService.java#L42" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>实现</strong>方法，调用 <code>DisruptorQueueCreator#register(queueSize, executor)</code> 方法，创建队列处理器。</p>
+<h3 id="3-2-1-DisruptorQueueCreator"><a href="#3-2-1-DisruptorQueueCreator" class="headerlink" title="3.2.1 DisruptorQueueCreator"></a>3.2.1 DisruptorQueueCreator</h3><blockquote>
+<p>友情提示：如果胖友对 Disruptor 暂时不了解，建议先使用 Disruptor 写个小 Demo 。</p>
+<p>如下是笔者阅读的文章：  </p>
+<ul>
+<li><a href="http://colobu.com/2014/08/01/3-steps-to-create-a-disruptor-application/" rel="external nofollow noopener noreferrer" target="_blank">《三步创建Disruptor应用》</a></li>
+<li><a href="http://ifeve.com/disruptor-getting-started/" rel="external nofollow noopener noreferrer" target="_blank">《Disruptor入门》</a></li>
+<li><a href="http://ifeve.com/dissecting-disruptor-whats-so-special/" rel="external nofollow noopener noreferrer" target="_blank">《剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处》</a> </li>
+</ul>
+</blockquote>
+<p><code>org.skywalking.apm.collector.queue.disruptor.base.DisruptorQueueCreator</code> ，实现 QueueCreator <strong>接口</strong>，基于 Disruptor 的队列创建器<strong>实现类</strong>。</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorQueueCreator.java#L41" rel="external nofollow noopener noreferrer" target="_blank"><code>#create(queueSize, executor)</code></a> <strong>实现</strong>方法，代码如下：</p>
+<ul>
+<li>第 42 至 45 行：<strong>校验</strong>队列大小为 2 的指数，否则创建 Disruptor 对象会报 <code>&quot;bufferSize must be a power of 2&quot;</code> 的异常，参见 <a href="https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/AbstractSequencer.java#L50" rel="external nofollow noopener noreferrer" target="_blank">AbstractSequencer</a> 的代码。</li>
+<li>第 49 行：<strong>创建</strong> Disruptor 对象。<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/8b7205313e60e84d50579261992042c8b581492f/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/MessageHolderFactory.java#L29" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.queue.disruptor.base.MessageHolderFactory</code></a> ，MessageHolder <strong>工厂</strong>。</li>
+</ul>
+</li>
+<li>第 51 至 64 行：设置 Disruptor 对象的<strong>默认异常处理器</strong>。</li>
+<li>第 67 至 70 行：创建 DisruptorEventHandler 对象，并设置为 Disruptor 对象的<strong>事件处理器</strong>。</li>
+<li>第 74 行：<strong>启动</strong> Disruptor 对象。</li>
+</ul>
+<p><strong>为什么 Disruptor 要求队列大小为 2 的指数呢</strong>？如下是相关资料，感兴趣的同学可以看看( 可跳过 )：</p>
+<ul>
+<li>FROM <a href="https://zh.wikipedia.org/wiki/%E7%92%B0%E5%BD%A2%E7%B7%A9%E8%A1%9D%E5%8D%80#Linux.E5.86.85.E6.A0.B8.E7.9A.84kfifo" rel="external nofollow noopener noreferrer" target="_blank">《环形缓冲器》</a></li>
+</ul>
+<blockquote>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/05.png" alt=""></p>
+</blockquote>
+<ul>
+<li><code>SingleProducerSequencer#hasAvailableCapacity(requiredCapacity)</code> 方法，代码如下：<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/06.png" alt=""></li>
+</ul>
+<h2 id="3-3-DisruptorEventHandler"><a href="#3-3-DisruptorEventHandler" class="headerlink" title="3.3 DisruptorEventHandler"></a>3.3 DisruptorEventHandler</h2><p><code>org.skywalking.apm.collector.queue.disruptor.base.DisruptorEventHandler</code> ，基于 Disruptor 的队列处理器<strong>实现类</strong>。</p>
+<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>ringBuffer</code></a> 属性，Disruptor RingBuffer 对象。</li>
+<li><a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/c方法参数ollector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><code>executor</code></a> 属性，执行器。</li>
+<li>实现 <code>org.skywalking.apm.collector.queue.base.QueueEventHandler</code> <strong>接口</strong> 的 <a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L80" rel="external nofollow noopener noreferrer" target="_blank"><code>#tell(message)</code></a> 接口方法，标准的 Disruptor 发布事件的代码。</li>
+<li>实现 <a href="https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/EventHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>com.lmax.disruptor.EventHandler</code></a> 的 <a href="https://github.com/YunaiV/skywalking/blob/0feb6bce291fa945eff5bf52100c82c960851143/apm-collector/apm-collector-queue/collector-queue-disruptor-provider/src/main/java/org/skywalking/apm/collector/queue/disruptor/base/DisruptorEventHandler.java#L62" rel="external nofollow noopener noreferrer" target="_blank"><code>#onEvent(event, sequence, endOfBatch)</code></a> 接口方法，代码如下：<ul>
+<li><code>endOfBatch</code> <strong>方法参数</strong>，标记该事件( 消息 )是否是 Disruptor <strong>每次批处理</strong>的最后一个事件。胖友可以参见 <a href="https://stackoverflow.com/questions/33716825/lmax-disruptor-what-determines-the-batch-size" rel="external nofollow noopener noreferrer" target="_blank">《LMAX Disruptor - what determines the batch size?》</a> 这篇文章，自己搭建一个 Demo 理解下该参数。</li>
+<li>第 66 行：调用 <code>MessageHolder#reset()</code> 方法，清空消息，因为在 Disruptor RingBuffer 里，事件( 消息 )对象是<strong>重用</strong>的，虽然后续发布事件( 消息 )可以进行<strong>覆盖</strong>，考虑到安全性进行清空。</li>
+<li>第 69 行：设置消息为该批量的结尾( 最后一条 )。<strong>为什么</strong>？在 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「3. AggregationWorker」</a> 揭晓答案。</li>
+<li>第 72 行：调用 <code>QueueExecutor#execute(message)</code> 方法，执行处理消息。</li>
+</ul>
+</li>
+</ul>
+<h1 id="4-collector-queue-datacarrier-provider"><a href="#4-collector-queue-datacarrier-provider" class="headerlink" title="4. collector-queue-datacarrier-provider"></a>4. collector-queue-datacarrier-provider</h1><p><code>collector-queue-datacarrier-provider</code> ：基于 <a href="https://github.com/YunaiV/skywalking/tree/master/apm-commons/apm-datacarrier" rel="external nofollow noopener noreferrer" target="_blank">apm-datacarrier</a> 的队列组件实现。</p>
+<p><em>目前暂未完成</em>。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>在地铁里，夹缝中写代码( 😈 当然有座位 )。</p>
+<p>不容易，回家看《蜘蛛侠》。</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png" alt=""></p>
+<p>胖友，分享一波朋友圈可好。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/SkyWalking/">SkyWalking</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/SkyWalking/collector-queue-module/" data-title="SkyWalking 源码分析 —— Collector Queue 队列组件 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/SkyWalking/collector-storage-module/" title="SkyWalking 源码分析 —— Collector Storage 存储组件">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  SkyWalking 源码分析 —— Collector Storage 存储组件</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/SkyWalking/collector-naming-server/" title="SkyWalking 源码分析 —— Collector Naming Server 命名服务">
+ <strong>NEXT:</strong><br> 
+ <span>SkyWalking 源码分析 —— Collector Naming Server 命名服务
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-collector-queue-define"><span class="toc-number">2.</span> <span class="toc-text">2. collector-queue-define</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-QueueModule"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 QueueModule</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-QueueCreatorService"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 QueueCreatorService</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-MessageHolder"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 MessageHolder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-QueueEventHandler"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 QueueEventHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-DaemonThreadFactory"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 DaemonThreadFactory</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-collector-queue-disruptor-provider"><span class="toc-number">3.</span> <span class="toc-text">3. collector-queue-disruptor-provider</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-QueueModuleDisruptorProvider"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 QueueModuleDisruptorProvider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-DisruptorQueueCreatorService"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 DisruptorQueueCreatorService</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-DisruptorQueueCreator"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 DisruptorQueueCreator</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-DisruptorEventHandler"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 DisruptorEventHandler</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-collector-queue-datacarrier-provider"><span class="toc-number">4.</span> <span class="toc-text">4. collector-queue-datacarrier-provider</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>20</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>3</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+    </aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2017 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+

@@ -1,8 +1,588 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E"><meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0"><meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214"><meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1"><meta name="sogou_site_verification" content="MpPsku240L"><title>Eureka 源码解析 —— 应用实例注册发现（五）之过期 | 芋道源码 —— 纯源码解析BLOG</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1"><meta name="author" content="芋道源码"><meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Eureka/instance-registry-evict/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Eureka 1.8.X 版本
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>Eureka 源码解析 —— 应用实例注册发现（五）之过期 | 芋道源码 —— 纯源码解析BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="芋道源码">
+    
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Eureka/instance-registry-evict/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+本文主要基于 Eureka 1.8.X 版本 
 
 1. 概述
 2. 为什么需要过期
 3. EvictionTask
 4. 过期逻辑
-66"><meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表"><link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml"><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/css/style.css"><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="//hm.baidu.com/hm.js?9e70e3362807c1bd185a79655b307027";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script>!function(){var t="http:"==document.location.protocol?"http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";document.write('<script src="'+t+'" id="sozz"><\/script>')}()</script><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head></html><body><header><div><div id="textlogo"><h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1><a class="blog-motto">愿半生编码，如一生老友！</a></div><div class="navbar"><a class="navbutton navmobile" href="#" title="菜单"></a></div><nav class="animated"><ul><ul><li><a href="/">文章</a></li><li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li><li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li><li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li><li><a href="/link_url">友链</a></li></ul></ul></nav></div></header><div id="container"><div id="main" class="post" itemscope="" itemprop="blogPost"><article itemprop="articleBody"><header class="article-info clearfix"><h1 itemprop="name"><a href="/Eureka/instance-registry-evict/" title="Eureka 源码解析 —— 应用实例注册发现（五）之过期" itemprop="url">Eureka 源码解析 —— 应用实例注册发现（五）之过期</a></h1><p class="article-author"></p><p class="article-time">总阅读量:<span id="busuanzi_value_page_pv"></span>次</p></header><div class="article-content"><p>摘要: 原创出处 http://www.iocoder.cn/Eureka/instance-registry-evict/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p><p><strong>本文主要基于 Eureka 1.8.X 版本</strong></p><ul><li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">1. 概述</a></li><li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">2. 为什么需要过期</a></li><li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">3. EvictionTask</a></li><li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">4. 过期逻辑</a></li><li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">666. 彩蛋</a></li></ul><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1>1. 概述</h1><p>本文主要分享 <strong>Eureka-Server 过期超时续租的租约</strong>。</p><blockquote><p>FROM <a href="%E3%80%8Ahttp://techshow.ctrip.com/archives/1699.html%E3%80%8B">《深度剖析服务发现组件Netflix Eureka》</a><br><img src="http://www.iocoder.cn/images/Eureka/2018_06_22/01.png" alt=""></p></blockquote><p><strong>推荐 Spring Cloud 书籍</strong>：</p><ul><li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li><li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li><li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li><li>两书齐买，京东包邮。</li></ul><h1>2. 为什么需要过期</h1><p>正常情况下，应用实例下线时候会主动向 Eureka-Server 发起下线请求。但实际情况下，应用实例可能异常崩溃，又或者是网络异常等原因，导致下线请求无法被成功提交。</p><p>介于这种情况，通过 Eureka-Client 心跳延长租约，配合 Eureka-Server 清理超时的租约解决上述异常。</p><h1>3. EvictionTask</h1><p><code>com.netflix.eureka.registry.AbstractInstanceRegistry.EvictionTask</code>，清理租约过期任务。在 Eureka-Server 启动时，初始化 EvictionTask 定时执行，实现代码如下：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// AbstractInstanceRegistry.java</span></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* 清理租约过期任务</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;EvictionTask&gt; evictionTaskRef = <span class="keyword">new</span> AtomicReference&lt;EvictionTask&gt;();</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">postInit</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="comment">// .... 省略无关代码</span></div><div class="line"></div><div class="line">   <span class="comment">// 初始化 清理租约过期任务</span></div><div class="line">   <span class="keyword">if</span> (evictionTaskRef.get() != <span class="keyword">null</span>) &#123;</div><div class="line">       evictionTaskRef.get().cancel();</div><div class="line">   &#125;</div><div class="line">   evictionTaskRef.set(<span class="keyword">new</span> EvictionTask());</div><div class="line">   evictionTimer.schedule(evictionTaskRef.get(),</div><div class="line">           serverConfig.getEvictionIntervalTimerInMs(),</div><div class="line">           serverConfig.getEvictionIntervalTimerInMs());</div><div class="line">&#125;</div></pre></td></tr></table></figure><p></p><ul><li><p>配置 <code>eureka.evictionIntervalTimerInMs</code> ，清理租约过期任务执行频率，单位：毫秒。默认，60000 毫秒。</p></li><li><p>EvictionTask 实现代码如下：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvictionTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="meta">@Override</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           <span class="comment">// 获取 补偿时间毫秒数</span></div><div class="line">           <span class="keyword">long</span> compensationTimeMs = getCompensationTimeMs();</div><div class="line">           logger.info(<span class="string">"Running the evict task with compensationTime &#123;&#125;ms"</span>, compensationTimeMs);</div><div class="line">           <span class="comment">// 清理过期租约逻辑</span></div><div class="line">           evict(compensationTimeMs);</div><div class="line">       &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">           logger.error(<span class="string">"Could not run the evict task"</span>, e);</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure><p></p><ul><li><p>调用 <code>#compensationTimeMs()</code> 方法，获得补偿时间毫秒数。计算公式 = 当前时间 - 最后任务执行时间 - 任务执行频率。为什么需要补偿时间毫秒数，在 <a href="#">「4. 过期逻辑」<code>Lease#isisExpired(additionalLeaseMs)</code> 方法</a> 揭晓。<code>#compensationTimeMs()</code> 实现代码如下：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* 最后任务执行时间</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicLong lastExecutionNanosRef = <span class="keyword">new</span> AtomicLong(<span class="number">0L</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">getCompensationTimeMs</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">long</span> currNanos = getCurrentTimeNano();</div><div class="line">    <span class="keyword">long</span> lastNanos = lastExecutionNanosRef.getAndSet(currNanos);</div><div class="line">    <span class="keyword">if</span> (lastNanos == <span class="number">0L</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0L</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">long</span> elapsedMs = TimeUnit.NANOSECONDS.toMillis(currNanos - lastNanos);</div><div class="line">    <span class="keyword">long</span> compensationTime = elapsedMs - serverConfig.getEvictionIntervalTimerInMs();</div><div class="line">    <span class="keyword">return</span> compensationTime &lt;= <span class="number">0L</span> ? <span class="number">0L</span> : compensationTime;</div><div class="line">&#125;</div></pre></td></tr></table></figure><p></p><ul><li><p>由于 JVM GC ，又或是时间偏移( clock skew ) 等原因，定时器执行实际比预期会<strong>略有延迟</strong>。笔者在本机<strong>低负载</strong>运行，大概 10 ms 内。</p><blockquote><p>compute a compensation time defined as the actual time this task was executed since the prev iteration, vs the configured amount of time for execution. This is useful for cases where changes in time (due to clock skew or gc for example) causes the actual eviction task to execute later than the desired time according to the configured cycle.</p></blockquote></li></ul></li><li><p>调用 <code>#evict(compensationTime)</code> 方法，执行清理过期租约逻辑，在 <a href="#">「4. 过期逻辑」</a> 详细解析。</p></li></ul></li></ul><h1>4. 过期逻辑</h1><p>调用 <code>#evict(compensationTime)</code> 方法，执行清理过期租约逻辑，实现代码如下：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">evict</span><span class="params">(<span class="keyword">long</span> additionalLeaseMs)</span> </span>&#123;</div><div class="line"> <span class="number">2</span>:     logger.debug(<span class="string">"Running the evict task"</span>);</div><div class="line"> <span class="number">3</span>: </div><div class="line"> <span class="number">4</span>:     <span class="keyword">if</span> (!isLeaseExpirationEnabled()) &#123;</div><div class="line"> <span class="number">5</span>:         logger.debug(<span class="string">"DS: lease expiration is currently disabled."</span>);</div><div class="line"> <span class="number">6</span>:         <span class="keyword">return</span>;</div><div class="line"> <span class="number">7</span>:     &#125;</div><div class="line"> <span class="number">8</span>: </div><div class="line"> <span class="number">9</span>:     <span class="comment">// 获得 所有过期的租约</span></div><div class="line"><span class="number">10</span>:     <span class="comment">// We collect first all expired items, to evict them in random order. For large eviction sets,</span></div><div class="line"><span class="number">11</span>:     <span class="comment">// if we do not that, we might wipe out whole apps before self preservation kicks in. By randomizing it,</span></div><div class="line"><span class="number">12</span>:     <span class="comment">// the impact should be evenly distributed across all applications.</span></div><div class="line"><span class="number">13</span>:     List&lt;Lease&lt;InstanceInfo&gt;&gt; expiredLeases = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"><span class="number">14</span>:     <span class="keyword">for</span> (Entry&lt;String, Map&lt;String, Lease&lt;InstanceInfo&gt;&gt;&gt; groupEntry : registry.entrySet()) &#123;</div><div class="line"><span class="number">15</span>:         Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseMap = groupEntry.getValue();</div><div class="line"><span class="number">16</span>:         <span class="keyword">if</span> (leaseMap != <span class="keyword">null</span>) &#123;</div><div class="line"><span class="number">17</span>:             <span class="keyword">for</span> (Entry&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseEntry : leaseMap.entrySet()) &#123;</div><div class="line"><span class="number">18</span>:                 Lease&lt;InstanceInfo&gt; lease = leaseEntry.getValue();</div><div class="line"><span class="number">19</span>:                 <span class="keyword">if</span> (lease.isExpired(additionalLeaseMs) &amp;&amp; lease.getHolder() != <span class="keyword">null</span>) &#123; <span class="comment">// 过期</span></div><div class="line"><span class="number">20</span>:                     expiredLeases.add(lease);</div><div class="line"><span class="number">21</span>:                 &#125;</div><div class="line"><span class="number">22</span>:             &#125;</div><div class="line"><span class="number">23</span>:         &#125;</div><div class="line"><span class="number">24</span>:     &#125;</div><div class="line"><span class="number">25</span>: </div><div class="line"><span class="number">26</span>:     <span class="comment">// 计算 最大允许清理租约数量</span></div><div class="line"><span class="number">27</span>:     <span class="comment">// To compensate for GC pauses or drifting local time, we need to use current registry size as a base for</span></div><div class="line"><span class="number">28</span>:     <span class="comment">// triggering self-preservation. Without that we would wipe out full registry.</span></div><div class="line"><span class="number">29</span>:     <span class="keyword">int</span> registrySize = (<span class="keyword">int</span>) getLocalRegistrySize();</div><div class="line"><span class="number">30</span>:     <span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (registrySize * serverConfig.getRenewalPercentThreshold());</div><div class="line"><span class="number">31</span>:     <span class="keyword">int</span> evictionLimit = registrySize - registrySizeThreshold;</div><div class="line"><span class="number">32</span>: </div><div class="line"><span class="number">33</span>:     <span class="comment">// 计算 清理租约数量</span></div><div class="line"><span class="number">34</span>:     <span class="keyword">int</span> toEvict = Math.min(expiredLeases.size(), evictionLimit);</div><div class="line"><span class="number">35</span>:     <span class="keyword">if</span> (toEvict &gt; <span class="number">0</span>) &#123;</div><div class="line"><span class="number">36</span>:         logger.info(<span class="string">"Evicting &#123;&#125; items (expired=&#123;&#125;, evictionLimit=&#123;&#125;)"</span>, toEvict, expiredLeases.size(), evictionLimit);</div><div class="line"><span class="number">37</span>: </div><div class="line"><span class="number">38</span>:         <span class="comment">// 逐个过期</span></div><div class="line"><span class="number">39</span>:         Random random = <span class="keyword">new</span> Random(System.currentTimeMillis());</div><div class="line"><span class="number">40</span>:         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; toEvict; i++) &#123;</div><div class="line"><span class="number">41</span>:             <span class="comment">// Pick a random item (Knuth shuffle algorithm)</span></div><div class="line"><span class="number">42</span>:             <span class="keyword">int</span> next = i + random.nextInt(expiredLeases.size() - i);</div><div class="line"><span class="number">43</span>:             Collections.swap(expiredLeases, i, next);</div><div class="line"><span class="number">44</span>:             Lease&lt;InstanceInfo&gt; lease = expiredLeases.get(i);</div><div class="line"><span class="number">45</span>: </div><div class="line"><span class="number">46</span>:             String appName = lease.getHolder().getAppName();</div><div class="line"><span class="number">47</span>:             String id = lease.getHolder().getId();</div><div class="line"><span class="number">48</span>:             EXPIRED.increment();</div><div class="line"><span class="number">49</span>:             logger.warn(<span class="string">"DS: Registry: expired lease for &#123;&#125;/&#123;&#125;"</span>, appName, id);</div><div class="line"><span class="number">50</span>:             internalCancel(appName, id, <span class="keyword">false</span>);</div><div class="line"><span class="number">51</span>:         &#125;</div><div class="line"><span class="number">52</span>:     &#125;</div><div class="line"><span class="number">53</span>: &#125;</div></pre></td></tr></table></figure><p></p><ul><li><p>第 3 至 7 行 ：判断允许执行清理过期租约逻辑，主要和<strong>自我保护机制</strong>有关，在 <a href="http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self">《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》</a> 有详细解析。</p></li><li><p>第 9 至 24 行 ：获得<strong>所有过期</strong>的租约集合。</p><ul><li><p>第 19 行 ：调用 <code>Lease#isisExpired(additionalLeaseMs)</code> 方法，判断租约是否过期，实现代码如下：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Lease.java</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isExpired</span><span class="params">(<span class="keyword">long</span> additionalLeaseMs)</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> (evictionTimestamp &gt; <span class="number">0</span> || System.currentTimeMillis() &gt; (lastUpdateTimestamp + duration + additionalLeaseMs));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">renew</span><span class="params">()</span> </span>&#123;</div><div class="line">   lastUpdateTimestamp = System.currentTimeMillis() + duration;</div><div class="line">&#125;</div></pre></td></tr></table></figure><p></p><ul><li><p>😈<strong>注意</strong>：在不考虑 <code>additionalLeaseMs</code> 参数的情况下，租约过期时间比预期多了<strong>一个</strong> <code>duration</code>，原因在于 <code>#renew()</code> 方法错误的设置 <code>lastUpdateTimestamp = System.currentTimeMillis() + duration</code>，正确的设置应该是 <code>lastUpdateTimestamp = System.currentTimeMillis()</code> 。</p><blockquote><p>Note that due to renew() doing the 'wrong&quot; thing and setting lastUpdateTimestamp to +duration more than what it should be, the expiry will actually be 2 * duration. <strong>This is a minor bug and should only affect instances that ungracefully shutdown. Due to possible wide ranging impact to existing usage, this will not be fixed</strong>.</p></blockquote></li><li><p>TODO[0023]：additionalLeaseMs</p></li></ul></li></ul></li><li><p>第 26 至 34 行 ：计算<strong>最大允许</strong>清理租约的数量，后计算允许清理租约的数量。</p><ul><li><p>😈<strong>注意</strong>：即使 Eureka-Server 关闭<strong>自我保护机制</strong>，如果使用<code>renewalPercentThreshold = 0.85</code> 默认配置，结果会是<strong>分批逐步</strong>过期。举个例子：</p><p></p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 假设 20 个租约，其中有 10 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第一轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">20</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">20</span> * <span class="number">0.85</span>) = <span class="number">17</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">20</span> - <span class="number">17</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">10</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第一轮执行结束，剩余 17 个租约，其中有 7 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第二轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">17</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">17</span> * <span class="number">0.85</span>) = <span class="number">14</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">17</span> - <span class="number">14</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">7</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第二轮执行结束，剩余 14 个租约，其中有 4 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第三轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">14</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">14</span> * <span class="number">0.85</span>) = <span class="number">11</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">14</span> - <span class="number">11</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">4</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第三轮执行结束，剩余 11 个租约，其中有 1 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第四轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">11</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">11</span> * <span class="number">0.85</span>) = <span class="number">9</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">11</span> - <span class="number">9</span> = <span class="number">2</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">1</span>, <span class="number">2</span>) = <span class="number">1</span>;</div><div class="line"><span class="comment">// 第四轮执行结束，剩余 10 个租约，其中有 0 个租约过期。结束。</span></div></pre></td></tr></table></figure><p></p><ul><li>结论：是否开启自我保护的差别，在于是否执行清理过期租约逻辑。如果想关闭<strong>分批逐步</strong>过期，设置 <code>renewalPercentThreshold = 0</code> 。</li></ul></li><li><p>由于 JVM GC ，或是本地时间差异原因，可能自我保护机制的阀值 <code>expectedNumberOfRenewsPerMin</code>、<code>numberOfRenewsPerMinThreshold</code> 不够正确，在<strong>过期</strong>这个相对“危险”的操作，<strong>重新计算自我保护</strong>的阀值。</p></li></ul></li><li><p>第 35 至 51 行 ：<strong>随机</strong>清理过期的租约。由于租约是按照<strong>应用顺序</strong>添加到数组，通过随机的方式，<strong>尽量避免单个应用被全部过期</strong>。</p><ul><li>第 39 行 ：传入当前时间为种子生成随机，避免 Java 的伪随机情况。在 <a href="http://www.cnblogs.com/greatfish/p/5845924.html" rel="external nofollow noopener noreferrer" target="_blank">《为什么说Java中的随机数都是伪随机数？》</a> 有详细解析。</li><li>第 41 至 43 行 ：随机调换后面的元素到当前位置( <code>i</code> )。</li></ul></li><li><p>第 50 行 ：调用 <code>#internalCancel()</code> 方法，下线已过期的租约，在 <a href="http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self">《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》「3.2 下线应用实例信息」</a> 有详细解析。</p></li></ul><h1>666. 彩蛋</h1><p>😫 原本觉得比较容易的一篇文章，结果消耗了比想象中的时间，可能有四个小时。主要卡在补偿时间，目前也没弄懂。如果有知道的胖友，麻烦告知下。</p><p>胖友，分享我的公众号( <strong>芋道源码</strong> ) 给你的胖友可好？</p></div><footer class="article-footer clearfix"><div class="article-categories"><span></span> <a class="article-category-link" href="/categories/Eureka/">Eureka</a></div><div class="article-share" id="share"><div data-url="http://www.iocoder.cn/Eureka/instance-registry-evict/" data-title="Eureka 源码解析 —— 应用实例注册发现（五）之过期 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix"></div></div></footer></article><nav class="article-nav clearfix"><div class="prev"><a href="/Eureka/instance-registry-fetch-all/" title="Eureka 源码解析 —— 应用实例注册发现（六）之全量获取"><strong>PREVIOUS:</strong><br><span>Eureka 源码解析 —— 应用实例注册发现（六）之全量获取</span></a></div><div class="next"><a href="/Eureka/instance-registry-self-preservation/" title="Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制"><strong>NEXT:</strong><br><span>Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制</span></a></div></nav></div><div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div><div id="toc" class="toc-aside"><strong class="toc-title">文章目录</strong><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 为什么需要过期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. EvictionTask</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 过期逻辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol></div><div id="asidepart"><aside class="clearfix"><div id="authorInfo"><div><img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"></div><div class="social-list"></div></div><div class="categorieslist"><p class="asidetitle">微信公众号福利：芋道源码</p><ul><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">0. 阅读源码葵花宝典</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">2. 您对于源码的疑问每条留言都将得到认真回复</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">3. 新的源码解析文章实时收到通知，每周六十点更新</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群</a></li></ul></div><div class="categorieslist"><p class="asidetitle">分类</p><ul><li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li><li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li><li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li><li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li><li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li><li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li><li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li><li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li><li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li><li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li><li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li><li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li><li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li><li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>17</sup></a></li><li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li><li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li><li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li><li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li><li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li><li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li><li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>3</sup></a></li><li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li></ul></div></aside></div></div><footer><div id="footer"><img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display:none"><p class="copyright">© 2017 <a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a> && <span style="display:inline" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span> && <span style="display:inline" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span></p></div><div class="copyright">沪ICP备17037075号-1</div></footer><script src="/js/jquery-2.1.0.min.js"></script><script type="text/javascript">$(document).ready(function(){function e(){"number"==typeof window.innerWidth?n=window.innerWidth:document.documentElement&&document.documentElement.clientWidth&&(n=document.documentElement.clientWidth)}$(".navbar").click(function(){$("header nav").toggleClass("shownav")});var n=0,s=$("#main"),a=$("#asidepart"),o=$(".closeaside"),d=$(".openaside");$(window).resize(function(){e(),n>=1024?$("header nav").removeClass("shownav"):(s.removeClass("moveMain"),a.css("display","block").removeClass("fadeOut"),d.css("display","none"),$("#toc.toc-aside").css("display","none"))}),o.click(function(){a.addClass("fadeOut").css("display","none"),d.css("display","block").addClass("fadeIn"),s.addClass("moveMain")}),d.click(function(){d.css("display","none").removeClass("beforeFadeIn"),a.css("display","block").removeClass("fadeOut").addClass("fadeIn"),s.removeClass("moveMain")}),$(window).scroll(function(){d.css("top",Math.max(80,260-$(this).scrollTop()))})})</script><script type="text/javascript">$(document).ready(function(){var a=$(".article-content>iframe"),t=$(".article-content>embed"),n=$("#toc");$("article h2");ah=$("article h2"),ta=$("#toc.toc-aside"),o=$(".openaside"),c=$(".closeaside"),a.length>0&&a.wrap('<div class="video-container" />'),t.length>0&&t.wrap('<div class="video-container" />'),0==ah.length?n.css("display","none"):(c.click(function(){ta.css("display","block").addClass("fadeIn")}),o.click(function(){ta.css("display","none")}),$(window).scroll(function(){ta.css("top",Math.max(140,320-$(this).scrollTop()))}))})</script><script type="text/javascript">$(document).ready(function(){var t=$(".share"),a=t.attr("data-url"),e=encodeURIComponent(a),r=['<a href="#" class="overlay" id="qrcode"></a>','<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url='+e+'"/></div>','<a href="#textlogo" class="article-back-to-top" title="Top"></a>','<a href="https://www.facebook.com/sharer.php?u='+e+'" class="article-share-facebook" target="_blank" title="Facebook"></a>','<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>','<a href="https://twitter.com/intent/tweet?url='+e+'" class="article-share-twitter" target="_blank" title="Twitter"></a>','<a href="http://service.weibo.com/share/share.php?title='+t.attr("data-title")+"&url="+e+"&ralateUid="+t.attr("data-tsina")+'&searchPic=true&style=number" class="article-share-weibo" target="_blank" title="Weibo"></a>','<span title="Share to"></span>'].join("");t.append(r),$(".article-share-qrcode").click(function(){var t=$("#qrcode-pic").attr("data-src");$("#qrcode-pic").attr("src",t),$("#qrcode-pic").load(function(){$(".qrcode strong").text(" ")})})})</script><link rel="stylesheet" href="/alert/css/alert.css"><script src="/alert/js/alert.js"></script><script src="/js/jquery.cookie.js"></script><script src="/js/util.js"></script><script type="text/javascript">!function(e,a,t,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=a.createElement(t),s=a.getElementsByTagName(t)[0],o.async=1,o.src="//www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-107572620-1","auto"),ga("send","pageview")</script></body>
+6">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析BLOG" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析BLOG">芋道源码 —— 纯源码解析BLOG</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Eureka/instance-registry-evict/" title="Eureka 源码解析 —— 应用实例注册发现（五）之过期" itemprop="url">Eureka 源码解析 —— 应用实例注册发现（五）之过期</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="芋道源码">芋道源码</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2018-06-21T16:00:00.000Z" itemprop="datePublished">2018-06-22</time>-->
+    <!--更新日期:<time datetime="2017-10-12T05:39:14.000Z" itemprop="dateModified">2017-10-12</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">http://www.iocoder.cn/Eureka/instance-registry-evict/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Eureka 1.8.X 版本</strong> </p>
+<ul>
+<li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">1. 概述</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">2. 为什么需要过期</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">3. EvictionTask</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">4. 过期逻辑</a></li>
+<li><a href="http://www.iocoder.cn/Eureka/instance-registry-evict/">666. 彩蛋</a></li>
+</ul>
+<hr>
+<p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
+<blockquote>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
+<ol>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
+<li><strong>认真的</strong>源码交流微信群。</li>
+</ol>
+</blockquote>
+<hr>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Eureka-Server 过期超时续租的租约</strong>。</p>
+<blockquote>
+<p>FROM <a href="《http://techshow.ctrip.com/archives/1699.html》">《深度剖析服务发现组件Netflix Eureka》</a><br><img src="http://www.iocoder.cn/images/Eureka/2018_06_22/01.png" alt=""></p>
+</blockquote>
+<p><strong>推荐 Spring Cloud 书籍</strong>：</p>
+<ul>
+<li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
+<li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li>
+<li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
+<li>两书齐买，京东包邮。</li>
+</ul>
+<h1 id="2-为什么需要过期"><a href="#2-为什么需要过期" class="headerlink" title="2. 为什么需要过期"></a>2. 为什么需要过期</h1><p>正常情况下，应用实例下线时候会主动向 Eureka-Server 发起下线请求。但实际情况下，应用实例可能异常崩溃，又或者是网络异常等原因，导致下线请求无法被成功提交。</p>
+<p>介于这种情况，通过 Eureka-Client 心跳延长租约，配合 Eureka-Server 清理超时的租约解决上述异常。</p>
+<h1 id="3-EvictionTask"><a href="#3-EvictionTask" class="headerlink" title="3. EvictionTask"></a>3. EvictionTask</h1><p><code>com.netflix.eureka.registry.AbstractInstanceRegistry.EvictionTask</code>，清理租约过期任务。在 Eureka-Server 启动时，初始化 EvictionTask 定时执行，实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// AbstractInstanceRegistry.java</span></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* 清理租约过期任务</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;EvictionTask&gt; evictionTaskRef = <span class="keyword">new</span> AtomicReference&lt;EvictionTask&gt;();</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">postInit</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="comment">// .... 省略无关代码</span></div><div class="line"></div><div class="line">   <span class="comment">// 初始化 清理租约过期任务</span></div><div class="line">   <span class="keyword">if</span> (evictionTaskRef.get() != <span class="keyword">null</span>) &#123;</div><div class="line">       evictionTaskRef.get().cancel();</div><div class="line">   &#125;</div><div class="line">   evictionTaskRef.set(<span class="keyword">new</span> EvictionTask());</div><div class="line">   evictionTimer.schedule(evictionTaskRef.get(),</div><div class="line">           serverConfig.getEvictionIntervalTimerInMs(),</div><div class="line">           serverConfig.getEvictionIntervalTimerInMs());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>配置 <code>eureka.evictionIntervalTimerInMs</code> ，清理租约过期任务执行频率，单位：毫秒。默认，60000 毫秒。</li>
+<li><p>EvictionTask 实现代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvictionTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="meta">@Override</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           <span class="comment">// 获取 补偿时间毫秒数</span></div><div class="line">           <span class="keyword">long</span> compensationTimeMs = getCompensationTimeMs();</div><div class="line">           logger.info(<span class="string">"Running the evict task with compensationTime &#123;&#125;ms"</span>, compensationTimeMs);</div><div class="line">           <span class="comment">// 清理过期租约逻辑</span></div><div class="line">           evict(compensationTimeMs);</div><div class="line">       &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">           logger.error(<span class="string">"Could not run the evict task"</span>, e);</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>调用 <code>#compensationTimeMs()</code> 方法，获得补偿时间毫秒数。计算公式 = 当前时间 - 最后任务执行时间 - 任务执行频率。为什么需要补偿时间毫秒数，在 <a href="#">「4. 过期逻辑」<code>Lease#isisExpired(additionalLeaseMs)</code> 方法</a> 揭晓。<code>#compensationTimeMs()</code> 实现代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* 最后任务执行时间</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicLong lastExecutionNanosRef = <span class="keyword">new</span> AtomicLong(<span class="number">0L</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">getCompensationTimeMs</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">long</span> currNanos = getCurrentTimeNano();</div><div class="line">    <span class="keyword">long</span> lastNanos = lastExecutionNanosRef.getAndSet(currNanos);</div><div class="line">    <span class="keyword">if</span> (lastNanos == <span class="number">0L</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0L</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">long</span> elapsedMs = TimeUnit.NANOSECONDS.toMillis(currNanos - lastNanos);</div><div class="line">    <span class="keyword">long</span> compensationTime = elapsedMs - serverConfig.getEvictionIntervalTimerInMs();</div><div class="line">    <span class="keyword">return</span> compensationTime &lt;= <span class="number">0L</span> ? <span class="number">0L</span> : compensationTime;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>由于 JVM GC ，又或是时间偏移( clock skew ) 等原因，定时器执行实际比预期会<strong>略有延迟</strong>。笔者在本机<strong>低负载</strong>运行，大概 10 ms 内。</p>
+<blockquote>
+<p>compute a compensation time defined as the actual time this task was executed since the prev iteration, vs the configured amount of time for execution. This is useful for cases where changes in time (due to clock skew or gc for example) causes the actual eviction task to execute later than the desired time according to the configured cycle.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>调用 <code>#evict(compensationTime)</code> 方法，执行清理过期租约逻辑，在 <a href="#">「4. 过期逻辑」</a> 详细解析。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="4-过期逻辑"><a href="#4-过期逻辑" class="headerlink" title="4. 过期逻辑"></a>4. 过期逻辑</h1><p>调用 <code>#evict(compensationTime)</code> 方法，执行清理过期租约逻辑，实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">evict</span><span class="params">(<span class="keyword">long</span> additionalLeaseMs)</span> </span>&#123;</div><div class="line"> <span class="number">2</span>:     logger.debug(<span class="string">"Running the evict task"</span>);</div><div class="line"> <span class="number">3</span>: </div><div class="line"> <span class="number">4</span>:     <span class="keyword">if</span> (!isLeaseExpirationEnabled()) &#123;</div><div class="line"> <span class="number">5</span>:         logger.debug(<span class="string">"DS: lease expiration is currently disabled."</span>);</div><div class="line"> <span class="number">6</span>:         <span class="keyword">return</span>;</div><div class="line"> <span class="number">7</span>:     &#125;</div><div class="line"> <span class="number">8</span>: </div><div class="line"> <span class="number">9</span>:     <span class="comment">// 获得 所有过期的租约</span></div><div class="line"><span class="number">10</span>:     <span class="comment">// We collect first all expired items, to evict them in random order. For large eviction sets,</span></div><div class="line"><span class="number">11</span>:     <span class="comment">// if we do not that, we might wipe out whole apps before self preservation kicks in. By randomizing it,</span></div><div class="line"><span class="number">12</span>:     <span class="comment">// the impact should be evenly distributed across all applications.</span></div><div class="line"><span class="number">13</span>:     List&lt;Lease&lt;InstanceInfo&gt;&gt; expiredLeases = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"><span class="number">14</span>:     <span class="keyword">for</span> (Entry&lt;String, Map&lt;String, Lease&lt;InstanceInfo&gt;&gt;&gt; groupEntry : registry.entrySet()) &#123;</div><div class="line"><span class="number">15</span>:         Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseMap = groupEntry.getValue();</div><div class="line"><span class="number">16</span>:         <span class="keyword">if</span> (leaseMap != <span class="keyword">null</span>) &#123;</div><div class="line"><span class="number">17</span>:             <span class="keyword">for</span> (Entry&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseEntry : leaseMap.entrySet()) &#123;</div><div class="line"><span class="number">18</span>:                 Lease&lt;InstanceInfo&gt; lease = leaseEntry.getValue();</div><div class="line"><span class="number">19</span>:                 <span class="keyword">if</span> (lease.isExpired(additionalLeaseMs) &amp;&amp; lease.getHolder() != <span class="keyword">null</span>) &#123; <span class="comment">// 过期</span></div><div class="line"><span class="number">20</span>:                     expiredLeases.add(lease);</div><div class="line"><span class="number">21</span>:                 &#125;</div><div class="line"><span class="number">22</span>:             &#125;</div><div class="line"><span class="number">23</span>:         &#125;</div><div class="line"><span class="number">24</span>:     &#125;</div><div class="line"><span class="number">25</span>: </div><div class="line"><span class="number">26</span>:     <span class="comment">// 计算 最大允许清理租约数量</span></div><div class="line"><span class="number">27</span>:     <span class="comment">// To compensate for GC pauses or drifting local time, we need to use current registry size as a base for</span></div><div class="line"><span class="number">28</span>:     <span class="comment">// triggering self-preservation. Without that we would wipe out full registry.</span></div><div class="line"><span class="number">29</span>:     <span class="keyword">int</span> registrySize = (<span class="keyword">int</span>) getLocalRegistrySize();</div><div class="line"><span class="number">30</span>:     <span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (registrySize * serverConfig.getRenewalPercentThreshold());</div><div class="line"><span class="number">31</span>:     <span class="keyword">int</span> evictionLimit = registrySize - registrySizeThreshold;</div><div class="line"><span class="number">32</span>: </div><div class="line"><span class="number">33</span>:     <span class="comment">// 计算 清理租约数量</span></div><div class="line"><span class="number">34</span>:     <span class="keyword">int</span> toEvict = Math.min(expiredLeases.size(), evictionLimit);</div><div class="line"><span class="number">35</span>:     <span class="keyword">if</span> (toEvict &gt; <span class="number">0</span>) &#123;</div><div class="line"><span class="number">36</span>:         logger.info(<span class="string">"Evicting &#123;&#125; items (expired=&#123;&#125;, evictionLimit=&#123;&#125;)"</span>, toEvict, expiredLeases.size(), evictionLimit);</div><div class="line"><span class="number">37</span>: </div><div class="line"><span class="number">38</span>:         <span class="comment">// 逐个过期</span></div><div class="line"><span class="number">39</span>:         Random random = <span class="keyword">new</span> Random(System.currentTimeMillis());</div><div class="line"><span class="number">40</span>:         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; toEvict; i++) &#123;</div><div class="line"><span class="number">41</span>:             <span class="comment">// Pick a random item (Knuth shuffle algorithm)</span></div><div class="line"><span class="number">42</span>:             <span class="keyword">int</span> next = i + random.nextInt(expiredLeases.size() - i);</div><div class="line"><span class="number">43</span>:             Collections.swap(expiredLeases, i, next);</div><div class="line"><span class="number">44</span>:             Lease&lt;InstanceInfo&gt; lease = expiredLeases.get(i);</div><div class="line"><span class="number">45</span>: </div><div class="line"><span class="number">46</span>:             String appName = lease.getHolder().getAppName();</div><div class="line"><span class="number">47</span>:             String id = lease.getHolder().getId();</div><div class="line"><span class="number">48</span>:             EXPIRED.increment();</div><div class="line"><span class="number">49</span>:             logger.warn(<span class="string">"DS: Registry: expired lease for &#123;&#125;/&#123;&#125;"</span>, appName, id);</div><div class="line"><span class="number">50</span>:             internalCancel(appName, id, <span class="keyword">false</span>);</div><div class="line"><span class="number">51</span>:         &#125;</div><div class="line"><span class="number">52</span>:     &#125;</div><div class="line"><span class="number">53</span>: &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>第 3 至 7 行 ：判断允许执行清理过期租约逻辑，主要和<strong>自我保护机制</strong>有关，在 <a href="http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self">《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》</a> 有详细解析。</li>
+<li><p>第 9 至 24 行 ：获得<strong>所有过期</strong>的租约集合。</p>
+<ul>
+<li><p>第 19 行 ：调用 <code>Lease#isisExpired(additionalLeaseMs)</code> 方法，判断租约是否过期，实现代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Lease.java</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isExpired</span><span class="params">(<span class="keyword">long</span> additionalLeaseMs)</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> (evictionTimestamp &gt; <span class="number">0</span> || System.currentTimeMillis() &gt; (lastUpdateTimestamp + duration + additionalLeaseMs));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">renew</span><span class="params">()</span> </span>&#123;</div><div class="line">   lastUpdateTimestamp = System.currentTimeMillis() + duration;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>😈<strong>注意</strong>：在不考虑 <code>additionalLeaseMs</code> 参数的情况下，租约过期时间比预期多了<strong>一个</strong> <code>duration</code>，原因在于 <code>#renew()</code> 方法错误的设置 <code>lastUpdateTimestamp = System.currentTimeMillis() + duration</code>，正确的设置应该是 <code>lastUpdateTimestamp = System.currentTimeMillis()</code> 。</p>
+<blockquote>
+<p>Note that due to renew() doing the ‘wrong” thing and setting lastUpdateTimestamp to +duration more than what it should be, the expiry will actually be 2 <em> duration. <em>*This is a minor bug and should only affect instances that ungracefully shutdown. Due to possible wide ranging impact to existing usage, this will not be fixed</em></em>. </p>
+</blockquote>
+</li>
+<li><p>TODO[0023]：additionalLeaseMs</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>第 26 至 34 行 ：计算<strong>最大允许</strong>清理租约的数量，后计算允许清理租约的数量。</p>
+<ul>
+<li><p>😈<strong>注意</strong>：即使 Eureka-Server 关闭<strong>自我保护机制</strong>，如果使用<code>renewalPercentThreshold = 0.85</code> 默认配置，结果会是<strong>分批逐步</strong>过期。举个例子：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 假设 20 个租约，其中有 10 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第一轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">20</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">20</span> * <span class="number">0.85</span>) = <span class="number">17</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">20</span> - <span class="number">17</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">10</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第一轮执行结束，剩余 17 个租约，其中有 7 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第二轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">17</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">17</span> * <span class="number">0.85</span>) = <span class="number">14</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">17</span> - <span class="number">14</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">7</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第二轮执行结束，剩余 14 个租约，其中有 4 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第三轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">14</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">14</span> * <span class="number">0.85</span>) = <span class="number">11</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">14</span> - <span class="number">11</span> = <span class="number">3</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">4</span>, <span class="number">3</span>) = <span class="number">3</span>;</div><div class="line"><span class="comment">// 第三轮执行结束，剩余 11 个租约，其中有 1 个租约过期。</span></div><div class="line"></div><div class="line"><span class="comment">// 第四轮执行开始</span></div><div class="line"><span class="keyword">int</span> registrySize = <span class="number">11</span>;</div><div class="line"><span class="keyword">int</span> registrySizeThreshold = (<span class="keyword">int</span>) (<span class="number">11</span> * <span class="number">0.85</span>) = <span class="number">9</span>;</div><div class="line"><span class="keyword">int</span> evictionLimit = <span class="number">11</span> - <span class="number">9</span> = <span class="number">2</span>;</div><div class="line"><span class="keyword">int</span> toEvict = Math.min(<span class="number">1</span>, <span class="number">2</span>) = <span class="number">1</span>;</div><div class="line"><span class="comment">// 第四轮执行结束，剩余 10 个租约，其中有 0 个租约过期。结束。</span></div></pre></td></tr></table></figure>
+<ul>
+<li>结论：是否开启自我保护的差别，在于是否执行清理过期租约逻辑。如果想关闭<strong>分批逐步</strong>过期，设置 <code>renewalPercentThreshold = 0</code> 。</li>
+</ul>
+</li>
+<li><p>由于 JVM GC ，或是本地时间差异原因，可能自我保护机制的阀值 <code>expectedNumberOfRenewsPerMin</code>、<code>numberOfRenewsPerMinThreshold</code> 不够正确，在<strong>过期</strong>这个相对“危险”的操作，<strong>重新计算自我保护</strong>的阀值。</p>
+</li>
+</ul>
+</li>
+<li><p>第 35 至 51 行 ：<strong>随机</strong>清理过期的租约。由于租约是按照<strong>应用顺序</strong>添加到数组，通过随机的方式，<strong>尽量避免单个应用被全部过期</strong>。</p>
+<ul>
+<li>第 39 行 ：传入当前时间为种子生成随机，避免 Java 的伪随机情况。在 <a href="http://www.cnblogs.com/greatfish/p/5845924.html" rel="external nofollow noopener noreferrer" target="_blank">《为什么说Java中的随机数都是伪随机数？》</a> 有详细解析。</li>
+<li>第 41 至 43 行 ：随机调换后面的元素到当前位置( <code>i</code> )。</li>
+</ul>
+</li>
+<li>第 50 行 ：调用 <code>#internalCancel()</code> 方法，下线已过期的租约，在 <a href="http://www.iocoder.cn/Eureka/instance-registry-self-preservation/?self">《Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制》「3.2 下线应用实例信息」</a> 有详细解析。</li>
+</ul>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>😫 原本觉得比较容易的一篇文章，结果消耗了比想象中的时间，可能有四个小时。主要卡在补偿时间，目前也没弄懂。如果有知道的胖友，麻烦告知下。</p>
+<p>胖友，分享我的公众号( <strong>芋道源码</strong> ) 给你的胖友可好？</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Eureka/">Eureka</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Eureka/instance-registry-evict/" data-title="Eureka 源码解析 —— 应用实例注册发现（五）之过期 | 芋道源码 —— 纯源码解析BLOG" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Eureka/instance-registry-fetch-all/" title="Eureka 源码解析 —— 应用实例注册发现（六）之全量获取">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Eureka 源码解析 —— 应用实例注册发现（六）之全量获取</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/Eureka/instance-registry-self-preservation/" title="Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制">
+ <strong>NEXT:</strong><br> 
+ <span>Eureka 源码解析 —— 应用实例注册发现（四）之自我保护机制
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-为什么需要过期"><span class="toc-number">2.</span> <span class="toc-text">2. 为什么需要过期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-EvictionTask"><span class="toc-number">3.</span> <span class="toc-text">3. EvictionTask</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-过期逻辑"><span class="toc-number">4.</span> <span class="toc-text">4. 过期逻辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>20</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>3</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+    </aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2017 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+
