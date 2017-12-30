@@ -34,10 +34,14 @@
 TraceSegment 属性，如下：
 
 * `traceSegmentId` 属性，TraceSegment 的编号，全局唯一。在 [「2.1 ID」](#) 详细解析。
-* `refs` 属性，TraceSegmentRef **数组**，指向的**父** TraceSegment 数组。**为什么会有多个爸爸**？下面统一讲。
-* `relatedGlobalTraces` 属性，关联的 DistributedTraceId **数组**。**为什么会有多个爸爸**？下面统一讲。
-* `spans` 属性，包含的 DistributedTraceId **数组**。
-* `ignore` 属性，
+* `refs` 属性，TraceSegmentRef **数组**，指向的**父** TraceSegment 数组。
+    * **为什么会有多个爸爸**？下面统一讲。
+    * TraceSegmentRef ，在 [「2.3 TraceSegmentRef」](#) 详细解析。
+* `relatedGlobalTraces` 属性，关联的 DistributedTraceId **数组**。
+    * **为什么会有多个爸爸**？下面统一讲。
+    * DistributedTraceId ，在 [「2.1.2 DistributedTraceId」](#) 详细解析。
+* `spans` 属性，包含的 Span **数组**。在 [「2.2 AbstractSpan」](#) 详细解析。这是 TraceSegment 的**主体**，总的来说，TraceSegment 是 Span 数组的封装。
+* `ignore` 属性，是否忽略该条 TraceSegment 。在一些情况下，我们会忽略 TraceSegment ，即不收集链路追踪，在下面 [「3. Context」](#) 部分内容，我们将会看到这些情况。
 * `isSizeLimited` 属性，Span 是否超过上限( [`Config.Agent.SPAN_LIMIT_PER_SEGMENT`](https://github.com/YunaiV/skywalking/blob/2961e9f539286ef91af1ff1ef7681d0a06f156b0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/conf/Config.java#L56) )。超过上限，不在记录 Span 。
 
 **为什么会有多个爸爸**？
@@ -50,6 +54,8 @@ TraceSegment 属性，如下：
     * 将自己的 `relatedGlobalTraces` 设置为【多个服务】的**多个** DistributedTraceId 。
 
 > 友情提示：多个爸爸的故事，可能比较难懂，等胖友读完全文，在回过头想想。或者拿起来代码调试调试。
+
+下面，我们来具体看看 TraceSegment 的每个元素，最后，我们会回过头，在 [「2.4 TraceSegment」](#) 详细解析它。
 
 ## 2.1 ID
 
@@ -78,7 +84,7 @@ TraceSegment 属性，如下：
     * 第 72 行：`ID.part3` 属性，调用 [`IDContext#nextSeq()`](https://github.com/YunaiV/skywalking/blob/9db53fd95e1c4c10f0f7a939e4484d7e2102ad3f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/GlobalIdGenerator.java#L102) 方法，生成带有时间戳的序列号。
 * ps ：代码比较易懂，已经添加完成注释。
 
-## 2.1.2 DistributedTraceId
+### 2.1.2 DistributedTraceId
 
 [`org.skywalking.apm.agent.core.context.ids.DistributedTraceId`](https://github.com/YunaiV/skywalking/blob/5fb841b3ae5b78f07d06c6186adf9a8c08295a07/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/DistributedTraceId.java) ，分布式链路追踪编号**抽象类**。
 
@@ -89,20 +95,24 @@ DistributedTraceId 有两个实现类：
 * [org.skywalking.apm.agent.core.context.ids.NewDistributedTraceId](https://github.com/YunaiV/skywalking/blob/5fb841b3ae5b78f07d06c6186adf9a8c08295a07/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/NewDistributedTraceId.java) ，**新建的**分布式链路追踪编号。当全局链路追踪开始，创建 TraceSegment 对象的过程中，会调用 [`DistributedTraceId()` 构造方法](https://github.com/YunaiV/skywalking/blob/5fb841b3ae5b78f07d06c6186adf9a8c08295a07/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/NewDistributedTraceId.java#L30)，创建 DistributedTraceId 对象。该构造方法内部会调用 `GlobalIdGenerator#generate()` 方法，创建 ID 对象。
 * [org.skywalking.apm.agent.core.context.ids.PropagatedTraceId](https://github.com/YunaiV/skywalking/blob/5fb841b3ae5b78f07d06c6186adf9a8c08295a07/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/PropagatedTraceId.java) ，**传播的**分布式链路追踪编号。例如，A 服务调用 B 服务时，A 服务会将 DistributedTraceId 对象带给 B 服务，B 服务会调用 [`PropagatedTraceId(String id)` 构造方法](https://github.com/YunaiV/skywalking/blob/5fb841b3ae5b78f07d06c6186adf9a8c08295a07/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/PropagatedTraceId.java#L30) ，创建 PropagatedTraceId 对象。该构造方法内部会解析 id ，生成 ID 对象。
 
-## 2.1.3 DistributedTraceIds
+### 2.1.3 DistributedTraceIds
 
 [`org.skywalking.apm.agent.core.context.ids.DistributedTraceIds`](https://github.com/YunaiV/skywalking/blob/2961e9f539286ef91af1ff1ef7681d0a06f156b0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/DistributedTraceIds.java) ，DistributedTraceId 数组的封装。
 
 * `relatedGlobalTraces` 属性，关联的 DistributedTraceId **链式**数组。
 * 
 
-## 2.2 AbstractTracingSpan
+## 2.2 AbstractSpan
 
 layer
 
 tag
 
 Component
+
+## 2.3 TraceSegmentRef
+
+## 2.4 TraceSegment
 
 # 3. Context
 
