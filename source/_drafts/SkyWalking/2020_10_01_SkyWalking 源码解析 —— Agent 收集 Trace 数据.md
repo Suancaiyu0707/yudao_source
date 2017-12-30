@@ -103,7 +103,7 @@ DistributedTraceId 有两个实现类：
 
 ## 2.2 AbstractSpan
 
-[`org.skywalking.apm.agent.core.context.trace.AbstractSpan`](todo) ，Span **接口**( 不是抽象类 )，定义了 Span 通用属性的接口方法：
+[`org.skywalking.apm.agent.core.context.trace.AbstractSpan`](https://github.com/YunaiV/skywalking/blob/96fd1f0aacb995f725c446b1cfcdc3124058e6a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractSpan.java) ，Span **接口**( 不是抽象类 )，定义了 Span 通用属性的接口方法：
 
 * `#getSpanId()` 方法，获得 Span 编号。一个整数，在 TraceSegment 内**唯一**，从 0 开始自增，在创建 Span 对象时生成。
 * `#setOperationName(operationName)` 方法，设置操作名。
@@ -123,8 +123,8 @@ DistributedTraceId 有两个实现类：
     * `#log(Throwable)` 方法，记录一条异常日志，包含异常信息。 
 * `#errorOccurred()` 方法，标记发生异常。大多数情况下，配置 `#log(Throwable)` 方法一起使用。
 * `#start()` 方法，开始 Span 。一般情况的实现，设置开始时间。
-* `#isEntry()` 方法，todo
-* `#isExit()` 方法，todo
+* `#isEntry()` 方法，是否是入口 Span ，在 [「2.2.2.1 EntrySpan」](#) 详细解析。
+* `#isExit()` 方法，是否是出口 Span ，在 [「2.2.2.2 ExitSpan」](#) 详细解析。
 
 ### 2.2.1 Tag
 
@@ -147,7 +147,106 @@ DistributedTraceId 有两个实现类：
 
 在 [《opentracing-specification-zh —— 语义惯例》](https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/semantic_conventions.md#%E6%A0%87%E5%87%86%E7%9A%84span-tag-%E5%92%8C-log-field) 里，定义了标准的 Span Tag 。
 
-### 2.2.2 
+### 2.2.2 AbstractSpan 实现类
+
+AbstractSpan 实现类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/03.png)
+
+* 左半边的 Span 实现类：**有**具体操作的 Span 。
+* 右半边的 Span 实现类：**无**具体操作的 Span ，和左半边的 Span 实现类**相对**，用于不需要收集 Span 的场景。
+
+抛开右半边的 Span 实现类的特殊处理，Span 只有三种实现类：
+
+* EntrySpan ：入口 Span
+* LocalSpan ：本地 Span
+* ExitSpan ：出口 Span
+
+下面，我们分小节逐步分享。
+
+#### 2.2.2.1 AbstractTracingSpan
+
+[`org.skywalking.apm.agent.core.context.trace.AbstractTracingSpan`](https://github.com/YunaiV/skywalking/blob/11b66b8d36943d6492f51c676b455f29c9c0abc6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java) ，实现 AbstractSpan 接口，链路追踪 Span **抽象类**。
+
+在创建 AbstractTracingSpan 时，会传入 `spanId` , `parentSpanId` , `operationName` / `operationId` 参数。参见构造方法：
+
+* `#AbstractTracingSpan(spanId, parentSpanId, operationName)`
+* `#AbstractTracingSpan(spanId, parentSpanId, operationId)`
+
+-------
+
+大部分是 setting / getting 方法，或者类似方法，已经添加注释，胖友自己阅读。
+
+[`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/11b66b8d36943d6492f51c676b455f29c9c0abc6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java#L126) 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。为什么会调用该方法，在 TODO 详细解析。
+
+#### 2.2.2.2 StackBasedTracingSpan
+
+ [`org.skywalking.apm.agent.core.context.trace.StackBasedTracingSpan`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java) ，实现 AbstractTracingSpan 抽象类，基于**栈**的链路追踪 Span 抽象类。这种 Span 能够被多次调用 `#start(...)` 和 `#finish(...)` 方法，在类似堆栈的调用中。在 [「2.2.2.2.1 EntrySpan」](#) 中详细举例子。代码如下：
+ 
+* `stackDepth` 属，**栈**深度。
+* [`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java#L52) **实现**方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。**当且仅当 `stackDepth == 0` 时，添加成功**。代码如下：
+    * 第 53 至 73 行：栈深度为零，出栈成功。调用 `super#finish(TraceSegment)` 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。
+        * 第 55 至 72 行：当操作编号为空时，尝试使用操作名获得操作编号并设置。用于**减少** Agent 发送 Collector 数据的网络流量。
+    * 第 74 至 76 行：栈深度非零，出栈失败。
+
+##### 2.2.2.2.1 EntrySpan
+
+**重点**
+
+[`org.skywalking.apm.agent.core.context.trace.EntrySpan`](https://github.com/YunaiV/skywalking/blob/d36f6a47a208720f4caac9d9a8b7263bd36f2187/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/EntrySpan.java) ，实现 StackBasedTracingSpan 抽象类，**入口** Span ，用于服务提供者( Service Provider ) ，例如 Tomcat 。
+
+EntrySpan 是 TraceSegment 的第一个 Span ，这也是为什么称为"**入口**" Span 的原因。
+
+**那么为什么 EntrySpan 继承 StackBasedTracingSpan** ？
+
+例如，我们常用的 SprintBoot 场景下，Agent 会在 SkyWalking 插件在 Tomcat 定义的方法切面，创建 EntrySpan 对象，也会在 SkyWalking 插件在 SpringMVC 定义的方法切面，创建 EntrySpan 对象。那岂不是出现**两个** EntrySpan ，一个 TraceSegment 出现了两个入口 Span ？
+
+答案是当然不会！Agent 只会在第一个方法切面，生成 EntrySpan 对象，第二个方法切面，栈深度 **+ 1**。这也是上面我们看到的 `#finish(TraceSegment)` 方法，只在栈深度为零时，出栈成功。通过这样的方式，保持一个 TraceSegment 有且仅有一个 EntrySpan 对象。
+
+当然，多个 TraceSegment 会有多个 EntrySpan 对象 ，例如【服务 A】远程调用【服务 B】。
+
+另外，虽然 EntrySpan 在第一个服务提供者创建，EntrySpan 代表的是最后一个服务提供者，例如，上面的例子，EntrySpan 代表的是 Spring MVC 的方法切面。所以，`startTime` 和 `endTime` 以第一个为准，`componentId` 、`componentName` 、`layer` 、`logs` 、`tags` 、`operationName` 、`operationId` 等等以最后一个为准。并且，一般情况下，最后一个服务提供者的信息也会**更加详细**。
+
+**ps**：如上内容信息量较大，胖友可以对照着实现方法，在理解理解。HOHO ，良心笔者当然也是加了注释的。
+
+如下是一个 EntrySpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/04.png)
+
+##### 2.2.2.2.2 ExitSpan
+
+**重点**
+
+[`org.skywalking.apm.agent.core.context.trace.ExitSpan`](https://github.com/YunaiV/skywalking/blob/958830d8db481b5b8a70498a09bc18eb7c721737/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/ExitSpan.java) ，实现 StackBasedTracingSpan 抽象类，**出口** Span ，用于服务消费者( Service Consumer ) ，例如 HttpClient 、MongoDBClient 。
+
+-------
+
+ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](https://github.com/YunaiV/skywalking/blob/958830d8db481b5b8a70498a09bc18eb7c721737/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/WithPeerInfo.java) 接口，代码如下：
+
+* `peer` 属性，节点地址。
+* `peerId` 属性，节点编号。
+
+如下是一个 ExitSpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/05.png)
+
+-------
+
+**那么为什么 ExitSpan 继承 StackBasedTracingSpan** ？
+
+例如，我们可能在使用的 Dubbox 场景下，【Dubbox 服务 A】使用 HTTP 调用【Dubbox 服务 B】时，实际过程是，【Dubbox 服务 A】=》【HttpClient】=》【Dubbox 服务 B】。Agent 会在【Dubbox 服务 A】创建 ExitSpan 对象，也会在 【HttpClient】创建 ExitSpan 对象。那岂不是**一次出口**，出现**两个** ExitSpan ？
+
+答案是当然不会！Agent 只会在【Dubbox 服务 A】，生成 EntrySpan 对象，第二个方法切面，栈深度 **+ 1**。这也是上面我们看到的 `#finish(TraceSegment)` 方法，只在栈深度为零时，出栈成功。通过这样的方式，保持**一次出口**有且仅有一个 ExitSpan 对象。
+
+当然，一个 TraceSegment 会有多个 ExitSpan 对象 ，例如【服务 A】远程调用【服务 B】，然后【服务 A】再次远程调用【服务 B】，或者然后【服务 A】远程调用【服务 C】。
+
+另外，虽然 ExitSpan 在第一个消费者创建，ExitSpan 代表的也是第一个服务提消费者，例如，上面的例子，ExitSpan 代表的是【Dubbox 服务 A】。
+
+**ps**：如上内容信息量较大，胖友可以对照着实现方法，在理解理解。HOHO ，良心笔者当然也是加了注释的。
+
+#### 2.2.2.3 LocalSpan 
+
+[`org.skywalking.apm.agent.core.context.trace.LocalSpan`](https://github.com/YunaiV/skywalking/blob/96fd1f0aacb995f725c446b1cfcdc3124058e6a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/LocalSpan.java) ，继承 AbstractTracingSpan 抽象类，本地 Span ，用于一个普通方法的链路追踪，例如本地方法。
+
+如下是一个 EntrySpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/06.png)
+
+#### 2.2.2.4 NoopSpan
+
+##### 2.2.2.3.1 NoopExitSpan
 
 ## 2.3 TraceSegmentRef
 
