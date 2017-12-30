@@ -39,6 +39,8 @@ permalink: SkyWalking/register
 
 下面，我们分成两个小节，分别从 API 的**实现**与**调用**，分享代码的具体实现。
 
+> 友情提示：推荐阅读 [《探针与Collector间通讯协议》](https://github.com/apache/incubator-skywalking/blob/master/docs/cn/How-to-communicate-with-the-collector-CN.md) 。
+
 # 2. Collector 注册相关 API
 
 Collector 注册相关 API 相关有四个接口：
