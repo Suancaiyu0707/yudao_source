@@ -100,15 +100,54 @@ DistributedTraceId 有两个实现类：
 [`org.skywalking.apm.agent.core.context.ids.DistributedTraceIds`](https://github.com/YunaiV/skywalking/blob/2961e9f539286ef91af1ff1ef7681d0a06f156b0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/DistributedTraceIds.java) ，DistributedTraceId 数组的封装。
 
 * `relatedGlobalTraces` 属性，关联的 DistributedTraceId **链式**数组。
-* 
 
 ## 2.2 AbstractSpan
 
-layer
+[`org.skywalking.apm.agent.core.context.trace.AbstractSpan`](todo) ，Span **接口**( 不是抽象类 )，定义了 Span 通用属性的接口方法：
 
-tag
+* `#getSpanId()` 方法，获得 Span 编号。一个整数，在 TraceSegment 内**唯一**，从 0 开始自增，在创建 Span 对象时生成。
+* `#setOperationName(operationName)` 方法，设置操作名。
+    * 操作名，定义如下：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/01.png)
+    * `#setOperationId(operationId)` 方法，设置操作编号。考虑到操作名是字符串，Agent 发送给 Collector 占用流量较大。因此，Agent 会将操作注册到 Collector ，生成操作编号。在 [《SkyWalking 源码分析 —— Agent DictionaryManager 字典管理》](http://www.iocoder.cn/SkyWalking/agent-dictionary/?self) 有详细解析。
+* `#setComponent(Component)` 方法，设置 [`org.skywalking.apm.network.trace.component.Component`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/Component.java) ，例如：MongoDB / SpringMVC / Tomcat 等等。目前，官方在 [`org.skywalking.apm.network.trace.component.ComponentsDefine`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/ComponentsDefine.java) 定义了目前已经支持的 Component 。
+    * `#setComponent(componentName)` 方法，直接设置 Component 名字。大多数情况下，我们不使用该方法。
 
-Component
+        > Only use this method in explicit instrumentation, like opentracing-skywalking-bridge. 
+        > It it higher recommend don't use this for performance consideration.
+
+* `#setLayer(SpanLayer)` 方法，设置 [`org.skywalking.apm.agent.core.context.trace.SpanLayer`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/NoopSpan.java) 。目前有，DB 、RPC_FRAMEWORK 、HTTP 、MQ ，未来会增加 CACHE 。
+
+* `#tag(key, value)` 方法，设置键值对的标签。可以调用多次，构成 Span 的标签集合。在 [「2.2.1 Tag」](#) 详细解析。
+* 日志相关
+    * `#log(timestampMicroseconds, fields)` 方法，记录一条通用日志，包含 `fields` 键值对集合。
+    * `#log(Throwable)` 方法，记录一条异常日志，包含异常信息。 
+* `#errorOccurred()` 方法，标记发生异常。大多数情况下，配置 `#log(Throwable)` 方法一起使用。
+* `#start()` 方法，开始 Span 。一般情况的实现，设置开始时间。
+* `#isEntry()` 方法，todo
+* `#isExit()` 方法，todo
+
+### 2.2.1 Tag
+
+#### 2.2.1.1 AbstractTag
+
+[`org.skywalking.apm.agent.core.context.tag.AbstractTag<T>`](https://github.com/YunaiV/skywalking/blob/e0c449745dfabe847b2e918d5352381f191a4469/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/tag/AbstractTag.java) ，标签**抽象类**。注意，这个类的用途是将标签属性设置到 Span 上，或者说，它是设置 Span 的标签的**工具类**。代码如下：
+
+* `key` 属性，标签的键。
+* `#set(AbstractSpan span, T tagValue)` **抽象**方法，设置 Span 的标签键 `key` 的值为 `tagValue` 。
+
+#### 2.2.1.2 StringTag
+
+[`org.skywalking.apm.agent.core.context.tag.StringTag`](https://github.com/YunaiV/skywalking/blob/e0c449745dfabe847b2e918d5352381f191a4469/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/tag/StringTag.java) ，值类型为 String 的标签**实现类**。
+
+* `#set(AbstractSpan span, String tagValue)` **实现**方法，设置 Span 的标签键 `key` 的值为 `tagValue` 。
+
+#### 2.2.1.3 Tags
+
+[`org.skywalking.apm.agent.core.context.tag.Tags`](https://github.com/YunaiV/skywalking/blob/e0c449745dfabe847b2e918d5352381f191a4469/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/tag/Tags.java) ，**常用** Tag **枚举类**，内部定义了**多个** HTTP 、DB 相关的 StringTag 的静态变量。
+
+在 [《opentracing-specification-zh —— 语义惯例》](https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/semantic_conventions.md#%E6%A0%87%E5%87%86%E7%9A%84span-tag-%E5%92%8C-log-field) 里，定义了标准的 Span Tag 。
+
+### 2.2.2 
 
 ## 2.3 TraceSegmentRef
 
