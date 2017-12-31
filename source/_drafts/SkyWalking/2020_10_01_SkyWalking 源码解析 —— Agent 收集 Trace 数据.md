@@ -101,6 +101,11 @@ DistributedTraceId 有两个实现类：
 
 * `relatedGlobalTraces` 属性，关联的 DistributedTraceId **链式**数组。
 
+[`#append(DistributedTraceId)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/DistributedTraceIds.java#L50) 方法，添加分布式链路追踪编号( DistributedTraceId )。代码如下：
+
+* 第 51 至 54 行：移除**首个** NewDistributedTraceId 对象。为什么呢？在 [「2.4 TraceSegment」](#) 的构造方法中，会默认创建 NewDistributedTraceId 对象。在跨线程、或者跨进程的情况下时，创建的 TraceSegment 对象，需要指向父 Segment 的 DistributedTraceId ，所以需要移除默认创建的。
+* 第 56 至 58 行：添加 DistributedTraceId 对象到数组。
+
 ## 2.2 AbstractSpan
 
 [`org.skywalking.apm.agent.core.context.trace.AbstractSpan`](https://github.com/YunaiV/skywalking/blob/96fd1f0aacb995f725c446b1cfcdc3124058e6a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractSpan.java) ，Span **接口**( 不是抽象类 )，定义了 Span 通用属性的接口方法：
@@ -178,7 +183,6 @@ AbstractSpan 实现类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 [`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/11b66b8d36943d6492f51c676b455f29c9c0abc6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java#L126) 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。为什么会调用该方法，在 TODO 详细解析。
 
 #### 2.2.2.2 StackBasedTracingSpan
-
  [`org.skywalking.apm.agent.core.context.trace.StackBasedTracingSpan`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java) ，实现 AbstractTracingSpan 抽象类，基于**栈**的链路追踪 Span 抽象类。这种 Span 能够被多次调用 `#start(...)` 和 `#finish(...)` 方法，在类似堆栈的调用中。在 [「2.2.2.2.1 EntrySpan」](#) 中详细举例子。代码如下：
  
 * `stackDepth` 属，**栈**深度。
@@ -274,7 +278,22 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 ## 2.4 TraceSegment
 
+在看完了 TraceSegment 的各个元素，我们来看看 TraceSegment 内部实现的方法。
+
+[TraceSegment 构造方法](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L79)，代码如下：
+
+* 第 80 行：调用 `GlobalIdGenerator#generate()` 方法，生成 ID 对象，赋值给 `traceSegmentId` 。
+* 第 81 行：创建 `spans` 数组。
+    * [`#archive(AbstractTracingSpan)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L114) 方法，被 `AbstractSpan#finish(TraceSegment)` 方法调用，添加到 `spans` 数组。
+* 第 83 至 84 行：创建 DistributedTraceIds 对象，并添加 NewDistributedTraceId 到它。
+    * **注意**，当 TraceSegment 是一次分布式链路追踪的**首条**记录，创建的 NewDistributedTraceId 对象，即为分布式链路追踪的**全局编号**。
+    * [`#relatedGlobalTraces(DistributedTraceId)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L104) 方法，添加 DistributedTraceId 对象。被 `TracingContext#continued(ContextSnapshot)` 或者 `TracingContext#extract(ContextCarrier)` 方法调用，在 [「3. Context」](#) 详细解析。
+
+[`#ref(TraceSegmentRef)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L92) 方法，添加 TraceSegmentRef 对象，到 `refs` 属性，即**指向**父 Segment 。
+
 # 3. Context
+
+在 [「2. Trace」](#) 中，我们看了 Trace 的数据结构，本小节，我们一起来看看 Context 是怎么收集 Trace 数据的。
 
 ## 3.1 ContextManager
 
