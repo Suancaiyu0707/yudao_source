@@ -213,7 +213,7 @@ EntrySpan 是 TraceSegment 的第一个 Span ，这也是为什么称为"**入�
 
 **重点**
 
-[`org.skywalking.apm.agent.core.context.trace.ExitSpan`](https://github.com/YunaiV/skywalking/blob/958830d8db481b5b8a70498a09bc18eb7c721737/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/ExitSpan.java) ，实现 StackBasedTracingSpan 抽象类，**出口** Span ，用于服务消费者( Service Consumer ) ，例如 HttpClient 、MongoDBClient 。
+[`org.skywalking.apm.agent.core.context.trace.ExitSpan`](https://github.com/YunaiV/skywalking/blob/958830d8db481b5b8a70498a09bc18eb7c721737/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/ExitSpan.java) ，继承 StackBasedTracingSpan 抽象类，**出口** Span ，用于服务消费者( Service Consumer ) ，例如 HttpClient 、MongoDBClient 。
 
 -------
 
@@ -246,11 +246,45 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 #### 2.2.2.4 NoopSpan
 
+[`org.skywalking.apm.agent.core.context.trace.NoopSpan`](https://github.com/YunaiV/skywalking/blob/f00d2f405ca23e89778febeb4ada7b389858f258/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/NoopSpan.java) ，实现 AbstractSpan 接口，**无操作**的 Span 。配置 IgnoredTracerContext 一起使用，在 IgnoredTracerContext 声明[单例](https://github.com/YunaiV/skywalking/blob/f00d2f405ca23e89778febeb4ada7b389858f258/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/IgnoredTracerContext.java#L37) ，以减少不收集 Span 时的对象创建，达到减少内存使用和 GC 时间。
+
 ##### 2.2.2.3.1 NoopExitSpan
 
+[`org.skywalking.apm.agent.core.context.trace.NoopExitSpan`](https://github.com/YunaiV/skywalking/blob/f00d2f405ca23e89778febeb4ada7b389858f258/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/ExitSpan.java) ，实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](https://github.com/YunaiV/skywalking/blob/958830d8db481b5b8a70498a09bc18eb7c721737/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/WithPeerInfo.java) 接口，继承 StackBasedTracingSpan 抽象类，**出口** Span ，无操作的**出口** Span 。和 ExitSpan **相对**，不记录服务消费者的出口 Span 。
+
 ## 2.3 TraceSegmentRef
+
+[`org.skywalking.apm.agent.core.context.trace.TraceSegmentRef`](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java) ，TraceSegment 指向，通过 `traceSegmentId` 和 `spanId` 属性，指向父级 TraceSegment 的指定 Span 。
+
+* `type` 属性，指向类型( [SegmentRefType](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L206) ) 。不同的指向类型，使用不同的构造方法。
+    * `CROSS_PROCESS` ，跨进程，例如远程调用，对应构造方法 [#TraceSegmentRef(ContextCarrier)](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L97) 。 
+    * `CROSS_THREAD` ，跨线程，例如异步线程任务，对应构造方法 [#TraceSegmentRef(ContextSnapshot)](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L123) 。
+    * 构造方法的代码，在 [「3. Context」](#) 中，伴随着调用过程，一起解析。
+
+* `traceSegmentId` 属性，**父** TraceSegment 编号。**重要**
+* `spanId` 属性，**父** Span 编号。**重要**
+* `peerId` 属性，todo
+* `peerHost` 属性，todo
+* `entryApplicationInstanceId` 属性，**入口**应用实例编号。例如，在一个分布式链路 `A->B->C` 中，此字段为 A 应用的实例编号。
+* `parentApplicationInstanceId` 属性，**父**应用实例编号。
+* `entryOperationName` 属性，**入口**操作名。
+* `entryOperationId` 属性，**入口**操作编号。
+* `parentOperationName` 属性，**父**操作名。
+* `parentOperationId` 属性，**父**操作编号。
 
 ## 2.4 TraceSegment
 
 # 3. Context
+
+## 3.1 ContextManager
+
+ContextListener
+
+
+
+
+    public TraceSegmentRef(ContextCarrier carrier) {
+
+    public TraceSegmentRef(ContextSnapshot snapshot) {
+
 
