@@ -297,6 +297,32 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 ## 3.1 ContextManager
 
+`org.skywalking.apm.agent.core.context.ContextManager` ，实现了 BootService 、TracingContextListener 、IgnoreTracerContextListener 接口，链路追踪上下文管理器。
+
+-------
+
+[`CONTEXT`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L52) **静态**属性，线程变量，存储 AbstractTracerContext 对象。为什么是**线程变量**呢？
+
+**一个** TraceSegment 对象，关联到**一个**线程，负责收集该线程的链路追踪数据，因此使用线程变量。
+
+而**一个** AbstractTracerContext 会关联**一个** TraceSegment 对象，ContextManager 负责获取、创建、销毁 AbstractTracerContext 对象。
+
+[`#getOrCreate(operationName, forceSampling)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L61) **静态**方法，获取 AbstractTracerContext 对象。若不存在，进行**创建**。
+
+* **要**需要收集 Trace 数据的情况下，创建 [TracingContext](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java) 对象。
+* **不**需要收集 Trace 数据的情况下，创建 [IgnoredTracerContext](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/IgnoredTracerContext.java) 对象。
+
+在下面的 `#createEntrySpan(...)` 、`#createLocalSpan(...)` 、`#createExitSpan(...)` 等等方法中，都会调用 AbstractTracerContext 提供的方法。这些方法的代码，我们放在 [「3.2 AbstractTracerContext」](#) 一起解析，保证流程的整体性。
+
+-------
+
+[`#boot()`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L201) **实现**方法，启动时，将自己注册到 [TracingContext.ListenerManager]() 和 [IgnoredTracerContext.ListenerManager]() 中，这样一次链路追踪上下文( Context )完成时，从而被回调如下方法，清理上下文：
+
+* [`#afterFinished(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L216)
+* [`#afterFinished(IgnoredTracerContext)`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L221)
+
+## 3.2 AbstractTracerContext
+
 ContextListener
 
 
