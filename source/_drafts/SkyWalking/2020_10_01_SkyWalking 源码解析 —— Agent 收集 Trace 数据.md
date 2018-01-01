@@ -267,8 +267,8 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 * `traceSegmentId` 属性，**父** TraceSegment 编号。**重要**
 * `spanId` 属性，**父** Span 编号。**重要**
-* `peerId` 属性，todo
-* `peerHost` 属性，todo
+* `peerId` 属性，节点编号。**注意，此处的节点编号就是应用( Application )编号**。
+* `peerHost` 属性，节点地址。
 * `entryApplicationInstanceId` 属性，**入口**应用实例编号。例如，在一个分布式链路 `A->B->C` 中，此字段为 A 应用的实例编号。
 * `parentApplicationInstanceId` 属性，**父**应用实例编号。
 * `entryOperationName` 属性，**入口**操作名。
@@ -455,7 +455,64 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 ### 3.2.3 ContextCarrier
 
+[`org.skywalking.apm.agent.core.context.ContextCarrier`](https://github.com/YunaiV/skywalking/blob/4c4c62d0d5ec2ce17e3d36cad0f6598247b582e1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextCarrier.java) ，实现 `java.io.Serializable` 接口，**跨进程** Context 传输**载体**。
+
+#### 3.2.3.1 解压
+
+我们来打开 [`#TraceSegmentRef(ContextCarrier)`](https://github.com/YunaiV/skywalking/blob/4c4c62d0d5ec2ce17e3d36cad0f6598247b582e1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L97) **构造**方法，该方法用于将 ContextCarrier 转换成 TraceSegmentRef ，对比下两者的属性，**基本一致**，差异如下：
+
+* `peerHost` 属性，节点地址。
+    * 当字符串**不**以 `#` 号开头，代表节点编号，格式为 `${peerId}` ，例如 `"123"` 。
+    * 当字符串以 `#` 号开头，代表地址，格式为 `${peerHost}` ，例如 `"192.168.16.1:8080"` 。
+* `entryOperationName` 属性，入口操作名。
+    * 当字符串**不**以 `#` 号开头，代表入口操作编号，格式为 `#${entryOperationId}` ，例如 `"666"` 。
+    * 当字符串以 `#` 号开头，代表入口操作名，格式为 `#${entryOperationName}` ，例如 `"#user/login"` 。
+* `parentOperationName` 属性，父操作名。类似 `entryOperationName` 属。
+* `primaryDistributedTraceId` 属性，分布式链路追踪**全局**编号。**它不在此处处理，而在 `TracingContext#extract(ContextCarrier)` 方法中**。
+
+在 [`ContextManager#createEntrySpan(operationName, carrier)`](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L127) 方法中，当**存在** ContextCarrier 传递时，创建 Context 后，会将 ContextCarrier **解压**到 Context 中，以达到跨进程传播。[`TracingContext#extract(ContextCarrier)`](https://github.com/YunaiV/skywalking/blob/4c4c62d0d5ec2ce17e3d36cad0f6598247b582e1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L147) 方法，代码如下：
+
+* 第 148 行：将 ContextCarrier 转换成 TraceSegmentRef 对象，调用 `TraceSegment#ref(TraceSegmentRef)` 方法，进行指向父 TraceSegment。
+* 第 149 行：调用 `TraceSegment#relatedGlobalTraces(DistributedTraceId)` 方法，将传播的分布式链路追踪**全局**编号，添加到 TraceSegment 中，进行指向**全局**编号。
+
+另外，ContextManager **单独**提供 [`#extract(ContextCarrier)`](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L161) 方法，将**多个** ContextCarrier 注入到**一个** Context 中，从而解决"**多个爸爸**"的场景，例如 RocketMQ 插件的 [`AbstractMessageConsumeInterceptor#beforeMethod(...)`](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-sdk-plugin/rocketMQ-4.x-plugin/src/main/java/org/skywalking/apm/plugin/rocketMQ/v4/AbstractMessageConsumeInterceptor.java#L56) 方法。
+
+#### 3.2.3.2 注入
+
+在 [`ContextManager#createExitSpan(operationName, carrier, remotePeer)`](https://github.com/YunaiV/skywalking/blob/4c4c62d0d5ec2ce17e3d36cad0f6598247b582e1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L152) 方法中，当**需要** Context **跨进程**传递时，将 Context **注入**到 ContextCarrier 中，为 [「3.2.3.3 传输」](#) 做准备。[`TracingContext#inject(ContextCarrier)`](https://github.com/YunaiV/skywalking/blob/23c2146c134e0ef0a37a43758a1e04727de7697a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L87) 方法，代码比较易懂，胖友自己阅读理解。
+
+#### 3.2.3.3 传输
+
+> 友情提示：胖友，请先阅读 [《Skywalking Cross Process Propagation Headers Protocol》](https://github.com/apache/incubator-skywalking/blob/master/docs/cn/Skywalking-Cross-Process-Propagation-Headers-Protocol-CN-v1.md) 。
+
+[`org.skywalking.apm.agent.core.context.CarrierItem`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/CarrierItem.java) ，传输载体**项**。代码如：
+
+* `headKey` 属性，Header 键。
+* `headValue` 属性，Header 值。
+* `next` 属性，下一个项。
+
+CarrierItem 有两个子类：
+
+* [CarrierItemHead](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/CarrierItemHead.java) ：Carrier 项的头( Head )，即首个元素。
+* [SW3CarrierItem](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/SW3CarrierItem.java) ：`header = sw3` ，用于传输 ContextCarrier 。
+
+如下是 Dubbo 插件，使用 CarrierItem 的代码例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/07.png)
+
+* [`ContextCarrier#serialize()`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextCarrier.java#L110)
+* [`ContextCarrier#deserialize(text)`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextCarrier.java#L131)
+
 ### 3.2.4 ContextSnapshot
+
+[`org.skywalking.apm.agent.core.context.ContextSnapshot`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextSnapshot.java) ，**跨线程** Context 传递**快照**。和 ContextCarrier 基本一致，由于不需要**跨进程传输**，可以少**传递**一些属性：
+
+* `parentApplicationInstanceId` 
+* `peerHost`
+
+ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
+
+* [`#TraceSegmentRef(ContextSnapshot)`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L126)
+* [`TracingContext#capture()`](https://github.com/YunaiV/skywalking/blob/23c2146c134e0ef0a37a43758a1e04727de7697a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L163)
+* [`TracingContext#continued(ContextSnapshot)`](https://github.com/YunaiV/skywalking/blob/23c2146c134e0ef0a37a43758a1e04727de7697a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L205)
 
 ## 3.3 SamplingService
 
