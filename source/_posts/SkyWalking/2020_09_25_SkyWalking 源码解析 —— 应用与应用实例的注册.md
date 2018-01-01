@@ -236,7 +236,7 @@ TODO 【4007】
 * ---------- 分割线 ----------
 * `lastSegmentTime` 属性，最后记录 Segment 的时间。
 * [`#afterFinished()`](https://github.com/YunaiV/skywalking/blob/bb8cb1b7dcb428c161f225f0b5d57441105f84c0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/AppAndServiceRegisterClient.java#L186) **实现**方法，记录 Segment 最后的时间。
-* [`#afterBoot()`](https://github.com/YunaiV/skywalking/blob/bb8cb1b7dcb428c161f225f0b5d57441105f84c0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/AppAndServiceRegisterClient.java#L103) **实现**方法，将自己作为监听器( 因为实现了 TracingContextListener 接口 )添加到 GRPCChannelManager 中，从而监听 Segment 的记录。在 [《TODO 【4009】》](http://www.iocoder.cn/SkyWalking/agent-remote-manager/?self) 有详细解析。
+* [`#afterBoot()`](https://github.com/YunaiV/skywalking/blob/bb8cb1b7dcb428c161f225f0b5d57441105f84c0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/AppAndServiceRegisterClient.java#L103) **实现**方法，将自己作为监听器( 因为实现了 TracingContextListener 接口 )添加到 GRPCChannelManager 中，从而监听 Segment 的记录。在 [《SkyWalking 源码分析 —— Agent 收集 Trace 数据》](http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self) 有详细解析。
 
 -------
 

@@ -1,3 +1,38 @@
+title: SkyWalking 源码分析 —— Agent 收集 Trace 数据
+date: 2020-10-01
+tags:
+categories: SkyWalking
+permalink: SkyWalking/agent-collect-trace
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-collect-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+- [2. Trace](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [2.1 ID](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [2.2 AbstractSpan](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [2.3 TraceSegmentRef](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [2.4 TraceSegment](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+- [3. Context](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [3.1 ContextManager](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [3.2 AbstractTracerContext](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+  - [3.3 SamplingService](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 分布式链路追踪系统，链路的追踪大体流程如下：
@@ -15,7 +50,7 @@
 
 本文涉及到的代码如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/01.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/01.png)
 
 * **红框**部分：Trace 的数据结构，在 [「2. Trace」](#) 分享。
 * **黄框**部分：Context 收集 Trace 的方法，在 [「3. Context」](#) 分享。
@@ -112,7 +147,7 @@ DistributedTraceId 有两个实现类：
 
 * `#getSpanId()` 方法，获得 Span 编号。一个整数，在 TraceSegment 内**唯一**，从 0 开始自增，在创建 Span 对象时生成。
 * `#setOperationName(operationName)` 方法，设置操作名。
-    * 操作名，定义如下：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/01.png)
+    * 操作名，定义如下：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/01.png)
     * `#setOperationId(operationId)` 方法，设置操作编号。考虑到操作名是字符串，Agent 发送给 Collector 占用流量较大。因此，Agent 会将操作注册到 Collector ，生成操作编号。在 [《SkyWalking 源码分析 —— Agent DictionaryManager 字典管理》](http://www.iocoder.cn/SkyWalking/agent-dictionary/?self) 有详细解析。
 * `#setComponent(Component)` 方法，设置 [`org.skywalking.apm.network.trace.component.Component`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/Component.java) ，例如：MongoDB / SpringMVC / Tomcat 等等。目前，官方在 [`org.skywalking.apm.network.trace.component.ComponentsDefine`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/ComponentsDefine.java) 定义了目前已经支持的 Component 。
     * `#setComponent(componentName)` 方法，直接设置 Component 名字。大多数情况下，我们不使用该方法。
@@ -154,7 +189,7 @@ DistributedTraceId 有两个实现类：
 
 ### 2.2.2 AbstractSpan 实现类
 
-AbstractSpan 实现类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/03.png)
+AbstractSpan 实现类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/03.png)
 
 * 左半边的 Span 实现类：**有**具体操作的 Span 。
 * 右半边的 Span 实现类：**无**具体操作的 Span ，和左半边的 Span 实现类**相对**，用于不需要收集 Span 的场景。
@@ -211,7 +246,7 @@ EntrySpan 是 TraceSegment 的第一个 Span ，这也是为什么称为"**入�
 
 **ps**：如上内容信息量较大，胖友可以对照着实现方法，在理解理解。HOHO ，良心笔者当然也是加了注释的。
 
-如下是一个 EntrySpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/04.png)
+如下是一个 EntrySpan 在 SkyWalking 展示的例子：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/04.png)
 
 ##### 2.2.2.2.2 ExitSpan
 
@@ -226,7 +261,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 * `peer` 属性，节点地址。
 * `peerId` 属性，节点编号。
 
-如下是一个 ExitSpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/05.png)
+如下是一个 ExitSpan 在 SkyWalking 展示的例子：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/05.png)
 
 -------
 
@@ -246,7 +281,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 [`org.skywalking.apm.agent.core.context.trace.LocalSpan`](https://github.com/YunaiV/skywalking/blob/96fd1f0aacb995f725c446b1cfcdc3124058e6a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/LocalSpan.java) ，继承 AbstractTracingSpan 抽象类，本地 Span ，用于一个普通方法的链路追踪，例如本地方法。
 
-如下是一个 EntrySpan 在 SkyWalking 展示的例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/06.png)
+如下是一个 EntrySpan 在 SkyWalking 展示的例子：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/06.png)
 
 #### 2.2.2.4 NoopSpan
 
@@ -439,6 +474,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
     * `!samplingService.trySampling()` ：不采样。 
     * `!segment.hasRef()` ：无父 TraceSegment 指向。如果此处忽略采样，则会导致整条分布式链路追踪**不完整**。
     * `segment.isSingleSpanSegment()` ：TraceSegment 只有**一个** Span 。
+    * TODO 【4010】
 * 第 450 行：调用 [`TracingContext.ListenerManager#notifyFinish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L476) 方法，通知监听器，一次 TraceSegment 完成。通过这样的方式，TraceSegment 会被 [TraceSegmentServiceClient](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L157) **异步**发送给 Collector 。下一篇文章，我们详细分享发送的过程。
 
 ### 3.2.2 IgnoredTracerContext
@@ -496,7 +532,7 @@ CarrierItem 有两个子类：
 * [CarrierItemHead](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/CarrierItemHead.java) ：Carrier 项的头( Head )，即首个元素。
 * [SW3CarrierItem](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/SW3CarrierItem.java) ：`header = sw3` ，用于传输 ContextCarrier 。
 
-如下是 Dubbo 插件，使用 CarrierItem 的代码例子：[](http://www.iocoder.cn/images/SkyWalking/2020_10_01/07.png)
+如下是 Dubbo 插件，使用 CarrierItem 的代码例子：![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/07.png)
 
 * [`ContextCarrier#serialize()`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextCarrier.java#L110)
 * [`ContextCarrier#deserialize(text)`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextCarrier.java#L131)
@@ -530,4 +566,11 @@ ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
 
 # 666. 彩蛋
 
+元旦很认真( 硬憋 )出一篇"硬货"。哈哈哈。
+
+由于篇幅较长，内容略多，如果有错误的或者解释不清晰的，烦请胖友斧正。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/08.png)
+
+胖友，分享个朋友圈可好？
 

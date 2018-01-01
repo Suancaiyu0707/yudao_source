@@ -255,7 +255,7 @@ public void createServiceReferenceGraph() {
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_25/12.png)
 
-* [`org.skywalking.apm.collector.stream.worker.base.Provider`](todo) ，Worker 供应者**接口**，用于创建 Worker 和 WorkerRef 对象的**工厂**。
+* [`org.skywalking.apm.collector.stream.worker.base.Provider`](https://github.com/YunaiV/skywalking/blob/23c2146c134e0ef0a37a43758a1e04727de7697a/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/Provider.java) ，Worker 供应者**接口**，用于创建 Worker 和 WorkerRef 对象的**工厂**。
 
 ### 3.2.1 AbstractWorker
 
