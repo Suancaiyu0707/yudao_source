@@ -26,7 +26,7 @@
 > 
 > 本小节，笔者认为胖友已经对 OpenTracing 有一定的理解。
 
-[`org.skywalking.apm.agent.core.context.trace.TraceSegment`](todo) ，是**一次**分布式链路追踪( Distributed Trace ) 的**一段**。
+[`org.skywalking.apm.agent.core.context.trace.TraceSegment`](https://github.com/YunaiV/skywalking/blob/2a75efbeddac2b9565816af0ab0873ec3d998424/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java) ，是**一次**分布式链路追踪( Distributed Trace ) 的**一段**。
 
 * **一条** TraceSegment ，用于记录所在**线程**( Thread )的链路。
 * **一次**分布式链路追踪，可以包含**多条** TraceSegment ，因为存在**跨进程**( 例如，RPC 、MQ 等等)，或者垮**线程**( 例如，并发执行、异步回调等等 )。
@@ -180,7 +180,7 @@ AbstractSpan 实现类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 
 大部分是 setting / getting 方法，或者类似方法，已经添加注释，胖友自己阅读。
 
-[`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/11b66b8d36943d6492f51c676b455f29c9c0abc6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java#L126) 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。为什么会调用该方法，在 TODO 详细解析。
+[`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/11b66b8d36943d6492f51c676b455f29c9c0abc6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java#L126) 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。为什么会调用该方法，在 [「3. Context」](#) 详细解析。
 
 #### 2.2.2.2 StackBasedTracingSpan
  [`org.skywalking.apm.agent.core.context.trace.StackBasedTracingSpan`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java) ，实现 AbstractTracingSpan 抽象类，基于**栈**的链路追踪 Span 抽象类。这种 Span 能够被多次调用 `#start(...)` 和 `#finish(...)` 方法，在类似堆栈的调用中。在 [「2.2.2.2.1 EntrySpan」](#) 中详细举例子。代码如下：
@@ -314,6 +314,8 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 在下面的 `#createEntrySpan(...)` 、`#createLocalSpan(...)` 、`#createExitSpan(...)` 等等方法中，都会调用 AbstractTracerContext 提供的方法。这些方法的代码，我们放在 [「3.2 AbstractTracerContext」](#) 一起解析，保证流程的整体性。
 
+另外，ContextManager 封装了**所有** AbstractTracerContext 提供的方法，从而实现，外部调用者，例如 SkyWalking 的插件，只调用 ContextManager 的方法，而不调用 AbstractTracerContext 的方法。
+
 -------
 
 [`#boot()`](https://github.com/YunaiV/skywalking/blob/ad259ad680df86296036910ede262765ffb44e5e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L201) **实现**方法，启动时，将自己注册到 [TracingContext.ListenerManager]() 和 [IgnoredTracerContext.ListenerManager]() 中，这样一次链路追踪上下文( Context )完成时，从而被回调如下方法，清理上下文：
@@ -323,13 +325,152 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 ## 3.2 AbstractTracerContext
 
-ContextListener
+[`org.skywalking.apm.agent.core.context.AbstractTracerContext`](https://github.com/YunaiV/skywalking/blob/2a75efbeddac2b9565816af0ab0873ec3d998424/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/AbstractTracerContext.java) ，链路追踪上下文**接口**。定义了如下方法：
 
+* `#getReadableGlobalTraceId()` 方法，获得**关联**的全局链路追踪编号。
+* `#createEntrySpan(operationName)` 方法，创建 EntrySpan 对象。
+* `#createLocalSpan(operationName)` 方法，创建 LocalSpan 对象。
+* `#createExitSpan(operationName, remotePeer)` 方法，创建 ExitSpan 对象。
+* `#activeSpan()` 方法，获得当前**活跃**的 Span 对象。
+* `#stopSpan(AbstractSpan)` 方法，停止( 完成 )指定 AbstractSpan 对象。
+* --------- 跨进程( cross-process ) ---------
+* `#inject(ContextCarrier)` 方法，将 Context **注入**到 ContextCarrier ，用于跨进程，**传播**上下文。
+* `#extract(ContextCarrier)` 方法，将 ContextCarrier **解压**到 Context ，用于跨进程，**接收**上下文。
+* --------- 跨线程( cross-thread ) ---------
+* `#capture()` 方法，将 Context **快照**到 ContextSnapshot ，用于跨线程，**传播**上下文。
+* `#continued(ContextSnapshot)` 方法，将 ContextSnapshot **解压**到 Context ，用于跨线程，**接收**上下文。
 
+### 3.2.1 TracingContext
 
+`org.skywalking.apm.agent.core.context.TracingContext` ，实现 AbstractTracerContext 接口，链路追踪上下文**实现类**。
 
-    public TraceSegmentRef(ContextCarrier carrier) {
+* `segment` 属性，上下文对应的 TraceSegment 对象。
+* `activeSpanStack` 属性，AbstractSpan **链表**数组，收集当前**活跃**的 Span 对象。正如方法的调用与执行一样，在一个**调用栈**中，先执行的方法后结束。
+* `spanIdGenerator` 属性，Span 编号自增序列。创建的 Span 的编号，通过该变量自增生成。
 
-    public TraceSegmentRef(ContextSnapshot snapshot) {
+[TracingContext 构造方法](https://github.com/YunaiV/skywalking/blob/2a75efbeddac2b9565816af0ab0873ec3d998424/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L79) ，代码如下：
+
+* 第 80 行：创建 TraceSegment 对象。
+* 第 81 行：设置 `spanIdGenerator = 0` 。
+
+[`#getReadableGlobalTraceId()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L79) **实现**方法，获得 TraceSegment 的**首个** DistributedTraceId 作为返回。
+
+#### 3.2.1.1 创建 EntrySpan
+
+调用 [`ContextManager#createEntrySpan(operationName, carrier)`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L118) 方法，创建 EntrySpan 对象。代码如下：
+
+* 第 121 至 131 行：调用 `#getOrCreate(operationName, forceSampling)` 方法，获取 AbstractTracerContext 对象。若不存在，进行创建。
+    * 第 122 至 125 行：有**传播** Context 的情况下，**强制**收集 Trace 数据。
+    * 第 127 行：调用 `TracingContext#extract(ContextCarrier)` 方法，将 ContextCarrier **解压**到 Context ，**跨进程**，接收上下文。在 [「3.2.3 ContextCarrier」](#) 详细解析。
+* 第 133 行：调用 `TracingContext#createEntrySpan(operationName)` 方法，创建 EntrySpan 对象。
+
+-------
+
+调用 [`TracingContext#createEntrySpan(operationName)`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L230) 方法，创建 EntrySpan 对象。代码如下：
+
+* 第 223 至 227 行：调用 [`#isLimitMechanismWorking()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L500) 方法，判断 Span 数量**超过上限**，创建 NoopSpan 对象，并调用 `#push(AbstractSpan)` 方法，添加到 `activeSpanStack` 中。
+* 第 229 至 231 行：调用 [`#peek()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L489) 方法，获得当前活跃的 AbstractSpan 对象。
+* 第 232 至 249 行：若**父** Span 对象不存在，创建 EntrySpan 对象。
+    * 第 235 至 244 行：创建 EntrySpan 对象。
+    * 第 247 行：调用 `EntrySpan#start()` 方法，开始 EntrySpan 。
+    * 第 249 行：调用 `#push(AbstractSpan)` 方法，添加到 `activeSpanStack` 中。
+* 第 251 至 264 行：若**父** EntrySpan 对象存在，**重新**开始 EntrySpan 。参见 [「2.2.2.2.1 EntrySpan」](#) 。
+* 第 265 至 267 行：`"The Entry Span can't be the child of Non-Entry Span"` 。
+
+#### 3.2.1.2 创建 LocalSpan
+
+调用 [`ContextManager#createLocalSpan(operationName)`](https://github.com/YunaiV/skywalking/blob/97777afc4975ee3bd466fd8870d7dbbc3da9ddd0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L136) 方法，创建 LocalSpan 对象。
+
+* 第 138 行：调用 `#getOrCreate(operationName, forceSampling)` 方法，获取 AbstractTracerContext 对象。若不存在，进行创建。
+* 第 140 行：调用 `TracingContext#createLocalSpan(operationName)` 方法，创建 LocalSpan 对象。
+
+-------
+
+调用 [`TracingContext#createLocalSpan(operationName)`](https://github.com/YunaiV/skywalking/blob/97777afc4975ee3bd466fd8870d7dbbc3da9ddd0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L278) 方法，创建 LocalSpan 对象。代码如下：
+
+* 第 280 至 283 行：调用 [`#isLimitMechanismWorking()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L500) 方法，判断 Span 数量**超过上限**，创建 NoopSpan 对象，并调用 `#push(AbstractSpan)` 方法，添加到 `activeSpanStack` 中。
+* 第 284 至 286 行：调用 [`#peek()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L489) 方法，获得当前活跃的 AbstractSpan 对象。
+* 第 288 至 300 行：创建 LocalSpan 对象。
+* 第 302 行：调用 `LocalSpan#start()` 方法，开始 LocalSpan 。
+* 第 304 行：调用 `#push(AbstractSpan)` 方法，添加到 `activeSpanStack` 中。
+
+#### 3.2.1.3 创建 ExitSpan
+
+调用 [`ContextManager#createExitSpan(operationName, carrier, remotePeer)`](https://github.com/YunaiV/skywalking/blob/97777afc4975ee3bd466fd8870d7dbbc3da9ddd0/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L143) 方法，创建 ExitSpan 对象。
+
+* 第 148 行：调用 `#getOrCreate(operationName, forceSampling)` 方法，获取 AbstractTracerContext 对象。若不存在，进行创建。
+* 第 150 行：调用 `TracingContext#createExitSpan(operationName, remotePeer)` 方法，创建 ExitSpan 对象。
+* 第 160 行：`TracingContext#inject(ContextCarrier)` 方法，将 Context **注入**到 ContextCarrier ，**跨进程**，传播上下文。在 [「3.2.3 ContextCarrier」](#) 详细解析。
+
+-------
+
+调用 [`TracingContext#createEntrySpan(operationName)`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L230) 方法，创建 ExitSpan 对象。代码如下：
+
+* 第 319 行：调用 [`#peek()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L489) 方法，获得当前活跃的 AbstractSpan 对象。
+* 第 320 至 322 行：若 ExitSpan 对象存在，直接使用，不重新创建。参见 [「2.2.2.2.2 ExitSpan」](#) 。
+* 第 324 至 377 行：创建 ExitSpan 对象，并添加到 `activeSpanStack` 中。
+    * 第 327 行：根据 `remotePeer` 参数，查找 `peerId` 。**注意**，此处会创建一个 Application 对象，通过 ServiceMapping 表，和远程的 Application 进行**匹配映射**。后续有文章会分享这块。
+    * 第 322 至 324 行 || 第 335 至 358 行：判断 Span 数量**超过上限**，创建 NoopExitSpan 对象，并调用 `#push(AbstractSpan)` 方法，添加到 `activeSpanStack` 中。
+* 第 380 行：开始 ExitSpan 。
+
+#### 3.2.1.4 结束 Span
+
+调用 [`ContextManager#stopSpan()`](https://github.com/YunaiV/skywalking/blob/85effa4f5752bdfe3efa43294293af0634a40626/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L316) 方法，结束 Span 。代码如下：
+
+* 第 199 行：调用 `TracingContext#stopSpan(AbstractSpan)` 方法，结束 Span 。**当所有活跃的 Span 都被结束后，当前线程的 TraceSegment 完成**。
+
+-------
+
+调用 [`TracingContext#stopSpan(AbstractSpan)`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L403) 方法，结束 Span 。代码如下：
+
+* 第 405 行：调用 [`#peek()`](https://github.com/YunaiV/skywalking/blob/5eb4b28e18e8a47de10ec331a9667444d16f4933/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L489) 方法，获得当前活跃的 AbstractSpan 对象。
+* 第 408 至 414 行：当 Span 为 AbstractTracingSpan 的子类，即记录链路追踪的 Span ，调用 `AbstractTracingSpan#finish(TraceSegment)` 方法，完成 Span 。
+    * 当完成**成功**时，调用 `#pop()` 方法，移除出 `activeSpanStack` 。
+    * 当完成**失败**时，原因参见 [「2.2.2.2 StackBasedTracingSpan」](#) 。
+* 第 416 至 419 行：当 Span 为 NoopSpan 的子类，即不记录链路追踪的 Span ，调用 `#pop()` 方法，移除出 `activeSpanStack` 。
+* 第 425 至 427 行：当所有活跃的 Span 都被结束后，调用 `#finish()` 方法，当前线程的 TraceSegment 完成。
+
+-------
+
+调用 [`TracingContext#stopSpan(AbstractSpan)`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L434) 方法，完成 Context 。代码如下：
+
+* 第 436 行：调用 `TraceSegment#finish(isSizeLimited)` 方法，完成 TraceSegment 。
+* 第 444 至 448 行：若满足条件，调用 `TraceSegment#setIgnore(true)` 方法，标记该 TraceSegment 忽略，不发送给 Collector 。
+    * `!samplingService.trySampling()` ：不采样。 
+    * `!segment.hasRef()` ：无父 TraceSegment 指向。如果此处忽略采样，则会导致整条分布式链路追踪**不完整**。
+    * `segment.isSingleSpanSegment()` ：TraceSegment 只有**一个** Span 。
+* 第 450 行：调用 [`TracingContext.ListenerManager#notifyFinish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/TracingContext.java#L476) 方法，通知监听器，一次 TraceSegment 完成。通过这样的方式，TraceSegment 会被 [TraceSegmentServiceClient](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L157) **异步**发送给 Collector 。下一篇文章，我们详细分享发送的过程。
+
+### 3.2.2 IgnoredTracerContext
+
+[`org.skywalking.apm.agent.core.context.IgnoredTracerContext`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/IgnoredTracerContext.java) ，实现 AbstractTracerContext 接口，忽略( **不记录** )链路追踪的上下文。代码如下：
+
+* `NOOP_SPAN` **静态**属性，NoopSpan 单例。
+    * 所有的创建 Span 方法，返回的都是该对象。
+* `stackDepth` 属性，栈深度。
+    * 不同于 TracingContext 使用**链式数组**来处理 Span 的**出入栈**，IgnoredTracerContext 使用 `stackDepth` 来计数，从而实现**出入栈**的效果。
+* 通过这两个属性和相应**空**方法的实现，以减少 NoopSpan 时的对象创建，达到减少内存使用和 GC 时间。
+
+代码比较简单，胖友自己阅读该类的实现。
+
+### 3.2.3 ContextCarrier
+
+### 3.2.4 ContextSnapshot
+
+## 3.3 SamplingService
+
+[`org.skywalking.apm.agent.core.sampling.SamplingService`](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/sampling/SamplingService.java) ，实现 Service 接口，Agent 抽样服务。该服务的作用是，如何对 TraceSegment 抽样收集。考虑到如果每条 TraceSegment 都进行追踪，会带来一定的 CPU ( 用于序列化与反序列化 ) 和网络的开销。通过配置 `Config.Agent.SAMPLE_N_PER_3_SECS` 属性，设置**每三秒**，收集 TraceSegment 的条数。默认情况下，不开启抽样服务，即全部收集。
+
+代码如下：
+
+* `on` 属性，是否开启抽样服务。
+* `samplingFactorHolder` 属性，抽样计数器。通过定时任务，每三秒重置一次。
+* `scheduledFuture` 属性，定时任务。
+* `#boot()` **实现**方法，若开启抽样服务( `Config.Agent.SAMPLE_N_PER_3_SECS > 0` ) 时，创建定时任务，每三秒，调用一次 `#resetSamplingFactor()` 方法，重置计数器。
+* `#trySampling()` 方法，若开启抽样服务，判断是否超过每三秒的抽样**上限**。若不是，返回 `true` ，并增加计数器。否则，返回 `false` 。
+* `#forceSampled()` 方法，**强制**增加计数器加一。一般情况下，该方法用于链路追踪上下文传播时，被调用服务必须记录链路，参见调用处的[代码](https://github.com/YunaiV/skywalking/blob/7b39e952da408f722a53168e6d6a0cd7e7ff372f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextManager.java#L123)。
+* `#resetSamplingFactor()` 方法，重置计数器。
+
+# 666. 彩蛋
 
 
