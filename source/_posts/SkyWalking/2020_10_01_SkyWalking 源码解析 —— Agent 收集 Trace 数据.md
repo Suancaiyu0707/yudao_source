@@ -37,11 +37,12 @@ permalink: SkyWalking/agent-collect-trace
 
 分布式链路追踪系统，链路的追踪大体流程如下：
 
-1. Agent 收集 Trace 数据。
+1. **Agent 收集 Trace 数据**。
 2. Agent 发送 Trace 数据给 Collector 。
-3. Collector 存储 Trace 数据到存储器，例如，数据库。
+3. Collector 接收 Trace 数据。
+4. Collector 存储 Trace 数据到存储器，例如，数据库。
 
-本文主要分享 **SkyWalking Agent 收集 Trace 数据**。文章的内容顺序如下：
+本文主要分享【第一部分】 **SkyWalking Agent 收集 Trace 数据**。文章的内容顺序如下：
 
 * Trace 的数据结构
 * Context 收集 Trace 的方法
