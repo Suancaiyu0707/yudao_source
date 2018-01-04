@@ -1,3 +1,37 @@
+title: SkyWalking 源码分析 —— Collector 接收 Trace 数据
+date: 2020-10-10
+tags:
+categories: SkyWalking
+permalink: SkyWalking/collector-receive-trace
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-receive-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+- [2. TraceSegmentServiceHandler](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [2.1 TraceSegmentService](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [2.2 SegmentParse](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [2.3 Standardization 标准化](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+- [3. Buffer 文件](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [3.1 初始化](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [3.2 写入](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+  - [3.3 读取](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 分布式链路追踪系统，链路的追踪大体流程如下：
@@ -11,7 +45,7 @@
 
 > 友情提示：Collector 接收到 TraceSegment 的数据，对应的类是 Protobuf 生成的。考虑到更加易读易懂，本文使用 TraceSegment 相关的**原始类**。
 
-大体流程如下：[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/01.png)
+大体流程如下：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/01.png)
 
 * Collector 接收到 TraceSegment 数据后，进行**构建**。
 * 【蓝色流程】构建**成功**，进行流式处理，最终存储到存储器( 例如，ES / H2 )。
@@ -22,7 +56,7 @@
 
 从 TraceSegment **数据**中，会构建出更多的**数据维度**，如下图所示：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/02.png)
 
 构建的过程，本文只分享**调用**的过程，具体怎么**生成**新的数据，数据的**流式处理与存储**，在 [《SkyWalking 源码解析 —— Collector 流式处理 Trace 数据》](http://www.iocoder.cn/SkyWalking/collector-stream-process-trace/?self) 详细解析。
 
@@ -41,7 +75,7 @@
 
 我们先来看看 API 的定义，[`TraceSegmentService.proto`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-network/src/main/proto/TraceSegmentService.proto#L9) ，如下图所示：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/03.png)
 
 [`TraceSegmentServiceHandler#collect(Application, StreamObserver<ApplicationMapping>)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-grpc/collector-agent-grpc-provider/src/main/java/org/skywalking/apm/collector/agent/grpc/handler/TraceSegmentServiceHandler.java#L47), 代码如下：
 
@@ -122,7 +156,7 @@
 
 ## 2.3 Standardization 标准化
 
-本小节涉及到的类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/04.png)
+本小节涉及到的类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/04.png)
 
 我们先来说说，什么叫 standardization **标准化**？其实就是我们在文章开头说的"**例如将** `operationName` **转换成** `operationId`"。
 
@@ -178,7 +212,7 @@ IdExchanger 有三个实现类：
 
 # 3. Buffer 文件
 
-本小节涉及到的类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/05.png)
+本小节涉及到的类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/05.png)
 
 我们先来看看 Buffer 包括哪些文件：
 
@@ -222,7 +256,7 @@ data_20171205004132.sw		offset_20171205004132.sw
     * 第 118 至 121 行：设置 Offset 对象的写入和读取的文件名与偏移量都为**空**。在上面的方法，此处的【空】，在 Data 文件创建时，会重新设置 Offset 。
     * 第 123 行：调用 [`#flush()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/OffsetManager.java#L129) 方法，写入 Offset 对象到 Offset 文件。代码如下： 
         * 第 131 行：调用 [`Offset#serialize()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/Offset.java#L49) 方法，序列化读写偏移，格式为 `${读取文件名},${读取文件偏移量},${写入文件名},${写入文件偏移量}` 。
-        * 第 133 至 142 行：写入 Offset 对象到 Offset 文件。写入方式为**整行**，如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/06.png)
+        * 第 133 至 142 行：写入 Offset 对象到 Offset 文件。写入方式为**整行**，如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/06.png)
 * 第 82 至 94 行：获得所有 Offset 文件，删除老的 Offset 文件，保留最后一个。若不存在 Offset 文件，则调用 `#createOffsetFile()` 方法，创建**新**的 Offset 文件。
 * 第 98 至 99 行：从 Offset 文件的**最后一行**读取，反序列化到 Offset 对象。
 * 第 103 行：创建定义任务，延迟 10 秒，间隔 3 秒，调用 `#flush()` 方法，**定时**写入 Offset 对象到 Offset 文件。**注意，所以 Offset 改变时，不是立即写入 Offset 文件，而是周期性刷盘**。
@@ -237,7 +271,7 @@ data_20171205004132.sw		offset_20171205004132.sw
 
 [`SegmentBufferManager#writeBuffer(UpstreamSegment)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/SegmentBufferManager.java#L91) 方法，将 TraceSegment 写入 Buffer 文件，包括两个步骤：1）将 TraceSegment 写入 Data 文件；2）更新 Offset 文件的偏移。代码如下：
 
-* 第 94 至 95 行：调用 `AbstractMessageLite#writeDelimitedTo(OutputStream)` 方法，将 TraceSegment 写入 Data 文件。该方法包括 **flush** 操作，代码如下：[](http://www.iocoder.cn/images/SkyWalking/2020_10_10/07.png)
+* 第 94 至 95 行：调用 `AbstractMessageLite#writeDelimitedTo(OutputStream)` 方法，将 TraceSegment 写入 Data 文件。该方法包括 **flush** 操作，代码如下：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/07.png)
 * 第 97 至 98 行：超过 Buffer **单文件容量上限**，调用 [`#newDataFile()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/SegmentBufferManager.java#L113) ，创建 Data 文件。
 * 第 99 至 102 行：调用 [`OffsetManager#setWriteOffset(position)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/OffsetManager.java#L186) 方法，设置 Offset 对象的写入偏移。
 
@@ -269,7 +303,11 @@ data_20171205004132.sw		offset_20171205004132.sw
 * 该情况发生于，Data 文件、Buffer 文件**首次**初始化创建，未设置可读文件名。
 * 第 79 行：调用 `#readEarliestCreateDataFile()` 方法，循环顺序读取 Data 文件，直到有一个没读完。
 
-# 4. 脑暴
-
 # 666. 彩蛋
+
+呼呼，即将开始 Trace 流式处理的文章，很嗨皮。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/08.png)
+
+胖友，分享个朋友圈可好？
 

@@ -1,3 +1,4 @@
+http://www.iocoder.cn/SkyWalking/collector-receive-trace/
 http://www.iocoder.cn/SkyWalking/agent-send-trace/
 http://www.iocoder.cn/SkyWalking/agent-collect-trace/
 http://www.iocoder.cn/SkyWalking/agent-dictionary/
@@ -96,5 +97,4 @@ http://www.iocoder.cn/Elastic-Job/cloud-local-executor/
 http://www.iocoder.cn/2018-meet-you/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-second/
 http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/
-http://www.iocoder.cn/Architecture/books-recommended/
 http://www.iocoder.cn/Architecture/how-to-read-article/
