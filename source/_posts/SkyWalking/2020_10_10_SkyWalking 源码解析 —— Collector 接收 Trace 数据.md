@@ -58,7 +58,7 @@ permalink: SkyWalking/collector-receive-trace
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/02.png)
 
-构建的过程，本文只分享**调用**的过程，具体怎么**生成**新的数据，数据的**流式处理与存储**，在 [《SkyWalking 源码解析 —— Collector 流式处理 Trace 数据》](http://www.iocoder.cn/SkyWalking/collector-stream-process-trace/?self) 详细解析。
+构建的过程，本文只分享**调用**的过程，具体怎么**生成**新的数据，数据的**流式处理与存储**，在 [《SkyWalking 源码解析 —— Collector 存储 Trace 数据》](http://www.iocoder.cn/SkyWalking/collector-store-trace/?self) 详细解析。
 
 **为什么构建会失败**？
 
@@ -114,7 +114,7 @@ permalink: SkyWalking/collector-receive-trace
     * 而后台线程，定时调用该方法重新构建使用的是 `Source.Buffer` ，如果不加盖判断，会预构建失败**重复**写入。
 * 第 100 行：返回 `false` ，表示构建失败。
 * -------- 构建成功 --------
-* 第 106 行：调用 [`#notifyListenerToBuild()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L199) 方法，通知 Span 监听器们，**执行构建**各自的数据。在 [《SkyWalking 源码解析 —— Collector 流式处理 Trace 数据》](http://www.iocoder.cn/SkyWalking/collector-stream-process-trace/?self) 详细解析。
+* 第 106 行：调用 [`#notifyListenerToBuild()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L199) 方法，通知 Span 监听器们，**执行构建**各自的数据。在 [《SkyWalking 源码解析 —— Collector 存储 Trace 数据》](http://www.iocoder.cn/SkyWalking/collector-store-trace/?self) 详细解析。
 * 第 109 行：调用 [`buildSegment(id, dataBinary)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L177) 方法，**执行构建** TraceSegment 。
 * 第 110 行：返回 `true` ，表示构建成功。
 * 第 112 至 115 行：发生 InvalidProtocolBufferException 异常，返回 `false` ，表示构建失败。

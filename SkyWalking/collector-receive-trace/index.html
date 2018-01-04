@@ -140,7 +140,7 @@
   </p>
   <p class="article-time">
     <!--<time datetime="2020-10-09T16:00:00.000Z" itemprop="datePublished">2020-10-10</time>-->
-    <!--更新日期:<time datetime="2018-01-04T15:01:44.000Z" itemprop="dateModified">2018-01-04</time>-->
+    <!--更新日期:<time datetime="2018-01-04T15:10:24.000Z" itemprop="dateModified">2018-01-04</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -199,7 +199,7 @@
 <p><strong>什么是构建</strong>？</p>
 <p>从 TraceSegment <strong>数据</strong>中，会构建出更多的<strong>数据维度</strong>，如下图所示：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_10/02.png" alt=""></p>
-<p>构建的过程，本文只分享<strong>调用</strong>的过程，具体怎么<strong>生成</strong>新的数据，数据的<strong>流式处理与存储</strong>，在 <a href="http://www.iocoder.cn/SkyWalking/collector-stream-process-trace/?self">《SkyWalking 源码解析 —— Collector 流式处理 Trace 数据》</a> 详细解析。</p>
+<p>构建的过程，本文只分享<strong>调用</strong>的过程，具体怎么<strong>生成</strong>新的数据，数据的<strong>流式处理与存储</strong>，在 <a href="http://www.iocoder.cn/SkyWalking/collector-store-trace/?self">《SkyWalking 源码解析 —— Collector 存储 Trace 数据》</a> 详细解析。</p>
 <p><strong>为什么构建会失败</strong>？</p>
 <p>在 TraceSegment 里的数据结构，例如操作名( <code>operationName</code> )和操作编号( <code>operationId</code> ) ，在 <a href="http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self">《SkyWalking 源码分析 —— Agent 收集 Trace 数据》</a> 中我们可以看到，考虑到网络传输，优先使用 <code>operationId</code> ，若不存在( 例如操作还未注册，或者注册了 Agent 未同步到本地 )，则使用 <code>operationName</code> 。</p>
 <p>但是，Collector 构建过程时，要求的是 <code>operationId</code> ，如果传递的是 <code>operationName</code> 时，需要将 <code>operationName</code> 转换成 <code>operationId</code> 。若此时 <code>operationName</code> 未注册时，则无法获取到 <code>operationId</code> ，导致<strong>构建失败</strong>。</p>
@@ -246,7 +246,7 @@
 </li>
 <li>第 100 行：返回 <code>false</code> ，表示构建失败。</li>
 <li>——– 构建成功 ——–</li>
-<li>第 106 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L199" rel="external nofollow noopener noreferrer" target="_blank"><code>#notifyListenerToBuild()</code></a> 方法，通知 Span 监听器们，<strong>执行构建</strong>各自的数据。在 <a href="http://www.iocoder.cn/SkyWalking/collector-stream-process-trace/?self">《SkyWalking 源码解析 —— Collector 流式处理 Trace 数据》</a> 详细解析。</li>
+<li>第 106 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L199" rel="external nofollow noopener noreferrer" target="_blank"><code>#notifyListenerToBuild()</code></a> 方法，通知 Span 监听器们，<strong>执行构建</strong>各自的数据。在 <a href="http://www.iocoder.cn/SkyWalking/collector-store-trace/?self">《SkyWalking 源码解析 —— Collector 存储 Trace 数据》</a> 详细解析。</li>
 <li>第 109 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L177" rel="external nofollow noopener noreferrer" target="_blank"><code>buildSegment(id, dataBinary)</code></a> 方法，<strong>执行构建</strong> TraceSegment 。</li>
 <li>第 110 行：返回 <code>true</code> ，表示构建成功。</li>
 <li>第 112 至 115 行：发生 InvalidProtocolBufferException 异常，返回 <code>false</code> ，表示构建失败。</li>
