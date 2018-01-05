@@ -6,6 +6,34 @@ permalink: SkyWalking/collector-store-trace
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-store-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [2. SpanListener](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [3. GlobalTrace](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [4. InstPerformance](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [5. SegmentCost](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [6. NodeComponent](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [7. NodeMapping](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [8. NodeReference](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [9. ServiceEntry](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [10. ServiceReference](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [11. Segment](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/collector-store-trace/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 分布式链路追踪系统，链路的追踪大体流程如下：
@@ -395,4 +423,12 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 
 # 666. 彩蛋
 
+抱歉，本文可能会存在一些错误或者细节没有扣到，烦请见谅。  
+胖友如果有疑惑，请给我的公众号留言，一起探讨。
+
+大量类似的内容，笔者一天都处于昏昏沉沉的状态，中间有一块不小心替换错误，实在是苦闷而又几分枯燥，不得不佩服 SkyWalking 开发者的耐心。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/13.png)
+
+胖友，分享个朋友圈可好？
 
