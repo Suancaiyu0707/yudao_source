@@ -43,11 +43,11 @@ permalink: SkyWalking/collector-store-trace
 3. Collector 接收 Trace 数据。
 4. **Collector 存储 Trace 数据到存储器，例如，数据库**。
 
-本文主要分享【第三部分】 **SkyWalking Collector 存储 Trace 数据**。
+本文主要分享【第四部分】 **SkyWalking Collector 存储 Trace 数据**。
 
 > 友情提示：Collector 接收到 TraceSegment 的数据，对应的类是 Protobuf 生成的。考虑到更加易读易懂，本文使用 TraceSegment 相关的**原始类**。
 
-Collector 在接收到 Trace 数据后，经过**流式处理**，最终**存储**到存储器。如下图，**红圈部分**，为本文分享的内容：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/01.jpeg)
+Collector 在接收到 Trace 数据后，经过**流式处理**，最终**存储**到存储器。如下图，**红圈部分**，为本文分享的内容：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/01.jpeg)
 
 # 2. SpanListener
 
@@ -60,7 +60,7 @@ Collector 在接收到 Trace 数据后，经过**流式处理**，最终**存储
 
 * 定义了 [`#build()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SpanListener.java#L28) 方法，构建数据，执行流式处理，最终存储到存储器。
 
-SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/02.png)
+SpanListener 的子类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/02.png)
 
 * 第一层，通用接口层，定义了从 TraceSegment 解析数据的方法。
     * ① [GlobalTraceSpanListener](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/GlobalTraceIdsListener.java) ：解析链路追踪全局编号数组( `TraceSegment.relatedGlobalTraces` )。
@@ -69,7 +69,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * ③ [EntrySpanListener](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/EntrySpanListener.java) ：解析 EntrySpan (`TraceSegment.spans`)。
     * ③ [LocalSpanListener](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/LocalSpanListener.java) ：解析 LocalSpan (`TraceSegment.spans`)。
     * ③ [ExitSpanListener](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/ExitSpanListener.java) ：解析 ExitSpan (`TraceSegment.spans`)。
-* 第二层，业务实现层，每个实现类对应一个数据实体类，一个 Graph 对象。如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/03.png)
+* 第二层，业务实现层，每个实现类对应一个数据实体类，一个 Graph 对象。如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/03.png)
 
 下面，我们以每个数据实体类为中心，逐个分享。
 
@@ -83,7 +83,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `segment_id` ：TraceSegment 链路编号。
     * `time_bucket` ：时间。
 * [`org.skywalking.apm.collector.storage.es.dao.GlobalTraceEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/GlobalTraceEsPersistenceDAO.java) ，GlobalTrace 的 EsDAO 。
-* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_15/04.png)
+* 在 ES 存储例子如下图： ![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/04.png)
 
 -------
 
@@ -122,7 +122,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `cost_total` ：消耗总时长。
     * `time_bucket` ：时间。
 * [`org.skywalking.apm.collector.storage.es.dao.InstPerformanceEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstPerformanceEsPersistenceDAO.java) ，InstPerformance 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/05.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/05.png)
 
 -------
 
@@ -153,7 +153,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `cost` ：消耗时长。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.SegmentCostEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentCostEsPersistenceDAO.java) ，SegmentCost 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/06.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/06.png)
 
 -------
 
@@ -176,7 +176,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `peer_id` ：对等编号。每个组件，或是服务提供者，有服务地址；又或是服务消费者，有调用服务地址。这两者都脱离不开**服务地址**。SkyWalking 将**服务地址**作为 `applicationCode` ，注册到 Application 。因此，此处的 `peer_id` 实际上是，**服务地址**对应的应用编号。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.NodeComponentEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeComponentEsPersistenceDAO.java) ，NodeComponent 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/07.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/07.png)
 
 -------
 
@@ -220,7 +220,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `address_id` ：服务提供者应用编号。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.NodeMappingEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeMappingEsPersistenceDAO.java) ，NodeMapping 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/08.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/08.png)
 
 -------
 
@@ -258,7 +258,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `summary` ：总共的调用次数。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.NodeReferenceEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeReferenceEsPersistenceDAO.java) ，NodeReference 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/09.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/09.png)
 
 -------
 
@@ -308,7 +308,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `register_time` ：注册时间。
     * `newest_time` ：最后调用时间。
 * [`org.skywalking.apm.collector.storage.es.dao.ServiceEntryEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceEntryEsPersistenceDAO.java) ，ServiceEntry 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/10.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/10.png)
 
 -------
 
@@ -357,7 +357,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `cost_summary` ：总共的花费时间。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.ServiceReference`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceReference.java) ，ServiceReference 的 EsDAO 。
-* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/11.png)
+* 在 ES 存储例子如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/11.png)
 
 -------
 
@@ -413,7 +413,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `data_binary` ：TraceSegment 链路编号。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
 * [`org.skywalking.apm.collector.storage.es.dao.SegmentEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsPersistenceDAO.java) ，GlobalTrace 的 EsDAO 。
-* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_15/12.png)
+* 在 ES 存储例子如下图： ![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/12.png)
 
 -------
 
