@@ -45,7 +45,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 
 下面，我们以每个数据实体类为中心，逐个分享。
 
-## 2.1 GlobalTrace
+# 3. GlobalTrace
 
 [`org.skywalking.apm.collector.storage.table.global.GlobalTrace`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/global/GlobalTrace.java) ，全局链路追踪，记录一次分布式链路追踪，包括的 TraceSegment 编号。
 
@@ -81,7 +81,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * [`#id()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/global/GlobalTracePersistenceWorker.java#L39) 实现方法，返回 120 。
     * [`#needMergeDBData()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/global/GlobalTracePersistenceWorker.java#L43) 实现方法，返回 `false` ，存储时，不需要合并数据。GlobalTrace 只有新增操作，没有更新操作，因此无需合并数据。
 
-## 2.2 InstPerformance
+# 4. InstPerformance
 
 > 旁白君：InstPerformance 和 GlobalTrace 整体比较相似，分享的会比较简洁一些。
 
@@ -109,7 +109,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * 类似 GlobalTracePersistenceWorker ，... 省略其它类和方法。
     * [`#needMergeDBData()`](https://github.com/YunaiV/skywalking/blob/0f8c38a8a35cbda777fa9a9bc5f51c8651ae4051/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/instance/InstPerformancePersistenceWorker.java#L46) 实现方法，返回 `true` ，存储时，需要合并数据。`calls` 、`cost_total` 需要累加合并。
 
-## 2.3 SegmentCost
+# 5. SegmentCost
 
 > 旁白君：SegmentCost 和 GlobalTrace 整体比较相似，分享的会比较简洁一些。
 
@@ -139,7 +139,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 
     * 类似 GlobalTracePersistenceWorker ，... 省略其它类和方法。
 
-## 2.4 NodeComponent
+# 6. NodeComponent
 
 [`org.skywalking.apm.collector.storage.table.node.NodeComponent`](https://github.com/YunaiV/skywalking/blob/297c693e9e91200860a147ca41473f68d48d5955/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/node/NodeComponent.java) ，节点组件。
 
@@ -183,7 +183,7 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * 类似 GlobalTracePersistenceWorker ，... 省略其它类和方法。
     * [`#needMergeDBData()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryPersistenceWorker.java#L43) 实现方法，返回 `true` ，存储时，需要合并数据。
 
-## 2.5 NodeMapping
+# 7. NodeMapping
 
 [`org.skywalking.apm.collector.storage.table.node.NodeComponent`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/node/NodeComponent.java) ，节点匹配，用于匹配服务消费者与提供者。
 
@@ -215,11 +215,11 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 * [`org.skywalking.apm.collector.agent.stream.worker.trace.node.NodeMappingRemoteWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/node/NodeMappingRemoteWorker.java)
 * [`org.skywalking.apm.collector.agent.stream.worker.trace.node.NodeMappingPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/node/NodeMappingPersistenceWorker.java)
 
-## 2.6 ServiceEntry
+# 8. NodeReference
 
-[`org.skywalking.apm.collector.storage.table.service.ServiceEntry`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/service/ServiceEntry.java) ，节点调用统计，用于记录服务消费者对服务提供者的调用，基于**应用**级别的，以**分钟**为时间最小粒度的聚合统计。
+[`org.skywalking.apm.collector.storage.table.noderef.NodeReference`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/noderef/NodeReference.java) ，节点调用统计，用于记录服务消费者对服务提供者的调用，基于**应用**级别的，以**分钟**为时间最小粒度的聚合统计。
 
-* [`org.skywalking.apm.collector.storage.table.service.ServiceEntryTable`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/service/ServiceEntryTable.java) ， ServiceEntryTable 表( `node_reference` )。字段如下：
+* [`org.skywalking.apm.collector.storage.table.noderef.NodeReference`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/noderef/NodeReferenceTable.java) ， NodeReference 表( `node_reference` )。字段如下：
     * `front_application_id` ：服务消费者应用编号。
     * `behind_application_id` ：服务提供者应用编号。
     * `s1_lte` ：( 0, 1000 ms ] 的调用次数。
@@ -229,45 +229,45 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
     * `error` ：发生异常的调用次数。
     * `summary` ：总共的调用次数。
     * `time_bucket` ：时间( `yyyyMMddHHmm` )。
-* [`org.skywalking.apm.collector.storage.es.dao.ServiceEntryEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceEntryEsPersistenceDAO.java) ，ServiceEntry 的 EsDAO 。
+* [`org.skywalking.apm.collector.storage.es.dao.NodeReferenceEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeReferenceEsPersistenceDAO.java) ，NodeReference 的 EsDAO 。
 * 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/09.png)
 
 -------
 
-[`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntrySpanListener`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntrySpanListener.java) ，**ServiceEntry 的 SpanListener** ，实现了 EntrySpanListener 、ExitSpanListener 、RefsListener 接口，代码如下：
+[`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.NodeReferenceSpanListener`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java) ，**NodeReference 的 SpanListener** ，实现了 EntrySpanListener 、ExitSpanListener 、RefsListener 接口，代码如下：
 
-* `references` 属性，**父 TraceSegment** 调用产生的 ServiceEntry 数组。
-* `ServiceEntrys` 属性，ServiceEntry 数组，最终会包含 `references` 数组。
+* `references` 属性，**父 TraceSegment** 调用产生的 NodeReference 数组。
+* `nodeReferences` 属性，NodeReference 数组，最终会包含 `references` 数组。
 * `timeBucket` 属性，时间( `yyyyMMddHHmm` )。
-* [`#parseRef(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntrySpanListener.java#L103) 方法，代码如下：
-    * 第 106 至 109 行：使用父 TraceSegment 的应用编号作为服务**消费者**编号，自己的应用编号作为服务**提供者**应用编号，创建 ServiceEntry 对象。
-    * 第 111 行：将 ServiceEntry 对象，添加到 `references` 。**注意**，是 `references` ，而不是 `ServiceEntrys` 。
-* [`#parseEntry(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntrySpanListener.java#L77) 方法，代码如下：
+* [`#parseRef(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L103) 方法，代码如下：
+    * 第 106 至 109 行：使用父 TraceSegment 的应用编号作为服务**消费者**编号，自己的应用编号作为服务**提供者**应用编号，创建 NodeReference 对象。
+    * 第 111 行：将 NodeReference 对象，添加到 `references` 。**注意**，是 `references` ，而不是 `nodeReference` 。
+* [`#parseEntry(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L77) 方法，代码如下：
     * 作为服务提供者，**接受**调用。 
     * ------- **父 TraceSegment 存在** -------- 
     * 第 79 至 85 行：`references` 非空，说明被父 TraceSegment 调用。因此，循环 `references` 数组，设置 `id` ，`timeBucket` 属性( 因为 `timeBucket` 需要从 EntrySpan 中获取，所以 `#parseRef(...)` 的目的，就是临时存储父 TraceSegment 的应用编号到 `references` 中 )。 
-    * 第 87 行：调用 [`#buildserviceSum(...)`]() 方法，设置调用次数，然后添加到 `ServiceEntrys` 中。
+    * 第 87 行：调用 [`#buildserviceSum(...)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L122) 方法，设置调用次数，然后添加到 `nodeReferences` 中。
     * ------- **父 TraceSegment 不存在** -------- 
-    * 第 91 至 97 行：使用 `USER_ID` 的应用编号( 特殊，代表 "**用户**" )作为服务**消费者**编号，自己的应用编号作为服务**提供者**应用编号，创建 ServiceEntry 对象。
-    * 第 99 行：调用 [`#buildserviceSum(...)`]() 方法，设置调用次数，然后添加到 `ServiceEntrys` 中。
-* [`#parseExit(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntrySpanListener.java#L62) 方法，代码如下：
+    * 第 91 至 97 行：使用 `USER_ID` 的应用编号( 特殊，代表 "**用户**" )作为服务**消费者**编号，自己的应用编号作为服务**提供者**应用编号，创建 NodeReference 对象。
+    * 第 99 行：调用 [`#buildserviceSum(...)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L122) 方法，设置调用次数，然后添加到 `nodeReferences` 中。
+* [`#parseExit(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L62) 方法，代码如下：
     * 作为服务消费者，**发起**调用。  
-    * 第 64 至 71 行：使用自己的应用编号作为服务**消费者**编号，`peerId` 作为服务**提供者**应用编号，创建 ServiceEntry 对象。
-    * 第 73 行：调用 [`#buildserviceSum(...)`]() 方法，设置调用次数，然后添加到 `ServiceEntrys` 中。
-* [`#build()`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntrySpanListener.java#L114) 方法，构建，代码如下：
-    * 第 84 行：获取 ServiceEntry 对应的 `Graph<ServiceEntry>` 对象。
-    * 第 86 至 92 行：循环 `ServiceEntrys` 数组，逐个调用 `Graph#start(ServiceEntry)` 方法，进行流式处理。在这过程中，会保存 ServiceEntry 到存储器。
+    * 第 64 至 71 行：使用自己的应用编号作为服务**消费者**编号，`peerId` 作为服务**提供者**应用编号，创建 NodeReference 对象。
+    * 第 73 行：调用 [`#buildserviceSum(...)`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L122) 方法，设置调用次数，然后添加到 `nodeReferences` 中。
+* [`#build()`](https://github.com/YunaiV/skywalking/blob/112bcba1a7543e3c86fcbfb49718f7e4f3f4638f/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceSpanListener.java#L114) 方法，构建，代码如下：
+    * 第 84 行：获取 NodeReference 对应的 `Graph<NodeReference>` 对象。
+    * 第 86 至 92 行：循环 `nodeReferences` 数组，逐个调用 `Graph#start(nodeReference)` 方法，进行流式处理。在这过程中，会保存 NodeReference 到存储器。
 
 -------
 
-在 [`TraceStreamGraph#createServiceEntryGraph()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/TraceStreamGraph.java#L131) 方法中，我们可以看到 ServiceEntry 对应的 `Graph<ServiceEntry>` 对象的创建。
+在 [`TraceStreamGraph#createNodeReferenceGraph()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/TraceStreamGraph.java#L131) 方法中，我们可以看到 NodeReference 对应的 `Graph<NodeReference>` 对象的创建。
 
 * 和 NodeComponent 的 `Graph<NodeComponent>` 基本一致，胖友自己看下源码。
-* [`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntryAggregationWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryAggregationWorker.java)
-* [`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntryRemoteWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryRemoteWorker.java)
-* [`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntryPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryPersistenceWorker.java)
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.NodeReferenceAggregationWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceAggregationWorker.java)
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.NodeReferenceRemoteWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferenceRemoteWorker.java)
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.NodeReferencePersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/noderef/NodeReferencePersistenceWorker.java)
 
-## 2.7 ServiceEntry
+# 9. ServiceEntry
 
 [`org.skywalking.apm.collector.storage.table.service.ServiceEntry`](https://github.com/YunaiV/skywalking/blob/d8e7d053381e7317d413188c4248be1dacf4e85a/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/service/ServiceEntry.java) ，入口操作。
 
@@ -310,7 +310,89 @@ SpanListener 的子类如下图：[](http://www.iocoder.cn/images/SkyWalking/202
 * [`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntryRemoteWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryRemoteWorker.java)
 * [`org.skywalking.apm.collector.agent.stream.worker.trace.service.ServiceEntryPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/service/ServiceEntryPersistenceWorker.java)
 
-## 2.8 ServiceReference
+# 10. ServiceReference
 
-# 3. Segment
+[`org.skywalking.apm.collector.storage.table.serviceref.ServiceReference`](https://github.com/YunaiV/skywalking/blob/288d70975ed1c5f1ecfb7d51e2233ec75ad8d12a/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/serviceref/ServiceReference.java) ，入口操作调用统计，用于记录入口操作的调用，基于**入口操作**级别的，以**分钟**为时间最小粒度的聚合统计。
+
+* 和 NodeReference 类似。
+* **注意**，此处的 "**入口操作**" 不同于 ServiceEntry ，**包含**每一条 TraceSegment 的入口操作。
+* [`org.skywalking.apm.collector.storage.table.serviceref.ServiceReferenceTable`](https://github.com/YunaiV/skywalking/blob/288d70975ed1c5f1ecfb7d51e2233ec75ad8d12a/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/serviceref/ServiceReferenceTable.java) ， ServiceReference 表( `service_reference` )。字段如下：
+    * `entry_service_id` ：入口操作编号。 
+    * `front_service_id` ：服务消费者操作编号。
+    * `behind_service_id` ：服务提供者操作编号。
+    * `s1_lte` ：( 0, 1000 ms ] 的调用次数。
+    * `s3_lte` ：( 1000, 3000 ms ] 的调用次数。
+    * `s5_lte` ：( 3000, 5000ms ] 的调用次数
+    * `s5_gt` ：( 5000, +∞ ] 的调用次数。
+    * `error` ：发生异常的调用次数。
+    * `summary` ：总共的调用次数。
+    * `cost_summary` ：总共的花费时间。
+    * `time_bucket` ：时间( `yyyyMMddHHmm` )。
+* [`org.skywalking.apm.collector.storage.es.dao.ServiceReference`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceReference.java) ，ServiceReference 的 EsDAO 。
+* 在 ES 存储例子如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_15/11.png)
+
+-------
+
+[`org.skywalking.apm.collector.agent.stream.worker.trace.segment.ServiceReferenceSpanListener`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java) ，**ServiceReference 的 SpanListener** ，实现了 EntrySpanListener 、FirstSpanListener 、RefsListener 接口，代码如下：
+
+* `referenceServices` 属性，ReferenceDecorator 数组，记录 TraceSegmentRef 数组。
+* `serviceId` 属性，入口操作编号。
+* `startTime` 属性，开始时间。
+* `endTime` 属性，结束时间。
+* `isError` 属性，是否有错误。
+* `hasEntry` 属性，是否有 SpanEntry 。
+* `timeBucket` 属性，时间( `yyyyMMddHHmm` )。
+* [`#parseRef(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L79) 方法，将 TraceSegmentRef 添加到 `referenceServices` 。
+* [`#parseFirst(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L74) 方法，从**首个** Span 中解析到 `timeBucket` 。
+* [`#parseEntry(SpanDecorator, applicationId, instanceId, segmentId)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L85) 方法，从 EntrySpan 中解析 `serviceId` 、`startTime` 、`endTime` 、`isError` 、`hasEntry` 。
+* [`#build()`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L112) 方法，构建，代码如下：
+    * 第 114 行：判断 `hasEntry = true` ，存在 EntrySpan 。
+    * --------- **有 TraceSegmentRef** ---------
+    * 第 117 至 120 行：创建 ServiceReference 对象，其中：
+        * `entryServiceId` ：TraceSegmentRef 的入口编号。
+        * `frontServiceId` ：TraceSegmentRef 的操作编号。
+        * `behindServiceId` ： 自己 EntrySpan 的操作编号。
+    * 第 121 行：调用 [`#calculateCost(...)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L94) 方法，设置调用次数。
+    * 第 126 行：调用 [`#sendToAggregationWorker(...)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L141) 方法，发送 ServiceReference 给 AggregationWorker ，执行流式处理。
+    * --------- **无 TraceSegmentRef** ---------
+    * 第 117 至 120 行：创建 ServiceReference 对象，其中：
+        * `entryServiceId` ：自己 EntrySpan 的操作编号。
+        * `frontServiceId` ：`Const.NONE_SERVICE_ID` 对应的操作编号( 系统内置，代表【空】 )。
+        * `behindServiceId` ： 自己 EntrySpan 的操作编号。
+    * 第 121 行：调用 [`#calculateCost(...)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L94) 方法，设置调用次数。
+    * 第 126 行：调用 [`#sendToAggregationWorker(...)`](https://github.com/YunaiV/skywalking/blob/33a9634fff31a299b0baab5ffba603a58d6ff371/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceSpanListener.java#L141) 方法，发送 ServiceReference 给 AggregationWorker ，执行流式处理。
+
+-------
+
+在 [`TraceStreamGraph#createServiceReferenceGraph()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/TraceStreamGraph.java#L153) 方法中，我们可以看到 ServiceReference 对应的 `Graph<ServiceReference>` 对象的创建。
+
+* 和 NodeComponent 的 `Graph<NodeComponent>` 基本一致，胖友自己看下源码。
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.ServiceEntryAggregationWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceAggregationWorker.java)
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.ServiceEntryRemoteWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferenceRemoteWorker.java)
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.noderef.ServiceEntryPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/serviceref/ServiceReferencePersistenceWorker.java)
+
+# 11. Segment
+
+不同于上述所有数据实体，Segment 无需**解析**，直接使用 TraceSegment 构建，参见如下方法：
+
+* [`SegmentParse#parse(UpstreamSegment, Source)`](https://github.com/YunaiV/skywalking/blob/0f8c38a8a35cbda777fa9a9bc5f51c8651ae4051/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L109)
+* [`SegmentParse#buildSegment(id, dataBinary)`](https://github.com/YunaiV/skywalking/blob/0f8c38a8a35cbda777fa9a9bc5f51c8651ae4051/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/SegmentParse.java#L177)
+
+[`org.skywalking.apm.collector.storage.table.segment.Segment`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/global/GlobalTrace.java) ，全局链路追踪，记录一次分布式链路追踪，包括的 TraceSegment 编号。
+
+* [`org.skywalking.apm.collector.storage.table.global.GlobalTraceTable`](https://github.com/YunaiV/skywalking/blob/25a830d4fed13ee2d62adb7ad7b35ada436bd6f6/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/segment/Segment.java) ， Segment 表( `segment` )。字段如下：
+    * `_id` ：TraceSegment 编号。
+    * `data_binary` ：TraceSegment 链路编号。
+    * `time_bucket` ：时间( `yyyyMMddHHmm` )。
+* [`org.skywalking.apm.collector.storage.es.dao.SegmentEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsPersistenceDAO.java) ，GlobalTrace 的 EsDAO 。
+* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_15/12.png)
+
+-------
+
+在 [`TraceStreamGraph#createSegmentGraph()`](https://github.com/YunaiV/skywalking/blob/52e41bc200857d2eb1b285d046cb9d2dd646fb7b/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/TraceStreamGraph.java#L164) 方法中，我们可以看到 Segment 对应的 `Graph<Segment>` 对象的创建。
+
+* [`org.skywalking.apm.collector.agent.stream.worker.trace.segment.SegmentPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/ee9400fc51d6ae21b1053bb0d8cca7ad4d51efe5/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/trace/segment/SegmentPersistenceWorker.java)
+
+# 666. 彩蛋
+
 
