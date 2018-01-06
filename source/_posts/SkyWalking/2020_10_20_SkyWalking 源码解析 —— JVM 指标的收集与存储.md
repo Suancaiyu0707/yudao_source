@@ -114,6 +114,19 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 
 ## 2.3 Memory
 
+[`org.skywalking.apm.agent.core.jvm.memory.MemoryProvider`](https://github.com/YunaiV/skywalking/blob/ac31b37208b33a06616e580dfc71e2079531a2a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memory/MemoryProvider.java) ，Memory 提供者，提供 [`#getMemoryMetricList()`](https://github.com/YunaiV/skywalking/blob/ac31b37208b33a06616e580dfc71e2079531a2a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memory/MemoryProvider.java#L40) 方法，采集 Memory 指标，如下图所示：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/07.png)
+
+* 推荐阅读文章：
+    * [MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html)
+    * [Java中监控程序内存的函数](http://blog.sina.com.cn/s/blog_ad7c19000102vjcw.html) 
+* `isHeap` ：是否堆内内存。
+* `init` ：初始化的内存数量。
+* `max` ：最大的内存数量。
+* `used` ：已使用的内存数量。
+* `committed` ：可以使用的内存数量。
+* 第 44 至 51 行：使用 MemoryMXBean 对象，获得堆内( Heap )内存。
+* 第 54 至 61 行：使用 MemoryMXBean 对象，获得非堆内( None-Heap )内存。 
+
 ## 2.4 MemoryPool
 
 ## 2.5 GC 
@@ -145,7 +158,7 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 
 [`org.skywalking.apm.collector.storage.table.jvm.CpuMetric`](https://github.com/YunaiV/skywalking/blob/aadff78dcde7c2e05dc8d29f3381032c1650137e/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/CpuMetric.java) ，CPU 指标。
 
-* [`org.skywalking.apm.collector.storage.table.jvm.CpuMetricTable`](https://github.com/YunaiV/skywalking/blob/aadff78dcde7c2e05dc8d29f3381032c1650137e/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/CpuMetricTable.java) ， CpuMetricTable 表( `cpu_metric` )。字段如下：
+* [`org.skywalking.apm.collector.storage.table.jvm.CpuMetricTable`](https://github.com/YunaiV/skywalking/blob/aadff78dcde7c2e05dc8d29f3381032c1650137e/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/CpuMetricTable.java) ， CpuMetric 表( `cpu_metric` )。字段如下：
     * `instance_id` ：应用实例编号。
     * `usage_percent` ：CPU 占用率。
     * `time_bucket` ：时间。
@@ -155,6 +168,21 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 * [`org.skywalking.apm.collector.agent.stream.worker.jvm.CpuMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/CpuMetricPersistenceWorker.java) , CPU 指标批量存储 Worker 。
 
 ## 3.3 Memory
+
+[`org.skywalking.apm.collector.storage.table.jvm.MemoryMetric`](https://github.com/YunaiV/skywalking/blob/0051d648dc8e5435dd63666a34da81274f0a0e61/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/MemoryMetric.java) ，Memory 指标。
+
+* [`org.skywalking.apm.collector.storage.table.jvm.MemoryMetricTable`](https://github.com/YunaiV/skywalking/blob/0051d648dc8e5435dd63666a34da81274f0a0e61/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/MemoryMetricTable.java) ， MemoryMetric 表( `memory_metric` )。字段如下：
+    * `instance_id` ：应用实例编号。
+    * `isHeap` ：是否堆内内存。
+    * `init` ：初始化的内存数量。
+    * `max` ：最大的内存数量。
+    * `used` ：已使用的内存数量。
+    * `committed` ：可以使用的内存数量。
+    * `time_bucket` ：时间。
+* [`org.skywalking.apm.collector.storage.es.dao.MemoryMetricEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/MemoryMetricEsPersistenceDAO.java) ，MemoryMetric 的 EsDAO 。
+* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_20/08.png)
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricService.java) ，Memory 指标服务，调用 MemoryMetric 对应的 [`Graph<MemoryMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L66) 对象，流式处理，最终 MemoryMetric 保存到存储器。
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricPersistenceWorker.java) , Memory 指标批量存储 Worker 。
 
 ## 3.4 MemoryPool
 
