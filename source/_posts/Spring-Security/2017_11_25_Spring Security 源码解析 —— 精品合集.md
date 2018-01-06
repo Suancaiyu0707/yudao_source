@@ -32,10 +32,11 @@ permalink: Spring-Security/good-collection
     * [《Spring Security(一)--Architecture Overview》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483860&idx=1&sn=a0d4de91cd9e97b6a0a752f75c172434&chksm=fa497e65cd3ef773b729f36a9adab379d492ae859e34a48ba86be687e487762d346ecce5f129#rd) 
     * [《Spring Security(二)--Guides》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483886&idx=1&sn=0af17e8b96114b05f821c06ec10aeea9&chksm=fa497e5fcd3ef749420215c42465e60610e797521cf3f30d9df9aa29440c9f4aae0933ad3d1f#rd) 
     * [《Spring Security(三)--核心配置解读》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483908&idx=1&sn=4dd136153020aca92582fbb3f794dd1b&chksm=fa497db5cd3ef4a3c07542e6293fc84f4999a0fa07d0a41661c0b59caf057a9602bce6ad147a#rd) 
-    * [《Spring Security(四)--核心过滤器源码分析》](https://www.cnkirito.moe/2017/09/30/spring-security-4/) 
+    * [《Spring Security(四)--核心过滤器源码分析》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483933&idx=1&sn=d7e3a51b20c6d8a51e1c64b31068685d&chksm=fa497daccd3ef4baf88b370700d09db36f3662b0b6a7bac4c94d08dfbcc82cbc19dc24585253#rd) 
     * [《Spring Security(五)--动手实现一个IP_Login》](https://www.cnkirito.moe/2017/10/01/spring-security-5/) 
     * [《从零开始的Spring Security OAuth2（一）》](https://www.cnkirito.moe/2017/08/08/Re%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84Spring%20Security%20OAuth2%EF%BC%88%E4%B8%80%EF%BC%89/) 
     * [《从零开始的Spring Security OAuth2（二）》](https://www.cnkirito.moe/2017/08/09/Re%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84Spring%20Security%20OAuth2%EF%BC%88%E4%BA%8C%EF%BC%89/) 
     * [《从零开始的Spring Security OAuth2（三）》](https://www.cnkirito.moe/2017/08/10/Re%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84Spring%20Security%20OAuth2%EF%BC%88%E4%B8%89%EF%BC%89/) 
 
 # 2. 欢迎投稿
+
