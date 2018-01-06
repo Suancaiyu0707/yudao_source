@@ -119,6 +119,7 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 * 推荐阅读文章：
     * [MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html)
     * [Java中监控程序内存的函数](http://blog.sina.com.cn/s/blog_ad7c19000102vjcw.html) 
+    * [JVM内存调优相关的一些笔记（杂）](http://zhanjindong.com/2016/03/02/jvm-memory-tunning-notes)
 * `isHeap` ：是否堆内内存。
 * `init` ：初始化的内存数量。
 * `max` ：最大的内存数量。
@@ -128,6 +129,53 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 * 第 54 至 61 行：使用 MemoryMXBean 对象，获得非堆内( None-Heap )内存。 
 
 ## 2.4 MemoryPool
+
+[`org.skywalking.apm.agent.core.jvm.memorypool.MemoryPoolProvider`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolProvider.java) ，MemoryPool 提供者，提供 [`#getMemoryPoolMetricList()`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolProvider.java#L52) 方法，采集 MemoryPool 指标**数组**，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/09.png)
+
+* 推荐阅读文章：
+    * [MemoryUsage](JVM堆内存和非堆内存)
+* `type` ：内存区域类型。MemoryPool 和 Memory 的差别在于拆分的维度不同，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/11.png)
+* `init` ：初始化的内存数量。
+* `max` ：最大的内存数量。
+* `used` ：已使用的内存数量。
+* `committed` ：可以使用的内存数量。
+
+[MemoryPoolProvider 构造方法](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolProvider.java#L36)，代码如下：
+
+* 第 38 行：获得 MemoryPoolMXBean 数组。每个 MemoryPoolMXBean 对象，代表上面的一个区域类型。
+* 第 39 至 46 行：循环 MemoryPoolMXBean 数组，调用 [`#findByBeanName(name)`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolProvider.java#L56) 方法，找到对应的 GC 算法，创建对应的 MemoryPoolMetricAccessor 对象。
+* 第 47 至 49 行：未找到匹配的 GC 算法，创建 UnknownMemoryPool 对象。
+
+### 2.4.1 MemoryPoolMetricAccessor
+ [`org.skywalking.apm.agent.core.jvm.memorypool.MemoryPoolMetricAccessor`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolMetricAccessor.java) ，MemoryPool 指标访问器**接口**。
+ 
+ * 定义了 [`#getMemoryPoolMetricList()`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolMetricAccessor.java#L30) 接口，获得 MemoryPool 指标**数组**。
+
+MemoryPoolMetricAccessor 子类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/12.png)
+
+* [UnknownMemoryPool](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/UnknownMemoryPool.java) ，未知的 MemoryPool 指标访问器实现类。每次 [`#getMemoryPoolMetricList()`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/UnknownMemoryPool.java#L31) 方法，返回  MemoryPool 指标**数组**，但是每个指标元素是无具体数据的。
+
+### 2.4.2 MemoryPoolModule
+
+[`org.skywalking.apm.agent.core.jvm.memorypool.MemoryPoolModule`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java) ，实现 MemoryPoolMetricAccessor 接口，MemoryPool 指标访问器**抽象类**。不同 GC 算法之间，内存区域命名不同，通过如下**六个**方法抽象，分别对应不同内存区域，形成映射关系，屏蔽差异：
+
+* [`#getPermNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L85)
+* [`#getCodeCacheNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L87)
+* [`#getEdenNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L89)
+* [`#getOldNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L91)
+* [`#getSurvivorNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L93)
+* [`#getMetaspaceNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L95)
+* 胖友可以看看 MemoryPoolModule 子类的实现：
+    * [CMSCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/CMSCollectorModule.java)
+    * [G1CollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/G1CollectorModule.java) 
+    * [ParallelCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/ParallelCollectorModule.java)
+    * [SerialCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/SerialCollectorModule.java)
+
+[`#getMemoryPoolMetricList()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L41) **实现方法**，代码如下：
+
+* 第 44 行：循环每个内存区域，收集每个 MemoryPool 指标。
+* 第 47 至 62 行：调用 [`#contains(possibleNames, name)`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L76) 方法，逐个内存区域名字判断，获得对应的内存区域类型。
+* 第 65 至 71 行：创建 MemoryUsage 对象，并添加到结果数组。
 
 ## 2.5 GC 
 
@@ -181,10 +229,27 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
     * `time_bucket` ：时间。
 * [`org.skywalking.apm.collector.storage.es.dao.MemoryMetricEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/MemoryMetricEsPersistenceDAO.java) ，MemoryMetric 的 EsDAO 。
 * 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_20/08.png)
-* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricService.java) ，Memory 指标服务，调用 MemoryMetric 对应的 [`Graph<MemoryMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L66) 对象，流式处理，最终 MemoryMetric 保存到存储器。
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricService.java) ，Memory 指标服务，调用 MemoryMetric 对应的 [`Graph<MemoryMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L74) 对象，流式处理，最终 MemoryMetric 保存到存储器。
 * [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricPersistenceWorker.java) , Memory 指标批量存储 Worker 。
 
 ## 3.4 MemoryPool
 
+[`org.skywalking.apm.collector.storage.table.jvm.MemoryPoolMetric`](https://github.com/YunaiV/skywalking/blob/0051d648dc8e5435dd63666a34da81274f0a0e61/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/MemoryPoolMetric.java) ，MemoryPool 指标。
+
+* [`org.skywalking.apm.collector.storage.table.jvm.MemoryPoolMetricTable`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/MemoryPoolMetricTable.java) ， MemoryPool 表( `memory_pool_metric` )。字段如下：
+    * `instance_id` ：应用实例编号。
+    * `pool_type` ：内存区域类型。
+    * `init` ：初始化的内存数量。
+    * `max` ：最大的内存数量。
+    * `used` ：已使用的内存数量。
+    * `committed` ：可以使用的内存数量。
+    * `time_bucket` ：时间。
+* [`org.skywalking.apm.collector.storage.es.dao.MemoryPoolMetricEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/MemoryPoolMetricEsPersistenceDAO.java) ，MemoryPoolMetric 的 EsDAO 。
+* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_20/10.png)
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryPoolMetricService.java) ，MemoryPoolMetric 指标服务，调用 MemoryPoolMetric 对应的 [`Graph<MemoryPoolMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L82) 对象，流式处理，最终 MemoryPoolMetric 保存到存储器。
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricPersistenceWorker.java) , MemoryPool 指标批量存储 Worker 。
+
 ## 3.5 GC 
+
+# 4. 
 
