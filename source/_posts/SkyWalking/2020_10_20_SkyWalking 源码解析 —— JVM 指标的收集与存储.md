@@ -179,6 +179,47 @@ MemoryPoolMetricAccessor 子类如下图：[](http://www.iocoder.cn/images/SkyWa
 
 ## 2.5 GC 
 
+整体实现类似 [「2.4 MemoryPool」](#) 。 
+
+[`org.skywalking.apm.agent.core.jvm.memorypool.GCProvider`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L30) ，GC 提供者，提供 [`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L55) 方法，采集 GC 指标**数组**，如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/13.png)
+
+* `phrase` ：生代类型，包括新生代、老生代。
+* `count` ：总回收次数。
+* `time` ：总回收占用时间。
+
+[GCProvider 构造方法](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L37)，代码如下：
+
+* 第 38 行：获得 GarbageCollectorMXBean 数组。
+* 第 39 至 46 行：循环 MemoryPoolMXBean 数组，调用 [`#findByBeanName(name)`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L59) 方法，找到对应的 GC 算法，创建对应的 GCMetricAccessor 对象。
+* 第 47 至 49 行：未找到匹配的 GC 算法，创建 UnknowGC 对象。
+
+### 2.5.1 GCMetricAccessor
+ [`org.skywalking.apm.agent.core.jvm.gc.GCMetricAccessor`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCMetricAccessor.java) ，GC 指标访问器**接口**。
+ 
+ * 定义了 [`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCMetricAccessor.java#L28) 接口，获得 GC 指标**数组**。
+
+GCMetricAccessor 子类如下图：[](http://www.iocoder.cn/images/SkyWalking/2020_10_20/15.png)
+
+* [UnknowGC](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/UnknowGC.java) ，未知的 GC 指标访问器实现类。每次 [`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/UnknowGC.java#L31) 方法，返回  GC 指标**数组**，但是每个指标元素是无具体数据的。
+
+### 2.5.2 GCModule
+
+[`org.skywalking.apm.agent.core.jvm.gc.GCModule`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCModule.java) ，实现 GCMetricAccessor 接口，GC 指标访问器**抽象类**。不同 GC 算法之间，生代命名不同，通过如下**两个**方法抽象，分别对应两个生代，形成映射关系，屏蔽差异：
+
+* [`#getOldGCName()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCModule.java#L66)
+* [`#getNewGCName()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCModule.java#L68)
+* 胖友可以看看 GCModule 子类的实现：
+    * [CMSGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/CMSGCModule.java)
+    * [G1GCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/G1GCModule.java) 
+    * [ParallelGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/ParallelGCModule.java)
+    * [SerialGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/SerialGCModule.java)
+
+[`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCModule.java#L39) **实现方法**，代码如下：
+
+* 第 44 行：循环 GarbageCollectorMXBean 数组，收集每个 GC 指标。
+* 第 47 至 62 行：获得生代类型。
+* 第 65 至 71 行：创建 GC 对象，并添加到结果数组。
+
 # 3. Collector 存储 JVM 指标
 
 ## 3.1 JVMMetricsServiceHandler
@@ -251,5 +292,25 @@ MemoryPoolMetricAccessor 子类如下图：[](http://www.iocoder.cn/images/SkyWa
 
 ## 3.5 GC 
 
-# 4. 
+[`org.skywalking.apm.collector.storage.table.jvm.GCMetric`](https://github.com/YunaiV/skywalking/blob/0051d648dc8e5435dd63666a34da81274f0a0e61/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/GCMetric.java) ，GC 指标。
+
+* [`org.skywalking.apm.collector.storage.table.jvm.GCMetricTable`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/GCMetricTable.java) ， GCMetric 表( `gc_metric` )。字段如下：
+    * `instance_id` ：应用实例编号。
+    * `phrase` ：生代类型，包括新生代、老生代。
+    * `count` ：总次数。
+    * `time` ：总时间。
+    * `time_bucket` ：时间。
+* [`org.skywalking.apm.collector.storage.es.dao.GCMetricEsPersistenceDAO`](https://github.com/YunaiV/skywalking/blob/3d1d1f5219205d38f58f1b59f0e81d81c038d2f1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/GCMetricEsPersistenceDAO.java) ，GCMetric 的 EsDAO 。
+* 在 ES 存储例子如下图： [](http://www.iocoder.cn/images/SkyWalking/2020_10_20/14.png)
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.GCMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/GCMetricService.java) ，GCMetric 指标服务，调用 GCMetric 对应的 [`Graph<GCMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L58) 对象，流式处理，最终 GCMetric 保存到存储器。
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricPersistenceWorker.java) , MemoryPool 指标批量存储 Worker 。
+
+# 4. 心跳
+
+Collector 在接收到 GC 指标上传后，调用 [`JVMMetricsServiceHandler#sendToInstanceHeartBeatService(...)`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-grpc/collector-agent-grpc-provider/src/main/java/org/skywalking/apm/collector/agent/grpc/handler/JVMMetricsServiceHandler.java#L77) 方法，发送心跳，记录应用实例的最后心跳时间。因为目前 SkyWaling 主要用于 JVM 平台，通过每秒的 JVM 指标收集的同时，记录应用实例的最后心跳时间。
+
+* [`org.skywalking.apm.collector.agent.stream.worker.jvm.InstanceHeartBeatService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/InstanceHeartBeatService.java) ，应用实例心跳服务，调用 Instance 对应的 [`Graph<Instance>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L90) 对象，流式处理，最终更新 Instance 的最后**心跳时间**( [`heartbeat_time`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/register/InstanceTable.java#L42) )到存储器。
+
+# 666. 彩蛋
+
 
