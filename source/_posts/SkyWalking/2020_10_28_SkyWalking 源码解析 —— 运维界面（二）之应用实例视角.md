@@ -36,7 +36,7 @@ permalink: SkyWalking/ui-2-instance
 
 在我们打开 SkyWalking WEBUI 的 `Instance Override` ( `health/health.html` ) 页时，如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/01.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/01.png)
 
 * 以应用实例为维度进行展示。
 * 红色部分，时间进度条，调用 [「2. AllInstanceLastTimeGetHandler」](#) 接口，获得应用实例最后心跳时间。大多情况下，我们进入该界面，看的是从最后心跳时间开始的应用调用情况。
@@ -46,7 +46,7 @@ permalink: SkyWalking/ui-2-instance
 
 在我们【点击任意应用实例】，打开 SkyWalking WEBUI 的 `Instance` ( `instance/instance.html` ) 页时，如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/02.png)
 
 * 以**单个**应用实例为维度进行展示。
 * 橘色部分，应用实例指标，初始化以 [ 打开页面时间前五分钟 , 打开页面时间 ] 调用 [「5. InstanceMetricGetRangeTimeBucketHandler」](#) 接口，获得**范围**数据。
@@ -63,7 +63,7 @@ permalink: SkyWalking/ui-2-instance
 [`org.skywalking.apm.collector.ui.jetty.handler.application.ApplicationsGetHandler`](https://github.com/YunaiV/skywalking/blob/a5db282a68747668356a1bc55e9227bd2b7869a0/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/application/ApplicationsGetHandler.java) ，实现 JettyHandler 接口，获得应用列表逻辑处理器。
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/a5db282a68747668356a1bc55e9227bd2b7869a0/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/application/ApplicationsGetHandler.java#L40) ，路径定义，`"applications"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/03.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/03.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53) 方法，代码如下：
     * 第 73 行：调用 [`ApplicationService#getApplications(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/a5db282a68747668356a1bc55e9227bd2b7869a0/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ApplicationService.java#L42) 方法，以应用编号为聚合，获得应用实例数量数组。代码如下：
         * 第 44 行：调用 [`NodeComponentEsUIDAO#load(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/a5db282a68747668356a1bc55e9227bd2b7869a0/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstanceEsUIDAO.java#L112) 方法，以应用编号为聚合，获得应用实例数量 JSON 数组。
@@ -74,7 +74,7 @@ permalink: SkyWalking/ui-2-instance
 [`org.skywalking.apm.collector.ui.jetty.handler.instancehealth.InstanceHealthGetHandler`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java) ，实现 JettyHandler 接口，获得应用的应用实例健康相关信息数组。
  
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L42) ，路径定义，`"/instance/health/applicationId"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/04.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/04.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
     * 第 58 至 62 行：解析 `timeBucket` 参数，秒级。
     * 第 65 至 72 行：解析 `applicationIds` 参数，应用编号**数组**。 
@@ -94,12 +94,12 @@ permalink: SkyWalking/ui-2-instance
 [`org.skywalking.apm.collector.ui.jetty.handler.instancemetric.InstanceMetricGetRangeTimeBucketHandler`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancemetric/InstanceMetricGetRangeTimeBucketHandler.java) ，实现 JettyHandler 接口，获得应用实例指定时间范围内的 Metric 信息。
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancemetric/InstanceMetricGetRangeTimeBucketHandler.java#L42) ，路径定义，`"/instance/jvm/instanceId/rangeBucket"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/05.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/05.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
     * 第 60 至 74 行：解析 `startTimeBucket` 和 `endTimeBucket` 参数，秒级。
     * 第 77 至 88 行：解析 `instanceId` 参数，应用实例编号。 
     * 第 84 至 92 行：解析 `metricTypes` 数组。
-    * 第 94 行：调用 [`InstanceJVMService#getInstanceJvmMetrics(instanceId, metricTypes, startTimeBucket, endTimeBucket)`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/InstanceJVMService.java#L101) 方法，获得应用实例指定时间范围内的 Metric 信息，涉及 GCMetric 、InstPerformanceMetric 、MemoryMetric 、MemoryPoolMetric 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/06.png)
+    * 第 94 行：调用 [`InstanceJVMService#getInstanceJvmMetrics(instanceId, metricTypes, startTimeBucket, endTimeBucket)`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/InstanceJVMService.java#L101) 方法，获得应用实例指定时间范围内的 Metric 信息，涉及 GCMetric 、InstPerformanceMetric 、MemoryMetric 、MemoryPoolMetric 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/06.png)
 
 
 # 666. 彩蛋
