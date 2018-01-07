@@ -34,7 +34,7 @@ permalink: SkyWalking/ui-1-application
 
 在我们打开 SkyWalking WEBUI 的首页时，如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_25/01.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/01.png)
 
 * 以应用为维度进行展示。
 * 紫色部分，时间进度条，调用 [「2. AllInstanceLastTimeGetHandler」](#) 接口，获得应用实例最后心跳时间。大多情况下，我们进入该界面，看的是从最后心跳时间开始的应用调用情况。
@@ -48,7 +48,7 @@ permalink: SkyWalking/ui-1-application
 [`org.skywalking.apm.collector.ui.jetty.handler.time.AllInstanceLastTimeGetHandler`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java) ，实现 JettyHandler 接口，获得应用实例最后心跳时间处理器。代码如下：
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L43) ，路径定义，`"/time/allInstance"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_25/02.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/02.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53) 方法，代码如下：
     * 第 55 至 59 行：调用 [`TimeSynchronousService#allInstanceLastTime()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/TimeSynchronousService.java#L40) 方法，获得应用实例最后心跳时间。
         * [`InstanceEsUIDAO#lastHeartBeatTime()`](https://github.com/YunaiV/skywalking/blob/fe20d4fff8e2ebf4ad44c9e7ac455f69146c0b9c/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstanceEsUIDAO.java#L61)
@@ -60,18 +60,20 @@ permalink: SkyWalking/ui-1-application
 [`org.skywalking.apm.collector.ui.jetty.handler.TraceDagGetHandler`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java) ，实现 JettyHandler 接口，获得应用拓扑图数据逻辑处理器。
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L38) ，路径定义，`"traceDag"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_25/03.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/03.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53) 方法，代码如下：
     * 第 73 行：调用 [`TraceDagService#load(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L73) 方法，获得应用拓扑图数据。代码如下：
         * 第 53 行：调用 [`NodeComponentEsUIDAO#load(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeComponentEsUIDAO.java#L59) 方法，获得 NodeComponent JSON 数组。
         * 第 56 行：调用 [`NodeMappingEsUIDAO#load(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeMappingEsUIDAO.java#L59) 方法，获得 NodeMapping JSON 数组。
         * 第 59 行：调用 [`NodeReferenceEsUIDAO#load(startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeReferenceEsUIDAO.java#L68) 方法，获得 NodeReference JSON 数组。
-        * 第 62 行：调用 [`TraceDagDataBuilder#build(nodeCompArray, nodesMappingArray, resSumArray)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L48) 方法，使用获得的 NodeComponent 、NodeMapping 、NodeReference 数据，构建应用拓扑图。逻辑较为繁琐，笔者已经添加注释，胖友调试一下，很容易明白滴。[](http://www.iocoder.cn/images/SkyWalking/2020_10_25/04.png)
+        * 第 62 行：调用 [`TraceDagDataBuilder#build(nodeCompArray, nodesMappingArray, resSumArray)`](https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L48) 方法，使用获得的 NodeComponent 、NodeMapping 、NodeReference 数据，构建应用拓扑图。逻辑较为繁琐，笔者已经添加注释，胖友调试一下，很容易明白滴。![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/04.png)
 
 # 666. 彩蛋
 
 水更第一发！
 
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
+胖友，分享一波朋友圈可好？
 
 
