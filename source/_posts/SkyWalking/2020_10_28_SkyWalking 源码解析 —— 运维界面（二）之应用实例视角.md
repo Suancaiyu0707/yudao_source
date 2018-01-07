@@ -30,7 +30,7 @@ permalink: SkyWalking/ui-2-instance
 
 # 1. 概述
 
-本文主要分享**运维界面的第一部分，应用视角**。
+本文主要分享**运维界面的第二部分，应用实例视角**。
 
 > SkyWalking WEBUI ：https://github.com/apache/incubator-skywalking-ui
 
