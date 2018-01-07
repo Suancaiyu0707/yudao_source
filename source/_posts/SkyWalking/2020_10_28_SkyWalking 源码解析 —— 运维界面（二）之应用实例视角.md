@@ -1,3 +1,33 @@
+title: SkyWalking 源码分析 —— 运维界面（二）之应用实例视角
+date: 2020-10-28
+tags:
+categories: SkyWalking
+permalink: SkyWalking/ui-2-instance
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-2-instance/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+- [2. AllInstanceLastTimeGetHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+- [3. ApplicationsGetHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+- [4. InstanceHealthGetHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+- [5. InstanceMetricGetRangeTimeBucketHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享**运维界面的第一部分，应用视角**。
@@ -60,5 +90,24 @@
         * 第 133 至 135 行：调用 [`GCMetricEsUIDAO#getGCCount(timeBuckets, instanceId)`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/GCMetricEsUIDAO.java#L56) 方法，查询应用实例**五秒内**的( `timeBuckets` )的 GCCount **累加**数据，设置 `ygc` 和 `ogc` 返回字段。
 
 # 5. InstanceMetricGetRangeTimeBucketHandler
+
+[`org.skywalking.apm.collector.ui.jetty.handler.instancemetric.InstanceMetricGetRangeTimeBucketHandler`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancemetric/InstanceMetricGetRangeTimeBucketHandler.java) ，实现 JettyHandler 接口，获得应用实例指定时间范围内的 Metric 信息。
+
+* [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancemetric/InstanceMetricGetRangeTimeBucketHandler.java#L42) ，路径定义，`"/instance/jvm/instanceId/rangeBucket"` 。
+* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/05.png)
+* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
+    * 第 60 至 74 行：解析 `startTimeBucket` 和 `endTimeBucket` 参数，秒级。
+    * 第 77 至 88 行：解析 `instanceId` 参数，应用实例编号。 
+    * 第 84 至 92 行：解析 `metricTypes` 数组。
+    * 第 94 行：调用 [`InstanceJVMService#getInstanceJvmMetrics(instanceId, metricTypes, startTimeBucket, endTimeBucket)`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/InstanceJVMService.java#L101) 方法，获得应用实例指定时间范围内的 Metric 信息，涉及 GCMetric 、InstPerformanceMetric 、MemoryMetric 、MemoryPoolMetric 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。[](http://www.iocoder.cn/images/SkyWalking/2020_10_28/06.png)
+
+
+# 666. 彩蛋
+
+水更第二发！
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
+
+胖友，分享一波朋友圈可好？
 
 
