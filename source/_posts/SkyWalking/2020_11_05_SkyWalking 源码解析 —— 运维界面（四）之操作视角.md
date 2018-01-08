@@ -36,7 +36,7 @@ permalink: SkyWalking/ui-4-operation
 
 在我们打开 SkyWalking WEBUI 的 `Service Tree` ( `service/serviceTree.html` ) 页时，如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_05/01.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_05/01.png)
 
 * 以操作为维度进行展示。
 * 黄色部分，时间进度条，调用 [「2. AllInstanceLastTimeGetHandler」](#) 接口，获得应用实例最后心跳时间。大多情况下，我们进入该界面，看的是从最后心跳时间开始的操作情况。
@@ -59,7 +59,7 @@ permalink: SkyWalking/ui-4-operation
 [`org.skywalking.apm.collector.ui.jetty.handler.servicetree.EntryServiceGetHandler`](https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java) ，实现 JettyHandler 接口，获得入口操作( EntryService )分页列表的逻辑处理器。
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java#L40) ，路径定义，`"/service/entry"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_11_05/02.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_11_05/02.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java#L50) 方法，代码如下：
     * 第 66 至 71 行：解析 `applicationId` 参数。
     * 第 73 至 85 行：解析 `startTime` 和 `endTime` 参数。
@@ -73,17 +73,17 @@ permalink: SkyWalking/ui-4-operation
 [`org.skywalking.apm.collector.ui.jetty.handler.servicetree.ServiceTreeGetByIdHandler`](https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/ServiceTreeGetByIdHandler.java) ，实现 JettyHandler 接口，获得指定操作的关联操作调用统计树列表的逻辑处理器。
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/ServiceTreeGetByIdHandler.java#L40) ，路径定义，`"/service/tree/entryServiceId"` 。
-* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_11_05/03.png)
+* 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_11_05/03.png)
 * [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
     * 第 61 至 66 行：解析 `entryServiceId` 参数。 
     * 第 60 至 74 行：解析 `startTime` 和 `endTime` 参数。
-    * 第 94 行：调用 [`ServiceTreeService#loadServiceTree(entryServiceId, startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L74) 方法，获得指定操作的关联操作调用统计树列表，涉及 **ServiceReference** 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。[](http://www.iocoder.cn/images/SkyWalking/2020_11_05/04.png)
+    * 第 94 行：调用 [`ServiceTreeService#loadServiceTree(entryServiceId, startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L74) 方法，获得指定操作的关联操作调用统计树列表，涉及 **ServiceReference** 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。![](http://www.iocoder.cn/images/SkyWalking/2020_11_05/04.png)
 
 # 6. 彩蛋
 
 水更第四发！
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
 
