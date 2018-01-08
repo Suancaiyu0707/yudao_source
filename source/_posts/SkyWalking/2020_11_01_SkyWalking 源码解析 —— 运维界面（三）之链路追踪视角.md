@@ -42,6 +42,13 @@
 
 # 4. TraceStackGetHandler
 
+[`org.skywalking.apm.collector.ui.jetty.handler.TraceStackGetHandler`](https://github.com/YunaiV/skywalking/blob/e26853f280a23a9eadb8267963b75727a65ea31a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceStackGetHandler.java) ，实现 JettyHandler 接口，获取一次分布式链路追踪记录详情的逻辑处理器。
+
+* [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/e26853f280a23a9eadb8267963b75727a65ea31a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceStackGetHandler.java#L40) ，路径定义，`"/traceStack/globalTraceId"` 。
+* 响应示例：[](http://www.iocoder.cn/images/SkyWalking/2020_11_01/04.png)
+* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/e26853f280a23a9eadb8267963b75727a65ea31a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceStackGetHandler.java#L50) 方法，代码如下：
+    * 第 73 行：调用 [`TraceStackService#load(globalTraceId)`](https://github.com/YunaiV/skywalking/blob/e26853f280a23a9eadb8267963b75727a65ea31a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/TraceStackService.java#L59) 方法，基 **GlobalTrace** 和 **Segment** 表，获取一次分布式链路追踪记录详情的逻辑处理器。逻辑较为繁琐，笔者已经添加注释，胖友调试一下，很容易明白滴。[](http://www.iocoder.cn/images/SkyWalking/2020_11_01/05.png)
+
 # 5. SpanGetHandler
 
 [`org.skywalking.apm.collector.ui.jetty.handler.SpanGetHandler`](https://github.com/YunaiV/skywalking/blob/c3f55e55593158e065b9589855ca90e819558765/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/SpanGetHandler.java) ，实现 JettyHandler 接口，获得 TraceSegment 单个 Span 详细的逻辑处理器。
