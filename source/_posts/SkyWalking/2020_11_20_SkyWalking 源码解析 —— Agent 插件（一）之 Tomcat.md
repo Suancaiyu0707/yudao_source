@@ -74,6 +74,6 @@ permalink: SkyWalking/agent-plugin-tomcat
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_20/04.png)
 
-胖友，分享一波胖友圈括号。
+胖友，分享一波朋友圈。
 
 
