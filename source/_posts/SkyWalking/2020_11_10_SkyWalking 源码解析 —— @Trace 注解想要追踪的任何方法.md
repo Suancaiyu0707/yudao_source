@@ -6,14 +6,37 @@ permalink: SkyWalking/@trace-for-any-methods
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+- [2. 使用例子](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+- [3. 实现代码](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+  - [3.1 TraceAnnotationActivation](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+  - [3.2 ActiveSpanTagActivation](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+  - [3.3 TraceContextActivation](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文主要分享 **@Trace 注解想要追踪的任何方法**。
 
 我们首先看看 [`@Trace`](https://github.com/apache/incubator-skywalking/blob/af2c1b979fe025603dc65d7e2a2dbdea8005ede8/apm-application-toolkit/apm-toolkit-trace/src/main/java/org/apache/skywalking/apm/toolkit/trace/Trace.java) 的使用例子，再看看 `@Trace` 的实现代码。涉及代码如下：
 
-* [](http://www.iocoder.cn/images/SkyWalking/2020_11_10/01.png)
-* [](http://www.iocoder.cn/images/SkyWalking/2020_11_10/02.png)
+* ![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/01.png)
+* ![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/02.png)
 
 # 2. 使用例子
 
@@ -47,7 +70,7 @@ public String log() {
 
 3、执行后，我们看来看看 SkyWalking WEBUI 的展示。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_10/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/03.png)
 
 # 3. 实现代码
 
@@ -57,7 +80,7 @@ public String log() {
 
 [`org.skywalking.apm.toolkit.activation.trace.TraceAnnotationActivation`](https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-trace-activation/src/main/java/org/skywalking/apm/toolkit/activation/trace/TraceAnnotationActivation.java) ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_10/04.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/04.png)
 
 -------
 
@@ -73,7 +96,7 @@ public String log() {
 
 [`org.skywalking.apm.toolkit.activation.trace.ActiveSpanTagActivation`](https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-trace-activation/src/main/java/org/skywalking/apm/toolkit/activation/trace/ActiveSpanTagActivation.java) ，实现 ClassStaticMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_10/05.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/05.png)
 
 -------
 
@@ -85,7 +108,7 @@ public String log() {
 
 [`org.skywalking.apm.toolkit.activation.trace.TraceContextActivation`](https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-trace-activation/src/main/java/org/skywalking/apm/toolkit/activation/trace/TraceContextActivation.java) ，实现 ClassStaticMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_10/06.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/06.png)
 
 -------
 
@@ -96,6 +119,8 @@ public String log() {
 # 666. 彩蛋
 
 简单一文一篇。
+
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/07.png)
 
 胖友，分享个朋友圈可好？
 
