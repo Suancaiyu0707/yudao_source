@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/</loc>
+    
+    <lastmod>2018-01-09T09:50:59.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/</loc>
     
-    <lastmod>2018-01-09T05:38:50.000Z</lastmod>
+    <lastmod>2018-01-09T07:45:07.000Z</lastmod>
     
   </url>
   
@@ -338,98 +345,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-definition/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-discover-client/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-intro/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-handler-mapping/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-request-rate-limiter/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</loc>
-    
-    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-kotlin/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-route-to-request/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
@@ -443,28 +359,35 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-route-to-request/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-factory/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-websocket-routing/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-handler-mapping/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-request-rate-limiter/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
@@ -478,7 +401,91 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/</loc>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-kotlin/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-custom-java/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-intro/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-discover-client/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-repository/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-properties/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-intro/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-websocket-routing/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-load-balancer-client/</loc>
+    
+    <lastmod>2017-12-01T16:41:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/route-locator-route-definition/</loc>
     
     <lastmod>2017-12-01T16:41:36.000Z</lastmod>
     
@@ -576,6 +583,13 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/Hystrix/build-debugging-environment/</loc>
+    
+    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Hystrix/command-execute-mode/</loc>
     
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
@@ -584,13 +598,6 @@
   
   <url>
     <loc>http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/</loc>
-    
-    <lastmod>2017-11-06T10:40:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Hystrix/build-debugging-environment/</loc>
     
     <lastmod>2017-11-06T10:40:09.000Z</lastmod>
     
@@ -905,7 +912,14 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
+    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
+    
+    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -919,14 +933,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/RocketMQ/high-availability/</loc>
-    
-    <lastmod>2017-10-12T06:44:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/RocketMQ/store-init-and-shutdown/</loc>
+    <loc>http://www.iocoder.cn/RocketMQ/filtersrv/</loc>
     
     <lastmod>2017-10-12T06:44:15.000Z</lastmod>
     
@@ -961,7 +968,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-recovery/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -975,7 +982,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/http-sample/</loc>
+    <loc>http://www.iocoder.cn/TCC-Transaction/transaction-recovery/</loc>
     
     <lastmod>2017-10-12T06:43:18.000Z</lastmod>
     
@@ -1017,7 +1024,21 @@
   </url>
   
   <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
+    
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/sql-parse-4/</loc>
+    
+    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
@@ -1032,20 +1053,6 @@
   
   <url>
     <loc>http://www.iocoder.cn/Sharding-JDBC/distributed-id/</loc>
-    
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/jdbc-implement-and-read-write-splitting/</loc>
-    
-    <lastmod>2017-10-12T06:29:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Sharding-JDBC/sql-rewrite/</loc>
     
     <lastmod>2017-10-12T06:29:38.000Z</lastmod>
     
@@ -1255,7 +1262,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-execute/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
     
     <lastmod>2017-10-12T05:33:33.000Z</lastmod>
     
@@ -1269,7 +1276,7 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Elastic-Job/job-init/</loc>
+    <loc>http://www.iocoder.cn/Elastic-Job/job-execute/</loc>
     
     <lastmod>2017-10-12T05:33:33.000Z</lastmod>
     
