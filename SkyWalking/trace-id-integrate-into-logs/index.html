@@ -11,23 +11,18 @@
     <meta name="sogou_site_verification" content="MpPsku240L">
 
   
-    <title>Eureka 源码解析 —— Eureka源码解析 —— 应用实例注册发现 （九）之岁月是把萌萌的读写锁 | 芋道源码 —— 纯源码解析博客</title>
+    <title>SkyWalking 源码分析 —— traceId 集成到日志组件 | 芋道源码 —— 纯源码解析博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="芋道源码">
     
-    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
 1. 概述
-2. 读写锁
-666. 彩蛋
-
-
-
-
-🙂🙂🙂关注微信公众号：【芋道源码】有福利：  
-
-Roc">
+2. 使用例子
+3. 实现代码
+3.1 TraceIdPatternLogbackLayout
+3.2">
     
 
     
@@ -136,7 +131,7 @@ Roc">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/Eureka/instance-registry-read-write-lock/" title="Eureka 源码解析 —— Eureka源码解析 —— 应用实例注册发现 （九）之岁月是把萌萌的读写锁" itemprop="url">Eureka 源码解析 —— Eureka源码解析 —— 应用实例注册发现 （九）之岁月是把萌萌的读写锁</a>
+      <a href="/SkyWalking/trace-id-integrate-into-logs/" title="SkyWalking 源码分析 —— traceId 集成到日志组件" itemprop="url">SkyWalking 源码分析 —— traceId 集成到日志组件</a>
   </h1>
   <p class="article-author">
       <!--By-->
@@ -145,8 +140,8 @@ Roc">
     <!---->
   </p>
   <p class="article-time">
-    <!--<time datetime="2018-07-13T16:00:00.000Z" itemprop="datePublished">2018-07-14</time>-->
-    <!--更新日期:<time datetime="2017-10-20T01:19:46.000Z" itemprop="dateModified">2017-10-20</time>-->
+    <!--<time datetime="2020-11-09T16:00:00.000Z" itemprop="datePublished">2020-11-10</time>-->
+    <!--更新日期:<time datetime="2018-01-09T05:38:50.000Z" itemprop="dateModified">2018-01-09</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -154,11 +149,16 @@ Roc">
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
-<li><a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">1. 概述</a></li>
-<li><a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">2. 读写锁</a></li>
-<li><a href="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/">666. 彩蛋</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">1. 概述</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">2. 使用例子</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">3. 实现代码</a><ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">3.1 TraceIdPatternLogbackLayout</a></li>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">3.2 LogbackPatternConverterActivation</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/">666. 彩蛋</a></li>
 </ul>
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
@@ -173,113 +173,33 @@ Roc">
 </ol>
 </blockquote>
 <hr>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Eureka 注册中心的那把读写锁</strong>，让我瘙痒难耐，却不得其解。在某次意外的抠脚的一刻( 笔者不抽烟，如果抽烟的话，此处应该就不是抠脚了 )，突然顿悟，爽，这好比… 比喻有点猥琐，笔者就省略 100 字。</p>
-<p>不瞎比比，上代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractInstanceRegistry</span> <span class="keyword">implements</span> <span class="title">InstanceRegistry</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantReadWriteLock readWriteLock = <span class="keyword">new</span> ReentrantReadWriteLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock read = readWriteLock.readLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock write = readWriteLock.writeLock();</div><div class="line"></div><div class="line">    <span class="comment">// ... 省略其他代码</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>推荐 Spring Cloud 书籍</strong>：</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>traceId 集成到日志组件</strong>，例如 log4j 、log4j2 、logback 等等。</p>
+<p>我们首先看看<strong>集成</strong>的使用例子，再看看<strong>集成</strong>的实现代码。涉及代码如下：</p>
 <ul>
-<li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
-<li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li>
-<li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
-<li>两书齐买，京东包邮。</li>
+<li><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/01.png" alt=""></li>
+<li><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/02.png" alt=""></li>
 </ul>
-<h1 id="2-读写锁"><a href="#2-读写锁" class="headerlink" title="2. 读写锁"></a>2. 读写锁</h1><p>我们把设计到读写锁的方法整理如下：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>读锁</th>
-<th>写锁</th>
-<th>不使用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>#register(...)</code></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>#cancel(...)</code></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>#evict(...)</code></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>#renew(...)</code></td>
-<td></td>
-<td></td>
-<td>√</td>
-</tr>
-<tr>
-<td><code>#statusUpdate(...)</code></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>#deleteStatusOverride(...)</code></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>#getApplicationDeltasFromMultipleRegions(...)</code></td>
-<td></td>
-<td>√</td>
-<td></td>
-</tr>
-<tr>
-<td><code>#getApplicationsFromMultipleRegions(...)</code></td>
-<td></td>
-<td></td>
-<td>√</td>
-</tr>
-</tbody>
-</table>
-<p>是否看到这读写感到几丝诡异的味道？OK，我们把问题梳理如下：</p>
+<p>本文以 <strong>logback 1.x</strong> 为例子。</p>
+<h1 id="2-使用例子"><a href="#2-使用例子" class="headerlink" title="2. 使用例子"></a>2. 使用例子</h1><p>1、<strong>无需</strong>引入相应的工具包，只需启动参数带上 <code>-javaagent:/Users/yunai/Java/skywalking/packages/skywalking-agent/skywalking-agent.jar</code> 。</p>
+<p>2、在 <code>logback.xml</code> 配置 <code>%tid</code> 占位符：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/03.png" alt=""></p>
+<p>3、使用 <code>logger.info(...)</code> ，会打印日志如下：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/04.png" alt=""></p>
+<p><strong>注意</strong>，traceId 打印到每条日志里，最终需要经过例如 ELK ，收集到日志中心。</p>
+<h1 id="3-实现代码"><a href="#3-实现代码" class="headerlink" title="3. 实现代码"></a>3. 实现代码</h1><h2 id="3-1-TraceIdPatternLogbackLayout"><a href="#3-1-TraceIdPatternLogbackLayout" class="headerlink" title="3.1 TraceIdPatternLogbackLayout"></a>3.1 TraceIdPatternLogbackLayout</h2><p><a href=""><code>org.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout</code></a> ，实现 <code>ch.qos.logback.classic.PatternLayout</code> 类，实现支持 <code>%tid</code> 的占位符。代码如下：</p>
 <ul>
-<li>A. 为什么 <code>#register(...)</code> / <code>#cancel(...)</code> / <code>#evict(...)</code> / <code>#statusUpdate(...)</code> / <code>#deleteStatusOverride(...)</code> 等<strong>写操作</strong>使用<strong>读锁</strong></li>
-<li>B. 为什么 <code>#renew(...)</code> <strong>写操作</strong>不使用<strong>锁</strong></li>
-<li>C. 为什么 <code>#getApplicationDeltasFromMultipleRegions(...)</code> <strong>读操作</strong>使用<strong>写锁</strong></li>
-<li>D. 为什么 <code>getApplicationsFromMultipleRegions(...)</code> <strong>读操作</strong>不使用<strong>锁</strong></li>
+<li>第 33 行：添加 <code>tid</code> 的转换器为 <a href="https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-application-toolkit/apm-toolkit-logback-1.x/src/main/java/org/skywalking/apm/toolkit/log/logback/v1/x/LogbackPatternConverter.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.toolkit.log.logback.v1.x.LogbackPatternConverter</code></a> 类。</li>
 </ul>
+<h2 id="3-2-LogbackPatternConverterActivation"><a href="#3-2-LogbackPatternConverterActivation" class="headerlink" title="3.2 LogbackPatternConverterActivation"></a>3.2 LogbackPatternConverterActivation</h2><p><a href="https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-logback-1.x-activation/src/main/java/org/skywalking/apm/toolkit/activation/log/logback/v1/x/LogbackPatternConverterActivation.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.toolkit.activation.log.logback.v1.x.LogbackPatternConverterActivation</code></a> ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/05.png" alt=""></p>
 <hr>
-<p><strong>先解释 A + C</strong> ：</p>
-<p>我们来回想下，在 Eureka 应用集合一致性哈希码的公式：<code>appsHashCode = ${status}_${count}_</code> 。( 不了解的同学可以加载下 <a href="http://www.iocoder.cn/Eureka/instance-registry-fetch-delta/">《Eureka 源码解析 —— 应用实例注册发现（七）之增量获取》「 2. 应用集合一致性哈希码 」</a> )</p>
-<p><del>应用实例的数量和状态都会影响<strong>哈希码</strong>的计算结果。也就是说，上述<strong>前六个</strong>( 包括不使用锁的 <code>#renew(...)</code> 方法 )方法的调用都会影响哈希码。</del></p>
-<p>我们把目光移向唯一使用<strong>写锁</strong>的 <code>#getApplicationDeltasFromMultipleRegions(...)</code> 方法，该方法执行过程中，需要保证 <code>recentlyChangedQueue</code> 和 <code>registry</code> 共享变量的<strong>应用实例的状态一致</strong>，不然返回的增量应用实例集合的状态是不准确的。此时能够达到该效果，必须让 <code>#getApplicationDeltasFromMultipleRegions(...)</code> 和前六个方法<strong>互斥</strong>。方案如下：</p>
+<p><a href="https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-logback-1.x-activation/src/main/java/org/skywalking/apm/toolkit/activation/log/logback/v1/x/PrintTraceIdInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.toolkit.activation.log.logback.v1.x.PrintTraceIdInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，LogbackPatternConverterActivation 的拦截器。代码如下：</p>
 <ul>
-<li>a. 全部 <code>synchronized</code></li>
-<li>b. <code>#getApplicationDeltasFromMultipleRegions(...)</code> 使用<strong>读锁</strong>，前六个方法使用<strong>写锁</strong></li>
-<li>c. <code>#getApplicationDeltasFromMultipleRegions(...)</code> 使用<strong>写锁</strong>，前六个方法使用<strong>读锁</strong></li>
+<li><a href="https://github.com/YunaiV/skywalking/blob/5106601937af942dabcad917b90d8c92886a2e4d/apm-sniffer/apm-toolkit-activation/apm-toolkit-logback-1.x-activation/src/main/java/org/skywalking/apm/toolkit/activation/log/logback/v1/x/PrintTraceIdInterceptor.java#L37" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterMethod(...)</code></a> 方法，调用 <code>ContextManager#getGlobalTraceId()</code> 方法，使用全局链路追踪编号，而不是原有结果。</li>
 </ul>
-<p>Eureka 选择了<strong>方案c</strong>，原因如下：</p>
-<ul>
-<li>a. 性能太差</li>
-<li>b. 前六个方法使用<strong>写锁</strong>，势必冲突太大，虽然读肯定比写多。</li>
-<li>c. <code>#getApplicationDeltasFromMultipleRegions(...)</code> 使用<strong>写锁</strong>，配合 ResponseCache ，即减少了<strong>写锁</strong>使用的频率，每次缓存过期才使用，又避免了前六个方法因为<strong>方案b</strong>中的<strong>写锁</strong>导致互斥。( 不了解 ResponseCache 的同学可以加载下 <a href="hhttp://www.iocoder.cn/Eureka/instance-registry-fetch-all/">《Eureka 源码解析 —— 应用实例注册发现（六）之全量获取》「 3.2 响应缓存 ResponseCache 」</a> )</li>
-</ul>
-<hr>
-<p><strong>再解释 D</strong></p>
-<p><code>#getApplicationsFromMultipleRegions(...)</code> 方法的逻辑，只依赖 <code>registry</code> 共享变量，不存在应用实例的状态一致的困扰，所以不使用锁。</p>
-<hr>
-<p><strong>最后解释 B</strong></p>
-<p><code>#renew(...)</code> 方法的逻辑，虽然会影响应用实例的状态，但是是极小概率，考虑到它调用的比较频繁，比起因为锁给这个方法带来的性能降低，不如返回的结果暂时不够准确。( 想了解极小概率发生原因的同学可以加载 <a href="http://www.iocoder.cn/Eureka/instance-registry-override-status/?self">《Eureka 源码解析 —— 应用实例注册发现（八）之覆盖状态》「 4.3 续租场景 」</a> )</p>
-<hr>
-<p>TODO [0029] 读写锁</p>
-<p>笔者路上突然又想了问题，可能不是上述原因，可能和 ResponseCache 有关系，参见 <code>#invalidateCache(...)</code> 方法的每次调用。也就是说，这个读写锁是针对 ResponseCache 的读写锁。</p>
-<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>开森 ！</p>
-<p>本来以为需要跟 Eureka 官方提交 issue 提问，并且做好了获得不到答案的准备，结果无意中的抠脚( 请允许我热爱抠脚给我带来的灵感 )解答了自己的疑惑。</p>
-<p>岁月是把纠结而又萌萌哒的锁，你不知道你的困扰，哪天不经意的被打开。</p>
-<p>愿大喜大悲，不枉仅知的这一生。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>简单一文一篇 Again 。</p>
+<p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_15/06.png" alt=""></p>
+<p>胖友，分享个朋友圈可好？</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -287,14 +207,14 @@ Roc">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Eureka/">Eureka</a>
+  <a class="article-category-link" href="/categories/SkyWalking/">SkyWalking</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.iocoder.cn/Eureka/instance-registry-read-write-lock/" data-title="Eureka 源码解析 —— Eureka源码解析 —— 应用实例注册发现 （九）之岁月是把萌萌的读写锁 | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.iocoder.cn/SkyWalking/trace-id-integrate-into-logs/" data-title="SkyWalking 源码分析 —— traceId 集成到日志组件 | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -303,19 +223,11 @@ Roc">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev">
- <a href="/Eureka/batch-tasks/" title="Eureka 源码解析 —— 任务批处理">
-  <strong>PREVIOUS:</strong><br>
-  <span>
-  Eureka 源码解析 —— 任务批处理</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/Eureka/instance-registry-override-status/" title="Eureka 源码解析 —— 应用实例注册发现（八）之覆盖状态">
+<a href="/SkyWalking/@trace-for-any-methods/" title="SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法">
  <strong>NEXT:</strong><br> 
- <span>Eureka 源码解析 —— 应用实例注册发现（八）之覆盖状态
+ <span>SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法
 </span>
 </a>
 </div>
@@ -329,7 +241,7 @@ Roc">
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-读写锁"><span class="toc-number">2.</span> <span class="toc-text">2. 读写锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-使用例子"><span class="toc-number">2.</span> <span class="toc-text">2. 使用例子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-实现代码"><span class="toc-number">3.</span> <span class="toc-text">3. 实现代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-TraceIdPatternLogbackLayout"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 TraceIdPatternLogbackLayout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-LogbackPatternConverterActivation"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 LogbackPatternConverterActivation</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">
