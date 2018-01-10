@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-storage-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-storage-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
 - [2. apm-collector-core](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
   - [2.1 Table](http://www.iocoder.cn/SkyWalking/collector-storage-module/)
@@ -52,7 +54,7 @@ permalink: SkyWalking/collector-storage-module
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/02.png)
 
-* `apm-collector-core` 的 `data` 和 `define` **包** ：数据的抽象。 
+* `apm-collector-core` 的 `data` 和 `define` **包** ：数据的抽象。
 * `collector-storage-define` ：定义存储组件接口。
 * `collector-storage-h2-provider` ：基于 H2 的 存储组件实现。**该实现是单机版，建议仅用于 SkyWalking 快速上手，生产环境不建议使用**。
 * `collector-storage-es-provider` ：基于 Elasticsearch 的集群管理实现。**生产环境推荐使用**。
@@ -341,7 +343,7 @@ storage:
     * MemoryMetricEsTableDefine
     * MemoryPoolMetricEsTableDefine
 * 2 s
-    * InstPerformanceEsTableDefine 
+    * InstPerformanceEsTableDefine
     * NodeComponentEsTableDefine
     * NodeMappingEsTableDefine
     * NodeReferenceEsTableDefine
@@ -409,10 +411,10 @@ storage:
 实现代码易懂，胖友可以自己阅读。良心如我们，按照 DAO 的业务用途，推荐例子如下：
 
 * Cache ：[ApplicationEsCacheDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ApplicationEsCacheDAO.java)
-* Register ：[ApplicationEsRegisterDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ApplicationEsRegisterDAO.java) 
+* Register ：[ApplicationEsRegisterDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ApplicationEsRegisterDAO.java)
 * Persistence ：[SegmentEsPersistenceDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsPersistenceDAO.java)
     * 此处可见 IndexRequestBuilder 和 UpdateRequestBuilder 的创建。
-* UI ：[SegmentEsUIDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsUIDAO.java) 
+* UI ：[SegmentEsUIDAO](https://github.com/YunaiV/skywalking/blob/6f925c180fbd1bb543fbf5bbf6fafe118f031d11/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsUIDAO.java)
 
 ## 5.4 DataTTLKeeperTimer
 
@@ -441,5 +443,3 @@ storage:
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_20/11.png)
 
 胖友，分享一波朋友圈可好。
-
-

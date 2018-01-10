@@ -8,6 +8,8 @@ permalink: SkyWalking/register
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/register/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/register/)
 - [2. Collector 注册相关 API](http://www.iocoder.cn/SkyWalking/register/)
   - [2.1 应用的注册 API](http://www.iocoder.cn/SkyWalking/register/)
@@ -46,7 +48,7 @@ permalink: SkyWalking/register
 Collector 注册相关 API 相关有四个接口：
 
 * 2.1 应用的注册 API
-* 2.2 应用实例的正常注册 API 
+* 2.2 应用实例的正常注册 API
 * 2.3 应用实例的恢复注册 API
 * 2.4 应用实例的心跳 API
 
@@ -170,7 +172,7 @@ TODO 【4007】
 
 * [`org.skywalking.apm.collector.agent.stream.worker.register.InstanceRegisterRemoteWorker`](https://github.com/YunaiV/skywalking/blob/a9873b9bf07882746bd30f29b3c64f4b44887bf2/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/InstanceRegisterRemoteWorker.java) ，继承 AbstractRemoteWorker 抽象类，应用实例注册远程 Worker 。
 * [`org.skywalking.apm.collector.agent.stream.worker.register.ApplicationRegisterSerialWorker`](https://github.com/YunaiV/skywalking/blob/a9873b9bf07882746bd30f29b3c64f4b44887bf2/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/ApplicationRegisterSerialWorker.java) ，继承 AbstractLocalAsyncWorker 抽象类，异步保存应用 Worker 。
-    * 不同 Application ，Instance 的应用实例编号，从 `"1"` **正向**递增。 
+    * 不同 Application ，Instance 的应用实例编号，从 `"1"` **正向**递增。
     * [InstanceEsRegisterDAO#save(Instance)](https://github.com/YunaiV/skywalking/blob/a4db2c4dd5e2adc861e7fb9e9b7b7ffdc57dfb88/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstanceEsRegisterDAO.java#L53)
 
 ### 2.2.4 Instance
@@ -257,4 +259,3 @@ TODO 【4007】
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_25/09.png)
 
 胖友，分享个朋友圈可好？
-

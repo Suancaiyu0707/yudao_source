@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-streaming-second
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-streaming-second/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
 - [2. Data](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
   - [2.1 Collection](http://www.iocoder.cn/SkyWalking/collector-streaming-second/)
@@ -206,5 +208,3 @@ Worker 在创建时，会调用 [`WorkerCreateListener#addWorker`](https://githu
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_01/03.png)
 
 胖友，分享一波朋友圈可好。
-
-

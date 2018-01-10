@@ -8,6 +8,8 @@ permalink: SkyWalking/ui-2-instance
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-2-instance/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
 - [2. AllInstanceLastTimeGetHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
 - [3. ApplicationsGetHandler](http://www.iocoder.cn/SkyWalking/ui-2-instance/)
@@ -40,7 +42,7 @@ permalink: SkyWalking/ui-2-instance
 
 * 以应用实例为维度进行展示。
 * 红色部分，时间进度条，调用 [「2. AllInstanceLastTimeGetHandler」](#) 接口，获得应用实例最后心跳时间。大多情况下，我们进入该界面，看的是从最后心跳时间开始的应用调用情况。
-* 绿色部分，应用列表，初始化以 [ 实例最后心跳时间前一小时 , 实例最后心跳时间 ] 调用 [「3. ApplicationsGetHandler」](#) 接口，获得**范围**数据，而后每 4 秒刷新一次，数据范围向前走 4 秒( 时间进度条是走 2 次 2 秒 )，为 [ 实例最后心跳时间前一小时 + 四秒 , 实例最后心跳时间 + 四秒 ]。 
+* 绿色部分，应用列表，初始化以 [ 实例最后心跳时间前一小时 , 实例最后心跳时间 ] 调用 [「3. ApplicationsGetHandler」](#) 接口，获得**范围**数据，而后每 4 秒刷新一次，数据范围向前走 4 秒( 时间进度条是走 2 次 2 秒 )，为 [ 实例最后心跳时间前一小时 + 四秒 , 实例最后心跳时间 + 四秒 ]。
 * 红色部分，【点击任意应用】，应用实例列表，调用 [「4. InstanceHealthGetHandler」](#) 接口，获得**当前时间**数据，而后每 2 秒刷新一次。
 * 通过进度条的【**播放/暂停按钮**】可以切换到暂停模式，切换时间范围，查看时间范围为一小时内的应用调用拓扑图。注意，一定要切换到【暂时模式】才可调整时间范围，在【播放模式】下，每次**自动**请求都会重设时间范围。
 
@@ -52,7 +54,7 @@ permalink: SkyWalking/ui-2-instance
 * 橘色部分，应用实例指标，初始化以 [ 打开页面时间前五分钟 , 打开页面时间 ] 调用 [「5. InstanceMetricGetRangeTimeBucketHandler」](#) 接口，获得**范围**数据。
 * 红色部分，【点击 auto 开关】，每 1 秒刷新一次，数据范围向前走 1 秒，为 [ 打开页面时间 + 一秒 , 打开页面时间 + 一秒 ]，获得**每秒增量**数据。
 
-> 基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。 
+> 基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。
 
 # 2. AllInstanceLastTimeGetHandler
 
@@ -72,12 +74,12 @@ permalink: SkyWalking/ui-2-instance
 # 4. InstanceHealthGetHandler
 
 [`org.skywalking.apm.collector.ui.jetty.handler.instancehealth.InstanceHealthGetHandler`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java) ，实现 JettyHandler 接口，获得应用的应用实例健康相关信息数组。
- 
+
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L42) ，路径定义，`"/instance/health/applicationId"` 。
 * 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/04.png)
-* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
+* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下：
     * 第 58 至 62 行：解析 `timeBucket` 参数，秒级。
-    * 第 65 至 72 行：解析 `applicationIds` 参数，应用编号**数组**。 
+    * 第 65 至 72 行：解析 `applicationIds` 参数，应用编号**数组**。
     * 第 75 至 79 行：返回字段设置。
     * 第 82 至 85 行：循环应用编号数组，调用 [`InstanceHealthService#getInstances(timeBucket, applicationId)`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/InstanceHealthService.java#L76) 方法，获得应用的应用实例健康相关信息数组。代码如下：
         * 第 80 行：获得指定时间内的 **5 秒内**的数组，倒序。为什么？见下文的 InstPerformance 的查询。
@@ -95,9 +97,9 @@ permalink: SkyWalking/ui-2-instance
 
 * [`#pathSpec()`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancemetric/InstanceMetricGetRangeTimeBucketHandler.java#L42) ，路径定义，`"/instance/jvm/instanceId/rangeBucket"` 。
 * 响应示例：![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/05.png)
-* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下： 
+* [`#doGet()`](https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52) 方法，代码如下：
     * 第 60 至 74 行：解析 `startTimeBucket` 和 `endTimeBucket` 参数，秒级。
-    * 第 77 至 88 行：解析 `instanceId` 参数，应用实例编号。 
+    * 第 77 至 88 行：解析 `instanceId` 参数，应用实例编号。
     * 第 84 至 92 行：解析 `metricTypes` 数组。
     * 第 94 行：调用 [`InstanceJVMService#getInstanceJvmMetrics(instanceId, metricTypes, startTimeBucket, endTimeBucket)`](https://github.com/YunaiV/skywalking/blob/ecee73223defd374e711e7d5f08fa8ae13e6bd97/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/InstanceJVMService.java#L101) 方法，获得应用实例指定时间范围内的 Metric 信息，涉及 GCMetric 、InstPerformanceMetric 、MemoryMetric 、MemoryPoolMetric 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。![](http://www.iocoder.cn/images/SkyWalking/2020_10_28/06.png)
 
@@ -109,5 +111,3 @@ permalink: SkyWalking/ui-2-instance
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
-
-

@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-queue-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-queue-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
 - [2. collector-queue-define](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
   - [2.1 QueueModule](http://www.iocoder.cn/SkyWalking/collector-queue-module/)
@@ -137,12 +139,12 @@ queue:
 ### 3.2.1 DisruptorQueueCreator
 
 > 友情提示：如果胖友对 Disruptor 暂时不了解，建议先使用 Disruptor 写个小 Demo 。
-> 
+>
 > 如下是笔者阅读的文章：  
-> 
+>
 > * [《三步创建Disruptor应用》](http://colobu.com/2014/08/01/3-steps-to-create-a-disruptor-application/)
 > * [《Disruptor入门》](http://ifeve.com/disruptor-getting-started/)
-> * [《剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处》](http://ifeve.com/dissecting-disruptor-whats-so-special/) 
+> * [《剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处》](http://ifeve.com/dissecting-disruptor-whats-so-special/)
 
 `org.skywalking.apm.collector.queue.disruptor.base.DisruptorQueueCreator` ，实现 QueueCreator **接口**，基于 Disruptor 的队列创建器**实现类**。
 
@@ -191,6 +193,3 @@ queue:
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_15/07.png)
 
 胖友，分享一波朋友圈可好。
-
-
-

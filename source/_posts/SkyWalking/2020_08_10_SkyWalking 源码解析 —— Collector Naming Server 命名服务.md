@@ -9,6 +9,8 @@ permalink: SkyWalking/collector-naming-server
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-naming-server/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
 - [2. Collector Naming Server](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
   - [2.1 NamingModule](http://www.iocoder.cn/SkyWalking/collector-naming-server/)
@@ -177,5 +179,3 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_10/06.png)
 
 胖友，分享一波朋友圈可好！
-
-

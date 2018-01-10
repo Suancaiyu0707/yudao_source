@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-send-trace
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-send-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/agent-send-trace/)
 - [2. TraceSegmentServiceClient](http://www.iocoder.cn/SkyWalking/agent-send-trace/)
   - [2.1 实现 BootService 接口](http://www.iocoder.cn/SkyWalking/agent-send-trace/)
@@ -131,6 +133,3 @@ HOHO ，简单水更一篇，保持 Trace 相关的小系列文章，主题明�
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_05/02.jpeg)
 
 胖友，分享个朋友圈可好？
-
-
-

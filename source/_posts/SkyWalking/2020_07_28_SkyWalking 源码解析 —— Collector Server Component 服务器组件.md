@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-server-component
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-server-component/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-server-component/)
 - [2. 接口](http://www.iocoder.cn/SkyWalking/collector-server-component/)
   - [2.1 Server](http://www.iocoder.cn/SkyWalking/collector-server-component/)
@@ -133,4 +135,3 @@ GRPCHandler 无任何接口方法。
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_28/06.png)
 
 胖友，分享个朋友圈可好？
-

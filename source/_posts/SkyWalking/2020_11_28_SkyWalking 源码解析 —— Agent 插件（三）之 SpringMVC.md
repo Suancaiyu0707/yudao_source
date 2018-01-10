@@ -6,6 +6,42 @@ permalink: SkyWalking/agent-plugin-spring-mvc
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
+- [1. 概述](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+- [2. core-patch](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [2.1 AopProxyFactoryInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [2.2 AutowiredAnnotationProcessorInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+- [3. mvc-annotation-commons](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [3.1 PathMappingCache](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [3.2 EnhanceRequireObjectCache](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [3.3 Constants](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [3.4 拦截器](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+- [4. mvc-annotation-4.x-plugin](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.1 AbstractSpring4Instrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.2 AbstractControllerInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.3 InvocableHandlerInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.4 HandlerMethodInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.5 ControllerInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+  - [4.6 RestControllerInstrumentation](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+- [5. mvc-annotation-3.x-plugin](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+- [666. 彩蛋](http://www.iocoder.cn/SkyWalking/agent-plugin-spring-mvc/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 # 2. core-patch
@@ -37,7 +73,7 @@ private boolean hasNoUserSuppliedProxyInterfaces(AdvisedSupport config) {
 
 [`org.skywalking.apm.plugin.tomcat78x.define.TomcatInstrumentation`](https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/define/TomcatInstrumentation.java) ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/02.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/02.png)
 
 -------
 
@@ -65,7 +101,7 @@ Spring 的 [`AutowiredAnnotationBeanPostProcessor#determineCandidateConstructors
 
 [`org.skywalking.apm.plugin.spring.patch.define.AutowiredAnnotationProcessorInstrumentation`](https://github.com/YunaiV/skywalking/blob/684a837f39f9ca8fb66a84bea9b28678bc632382/apm-sniffer/apm-sdk-plugin/spring-plugins/core-patch/src/main/java/org/skywalking/apm/plugin/spring/patch/define/AutowiredAnnotationProcessorInstrumentation.java) ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/03.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/03.png)
 
 -------
 
@@ -118,7 +154,7 @@ ps：这块略复杂，如果笔者未解释清晰，那是因为我菜。
 
 [`org.skywalking.apm.plugin.spring.mvc.commons.interceptor`](https://github.com/YunaiV/skywalking/blob/ecc6e2aad35769204beba993554692c1cdd2010d/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-commons/src/main/java/org/skywalking/apm/plugin/spring/mvc/commons/interceptor/AbstractMethodInteceptor.java) 包下共有**四种**拦截器，如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/04.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/04.png)
 
 结合 [「 4. mvc-annotation-4.x-plugin 」](#) ，我们一起分享。
 
@@ -126,7 +162,7 @@ ps：这块略复杂，如果笔者未解释清晰，那是因为我菜。
 
 本小节涉及到的类如下图：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/05.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/05.png)
 
 我们整理如下：
 
@@ -151,7 +187,7 @@ ps：这块略复杂，如果笔者未解释清晰，那是因为我菜。
 
 [`org.skywalking.apm.plugin.spring.mvc.v4.define.AbstractControllerInstrumentation`](https://github.com/YunaiV/skywalking/blob/cc0f60e120ee5c51a6c063e41cbe8af78e7e7a92/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-4.x-plugin/src/main/java/org/skywalking/apm/plugin/spring/mvc/v4/define/AbstractControllerInstrumentation.java) ，实现 AbstractSpring4Instrumentation 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/06.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/06.png)
 
 分成两部分：
 
@@ -173,7 +209,7 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 [`org.skywalking.apm.plugin.spring.mvc.v4.define.InvocableHandlerInstrumentation`](https://github.com/YunaiV/skywalking/blob/abed55324ba1d9b870992dedb97a9405eac38b4d/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-4.x-plugin/src/main/java/org/skywalking/apm/plugin/spring/mvc/v4/define/InvocableHandlerInstrumentation.java) ，实现 AbstractSpring4Instrumentation 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/07.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/07.png)
 
 * 拦截 [`InvocableHandlerMethod#invokeForRequest(NativeWebRequest, ModelAndViewContainer, Object... providedArgs)`](https://github.com/spring-projects/spring-framework/blob/master/spring-web/src/main/java/org/springframework/web/method/support/InvocableHandlerMethod.java#L128) 方法，提交给 InvokeForRequestInterceptor 处理。
 
@@ -190,7 +226,7 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 [`org.skywalking.apm.plugin.spring.mvc.v4.define.HandlerMethodInstrumentation`](https://github.com/YunaiV/skywalking/blob/d24f0538f84f033f27eafc9eda887493c60dafe8/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-4.x-plugin/src/main/java/org/skywalking/apm/plugin/spring/mvc/v4/define/HandlerMethodInstrumentation.java) ，实现 AbstractSpring4Instrumentation 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/07.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/12.png)
 
 * 拦截 [`HandlerMethod#getBean()`](https://github.com/spring-projects/spring-framework/blob/master/spring-web/src/main/java/org/springframework/web/method/HandlerMethod.java#L195) 方法，提交给 GetBeanInterceptor 处理。
 * **注意**，上面我们看到的 ServletInvocableHandlerMethod 继承的 InvocableHandlerMethod 类，继承了 HandlerMethod.java 类。（绕口令）。
@@ -207,7 +243,7 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 [`org.skywalking.apm.plugin.spring.mvc.v4.define.ControllerInstrumentation`](https://github.com/YunaiV/skywalking/blob/1e948e06ef1228ff6fcc38d2cef9483938419f75/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-4.x-plugin/src/main/java/org/skywalking/apm/plugin/spring/mvc/v4/define/ControllerInstrumentation.java) ，实现 AbstractControllerInstrumentation 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/08.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/08.png)
 
 * 拦截 `@Controller` 注解的 Controller 类。
 
@@ -246,7 +282,7 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 [`org.skywalking.apm.plugin.spring.mvc.v4.define.RestControllerInstrumentation`](https://github.com/YunaiV/skywalking/blob/1e948e06ef1228ff6fcc38d2cef9483938419f75/apm-sniffer/apm-sdk-plugin/spring-plugins/mvc-annotation-4.x-plugin/src/main/java/org/skywalking/apm/plugin/spring/mvc/v4/define/RestControllerInstrumentation) ，实现 AbstractControllerInstrumentation 抽象类，定义了方法切面，代码如下：
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/09.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/09.png)
 
 * 拦截 `@RestController` 注解的 Controller 类。
 
@@ -256,12 +292,13 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 考虑到 Spring MVC 5.x 都出了，本小节就暂不解析了。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/10.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/10.png)
 
 # 666. 彩蛋
 
 Spring 的体系，真的是博大精深！被 `core-patch` 部分卡了好久，虽然现在还是有点模糊。
 
-[](http://www.iocoder.cn/images/SkyWalking/2020_11_28/11.png)
+![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/11.png)
 
+胖友，分享一波朋友圈可好！
 

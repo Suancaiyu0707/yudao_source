@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-client-component
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-client-component/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-client-component/)
 - [2. Client](http://www.iocoder.cn/SkyWalking/collector-client-component/)
 - [3. ElasticSearchClient](http://www.iocoder.cn/SkyWalking/collector-client-component/)
@@ -58,7 +60,7 @@ Client 的实现类，如下类图：
 
 # 3. ElasticSearchClient
 
-[`org.skywalking.apm.collector.client.elasticsearch.ElasticSearchClient`](https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/elasticsearch/ElasticSearchClient.java) ，Elastic Search 客户端。 
+[`org.skywalking.apm.collector.client.elasticsearch.ElasticSearchClient`](https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/elasticsearch/ElasticSearchClient.java) ，Elastic Search 客户端。
 
 基于 `org.elasticsearch.client.transport` 的 `5.5.0` 版本，封装 SkyWalking 需要的 Elastic Search 操作。目前用于 [`collector-storage-es-provider`](https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-storage/collector-storage-es-provider) 模块。
 
@@ -66,7 +68,7 @@ Client 的实现类，如下类图：
 
 [`org.skywalking.apm.collector.client.grpc.GRPCClient`](https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/grpc/GRPCClient.java) ，gRPC 客户端。
 
-基于 `io.grpc.grpc-core` 的 `1.8.0` 版本，封装 SkyWalking 需要的 gRPC 操作。目前用于 [`collector-remote-grpc-provider`](https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-remote/collector-remote-grpc-provider) 模块。 
+基于 `io.grpc.grpc-core` 的 `1.8.0` 版本，封装 SkyWalking 需要的 gRPC 操作。目前用于 [`collector-remote-grpc-provider`](https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-remote/collector-remote-grpc-provider) 模块。
 
 # 5. H2Client
 
@@ -95,4 +97,3 @@ Client 的实现类，如下类图：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_25/04.png)
 
 胖友，分享个朋友圈可好？
-

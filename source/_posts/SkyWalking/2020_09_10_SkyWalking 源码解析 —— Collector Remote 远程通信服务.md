@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-remote-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-remote-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
 - [2. collector-remote-define](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
   - [2.1 RemoteModule](http://www.iocoder.cn/SkyWalking/collector-remote-module/)
@@ -184,14 +186,14 @@ remote:
 [`#start()`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/RemoteModuleGRPCProvider.java#L59) **实现**方法，执行启动阶段逻辑。
 
 * Server 相关
-    * 第 65 行：创建 gRPC Server 对象。 
+    * 第 65 行：创建 gRPC Server 对象。
     * 第 67 行：注册 RemoteCommonServiceHandler 对象到 gRPC Server 上，用于接收 gRPC 请求后的处理。
     * [《SkyWalking 源码分析 —— Collector Server Component 服务器组件》「3. gRPC 实现」](http://www.iocoder.cn/SkyWalking/collector-server-component/?self)
     * [《SkyWalking 源码分析 —— Collector gRPC Server Manager》](http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/?self)
 * 注册发现相关
     * 第 70 至 71 行：创建 [`org.skywalking.apm.collector.remote.grpc.RemoteModuleGRPCRegistration`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/RemoteModuleGRPCRegistration.java) 对象，将自己注册到集群管理。这样，自己可以被 Collector 集群节点发现，从而被调用。
     * 第 73 至 74 行：注册 GRPCRemoteSenderService 对象到集群管理。这样，自己可以监听到 Collector 集群节点的加入或离开，从而调用。
-    * [《SkyWalking 源码分析 —— Collector Cluster 集群管理》](http://www.iocoder.cn/SkyWalking/collector-cluster-module/?self) 
+    * [《SkyWalking 源码分析 —— Collector Cluster 集群管理》](http://www.iocoder.cn/SkyWalking/collector-cluster-module/?self)
 
 [`#notifyAfterCompleted()`](https://github.com/YunaiV/skywalking/blob/0a289e159f472983a0b6f6df6bd62c675e4f0846/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/RemoteModuleGRPCProvider.java#L77) **实现**方法，方法为空。
 
@@ -243,7 +245,7 @@ RemoteModuleGRPCProvider 基于不同的选择器 ( [Selector](https://github.co
 
 * 第 73 行：调用 `RemoteDataIDGetter#getRemoteDataId(Class<? extends Data>)` 方法，获得**数据协议编号**。
 * 第 76 至 80 行：创建传输数据( RemoteMessage.Builder ) 对象。RemoteMessage 通过 [Protobuf](https://github.com/google/protobuf) 创建定义，如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/08.png)
-* 第 83 行：调用 `DataCarrier#produce(data)` 方法，发送数据到本地队列。 
+* 第 83 行：调用 `DataCarrier#produce(data)` 方法，发送数据到本地队列。
 
 [RemoteMessageConsumer](https://github.com/YunaiV/skywalking/blob/4cb80651dee25e985f974d691467a0a53d7dfbe9/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/service/GRPCRemoteClient.java#L93) ，**批量**消费本地队列的数据，逐条发送数据到远程 Collector 节点。
 
@@ -290,4 +292,3 @@ TODO 【4005】collector-remote-grpc-provider
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_10/10.png)
 
 胖友，分享一波朋友圈可好。
-

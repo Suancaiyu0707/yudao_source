@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-cluster-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-cluster-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
 - [2. collector-cluster-define](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
   - [2.1 ClusterModule](http://www.iocoder.cn/SkyWalking/collector-cluster-module/)
@@ -193,13 +195,13 @@ cluster:
     ```BASH
     [zk: localhost:2181(CONNECTED) 1] ls /skywalking
     [remote, ui, agent_jetty, agent_gRPC]
-    
+
     [zk: localhost:2181(CONNECTED) 2] ls /skywalking/ui
     [jetty]
-    
+
     [zk: localhost:2181(CONNECTED) 3] ls /skywalking/ui/jetty
     [localhost:12800]
-    
+
     [zk: localhost:2181(CONNECTED) 4] get /skywalking/ui/jetty/localhost:12800
     /
     cZxid = 0x24
@@ -258,5 +260,3 @@ cluster:
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/10.png)
 
 胖友，分享个朋友圈可好？
-
-

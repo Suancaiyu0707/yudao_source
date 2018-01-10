@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-jetty-server-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/)
 - [2. JettyManagerModule](http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/)
 - [3. JettyManagerProvider](http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/)
@@ -99,5 +101,3 @@ Jetty Server Manager 在 SkyWalking 架构图处于如下位置( **红框** ) �
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_01/04.png)
 
 胖友，分享个朋友圈可好？
-
-

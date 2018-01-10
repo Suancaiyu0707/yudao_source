@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-init
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-init/)
 - [2. CollectorBootStartUp](http://www.iocoder.cn/SkyWalking/collector-init/)
 - [2. ApplicationConfigLoader](http://www.iocoder.cn/SkyWalking/collector-init/)
@@ -42,7 +44,7 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 
 # 2. CollectorBootStartUp
 
-`org.skywalking.apm.collector.boot.CollectorBootStartUp` ，在 `apm-sniffer/apm-agent` Maven 模块项目里，SkyWalking Collector **启动入口**。 
+`org.skywalking.apm.collector.boot.CollectorBootStartUp` ，在 `apm-sniffer/apm-agent` Maven 模块项目里，SkyWalking Collector **启动入口**。
 
 [`#main(args)`](https://github.com/YunaiV/skywalking/blob/c633c1f0e143d1df2457926ab239350a642f7be2/apm-collector/apm-collector-boot/src/main/java/org/skywalking/apm/collector/boot/CollectorBootStartUp.java#L38) 方法，启动 Collector ，代码如下 ：
 
@@ -78,8 +80,8 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 [`#init()`](https://github.com/YunaiV/skywalking/blob/ff055ee52da855ef6cc8bfdfae7c2758ae3c61cd/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleManager.java#L49) 方法，初始化组件们，代码如下 ：
 
 * 第 51 至 53 行 ：调用 `java.util.ServiceLoader#load(Module.class)` 方法，加载所有 Module 实现类的实例数组。ServiceManager 基于 SPI (Service Provider Interface) 机制，在每个 `apm-collector-xxx-define` 项目的 `/resources/META-INF.services/org.skywalking.apm.collector.core.module.Module` 文件里，定义了该项目 Module 的实现类。如果胖友对 SPI 机制不熟悉，可以看下如下文章 ：
-    * [《SPI 和 ServiceLoader》](http://www.jianshu.com/p/32d3e108f30a) 
-    * [《跟我学Dubbo系列之Java SPI机制简介》](http://www.jianshu.com/p/46aa69643c97) 
+    * [《SPI 和 ServiceLoader》](http://www.jianshu.com/p/32d3e108f30a)
+    * [《跟我学Dubbo系列之Java SPI机制简介》](http://www.jianshu.com/p/46aa69643c97)
 
 * 第 55 至 75 行 ：遍历所有 Module 实现类的实例数组，创建**在配置中**的 Module 实现类的实例，并执行 Module 准备阶段的逻辑，后添加到加载的组件实例的映射( `loadedModules` )。
     * 第 59 至 67 行 ：创建 Module 对象。
@@ -161,7 +163,7 @@ ps ：Collector 是 SkyWalking 的 Server 端。整体如下图 ：
 另外，如下是 Service 接口的解释：
 
 > The <code>Service</code> implementation is a service provided by its own modules.  
-> 
+>
 > And every {@link ModuleProvider} must provide all the given services of the {@link Module}.
 
 ## 3.4 BootstrapFlow
@@ -187,23 +189,23 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
     * [《SkyWalking 源码分析 —— 运维界面（一）之应用视角》](http://www.iocoder.cn/SkyWalking/ui-1-application/?self)
     * [《SkyWalking 源码分析 —— 运维界面（二）之应用实例视角》](http://www.iocoder.cn/SkyWalking/ui-2-instance/?self)
     * [《SkyWalking 源码分析 —— 运维界面（三）之链路追踪视角》](http://www.iocoder.cn/SkyWalking/ui-3-trace/?self)
-    * [《SkyWalking 源码分析 —— 运维界面（四）之操作视角》](http://www.iocoder.cn/SkyWalking/ui-4-operation/?self) 
+    * [《SkyWalking 源码分析 —— 运维界面（四）之操作视角》](http://www.iocoder.cn/SkyWalking/ui-4-operation/?self)
 * Queue Module ：[《SkyWalking 源码分析 —— Collector Queue 队列组件》](http://www.iocoder.cn/SkyWalking/collector-queue-module/?self)
 * Cache Module ：[《SkyWalking 源码分析 —— Collector Cache 缓存组件》](http://www.iocoder.cn/SkyWalking/collector-cache-module/?self)
 * Cluster Module ：[《SkyWalking 源码分析 —— Collector Cluster 集群管理》](http://www.iocoder.cn/SkyWalking/collector-cluster-module/?self)
 * Component Libraries ：[《SkyWalking 源码分析 —— Collector Client Component 客户端组件》](http://www.iocoder.cn/SkyWalking/collector-client-component/?self) 、[《SkyWalking 源码分析 —— Collector Server Component 服务器组件》](http://www.iocoder.cn/SkyWalking/collector-server-component/?self)
 * Core ：
-    * [《SkyWalking 源码分析 —— Collector Storage 存储组件》「2. apm-collector-core」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self) 
+    * [《SkyWalking 源码分析 —— Collector Storage 存储组件》「2. apm-collector-core」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self)
     * [《SkyWalking 源码分析 —— Collector 初始化》「3. ModuleManager」](http://www.iocoder.cn/SkyWalking/collector-init/?self)
 * Storage Module ：[《SkyWalking 源码分析 —— Collector Storage 存储组件》](http://www.iocoder.cn/SkyWalking/collector-storage-module/?self)
-    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「2. apm-collector-core/graph」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self) 
-    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「2. Data」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self) 
+    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「2. apm-collector-core/graph」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self)
+    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「2. Data」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self)
 * Agent Module ：参见 Agent Streaming Computing 。
 * Jetty Manager Module ：[《SkyWalking 源码分析 —— Collector Jetty Server Manager》](http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/?self)
 * gRPC Manager Module ：[《SkyWalking 源码分析 —— Collector gRPC Server Manager》](http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/?self)
 * Agent Streaming Computing ：
-    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「2. apm-collector-core/graph」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self) 
-    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「2. Data」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self) 
+    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》「2. apm-collector-core/graph」](http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self)
+    * [《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（二）》「2. Data」](http://www.iocoder.cn/SkyWalking/collector-streaming-second/?self)
     * [《SkyWalking 源码分析 —— Collector Remote 远程通信服务》](http://www.iocoder.cn/SkyWalking/collector-remote-module/?self)
     * [《SkyWalking 源码分析 —— Agent 收集 Trace 数据》](http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self)
     * [《SkyWalking 源码分析 —— Agent 发送 Trace 数据》](http://www.iocoder.cn/SkyWalking/agent-send-trace/?self)
@@ -221,4 +223,3 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/11.png)
 
 胖友，分享个朋友圈可好？
-

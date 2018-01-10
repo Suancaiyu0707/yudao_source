@@ -8,6 +8,8 @@ permalink: SkyWalking/@trace-for-any-methods
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
 - [2. 使用例子](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
 - [3. 实现代码](http://www.iocoder.cn/SkyWalking/@trace-for-any-methods/)
@@ -48,7 +50,7 @@ permalink: SkyWalking/@trace-for-any-methods
 <dependency>
     <groupId>org.skywalking</groupId>
     <artifactId>apm-toolkit-trace</artifactId>
-    <version>${skywalking.version}</version> 
+    <version>${skywalking.version}</version>
 </dependency>
 ```
 
@@ -123,4 +125,3 @@ public String log() {
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/07.png)
 
 胖友，分享个朋友圈可好？
-

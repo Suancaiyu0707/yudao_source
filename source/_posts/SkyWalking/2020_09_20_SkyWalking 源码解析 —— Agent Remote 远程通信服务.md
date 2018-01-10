@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-remote-manager
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-remote-manager/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/agent-remote-manager/)
 - [2. GRPCChannelManager](http://www.iocoder.cn/SkyWalking/agent-remote-manager/)
 - [3. GRPCChannelListener](http://www.iocoder.cn/SkyWalking/agent-remote-manager/)
@@ -46,7 +48,7 @@ permalink: SkyWalking/agent-remote-manager
 * [`managedChannel`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L54) 属性，连接 gRPC Server 的 Channel 。**同一时间，GRPCChannelManager 只连接一个 Collector Agent gRPC Server 节点，并且在 Channel 不因为各种网络问题断开的情况下，持续保持**。
 * [`connectCheckFuture`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L58) 属性，定时重连 gRPC Server 的**定时任务**。
 * [`reconnect`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L63) 属性，是否重连。当 Channel 未连接需要连接，或者 Channel 断开需要重连时，标记 `reconnect = true` 。后台线程会根据该标识进行连接( 重连 )。
-* [`listeners`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L68) 属性，监听器( `org.skywalking.apm.agent.core.remote.GRPCChannelListener` ) 数组。使用 Channel 的其他服务，注册监听器到 GRPCChannelManager 上，从而根据连接状态( `org.skywalking.apm.agent.core.remote.GRPCChannelStatus` )，实现自定义逻辑。 
+* [`listeners`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L68) 属性，监听器( `org.skywalking.apm.agent.core.remote.GRPCChannelListener` ) 数组。使用 Channel 的其他服务，注册监听器到 GRPCChannelManager 上，从而根据连接状态( `org.skywalking.apm.agent.core.remote.GRPCChannelStatus` )，实现自定义逻辑。
 
 [`#boot()`](https://github.com/YunaiV/skywalking/blob/ba73b05b99a05bb67fd485188a6c6e0a4ad5fe57/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCChannelManager.java#L76) **实现**方法，调用 `ScheduledExecutorService#scheduleAtFixedRate(...)` 方法，创建定时任务。该定时任务**无初始化延迟**，每 `Config.GRPC_CHANNEL_CHECK_INTERVAL` ( 默认：30 s ) 执行一次 `#run()` 方法。
 
@@ -77,4 +79,3 @@ GRPCChannelListener 实现类如下图，后续文章会详细解析。
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_20/04.png)
 
 胖友，分享一波朋友圈可好。
-

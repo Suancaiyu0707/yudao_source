@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-plugin-system
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-plugin-system/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
 - [2. 插件的加载](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
   - [2.1 AgentClassLoader](http://www.iocoder.cn/SkyWalking/agent-plugin-system/)
@@ -176,7 +178,7 @@ PluginDefine 对象的 `defineClass` 属性，即对应不同插件对AbstractCl
 * [《Instrumentation 新功能》](https://www.ibm.com/developerworks/cn/java/j-lo-jse61/index.html)
 * [《JVM源码分析之javaagent原理完全解读》](http://www.infoq.com/cn/articles/javaagent-illustrated)
 
-> 友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。 
+> 友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。
 >  
 > 笔者练手的 JavaAgent 项目地址 ：https://github.com/YunaiV/learning/tree/master/javaagent01
 
@@ -192,7 +194,7 @@ PluginDefine 对象的 `defineClass` 属性，即对应不同插件对AbstractCl
 运行时创建和修改 Java 类，而徐无需编译器的帮助。
 >   
 > 除了参与 Java 类库一起提供代码生成工具外，`byte-buddy` 允许创建任意类，并不限于实现用于创建运行时代理的接口。  
-> 
+>
 > 此外，`byte-buddy` 提供了一个方便的 API ，用于 Java Agent 或在构建过程中更改类。
 
 下面笔者默认胖友已经对 `byte-buddy` 有一定的了解。如果胖友暂不了解，建议先阅读如下文章 ：
@@ -202,7 +204,7 @@ PluginDefine 对象的 `defineClass` 属性，即对应不同插件对AbstractCl
 * [《Easily Create Java Agents with Byte Buddy》](https://www.infoq.com/articles/Easily-Create-Java-Agents-with-ByteBuddy)
 * [《skywalking源码分析之javaAgent工具ByteBuddy的应用》](http://www.kailing.pub/article/index/arcid/178.html) 搜索 "BYTE BUDDY应用" 部分
 
-> 友情提示 ：建议自己简单使用下 `byte-buddy` ，更容易理解 SkyWalking Agent 。 
+> 友情提示 ：建议自己简单使用下 `byte-buddy` ，更容易理解 SkyWalking Agent 。
 >  
 > 笔者练手的 `byte-buddy` 项目地址 ：https://github.com/YunaiV/learning/tree/master/bytebuddy
 
@@ -299,7 +301,7 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 
     > In this class, it provide a bridge between `byte-buddy` and `sky-walking` plugin.
 
-## 4.1 ClassEnhancePluginDefine 
+## 4.1 ClassEnhancePluginDefine
 
 整体类图如下：
 
@@ -470,9 +472,9 @@ ConstructorInter [**构造方法**](https://github.com/YunaiV/skywalking/blob/ea
 先来瞅瞅 `@Morph` 注解的定义 ：
 
 > This annotation instructs Byte Buddy to inject a proxy class that calls a method's super method with explicit arguments.  
-> 
-> For this, the {@link Morph.Binder} needs to be installed for an interface type that takes an argument of the array type {@link java.lang.Object} and returns a non-array type of {@link java.lang.Object}. 
-> 
+>
+> For this, the {@link Morph.Binder} needs to be installed for an interface type that takes an argument of the array type {@link java.lang.Object} and returns a non-array type of {@link java.lang.Object}.
+>
 > This is an alternative to using the {@link net.bytebuddy.implementation.bind.annotation.SuperCall} or {@link net.bytebuddy.implementation.bind.annotation.DefaultCall} annotations which call a super method using the same arguments as the intercepted method was invoked with.
 
 简单的来说 ：
@@ -481,7 +483,7 @@ ConstructorInter [**构造方法**](https://github.com/YunaiV/skywalking/blob/ea
 * 需要使用 `Morph.Binder` 设置一个接口，并且该接口的方法定义为 `Object methodName(Object[])` 。在 InstMethodsInterWithOverrideArgs 使用的是  [`org.skywalking.apm.agent.core.plugin.interceptor.enhance.OverrideCallable`](https://github.com/YunaiV/skywalking/blob/ea8b4e879092b39070215b1a2d194e6df12f0ef8/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/plugin/interceptor/enhance/OverrideCallable.java#L29) 接口。另外，调用 `Morph.Binder#install(Class<?>)` 方法的代码如下 ：
 
     ```Java
-    // ClassEnhancePluginDefine.java 
+    // ClassEnhancePluginDefine.java
     // `#enhanceInstance(...)` 方法
     newClassBuilder =
         newClassBuilder.method(not(isStatic()).and(instanceMethodsInterceptPoint.getMethodsMatcher())) // 匹配
@@ -515,7 +517,3 @@ ConstructorInter [**构造方法**](https://github.com/YunaiV/skywalking/blob/ea
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_10/12.png)
 
 胖友，分享个朋友圈可好？
-
-
-
-

@@ -8,6 +8,8 @@ permalink: SkyWalking/build-debugging-environment
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 依赖工具](http://www.iocoder.cn/SkyWalking/build-debugging-environment/)
 - [2. 源码拉取](http://www.iocoder.cn/SkyWalking/build-debugging-environment/)
 - [3. 启动 SkyWalking Collector](http://www.iocoder.cn/SkyWalking/build-debugging-environment/)
@@ -102,5 +104,3 @@ SkyWalking 环境搭建完成，胖友们可以起飞，源码读起来。
 如下是笔者对代码量和用途的简单整理，完善度比较低，可能有一丢丢的帮助 ：
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_01/09.png)
-
-

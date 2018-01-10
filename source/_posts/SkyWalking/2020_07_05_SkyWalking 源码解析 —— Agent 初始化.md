@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-init
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-init/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/agent-init/)
 - [2. SkyWalkingAgent](http://www.iocoder.cn/SkyWalking/agent-init/)
 - [3. SnifferConfigInitializer](http://www.iocoder.cn/SkyWalking/agent-init/)
@@ -42,7 +44,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 * [《Instrumentation 新功能》](https://www.ibm.com/developerworks/cn/java/j-lo-jse61/index.html)
 * [《JVM源码分析之javaagent原理完全解读》](http://www.infoq.com/cn/articles/javaagent-illustrated)
 
-> 友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。 
+> 友情提示 ：建议自己手撸一个简单的 JavaAgent ，更容易理解 SkyWalking Agent 。
 >  
 > 笔者练手的 JavaAgent 项目地址 ：https://github.com/YunaiV/learning/tree/master/javaagent01
 
@@ -53,7 +55,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 [`#premain(...)`](https://github.com/YunaiV/skywalking/blob/c51dbc997348111674dbeedb71d22b0414936cdb/apm-sniffer/apm-agent/src/main/java/org/skywalking/apm/agent/SkyWalkingAgent.java#L54) 方法，代码如下 ：
 
 * 第 58 行 ：调用 `SnifferConfigInitializer#initialize()` 方法，初始化 Agent 配置。
-* 第 61 行 ：调用 `PluginBootstrap#loadPlugins()` 方法，加载 Agent 插件们。而后，创建 PluginFinder 。 
+* 第 61 行 ：调用 `PluginBootstrap#loadPlugins()` 方法，加载 Agent 插件们。而后，创建 PluginFinder 。
 * 第 64 行 ：调用 `ServiceManager#boot()` 方法，初始化 Agent 服务管理。在这过程中，Agent 服务们会被初始化。
 * 第 79 至 133 行 ：基于 [byte-buddy](https://github.com/raphw/byte-buddy) ，初始化 Instrumentation 的 [`java.lang.instrument.ClassFileTransformer`](https://docs.oracle.com/javase/7/docs/api/java/lang/instrument/ClassFileTransformer.html) 。
 
@@ -68,7 +70,7 @@ SkyWalking Agent 基于 **JavaAgent** 机制，实现应用**透明**接入 SkyW
 配置类有 Config 和 RemoteDownstreamConfig 两种。从命名上可以看出 ：
 
 * Config 为 Agent **本地**配置类，使用 SnifferConfigInitializer 进行初始化。
-* RemoteDownstreamConfig 为 Agent **远程**配置类，从 [Collector Server](https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-%E9%83%A8%E7%BD%B2Collector) 读取。 
+* RemoteDownstreamConfig 为 Agent **远程**配置类，从 [Collector Server](https://github.com/OpenSkywalking/skywalking/wiki/3.2.3-%E9%83%A8%E7%BD%B2Collector) 读取。
 
 -------
 
@@ -134,8 +136,8 @@ PluginFinder **[构造方法](https://github.com/YunaiV/skywalking/blob/09c654af
 [`#boot()`](https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L45) 方法，代码如下 ：
 
 * 第 47 行 ：调用 [`#loadAllServices()`](https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L72) 方法，加载所有 BootService 实现类的实例数组。ServiceManager 基于 SPI (Service Provider Interface) 机制，在 [/resources/META-INF.services/org.skywalking.apm.agent.core.boot.BootService](https://github.com/OpenSkywalking/skywalking/blob/b16d23c1484bec941367d6b36fa932b8ace40971/apm-sniffer/apm-agent-core/src/main/resources/META-INF/services/org.skywalking.apm.agent.core.boot.BootService) 文件里，定义了所有 BootService 的实现类。如果胖友对 SPI 机制不熟悉，可以看下如下文章 ：
-    * [《SPI 和 ServiceLoader》](http://www.jianshu.com/p/32d3e108f30a) 
-    * [《跟我学Dubbo系列之Java SPI机制简介》](http://www.jianshu.com/p/46aa69643c97) 
+    * [《SPI 和 ServiceLoader》](http://www.jianshu.com/p/32d3e108f30a)
+    * [《跟我学Dubbo系列之Java SPI机制简介》](http://www.jianshu.com/p/46aa69643c97)
 
 * 第 50 行 ：调用 [`#beforeBoot()`](https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L82) 方法，调用每个 `BootService#beforeBoot()` 方法。
 * 第 52 行 ：调用 [`#startup()`](https://github.com/YunaiV/skywalking/blob/3de8a6c15d07aa3b2c3b4e732e6654fc87c4e70e/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/boot/ServiceManager.java#L92) 方法，调用每个 `BootService#boot()` 方法。
@@ -158,5 +160,3 @@ BootService 目前有**七个**实现类，在后续的文章，我们会解析�
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/08.png)
 
 胖友，分享个朋友圈可好？
-
-

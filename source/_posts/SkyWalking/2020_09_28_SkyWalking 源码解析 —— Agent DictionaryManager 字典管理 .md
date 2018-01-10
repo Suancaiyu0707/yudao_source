@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-dictionary
 
 ![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 > 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
 > 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
 > 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
@@ -97,7 +99,7 @@ API 处理的流程大体如下：
 
 * [`org.skywalking.apm.collector.agent.stream.worker.register.ServiceNameRegisterRemoteWorker`](https://github.com/YunaiV/skywalking/blob/a9873b9bf07882746bd30f29b3c64f4b44887bf2/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/ServiceNameRegisterRemoteWorker.java) ，继承 AbstractRemoteWorker 抽象类，操作名注册远程 Worker 。
 * [`org.skywalking.apm.collector.agent.stream.worker.register.ServiceNameRegisterSerialWorker`](https://github.com/YunaiV/skywalking/blob/0830d985227c42f0e0f3787ebc99a2b197486b69/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/register/ServiceNameRegisterSerialWorker.java) ，继承 AbstractLocalAsyncWorker 抽象类，异步保存应用 Worker 。
-    * 相同于 Application ，ServiceName 的操作编号，从 `"1"` **双向**递增。 
+    * 相同于 Application ，ServiceName 的操作编号，从 `"1"` **双向**递增。
     * [ServiceNameEsRegisterDAO#save(ServiceName)](https://github.com/YunaiV/skywalking/blob/a4db2c4dd5e2adc861e7fb9e9b7b7ffdc57dfb88/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceNameEsRegisterDAO.java#L52)
 
 ### 2.2.4 ServiceName
@@ -167,5 +169,3 @@ API 处理的流程大体如下：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_28/04.png)
 
 胖友，分享个朋友圈可好？
-
-

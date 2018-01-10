@@ -8,6 +8,8 @@ permalink: SkyWalking/ui-1-application
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-1-application/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/ui-1-application/)
 - [2. AllInstanceLastTimeGetHandler](http://www.iocoder.cn/SkyWalking/ui-1-application/)
 - [3. TraceDagGetHandler](http://www.iocoder.cn/SkyWalking/ui-1-application/)
@@ -38,7 +40,7 @@ permalink: SkyWalking/ui-1-application
 
 * 以应用为维度进行展示。
 * 紫色部分，时间进度条，调用 [「2. AllInstanceLastTimeGetHandler」](#) 接口，获得应用实例最后心跳时间。大多情况下，我们进入该界面，看的是从最后心跳时间开始的应用调用情况。
-* 红色部分，应用调用拓扑图，初始化以 [ 实例最后心跳时间前一小时 , 实例最后心跳时间 ] 调用 [「3. TraceDagGetHandler」](#) 接口，获得数据，而后每 2 秒刷新一次，30 次刷新后，即过了 1 分钟后，数据范围向前走一分钟，为 [ 实例最后心跳时间前一小时 + 一分钟 , 实例最后心跳时间 + 一分钟 ]。 
+* 红色部分，应用调用拓扑图，初始化以 [ 实例最后心跳时间前一小时 , 实例最后心跳时间 ] 调用 [「3. TraceDagGetHandler」](#) 接口，获得数据，而后每 2 秒刷新一次，30 次刷新后，即过了 1 分钟后，数据范围向前走一分钟，为 [ 实例最后心跳时间前一小时 + 一分钟 , 实例最后心跳时间 + 一分钟 ]。
 * 通过进度条的【**播放/暂停按钮**】可以切换到暂停模式，切换时间范围，查看时间范围为一小时内的应用调用拓扑图。注意，一定要切换到【暂时模式】才可调整时间范围，在【播放模式】下，每次**自动**请求都会重设时间范围。
 
 > 基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。
@@ -53,7 +55,7 @@ permalink: SkyWalking/ui-1-application
     * 第 55 至 59 行：调用 [`TimeSynchronousService#allInstanceLastTime()`](https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/TimeSynchronousService.java#L40) 方法，获得应用实例最后心跳时间。
         * [`InstanceEsUIDAO#lastHeartBeatTime()`](https://github.com/YunaiV/skywalking/blob/fe20d4fff8e2ebf4ad44c9e7ac455f69146c0b9c/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstanceEsUIDAO.java#L61)
     * 第 61 至 65 行：减 5 秒，因为应用心跳是最频繁的，防止其他信息还没上传。
-    * 第 68 至 69 行：返回数据。 
+    * 第 68 至 69 行：返回数据。
 
 # 3. TraceDagGetHandler
 
@@ -75,5 +77,3 @@ permalink: SkyWalking/ui-1-application
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
-
-

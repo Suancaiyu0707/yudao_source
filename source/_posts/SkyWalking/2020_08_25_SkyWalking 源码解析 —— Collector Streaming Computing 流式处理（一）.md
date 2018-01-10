@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-streaming-first
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-streaming-first/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-streaming-first/)
 - [2. apm-collector-core/graph](http://www.iocoder.cn/SkyWalking/collector-streaming-first/)
   - [2.1 Graph 创建](http://www.iocoder.cn/SkyWalking/collector-streaming-first/)
@@ -58,7 +60,7 @@ OK，下面来一本正经的代码走起！
 
 * Graph ：定义了一个**数据**在**各个** Node 的处理拓扑图。
 * WayToNode ：提交**数据**给 Node 的**方式**。
-* Node ：节点，包含一个 NodeProcessor 和 一个 Next 。 
+* Node ：节点，包含一个 NodeProcessor 和 一个 Next 。
     * NodeProcessor ：Node 处理器，处理**数据**。
     * Next ：包含 WayToNode 数组，即 Node 提交**数据**给 Next 的 Node **数组**的**方式**。
 
@@ -140,7 +142,7 @@ public void createServiceReferenceGraph() {
 
 [`Graph#checkForNewNode(Node)`](https://github.com/YunaiV/skywalking/blob/a0d559d08e87879a08bd7269b9651188083ce05e/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/graph/Graph.java#L71) 方法，校验 Node 的 NodeProcessor 在 Graph 里，**编号唯一**，代码如下：
 
-* `nodeIndex` 属性，处理器编号与 Node 的映射。其中映射的 KEY 为 `NodeProcessor#id()` 。 
+* `nodeIndex` 属性，处理器编号与 Node 的映射。其中映射的 KEY 为 `NodeProcessor#id()` 。
 * 第 72 至 78 行：校验 Node 的 NodeProcessor 在 Graph 里，**编号唯一**。
 
 -------
@@ -307,5 +309,3 @@ AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_25/13.png)
 
 胖友，分享一波朋友圈可好！
-
-

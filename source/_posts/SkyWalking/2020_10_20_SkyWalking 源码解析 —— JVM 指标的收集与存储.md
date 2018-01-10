@@ -8,6 +8,8 @@ permalink: SkyWalking/jvm-collect
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/jvm-collect/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/jvm-collect/)
 - [2. Agent 收集 JVM 指标](http://www.iocoder.cn/SkyWalking/jvm-collect/)
   - [2.1 JVMService](http://www.iocoder.cn/SkyWalking/jvm-collect/)
@@ -136,9 +138,9 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 * 第 33 行：获得 OperatingSystemMXBean 对象。通过该对象，在 [`#getCpuTime()`](https://github.com/YunaiV/skywalking/blob/d10357a372d8178ff205a2272d2cb7d57bc8f605/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/cpu/SunCpuAccessor.java#L38) 实现方法，调用 [`OperatingSystemMXBean#getProcessCpuTime()`](https://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/OperatingSystemMXBean.html#getProcessCpuTime()) 方法，获得 JVM 进程占用 CPU 总时长。
 
     > long getProcessCpuTime()  
-    > 
+    >
     > Returns the CPU time used by the process on which the Java virtual machine is running in nanoseconds. The returned value is of nanoseconds precision but not necessarily nanoseconds accuracy. This method returns -1 if the the platform does not support this operation.  
-    > 
+    >
     > **Returns**:  
     > the CPU time used by the process in nanoseconds, or -1 if this operation is not supported.
 
@@ -157,7 +159,7 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 
 * 推荐阅读文章：
     * [MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html)
-    * [Java中监控程序内存的函数](http://blog.sina.com.cn/s/blog_ad7c19000102vjcw.html) 
+    * [Java中监控程序内存的函数](http://blog.sina.com.cn/s/blog_ad7c19000102vjcw.html)
     * [JVM内存调优相关的一些笔记（杂）](http://zhanjindong.com/2016/03/02/jvm-memory-tunning-notes)
 * `isHeap` ：是否堆内内存。
 * `init` ：初始化的内存数量。
@@ -165,7 +167,7 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 * `used` ：已使用的内存数量。
 * `committed` ：可以使用的内存数量。
 * 第 44 至 51 行：使用 MemoryMXBean 对象，获得堆内( Heap )内存。
-* 第 54 至 61 行：使用 MemoryMXBean 对象，获得非堆内( None-Heap )内存。 
+* 第 54 至 61 行：使用 MemoryMXBean 对象，获得非堆内( None-Heap )内存。
 
 ## 2.4 MemoryPool
 
@@ -187,7 +189,7 @@ CPUMetricAccessor 有两个子类，实际上文我们已经看到它的创建�
 
 ### 2.4.1 MemoryPoolMetricAccessor
  [`org.skywalking.apm.agent.core.jvm.memorypool.MemoryPoolMetricAccessor`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolMetricAccessor.java) ，MemoryPool 指标访问器**接口**。
- 
+
  * 定义了 [`#getMemoryPoolMetricList()`](https://github.com/YunaiV/skywalking/blob/868b01dbabccb8dd81031914d1536cb2393e9ab5/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolMetricAccessor.java#L30) 接口，获得 MemoryPool 指标**数组**。
 
 MemoryPoolMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_20/12.png)
@@ -206,7 +208,7 @@ MemoryPoolMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyW
 * [`#getMetaspaceNames()`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L95)
 * 胖友可以看看 MemoryPoolModule 子类的实现：
     * [CMSCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/CMSCollectorModule.java)
-    * [G1CollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/G1CollectorModule.java) 
+    * [G1CollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/G1CollectorModule.java)
     * [ParallelCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/ParallelCollectorModule.java)
     * [SerialCollectorModule](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/SerialCollectorModule.java)
 
@@ -216,9 +218,9 @@ MemoryPoolMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyW
 * 第 47 至 62 行：调用 [`#contains(possibleNames, name)`](https://github.com/YunaiV/skywalking/blob/c94fca439b748760bb7561e4fa79f2673df171a3/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/memorypool/MemoryPoolModule.java#L76) 方法，逐个内存区域名字判断，获得对应的内存区域类型。
 * 第 65 至 71 行：创建 MemoryUsage 对象，并添加到结果数组。
 
-## 2.5 GC 
+## 2.5 GC
 
-整体实现类似 [「2.4 MemoryPool」](#) 。 
+整体实现类似 [「2.4 MemoryPool」](#) 。
 
 [`org.skywalking.apm.agent.core.jvm.memorypool.GCProvider`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L30) ，GC 提供者，提供 [`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCProvider.java#L55) 方法，采集 GC 指标**数组**，如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_20/13.png)
 
@@ -234,7 +236,7 @@ MemoryPoolMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyW
 
 ### 2.5.1 GCMetricAccessor
  [`org.skywalking.apm.agent.core.jvm.gc.GCMetricAccessor`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCMetricAccessor.java) ，GC 指标访问器**接口**。
- 
+
  * 定义了 [`#getGCList()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCMetricAccessor.java#L28) 接口，获得 GC 指标**数组**。
 
 GCMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyWalking/2020_10_20/15.png)
@@ -249,7 +251,7 @@ GCMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyWalking/2
 * [`#getNewGCName()`](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/GCModule.java#L68)
 * 胖友可以看看 GCModule 子类的实现：
     * [CMSGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/CMSGCModule.java)
-    * [G1GCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/G1GCModule.java) 
+    * [G1GCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/G1GCModule.java)
     * [ParallelGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/ParallelGCModule.java)
     * [SerialGCModule](https://github.com/YunaiV/skywalking/blob/73f4c2fb5fb7cf6eb533d61ba59afec66af2c9b6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/jvm/gc/SerialGCModule.java)
 
@@ -329,7 +331,7 @@ GCMetricAccessor 子类如下图：![](http://www.iocoder.cn/images/SkyWalking/2
 * [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricService`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryPoolMetricService.java) ，MemoryPoolMetric 指标服务，调用 MemoryPoolMetric 对应的 [`Graph<MemoryPoolMetric>`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/graph/JvmMetricStreamGraph.java#L82) 对象，流式处理，最终 MemoryPoolMetric 保存到存储器。
 * [`org.skywalking.apm.collector.agent.stream.worker.jvm.MemoryMetricPersistenceWorker`](https://github.com/YunaiV/skywalking/blob/4b7d7083ca9cd89437bcca6d0c5f67f3832d60dd/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/worker/jvm/MemoryMetricPersistenceWorker.java) , MemoryPool 指标批量存储 Worker 。
 
-## 3.5 GC 
+## 3.5 GC
 
 [`org.skywalking.apm.collector.storage.table.jvm.GCMetric`](https://github.com/YunaiV/skywalking/blob/0051d648dc8e5435dd63666a34da81274f0a0e61/apm-collector/apm-collector-storage/collector-storage-define/src/main/java/org/skywalking/apm/collector/storage/table/jvm/GCMetric.java) ，GC 指标。
 
@@ -357,5 +359,3 @@ Collector 在接收到 GC 指标上传后，调用 [`JVMMetricsServiceHandler#se
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_20/16.png)
 
 胖友，分享个朋友圈可好？
-
-

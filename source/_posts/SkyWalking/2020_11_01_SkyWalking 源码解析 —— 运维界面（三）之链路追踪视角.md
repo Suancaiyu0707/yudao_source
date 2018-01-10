@@ -8,6 +8,8 @@ permalink: SkyWalking/ui-3-trace
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-3-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/ui-3-trace/)
 - [2. ApplicationsGetHandler](http://www.iocoder.cn/SkyWalking/ui-3-trace/)
 - [3. SegmentTopGetHandler](http://www.iocoder.cn/SkyWalking/ui-3-trace/)
@@ -44,7 +46,7 @@ permalink: SkyWalking/ui-3-trace
 * 蓝色部分，【点击单条 TraceSegment】，**一次完整**的分布式链路追踪记录详情，调用 [「5. TraceStackGetHandler」](#) 接口，获得数据。
 * 黄色部分，【点击单个 Span】，单条 Span 记录详情，调用 [「5. SpanGetHandler」](#) 接口，获得数据。
 
-> 基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。 
+> 基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。
 
 # 2. ApplicationsGetHandler
 
@@ -99,4 +101,3 @@ permalink: SkyWalking/ui-3-trace
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
-

@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-grpc-server-module
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/)
 - [2. GRPCManagerModule](http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/)
 - [3. GRPCManagerProvider](http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/)
@@ -32,7 +34,7 @@ permalink: SkyWalking/collector-grpc-server-module
 本文主要分享 **Collector gRPC Server Manager**。Collector 通过该管理器，管理启动的多个 gRPC Server，例如 Agent gRPC Server、Remote gRPC Server 。![](http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png)
 
 > 友情提示：建议胖友已经读过 [《SkyWalking 源码分析 —— Collector Server Component 服务器组件》](http://www.iocoder.cn/SkyWalking/collector-server-component/?self)
-> 
+>
 > 另外，本文和 [《SkyWalking 源码分析 —— Collector Jetty Server Manager》](http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/?self) 相似度 99%
 
 gRPC Server Manager 在 SkyWalking 架构图处于如下位置( **红框** ) ：
@@ -102,5 +104,3 @@ gRPC Server Manager 在 SkyWalking 架构图处于如下位置( **红框** ) ：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_05/04.png)
 
 胖友，分享个朋友圈可好？
-
-

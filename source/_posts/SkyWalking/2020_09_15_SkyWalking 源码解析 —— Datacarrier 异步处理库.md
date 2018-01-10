@@ -8,6 +8,8 @@ permalink: SkyWalking/data-carrier
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/data-carrier/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/data-carrier/)
 - [2. buffer](http://www.iocoder.cn/SkyWalking/data-carrier/)
   - [2.1 Buffer](http://www.iocoder.cn/SkyWalking/data-carrier/)
@@ -193,5 +195,3 @@ IDataPartitioner 目前有两个子类实现：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_15/05.png)
 
 胖友，分享一波朋友圈可好。
-
-

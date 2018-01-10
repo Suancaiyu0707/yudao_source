@@ -8,6 +8,8 @@ permalink: SkyWalking/collector-receive-trace
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-receive-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
 - [2. TraceSegmentServiceHandler](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
   - [2.1 TraceSegmentService](http://www.iocoder.cn/SkyWalking/collector-receive-trace/)
@@ -180,7 +182,7 @@ StandardBuilder 有三个实现类：
     * `isOrigin = true` ，使用 `spanObject`属性 。
     * `isOrigin = false` ，使用 `standardBuilder` 属性。
 * 在 Protobuf 里，数据修改值时，需要使用对应的 Builder 对象。通过使用**装饰者**设计模式，对使用者屏蔽细节，调用也更加方便。下面在来看看如下方法，是不是就更加明白了：
-    * [`#setOperationNameId(value)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/standardization/SpanDecorator.java#L165) 
+    * [`#setOperationNameId(value)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/standardization/SpanDecorator.java#L165)
     * [`#getOperationName()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/standardization/SpanDecorator.java#L172)
 * [`#toBuilder()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/standardization/SpanDecorator.java#L195) **实现**方法，创建 SpanObject 对应的 Builder ，并修改 `isOrigin = false` 。另外，会调用 `standardBuilder` 属性的 `#toBuilder()` 方法，目前在项目里，此处的 `standardBuilder` 属性为 SegmentDecorator 。
 
@@ -207,7 +209,7 @@ IdExchanger 有三个实现类：
     * 第 68 至 72 行：获得**到**，调用 `ReferenceDecorator#toBuilder()` 方法，创建 Builder ，然后设置操作编号。
 * 第 75 至 89 行：[`TraceSegmentRef.parentApplicationInstanceId`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L71) 为空，将 [`TraceSegmentRef.parentOperationName`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L90) 进行兑换。
 * 第 92 至 104 行：[`TraceSegmentRef.entryOperationName`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L76) 为空，将 [`TraceSegmentRef.peerHost`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L62) 进行兑换。在【第 93 行】，我们可以看到，调用 `ApplicationIDService#getOrCreate(applicationCode)` 方法，将**服务地址**作为 `applicationCode` 使用。
- 
+
 [`SpanIdExchanger#exchange(standardBuilder, applicationId)`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/parser/standardization/SpanIdExchanger.java#L54) 方法，类似，已经添加代码注释，胖友自己阅读理解。
 
 # 3. Buffer 文件
@@ -216,7 +218,7 @@ IdExchanger 有三个实现类：
 
 我们先来看看 Buffer 包括哪些文件：
 
-``` 
+```
 yunai$ pwd
 /Users/yunai/Java/buffer
 yunai$ ls
@@ -254,7 +256,7 @@ data_20171205004132.sw		offset_20171205004132.sw
 * 第 60 至 63 行：创建 Buffer 文件夹成功( 意味着该文件夹不存在 )，调用 [`#createOffsetFile()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/OffsetManager.java#L112) ，创建 Data 文件。代码如下：
     * 第 114 至 116 行：创建**新**的 Offset 文件。文件名格式为，`offset_${yyyyMMddHHmmss}.sw` 。
     * 第 118 至 121 行：设置 Offset 对象的写入和读取的文件名与偏移量都为**空**。在上面的方法，此处的【空】，在 Data 文件创建时，会重新设置 Offset 。
-    * 第 123 行：调用 [`#flush()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/OffsetManager.java#L129) 方法，写入 Offset 对象到 Offset 文件。代码如下： 
+    * 第 123 行：调用 [`#flush()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/OffsetManager.java#L129) 方法，写入 Offset 对象到 Offset 文件。代码如下：
         * 第 131 行：调用 [`Offset#serialize()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/Offset.java#L49) 方法，序列化读写偏移，格式为 `${读取文件名},${读取文件偏移量},${写入文件名},${写入文件偏移量}` 。
         * 第 133 至 142 行：写入 Offset 对象到 Offset 文件。写入方式为**整行**，如下图所示：![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/06.png)
 * 第 82 至 94 行：获得所有 Offset 文件，删除老的 Offset 文件，保留最后一个。若不存在 Offset 文件，则调用 `#createOffsetFile()` 方法，创建**新**的 Offset 文件。
@@ -294,7 +296,7 @@ data_20171205004132.sw		offset_20171205004132.sw
     * 第 170 行：返回 `true` ，文件被全部读取完成、处理并删除。
 * 第 75 行：调用 [`#readEarliestCreateDataFile()`](https://github.com/YunaiV/skywalking/blob/c15cf5e1356c7b44a23f2146b8209ab78c2009ac/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/buffer/SegmentBufferReader.java#L110) 方法，循环顺序读取 Data 文件，直到有一个没读完。
     * 第 112 至 118 行：若第一个 Data 文件和 Offset 读取的文件相同，返回。说明，在上一次 `#read()` 方法里，没有读完。
-    * 第 121 至 127 行：循环顺序调用 `#read(readFile, readFileOffset)` 方法，读取 Data 文件，直到有一个没读完。 
+    * 第 121 至 127 行：循环顺序调用 `#read(readFile, readFileOffset)` 方法，读取 Data 文件，直到有一个没读完。
 * -------- 读取文件不存在 --------
 * 该情况发生于，Data 文件被全部读取完成，并且删除。
 * 第 73 行：调用 `#deleteTheDataFilesBeforeReadFile(readFileName)` 方法，删除比指定文件早创建的 Data 文件。
@@ -310,4 +312,3 @@ data_20171205004132.sw		offset_20171205004132.sw
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/08.png)
 
 胖友，分享个朋友圈可好？
-

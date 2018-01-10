@@ -8,6 +8,8 @@ permalink: SkyWalking/agent-collect-trace
 
 摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-collect-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+**本文主要基于 SkyWalking 3.2.6 正式版**
+
 - [1. 概述](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
 - [2. Trace](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
   - [2.1 ID](http://www.iocoder.cn/SkyWalking/agent-collect-trace/)
@@ -59,7 +61,7 @@ permalink: SkyWalking/agent-collect-trace
 # 2. Trace
 
 > 友情提示：胖友，请先行阅读 [《OpenTracing语义标准》](https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/specification.md) 。  
-> 
+>
 > 本小节，笔者认为胖友已经对 OpenTracing 有一定的理解。
 
 [`org.skywalking.apm.agent.core.context.trace.TraceSegment`](https://github.com/YunaiV/skywalking/blob/2a75efbeddac2b9565816af0ab0873ec3d998424/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java) ，是**一次**分布式链路追踪( Distributed Trace ) 的**一段**。
@@ -153,7 +155,7 @@ DistributedTraceId 有两个实现类：
 * `#setComponent(Component)` 方法，设置 [`org.skywalking.apm.network.trace.component.Component`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/Component.java) ，例如：MongoDB / SpringMVC / Tomcat 等等。目前，官方在 [`org.skywalking.apm.network.trace.component.ComponentsDefine`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-network/src/main/java/org/skywalking/apm/network/trace/component/ComponentsDefine.java) 定义了目前已经支持的 Component 。
     * `#setComponent(componentName)` 方法，直接设置 Component 名字。大多数情况下，我们不使用该方法。
 
-        > Only use this method in explicit instrumentation, like opentracing-skywalking-bridge. 
+        > Only use this method in explicit instrumentation, like opentracing-skywalking-bridge.
         > It it higher recommend don't use this for performance consideration.
 
 * `#setLayer(SpanLayer)` 方法，设置 [`org.skywalking.apm.agent.core.context.trace.SpanLayer`](https://github.com/YunaiV/skywalking/blob/a51e197a78f82400edae5c33b523ba1cb5224b8f/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/NoopSpan.java) 。目前有，DB 、RPC_FRAMEWORK 、HTTP 、MQ ，未来会增加 CACHE 。
@@ -161,7 +163,7 @@ DistributedTraceId 有两个实现类：
 * `#tag(key, value)` 方法，设置键值对的标签。可以调用多次，构成 Span 的标签集合。在 [「2.2.1 Tag」](#) 详细解析。
 * 日志相关
     * `#log(timestampMicroseconds, fields)` 方法，记录一条通用日志，包含 `fields` 键值对集合。
-    * `#log(Throwable)` 方法，记录一条异常日志，包含异常信息。 
+    * `#log(Throwable)` 方法，记录一条异常日志，包含异常信息。
 * `#errorOccurred()` 方法，标记发生异常。大多数情况下，配置 `#log(Throwable)` 方法一起使用。
 * `#start()` 方法，开始 Span 。一般情况的实现，设置开始时间。
 * `#isEntry()` 方法，是否是入口 Span ，在 [「2.2.2.1 EntrySpan」](#) 详细解析。
@@ -220,7 +222,7 @@ AbstractSpan 实现类如下图：![](http://www.iocoder.cn/images/SkyWalking/20
 
 #### 2.2.2.2 StackBasedTracingSpan
  [`org.skywalking.apm.agent.core.context.trace.StackBasedTracingSpan`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java) ，实现 AbstractTracingSpan 抽象类，基于**栈**的链路追踪 Span 抽象类。这种 Span 能够被多次调用 `#start(...)` 和 `#finish(...)` 方法，在类似堆栈的调用中。在 [「2.2.2.2.1 EntrySpan」](#) 中详细举例子。代码如下：
- 
+
 * `stackDepth` 属，**栈**深度。
 * [`#finish(TraceSegment)`](https://github.com/YunaiV/skywalking/blob/c1e513b4581443e7ca720f4e9c91ad97cc6f0de1/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/StackBasedTracingSpan.java#L52) **实现**方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。**当且仅当 `stackDepth == 0` 时，添加成功**。代码如下：
     * 第 53 至 73 行：栈深度为零，出栈成功。调用 `super#finish(TraceSegment)` 方法，完成( 结束 ) Span ，将当前 Span ( 自己 )添加到 TraceSegment 。
@@ -278,7 +280,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 **ps**：如上内容信息量较大，胖友可以对照着实现方法，在理解理解。HOHO ，良心笔者当然也是加了注释的。
 
-#### 2.2.2.3 LocalSpan 
+#### 2.2.2.3 LocalSpan
 
 [`org.skywalking.apm.agent.core.context.trace.LocalSpan`](https://github.com/YunaiV/skywalking/blob/96fd1f0aacb995f725c446b1cfcdc3124058e6a6/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/LocalSpan.java) ，继承 AbstractTracingSpan 抽象类，本地 Span ，用于一个普通方法的链路追踪，例如本地方法。
 
@@ -297,7 +299,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 [`org.skywalking.apm.agent.core.context.trace.TraceSegmentRef`](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java) ，TraceSegment 指向，通过 `traceSegmentId` 和 `spanId` 属性，指向父级 TraceSegment 的指定 Span 。
 
 * `type` 属性，指向类型( [SegmentRefType](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L206) ) 。不同的指向类型，使用不同的构造方法。
-    * `CROSS_PROCESS` ，跨进程，例如远程调用，对应构造方法 [#TraceSegmentRef(ContextCarrier)](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L97) 。 
+    * `CROSS_PROCESS` ，跨进程，例如远程调用，对应构造方法 [#TraceSegmentRef(ContextCarrier)](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L97) 。
     * `CROSS_THREAD` ，跨线程，例如异步线程任务，对应构造方法 [#TraceSegmentRef(ContextSnapshot)](https://github.com/YunaiV/skywalking/blob/49dc81a8bcaad1879b3a3be9917944b0b8b5a7a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegmentRef.java#L123) 。
     * 构造方法的代码，在 [「3. Context」](#) 中，伴随着调用过程，一起解析。
 
@@ -472,7 +474,7 @@ ExitSpan 实现 [`org.skywalking.apm.agent.core.context.trace.WithPeerInfo`](htt
 
 * 第 436 行：调用 `TraceSegment#finish(isSizeLimited)` 方法，完成 TraceSegment 。
 * 第 444 至 448 行：若满足条件，调用 `TraceSegment#setIgnore(true)` 方法，标记该 TraceSegment 忽略，不发送给 Collector 。
-    * `!samplingService.trySampling()` ：不采样。 
+    * `!samplingService.trySampling()` ：不采样。
     * `!segment.hasRef()` ：无父 TraceSegment 指向。如果此处忽略采样，则会导致整条分布式链路追踪**不完整**。
     * `segment.isSingleSpanSegment()` ：TraceSegment 只有**一个** Span 。
     * TODO 【4010】
@@ -542,7 +544,7 @@ CarrierItem 有两个子类：
 
 [`org.skywalking.apm.agent.core.context.ContextSnapshot`](https://github.com/YunaiV/skywalking/blob/dd6d9bff2d160f3aa60bc0be5152c49ecc9d94a4/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ContextSnapshot.java) ，**跨线程** Context 传递**快照**。和 ContextCarrier 基本一致，由于不需要**跨进程传输**，可以少**传递**一些属性：
 
-* `parentApplicationInstanceId` 
+* `parentApplicationInstanceId`
 * `peerHost`
 
 ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
@@ -574,4 +576,3 @@ ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/08.png)
 
 胖友，分享个朋友圈可好？
-
