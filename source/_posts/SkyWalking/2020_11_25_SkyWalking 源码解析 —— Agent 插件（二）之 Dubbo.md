@@ -44,7 +44,7 @@ permalink: SkyWalking/agent-plugin-dubbo
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_25/02.png)
 
-* **基于 MonitorFilter 过滤器实现**。
+
 
 ## 2.1 DubboInterceptor
 
