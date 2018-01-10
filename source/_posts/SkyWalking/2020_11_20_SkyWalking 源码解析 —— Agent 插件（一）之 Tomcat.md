@@ -51,13 +51,13 @@ permalink: SkyWalking/agent-plugin-tomcat
 
 * [`#beforeMethod(...)`](https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L5) 方法，创建 EntrySpan 对象。代码如下：
     * 第 59 至 65 行：解析 ContextCarrier 对象，用于跨进程的链路追踪。在 [《SkyWalking 源码分析 —— Agent 收集 Trace 数据》「 3.2.3 ContextCarrier 」](http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self) 有详细解析。
-    * 第 68 行：调用 `ContextManager#createLocalSpan(operationName, contextCarrier)` 方法，创建 EntrySpan 对象。
+    * 第 68 行：调用 `ContextManager#createEntrySpan(operationName, contextCarrier)` 方法，创建 EntrySpan 对象。
     * 第 71 至 72 行：设置 EntrySpan 对象的 `url` / `http.method` 标签键值对。
     * 第 75 行：设置 EntrySpan 对象的组件类型。
     * 第 78 行：设置 EntrySpan 对象的分层。
 * [`#afterMethod(...)`](https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L81) 方法，完成 EntrySpan 对象。
     * 第 89 至 92 行：当返回状态码大于等于 400 时，标记 EntrySpan 发生异常，并设置 `status_code` 标签键值对。
-    * 调用 `ContextManager#stopSpan()` 方法，完成 EntrySpan 对象。
+    * 第 95 行：调用 `ContextManager#stopSpan()` 方法，完成 EntrySpan 对象。
 * [`#handleMethodException(...)`](https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L99) 方法，处理异常。**注意**，该方法实际并且调用，在 Tomcat 的[`StandardWrapperValve#invoke(request, response)`](https://github.com/Oreste-Luci/apache-tomcat-8.0.26-src/blob/master/java/org/apache/catalina/core/StandardWrapperValve.java#L94) 方法里，发生异常时，会提交异常给 [`StandardWrapperValve#exception(request, response, exception)`](https://github.com/Oreste-Luci/apache-tomcat-8.0.26-src/blob/master/java/org/apache/catalina/core/StandardWrapperValve.java#L507) 处理，所以会被 [「 2.2 TomcatExceptionInterceptor 」](#) 拦截。
 
 ## 2.2 TomcatExceptionInterceptor

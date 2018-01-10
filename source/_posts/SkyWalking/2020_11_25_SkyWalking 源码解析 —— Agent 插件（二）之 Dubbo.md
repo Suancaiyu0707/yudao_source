@@ -44,8 +44,6 @@ permalink: SkyWalking/agent-plugin-dubbo
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_25/02.png)
 
-
-
 ## 2.1 DubboInterceptor
 
 [`org.skywalking.apm.plugin.dubbo.DubboInterceptor`](https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java) ，实现 InstanceMethodsAroundInterceptor 接口，DubboInstrumentation 的拦截器。**同时适用于 Dubbo 服务提供者与消费者**。代码如下：
