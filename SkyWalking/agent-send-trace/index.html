@@ -21,8 +21,7 @@
 
 1. 概述
 2. TraceSegmentServiceClient
-
-2.1 实">
+2.1 实现">
     
 
     
@@ -149,12 +148,11 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-send-trace/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">http://www.iocoder.cn/SkyWalking/agent-send-trace/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">1. 概述</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">2. TraceSegmentServiceClient</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">2. TraceSegmentServiceClient</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">2.1 实现 BootService 接口</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">2.2 实现 GRPCChannelListener 接口</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-send-trace/">2.3 实现 TracingContextListener 接口</a></li>
@@ -166,18 +164,17 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>分布式链路追踪系统，链路的追踪大体流程如下：</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>分布式链路追踪系统，链路的追踪大体流程如下：</p>
 <ol>
 <li>Agent 收集 Trace 数据。</li>
 <li><strong>Agent 发送 Trace 数据给 Collector</strong> 。</li>
@@ -188,8 +185,7 @@
 <p>考虑到减少<strong>外部组件</strong>的依赖，Agent 收集到 Trace 数据后，不是写入外部消息队列( 例如，Kafka )或者日志文件，而是 Agent 写入<strong>内存消息队列</strong>，<strong>后台线程</strong>【<strong>异步</strong>】发送给 Collector 。</p>
 <p>本文涉及的类非常少，如下图所示：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_05/01.png" alt=""></p>
-<h1>2. TraceSegmentServiceClient</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.remote.TraceSegmentServiceClient</code></a> ，TraceSegment 发送服务客户端。它是一个服务，也是一个客户端，负责将 TraceSegment <strong>异步</strong>发送到 Collector 。</p>
+<h1 id="2-TraceSegmentServiceClient"><a href="#2-TraceSegmentServiceClient" class="headerlink" title="2. TraceSegmentServiceClient"></a>2. TraceSegmentServiceClient</h1><p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.remote.TraceSegmentServiceClient</code></a> ，TraceSegment 发送服务客户端。它是一个服务，也是一个客户端，负责将 TraceSegment <strong>异步</strong>发送到 Collector 。</p>
 <p>我们先来看看 TraceSegmentServiceClient 的<strong>属性</strong>：</p>
 <ul>
 <li><code>TIMEOUT</code> <strong>静态</strong>属性，发送等待超时时长，单位：毫秒。</li>
@@ -201,8 +197,7 @@
 <li><code>status</code> 属性，连接状态。</li>
 </ul>
 <p>下面，我们来介绍 TraceSegmentServiceClient 实现的<strong>接口</strong>以及对应的方法。</p>
-<h2>2.1 实现 BootService 接口</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L85" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeBoot()</code></a> 方法，代码如下：</p>
+<h2 id="2-1-实现-BootService-接口"><a href="#2-1-实现-BootService-接口" class="headerlink" title="2.1 实现 BootService 接口"></a>2.1 实现 BootService 接口</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L85" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeBoot()</code></a> 方法，代码如下：</p>
 <ul>
 <li>第 86 行：调用 <code>GRPCChannelManager#addChannelListener(this)</code> 方法，将自己添加到 GRPCChannelManager 中，作为一个监听器，从而调用 <code>#statusChanged(GRPCChannelStatus)</code> 方法，实现对<strong>连接状态</strong>( <code>status</code> )的监听处理。</li>
 </ul>
@@ -218,33 +213,27 @@
 <ul>
 <li>第 107 行：调用 <code>DataCarrier#shutdownConsumers()</code> 方法，停止消费。</li>
 </ul>
-<h2>2.2 实现 GRPCChannelListener 接口</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L209" rel="external nofollow noopener noreferrer" target="_blank"><code>#statusChanged(GRPCChannelStatus)</code></a> 方法，代码如下：</p>
+<h2 id="2-2-实现-GRPCChannelListener-接口"><a href="#2-2-实现-GRPCChannelListener-接口" class="headerlink" title="2.2 实现 GRPCChannelListener 接口"></a>2.2 实现 GRPCChannelListener 接口</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L209" rel="external nofollow noopener noreferrer" target="_blank"><code>#statusChanged(GRPCChannelStatus)</code></a> 方法，代码如下：</p>
 <ul>
 <li>第 211 至 214 行：连接成功，创建 Stub 对象。</li>
 <li>第 215 行：记录连接状态。</li>
 </ul>
-<h2>2.3 实现 TracingContextListener 接口</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L196" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterFinished(TraceSegment)</code></a> 方法，代码如下：</p>
+<h2 id="2-3-实现-TracingContextListener-接口"><a href="#2-3-实现-TracingContextListener-接口" class="headerlink" title="2.3 实现 TracingContextListener 接口"></a>2.3 实现 TracingContextListener 接口</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L196" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterFinished(TraceSegment)</code></a> 方法，代码如下：</p>
 <ul>
 <li>第 197 至 199 行：当 <code>TraceSegment.ignore = true</code> 时，忽略该 TraceSegment 。</li>
 <li>第 201 行：提交 TraceSegment 到内存队列。</li>
 </ul>
-<h2>2.4 实现 IConsumer 接口</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L116" rel="external nofollow noopener noreferrer" target="_blank"><code>#consume(List&lt;TraceSegment&gt;)</code></a> 方法，代码如下：</p>
+<h2 id="2-4-实现-IConsumer-接口"><a href="#2-4-实现-IConsumer-接口" class="headerlink" title="2.4 实现 IConsumer 接口"></a>2.4 实现 IConsumer 接口</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L116" rel="external nofollow noopener noreferrer" target="_blank"><code>#consume(List&lt;TraceSegment&gt;)</code></a> 方法，代码如下：</p>
 <ul>
-<li>------ <strong>连接中</strong> ------</li>
+<li>—— <strong>连接中</strong> ——</li>
 <li>第 119 行：创建 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCStreamServiceStatus.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.agent.core.remote。GRPCStreamServiceStatus</code></a> 对象。</li>
-<li>第 122 至 141 行：创建 StreamObserver 对象。在下面，我们可以看到 Agent 发送 TraceSegment 给 Collector 是<strong>非阻塞</strong>的方式，通过该对象，<strong>观察</strong>执行结果。
-<ul>
+<li>第 122 至 141 行：创建 StreamObserver 对象。在下面，我们可以看到 Agent 发送 TraceSegment 给 Collector 是<strong>非阻塞</strong>的方式，通过该对象，<strong>观察</strong>执行结果。<ul>
 <li>第 130 行 || 第 139 行：当发生错误或者完成时，调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCStreamServiceStatus.java#L44" rel="external nofollow noopener noreferrer" target="_blank"><code>GRPCStreamServiceStatus#finished()</code></a> 方法，<strong>标记完成</strong>。为什么呢？下面会看到。</li>
 <li>第 134 行：调用 <code>GRPCChannelManager#reportError(Throwable)</code> 方法，汇报错误。如果是连接错误，GRPCChannelManager 会负责断开重连。</li>
 </ul>
 </li>
-<li>第 144 至 151 行：逐条<strong>非阻塞</strong>发送 TraceSegment 请求。
-<ul>
-<li>第 146 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L163" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceSegment#transform()</code></a> 方法，将 TraceSegment 转换成 <code>org.skywalking.apm.network.proto.UpstreamSegment</code> 对象，用于 gRPC 传输，参见 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-network/src/main/proto/TraceSegmentService.proto#L14" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceSegmentService.proto</code></a> 的数据结构定义。
-<ul>
+<li>第 144 至 151 行：逐条<strong>非阻塞</strong>发送 TraceSegment 请求。<ul>
+<li>第 146 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/TraceSegment.java#L163" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceSegment#transform()</code></a> 方法，将 TraceSegment 转换成 <code>org.skywalking.apm.network.proto.UpstreamSegment</code> 对象，用于 gRPC 传输，参见 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-network/src/main/proto/TraceSegmentService.proto#L14" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceSegmentService.proto</code></a> 的数据结构定义。<ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/DistributedTraceId.java#L65" rel="external nofollow noopener noreferrer" target="_blank"><code>DistributedTraceId#toUniqueId()</code></a></li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/ids/ID.java#L120" rel="external nofollow noopener noreferrer" target="_blank"><code>ID#transform()</code></a></li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/context/trace/AbstractTracingSpan.java#L262" rel="external nofollow noopener noreferrer" target="_blank"><code>AbstractTracingSpan#transform()</code></a></li>
@@ -255,22 +244,20 @@
 </ul>
 </li>
 <li>第 154 行：调用 <code>StreamObserver#onCompleted()</code> 方法，标记全部请求发送完成。</li>
-<li>第 157 至 159 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCStreamServiceStatus.java#L51" rel="external nofollow noopener noreferrer" target="_blank"><code>GRPCStreamServiceStatus#wait4Finish(maxTimeout)</code></a> 方法，等待 Collector 处理完成。这就是为什么上面需要调用 <code>GRPCStreamServiceStatus#finished()</code> 方法。完成后，记录数量到 <code>segmentUplinkedCounter</code> 。
-<ul>
+<li>第 157 至 159 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/GRPCStreamServiceStatus.java#L51" rel="external nofollow noopener noreferrer" target="_blank"><code>GRPCStreamServiceStatus#wait4Finish(maxTimeout)</code></a> 方法，等待 Collector 处理完成。这就是为什么上面需要调用 <code>GRPCStreamServiceStatus#finished()</code> 方法。完成后，记录数量到 <code>segmentUplinkedCounter</code> 。<ul>
 <li><strong>注意</strong>，此处若等待完成超时，TraceSegment <strong>依然</strong>在发送，或者被 Collector 处理中，直到最终的成功或失败。</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>------ <strong>未连接</strong> ------</li>
+<li>—— <strong>未连接</strong> ——</li>
 <li>第 161 行：记录数量到 <code>segmentAbandonedCounter</code> 。</li>
-<li>------ <strong>ALL</strong> ------</li>
+<li>—— <strong>ALL</strong> ——</li>
 <li>调用 <a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L170" rel="external nofollow noopener noreferrer" target="_blank"><code>#printUplinkStatus()</code></a> 方法，每三十秒，打印一次 segmentUplinkedCounter 和 segmentAbandonedCounter 数据。主要用于开发调试。另外，该方法会重置 <code>segmentUplinkedCounter</code> 和 <code>segmentAbandonedCounter</code> 计数。</li>
 </ul>
 <p>ps：目前 DataCarrier <strong>最长</strong>每 20 秒消费一次。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/0fe81f39054634a0b9a04fca41e6889f0e175b4a/apm-sniffer/apm-agent-core/src/main/java/org/skywalking/apm/agent/core/remote/TraceSegmentServiceClient.java#L186" rel="external nofollow noopener noreferrer" target="_blank"><code>#onError(List&lt;TraceSegment&gt;, Throwable)</code></a> 方法，当消费发生<strong>异常</strong>时，打印日志。</p>
-<h1>666. 彩蛋</h1>
-<p>HOHO ，简单水更一篇，保持 Trace 相关的小系列文章，主题明确。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>HOHO ，简单水更一篇，保持 Trace 相关的小系列文章，主题明确。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_05/02.jpeg" alt=""></p>
 <p>胖友，分享个朋友圈可好？</p>
   
@@ -322,7 +309,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. TraceSegmentServiceClient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 实现 BootService 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 实现 GRPCChannelListener 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 实现 TracingContextListener 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 实现 IConsumer 接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-TraceSegmentServiceClient"><span class="toc-number">2.</span> <span class="toc-text">2. TraceSegmentServiceClient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-实现-BootService-接口"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 实现 BootService 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-实现-GRPCChannelListener-接口"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 实现 GRPCChannelListener 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-实现-TracingContextListener-接口"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 实现 TracingContextListener 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-实现-IConsumer-接口"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 实现 IConsumer 接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

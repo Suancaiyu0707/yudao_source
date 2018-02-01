@@ -21,8 +21,7 @@
 
 1. 概述
 2. TomcatInstrumentation
-
-2.1 To">
+2.1 Tom">
     
 
     
@@ -149,12 +148,11 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">1. 概述</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">2. TomcatInstrumentation</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">2. TomcatInstrumentation</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">2.1 TomcatInvokeInterceptor</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-tomcat/">2.2 TomcatExceptionInterceptor</a></li>
 </ul>
@@ -164,30 +162,26 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>SkyWalking Agent Tomcat 插件</strong>。涉及到的代码不多，如下图：</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Agent Tomcat 插件</strong>。涉及到的代码不多，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_20/01.png" alt=""></p>
-<h1>2. TomcatInstrumentation</h1>
-<p>在 <a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/resources/skywalking-plugin.def" rel="external nofollow noopener noreferrer" target="_blank"><code>skywalking-plugin.def</code></a> 里，定义了插件，如下图：</p>
+<h1 id="2-TomcatInstrumentation"><a href="#2-TomcatInstrumentation" class="headerlink" title="2. TomcatInstrumentation"></a>2. TomcatInstrumentation</h1><p>在 <a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/resources/skywalking-plugin.def" rel="external nofollow noopener noreferrer" target="_blank"><code>skywalking-plugin.def</code></a> 里，定义了插件，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_20/03.png" alt=""></p>
 <hr>
 <p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/define/TomcatInstrumentation.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.define.TomcatInstrumentation</code></a> ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_20/02.png" alt=""></p>
-<h2>2.1 TomcatInvokeInterceptor</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.TomcatInvokeInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，TomcatInstrumentation 的拦截器。代码如下：</p>
+<h2 id="2-1-TomcatInvokeInterceptor"><a href="#2-1-TomcatInvokeInterceptor" class="headerlink" title="2.1 TomcatInvokeInterceptor"></a>2.1 TomcatInvokeInterceptor</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.TomcatInvokeInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，TomcatInstrumentation 的拦截器。代码如下：</p>
 <ul>
-<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L5" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，创建 EntrySpan 对象。代码如下：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L5" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，创建 EntrySpan 对象。代码如下：<ul>
 <li>第 59 至 65 行：解析 ContextCarrier 对象，用于跨进程的链路追踪。在 <a href="http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self">《SkyWalking 源码分析 —— Agent 收集 Trace 数据》「 3.2.3 ContextCarrier 」</a> 有详细解析。</li>
 <li>第 68 行：调用 <code>ContextManager#createEntrySpan(operationName, contextCarrier)</code> 方法，创建 EntrySpan 对象。</li>
 <li>第 71 至 72 行：设置 EntrySpan 对象的 <code>url</code> / <code>http.method</code> 标签键值对。</li>
@@ -195,26 +189,22 @@
 <li>第 78 行：设置 EntrySpan 对象的分层。</li>
 </ul>
 </li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L81" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterMethod(...)</code></a> 方法，完成 EntrySpan 对象。
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L81" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterMethod(...)</code></a> 方法，完成 EntrySpan 对象。<ul>
 <li>第 89 至 92 行：当返回状态码大于等于 400 时，标记 EntrySpan 发生异常，并设置 <code>status_code</code> 标签键值对。</li>
 <li>第 95 行：调用 <code>ContextManager#stopSpan()</code> 方法，完成 EntrySpan 对象。</li>
 </ul>
 </li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatInvokeInterceptor.java#L99" rel="external nofollow noopener noreferrer" target="_blank"><code>#handleMethodException(...)</code></a> 方法，处理异常。<strong>注意</strong>，该方法实际并且调用，在 Tomcat 的<a href="https://github.com/Oreste-Luci/apache-tomcat-8.0.26-src/blob/master/java/org/apache/catalina/core/StandardWrapperValve.java#L94" rel="external nofollow noopener noreferrer" target="_blank"><code>StandardWrapperValve#invoke(request, response)</code></a> 方法里，发生异常时，会提交异常给 <a href="https://github.com/Oreste-Luci/apache-tomcat-8.0.26-src/blob/master/java/org/apache/catalina/core/StandardWrapperValve.java#L507" rel="external nofollow noopener noreferrer" target="_blank"><code>StandardWrapperValve#exception(request, response, exception)</code></a> 处理，所以会被 <a href="#">「 2.2 TomcatExceptionInterceptor 」</a> 拦截。</li>
 </ul>
-<h2>2.2 TomcatExceptionInterceptor</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatExceptionInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.TomcatExceptionInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，TomcatInstrumentation 的拦截器。代码如下：</p>
+<h2 id="2-2-TomcatExceptionInterceptor"><a href="#2-2-TomcatExceptionInterceptor" class="headerlink" title="2.2 TomcatExceptionInterceptor"></a>2.2 TomcatExceptionInterceptor</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatExceptionInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.TomcatExceptionInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，TomcatInstrumentation 的拦截器。代码如下：</p>
 <ul>
-<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatExceptionInterceptor.java#L31" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，处理异常。代码如下：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/TomcatExceptionInterceptor.java#L31" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，处理异常。代码如下：<ul>
 <li>第 35 行：调用 <code>AbstractSpan#errorOccurred()</code> 方法，标记 EntrySpan 对象发生异常。</li>
 <li>第 35 行：调用 <code>AbstractSpan#log(Throwable)</code> 方法，记录异常日志到 EntrySpan 对象。</li>
 </ul>
 </li>
 </ul>
-<h1>666. 彩蛋</h1>
-<p>一大波插件来袭！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>一大波插件来袭！</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_20/04.png" alt=""></p>
 <p>胖友，分享一波朋友圈。</p>
   
@@ -250,9 +240,9 @@
 
 
 <div class="next">
-<a href="/SkyWalking/trace-id-integrate-into-logs/" title="SkyWalking 源码分析 —— traceId 集成到日志组件">
+<a href="/SkyWalking/@trace-for-any-methods/" title="SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法">
  <strong>NEXT:</strong><br> 
- <span>SkyWalking 源码分析 —— traceId 集成到日志组件
+ <span>SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法
 </span>
 </a>
 </div>
@@ -266,7 +256,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. TomcatInstrumentation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 TomcatInvokeInterceptor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 TomcatExceptionInterceptor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-TomcatInstrumentation"><span class="toc-number">2.</span> <span class="toc-text">2. TomcatInstrumentation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-TomcatInvokeInterceptor"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 TomcatInvokeInterceptor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-TomcatExceptionInterceptor"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 TomcatExceptionInterceptor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

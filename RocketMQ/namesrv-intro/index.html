@@ -17,11 +17,11 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/RocketMQ/namesrv-intro/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 RocketMQ 4.0.x 正式版
+本文主要基于 RocketMQ 4.0.x 正式版  
 
 1. Namesrv组件
 
-本文为占坑文，未来会进行填坑，内容基本在后面的文章提及了，建议从 《">
+本文为占坑文，未来会进行填坑，内容基本在后面的文章提及了，建议从">
     
 
     
@@ -148,8 +148,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/RocketMQ/namesrv-intro/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 RocketMQ 4.0.x 正式版</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/RocketMQ/namesrv-intro/">http://www.iocoder.cn/RocketMQ/namesrv-intro/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 RocketMQ 4.0.x 正式版</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/RocketMQ/namesrv-intro">1. Namesrv组件</a></li>
 </ul>
@@ -157,25 +157,22 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h2>Namesrv组件</h2>
-<ul>
-<li>KVConfigManager：KV配置管理
-<ul>
+<h2 id="Namesrv组件"><a href="#Namesrv组件" class="headerlink" title="Namesrv组件"></a>Namesrv组件</h2><ul>
+<li>KVConfigManager：KV配置管理<ul>
 <li>key-value配置管理，增删改查</li>
 </ul>
 </li>
-<li>RouteInfoManager：路由信息管理
-<ul>
+<li>RouteInfoManager：路由信息管理<ul>
 <li>注册Broker，提供Broker信息（名字、角色编号、地址、集群名）</li>
 <li>注册Topic，提供Topic信息（Topic名、读写权限、队列情况）</li>
 </ul>
@@ -230,7 +227,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Namesrv组件</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Namesrv组件"><span class="toc-number">1.</span> <span class="toc-text">Namesrv组件</span></a></li></ol>
 </div>
 
 <div id="asidepart">

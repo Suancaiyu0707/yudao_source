@@ -148,7 +148,7 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-4-operation/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/ui-4-operation/">http://www.iocoder.cn/SkyWalking/ui-4-operation/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/ui-4-operation/">1. 概述</a></li>
@@ -161,20 +161,19 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享<strong>运维界面的第四部分，操作视角</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享<strong>运维界面的第四部分，操作视角</strong>。</p>
 <blockquote>
-<p>SkyWalking WEBUI ：https://github.com/apache/incubator-skywalking-ui</p>
+<p>SkyWalking WEBUI ：<a href="https://github.com/apache/incubator-skywalking-ui" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/apache/incubator-skywalking-ui</a></p>
 </blockquote>
 <p>在我们打开 SkyWalking WEBUI 的 <code>Service Tree</code> ( <code>service/serviceTree.html</code> ) 页时，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_05/01.png" alt=""></p>
@@ -188,22 +187,17 @@
 <blockquote>
 <p>基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。</p>
 </blockquote>
-<h1>2. AllInstanceLastTimeGetHandler</h1>
-<p>同 <a href="http://www.iocoder.cn/SkyWalking/ui-1-application/?self">《SkyWalking 源码分析 —— 运维界面（一）之应用视角》「2. AllInstanceLastTimeGetHandler」</a> 相同。</p>
-<h1>3. ApplicationsGetHandler</h1>
-<p>同 <a href="http://www.iocoder.cn/SkyWalking/ui-2-instance/?self">《SkyWalking 源码分析 —— 运维界面（二）之应用实例视角》「3. ApplicationsGetHandler」</a> 相同。</p>
-<h1>4. EntryServiceGetHandler</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.servicetree.EntryServiceGetHandler</code></a> ，实现 JettyHandler 接口，获得入口操作( EntryService )分页列表的逻辑处理器。</p>
+<h1 id="2-AllInstanceLastTimeGetHandler"><a href="#2-AllInstanceLastTimeGetHandler" class="headerlink" title="2. AllInstanceLastTimeGetHandler"></a>2. AllInstanceLastTimeGetHandler</h1><p>同 <a href="http://www.iocoder.cn/SkyWalking/ui-1-application/?self">《SkyWalking 源码分析 —— 运维界面（一）之应用视角》「2. AllInstanceLastTimeGetHandler」</a> 相同。</p>
+<h1 id="3-ApplicationsGetHandler"><a href="#3-ApplicationsGetHandler" class="headerlink" title="3. ApplicationsGetHandler"></a>3. ApplicationsGetHandler</h1><p>同 <a href="http://www.iocoder.cn/SkyWalking/ui-2-instance/?self">《SkyWalking 源码分析 —— 运维界面（二）之应用实例视角》「3. ApplicationsGetHandler」</a> 相同。</p>
+<h1 id="4-EntryServiceGetHandler"><a href="#4-EntryServiceGetHandler" class="headerlink" title="4. EntryServiceGetHandler"></a>4. EntryServiceGetHandler</h1><p><a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.servicetree.EntryServiceGetHandler</code></a> ，实现 JettyHandler 接口，获得入口操作( EntryService )分页列表的逻辑处理器。</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java#L40" rel="external nofollow noopener noreferrer" target="_blank"><code>#pathSpec()</code></a> ，路径定义，<code>&quot;/service/entry&quot;</code> 。</li>
 <li>响应示例：<img src="http://www.iocoder.cn/images/SkyWalking/2020_11_05/02.png" alt=""></li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java#L50" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/EntryServiceGetHandler.java#L50" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：<ul>
 <li>第 66 至 71 行：解析 <code>applicationId</code> 参数。</li>
 <li>第 73 至 85 行：解析 <code>startTime</code> 和 <code>endTime</code> 参数。</li>
 <li>第 88 至 99 行：解析 <code>from</code> 和 <code>size</code> 分页参数。</li>
-<li>第 73 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L57" rel="external nofollow noopener noreferrer" target="_blank"><code>ServiceTreeService#loadEntryService(...)</code></a> 方法，获得入口操作( EntryService )分页列表。代码如下：
-<ul>
+<li>第 73 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L57" rel="external nofollow noopener noreferrer" target="_blank"><code>ServiceTreeService#loadEntryService(...)</code></a> 方法，获得入口操作( EntryService )分页列表。代码如下：<ul>
 <li>第 44 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/3b31539e2e77baf00fafbc60ac9c30802e6c922a/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/ServiceEntryEsUIDAO.java#L49" rel="external nofollow noopener noreferrer" target="_blank"><code>ServiceEntryEsUIDAO#load(...)</code></a> 方法，查询 ServiceEntry 分页 JSON 数组。</li>
 <li>第 63 至 69 行：设置应用编码。</li>
 </ul>
@@ -211,21 +205,18 @@
 </ul>
 </li>
 </ul>
-<h1>5. ServiceTreeGetByIdHandler</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/ServiceTreeGetByIdHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.servicetree.ServiceTreeGetByIdHandler</code></a> ，实现 JettyHandler 接口，获得指定操作的关联操作调用统计树列表的逻辑处理器。</p>
+<h1 id="5-ServiceTreeGetByIdHandler"><a href="#5-ServiceTreeGetByIdHandler" class="headerlink" title="5. ServiceTreeGetByIdHandler"></a>5. ServiceTreeGetByIdHandler</h1><p><a href="https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/ServiceTreeGetByIdHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.servicetree.ServiceTreeGetByIdHandler</code></a> ，实现 JettyHandler 接口，获得指定操作的关联操作调用统计树列表的逻辑处理器。</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/servicetree/ServiceTreeGetByIdHandler.java#L40" rel="external nofollow noopener noreferrer" target="_blank"><code>#pathSpec()</code></a> ，路径定义，<code>&quot;/service/tree/entryServiceId&quot;</code> 。</li>
 <li>响应示例：<img src="http://www.iocoder.cn/images/SkyWalking/2020_11_05/03.png" alt=""></li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/68b704ef2395067fdb135262089c5c3d316efee7/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/instancehealth/InstanceHealthGetHandler.java#L52" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：<ul>
 <li>第 61 至 66 行：解析 <code>entryServiceId</code> 参数。</li>
 <li>第 60 至 74 行：解析 <code>startTime</code> 和 <code>endTime</code> 参数。</li>
 <li>第 94 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L74" rel="external nofollow noopener noreferrer" target="_blank"><code>ServiceTreeService#loadServiceTree(entryServiceId, startTime, endTime)</code></a> 方法，获得指定操作的关联操作调用统计树列表，涉及 <strong>ServiceReference</strong> 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。<img src="http://www.iocoder.cn/images/SkyWalking/2020_11_05/04.png" alt=""></li>
 </ul>
 </li>
 </ul>
-<h1>6. 彩蛋</h1>
-<p>水更第四发！</p>
+<h1 id="6-彩蛋"><a href="#6-彩蛋" class="headerlink" title="6. 彩蛋"></a>6. 彩蛋</h1><p>水更第四发！</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好？</p>
   
@@ -252,10 +243,10 @@
 <nav class="article-nav clearfix">
  
  <div class="prev">
- <a href="/SkyWalking/@trace-for-any-methods/" title="SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法">
+ <a href="/SkyWalking/trace-id-integrate-into-logs/" title="SkyWalking 源码分析 —— traceId 集成到日志组件">
   <strong>PREVIOUS:</strong><br>
   <span>
-  SkyWalking 源码分析 —— @Trace 注解想要追踪的任何方法</span>
+  SkyWalking 源码分析 —— traceId 集成到日志组件</span>
 </a>
 </div>
 
@@ -277,7 +268,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. AllInstanceLastTimeGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. ApplicationsGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. EntryServiceGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. ServiceTreeGetByIdHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-AllInstanceLastTimeGetHandler"><span class="toc-number">2.</span> <span class="toc-text">2. AllInstanceLastTimeGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-ApplicationsGetHandler"><span class="toc-number">3.</span> <span class="toc-text">3. ApplicationsGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-EntryServiceGetHandler"><span class="toc-number">4.</span> <span class="toc-text">4. EntryServiceGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-ServiceTreeGetByIdHandler"><span class="toc-number">5.</span> <span class="toc-text">5. ServiceTreeGetByIdHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-彩蛋"><span class="toc-number">6.</span> <span class="toc-text">6. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

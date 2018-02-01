@@ -148,7 +148,7 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/ui-1-application/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/ui-1-application/">http://www.iocoder.cn/SkyWalking/ui-1-application/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/ui-1-application/">1. 概述</a></li>
@@ -159,20 +159,19 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享<strong>运维界面的第一部分，应用视角</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享<strong>运维界面的第一部分，应用视角</strong>。</p>
 <blockquote>
-<p>SkyWalking WEBUI ：https://github.com/apache/incubator-skywalking-ui</p>
+<p>SkyWalking WEBUI ：<a href="https://github.com/apache/incubator-skywalking-ui" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/apache/incubator-skywalking-ui</a></p>
 </blockquote>
 <p>在我们打开 SkyWalking WEBUI 的首页时，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_25/01.png" alt=""></p>
@@ -185,15 +184,12 @@
 <blockquote>
 <p>基情提示：运维界面相关 HTTP 接口，逻辑简单易懂，笔者写的会比较简略一些。</p>
 </blockquote>
-<h1>2. AllInstanceLastTimeGetHandler</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.time.AllInstanceLastTimeGetHandler</code></a> ，实现 JettyHandler 接口，获得应用实例最后心跳时间处理器。代码如下：</p>
+<h1 id="2-AllInstanceLastTimeGetHandler"><a href="#2-AllInstanceLastTimeGetHandler" class="headerlink" title="2. AllInstanceLastTimeGetHandler"></a>2. AllInstanceLastTimeGetHandler</h1><p><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.time.AllInstanceLastTimeGetHandler</code></a> ，实现 JettyHandler 接口，获得应用实例最后心跳时间处理器。代码如下：</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>#pathSpec()</code></a> ，路径定义，<code>&quot;/time/allInstance&quot;</code> 。</li>
 <li>响应示例：<img src="http://www.iocoder.cn/images/SkyWalking/2020_10_25/02.png" alt=""></li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：
-<ul>
-<li>第 55 至 59 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/TimeSynchronousService.java#L40" rel="external nofollow noopener noreferrer" target="_blank"><code>TimeSynchronousService#allInstanceLastTime()</code></a> 方法，获得应用实例最后心跳时间。
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：<ul>
+<li>第 55 至 59 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/TimeSynchronousService.java#L40" rel="external nofollow noopener noreferrer" target="_blank"><code>TimeSynchronousService#allInstanceLastTime()</code></a> 方法，获得应用实例最后心跳时间。<ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/fe20d4fff8e2ebf4ad44c9e7ac455f69146c0b9c/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/InstanceEsUIDAO.java#L61" rel="external nofollow noopener noreferrer" target="_blank"><code>InstanceEsUIDAO#lastHeartBeatTime()</code></a></li>
 </ul>
 </li>
@@ -202,15 +198,12 @@
 </ul>
 </li>
 </ul>
-<h1>3. TraceDagGetHandler</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.TraceDagGetHandler</code></a> ，实现 JettyHandler 接口，获得应用拓扑图数据逻辑处理器。</p>
+<h1 id="3-TraceDagGetHandler"><a href="#3-TraceDagGetHandler" class="headerlink" title="3. TraceDagGetHandler"></a>3. TraceDagGetHandler</h1><p><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.ui.jetty.handler.TraceDagGetHandler</code></a> ，实现 JettyHandler 接口，获得应用拓扑图数据逻辑处理器。</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L38" rel="external nofollow noopener noreferrer" target="_blank"><code>#pathSpec()</code></a> ，路径定义，<code>&quot;traceDag&quot;</code> 。</li>
 <li>响应示例：<img src="http://www.iocoder.cn/images/SkyWalking/2020_10_25/03.png" alt=""></li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：
-<ul>
-<li>第 73 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L73" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceDagService#load(startTime, endTime)</code></a> 方法，获得应用拓扑图数据。代码如下：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/9f2dab1c61b49610eca0fc2634ee7af918ba7d1f/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/time/AllInstanceLastTimeGetHandler.java#L53" rel="external nofollow noopener noreferrer" target="_blank"><code>#doGet()</code></a> 方法，代码如下：<ul>
+<li>第 73 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/jetty/handler/TraceDagGetHandler.java#L73" rel="external nofollow noopener noreferrer" target="_blank"><code>TraceDagService#load(startTime, endTime)</code></a> 方法，获得应用拓扑图数据。代码如下：<ul>
 <li>第 53 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeComponentEsUIDAO.java#L59" rel="external nofollow noopener noreferrer" target="_blank"><code>NodeComponentEsUIDAO#load(startTime, endTime)</code></a> 方法，获得 NodeComponent JSON 数组。</li>
 <li>第 56 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeMappingEsUIDAO.java#L59" rel="external nofollow noopener noreferrer" target="_blank"><code>NodeMappingEsUIDAO#load(startTime, endTime)</code></a> 方法，获得 NodeMapping JSON 数组。</li>
 <li>第 59 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/f32d6d88343ec18a3b32127bf9c4152e5dc9d4d1/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/NodeReferenceEsUIDAO.java#L68" rel="external nofollow noopener noreferrer" target="_blank"><code>NodeReferenceEsUIDAO#load(startTime, endTime)</code></a> 方法，获得 NodeReference JSON 数组。</li>
@@ -220,8 +213,7 @@
 </ul>
 </li>
 </ul>
-<h1>666. 彩蛋</h1>
-<p>水更第一发！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>水更第一发！</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好？</p>
   
@@ -273,7 +265,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. AllInstanceLastTimeGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. TraceDagGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-AllInstanceLastTimeGetHandler"><span class="toc-number">2.</span> <span class="toc-text">2. AllInstanceLastTimeGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-TraceDagGetHandler"><span class="toc-number">3.</span> <span class="toc-text">3. TraceDagGetHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

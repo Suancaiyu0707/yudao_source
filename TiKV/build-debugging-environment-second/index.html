@@ -21,9 +21,8 @@
 1. 安装 PD
 2. 启动 TiKV
 3. 使用 TiKV
-
 3.1 TiDB
-3.2 tikv-client-">
+3.2 tikv-client-l">
     
 
     
@@ -150,12 +149,11 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/TiKV/build-debugging-environment-second/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">http://www.iocoder.cn/TiKV/build-debugging-environment-second/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
 <li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">1. 安装 PD</a></li>
 <li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">2. 启动 TiKV</a></li>
-<li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">3. 使用 TiKV</a>
-<ul>
+<li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">3. 使用 TiKV</a><ul>
 <li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">3.1 TiDB</a></li>
 <li><a href="http://www.iocoder.cn/TiKV/build-debugging-environment-second/">3.2 tikv-client-lib-java</a></li>
 </ul>
@@ -165,54 +163,45 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
 <p>本文接 <a href="http://www.iocoder.cn/TiKV/build-debugging-environment/?self">《TiKV 源码解析 —— 调试环境搭建（一）之运行单元测试》</a> ，主要分享如何搭建<strong>运行服务实例</strong>的调试环境。</p>
-<h1>1. 安装 PD</h1>
-<blockquote>
-<p>FROM <a href="https://github.com/pingcap/pd" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/pingcap/pd</a><br>
-PD is the abbreviation for Placement Driver. It is used to manage and schedule the <a href="https://github.com/pingcap/tikv" rel="external nofollow noopener noreferrer" target="_blank">TiKV</a> cluster.<br>
-PD supports distribution and fault-tolerance by embedding <a href="https://github.com/coreos/etcd" rel="external nofollow noopener noreferrer" target="_blank">etcd</a>.</p>
+<h1 id="1-安装-PD"><a href="#1-安装-PD" class="headerlink" title="1. 安装 PD"></a>1. 安装 PD</h1><blockquote>
+<p>FROM <a href="https://github.com/pingcap/pd" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/pingcap/pd</a><br>PD is the abbreviation for Placement Driver. It is used to manage and schedule the <a href="https://github.com/pingcap/tikv" rel="external nofollow noopener noreferrer" target="_blank">TiKV</a> cluster.<br>PD supports distribution and fault-tolerance by embedding <a href="https://github.com/coreos/etcd" rel="external nofollow noopener noreferrer" target="_blank">etcd</a>.</p>
 </blockquote>
 <p>安装命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/pingcap/pd</div><div class="line"><span class="built_in">cd</span> pd</div><div class="line">make build</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/pingcap/pd</div><div class="line"><span class="built_in">cd</span> pd</div><div class="line">make build</div></pre></td></tr></table></figure>
 <p>启动命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> bin</div><div class="line">nohup ./pd-server --data-dir=pd --<span class="built_in">log</span>-file=pd.log &amp;</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> bin</div><div class="line">nohup ./pd-server --data-dir=pd --<span class="built_in">log</span>-file=pd.log &amp;</div></pre></td></tr></table></figure>
 <p>测试启动是否成功命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 2379</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 2379</div></pre></td></tr></table></figure>
 <ul>
 <li><code>2379</code> 为 PD 服务的<strong>默认</strong>端口。</li>
 </ul>
-<h1>2. 启动 TiKV</h1>
-<p><strong>如下操作全部在 IntelliJ IDEA 中进行</strong>。</p>
+<h1 id="2-启动-TiKV"><a href="#2-启动-TiKV" class="headerlink" title="2. 启动 TiKV"></a>2. 启动 TiKV</h1><p><strong>如下操作全部在 IntelliJ IDEA 中进行</strong>。</p>
 <hr>
-<p>打开 <code>src/bin/tikv-server.rs</code> 文件，右键 <code>RUN 'tikv-server'</code> 运行。此时，<strong>运行报错</strong>。原因是 <code>pd endpoints</code> <strong>未配置</strong>。修改 <code>Command</code> 的配置文件路径。操作过程如下：</p>
+<p>打开 <code>src/bin/tikv-server.rs</code> 文件，右键 <code>RUN &#39;tikv-server&#39;</code> 运行。此时，<strong>运行报错</strong>。原因是 <code>pd endpoints</code> <strong>未配置</strong>。修改 <code>Command</code> 的配置文件路径。操作过程如下：</p>
 <ol>
-<li>
-<p>复制 <code>etc/config-template.toml</code> 文件，生成 <code>etc/config.toml</code> 文件，下面我们会修改该文件<strong>自定义配置</strong>。</p>
+<li><p>复制 <code>etc/config-template.toml</code> 文件，生成 <code>etc/config.toml</code> 文件，下面我们会修改该文件<strong>自定义配置</strong>。</p>
 </li>
-<li>
-<p>配置 <code>--config</code> 路径，如下图 ：<img src="http://www.iocoder.cn/images/TiKV/2019_08_05/01.png" alt=""></p>
+<li><p>配置 <code>--config</code> 路径，如下图 ：<img src="http://www.iocoder.cn/images/TiKV/2019_08_05/01.png" alt=""></p>
 <ul>
 <li>点击 【<strong>红框部分</strong>】，打开 <code>Run/Debug Configurations</code> 窗口。</li>
 <li>修改 【<strong>红线部分</strong>】，<code>-- --config=${path}</code> ，<strong>请设置成你自己的 <code>etc/config.toml</code> 文件所在路径噢</strong>。</li>
 <li>保存。</li>
 </ul>
 </li>
-<li>
-<p>打开 <code>src/bin/tikv-server.rs</code> 文件，右键 <code>RUN 'tikv-server'</code> 运行。</p>
+<li><p>打开 <code>src/bin/tikv-server.rs</code> 文件，右键 <code>RUN &#39;tikv-server&#39;</code> 运行。</p>
 </li>
-<li>
-<p>此时，<strong>运行报错</strong>。下面，我们一步一步，解决每一个报错。</p>
-</li>
+<li>此时，<strong>运行报错</strong>。下面，我们一步一步，解决每一个报错。</li>
 </ol>
 <hr>
 <p>问题 ：<code>please specify pd.endpoints</code> 。</p>
@@ -225,60 +214,51 @@ PD supports distribution and fault-tolerance by embedding <a href="https://githu
 <hr>
 <p>问题 ：<code>failed to create kv engine: &quot;Invalid argument: Compression type ZSTD is not linked with the binary.&quot;</code> 。</p>
 <ul>
-<li>
-<p>方案一 ：不使用压缩。</p>
-<p>修改 <code>etc/config.toml</code> 文件，配置 <code>compression-per-level = [&quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;]</code> 。有多处，小心别漏了。</p>
-<p><img src="http://www.iocoder.cn/images/TiKV/2019_08_05/03.png" alt=""></p>
+<li><p>方案一 ：不使用压缩。</p>
+<p>  修改 <code>etc/config.toml</code> 文件，配置 <code>compression-per-level = [&quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;]</code> 。有多处，小心别漏了。</p>
+<p>  <img src="http://www.iocoder.cn/images/TiKV/2019_08_05/03.png" alt=""></p>
 </li>
-<li>
-<p>方案二 ：TODO 【3001】编译安装 zstd 。https://github.com/facebook/zstd</p>
+<li><p>方案二 ：TODO 【3001】编译安装 zstd 。<a href="https://github.com/facebook/zstd" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/facebook/zstd</a></p>
 </li>
 </ul>
 <hr>
 <p>问题 ：<code>invalid configuration: StringError(&quot;default rocksdb exist, buf raftdb not exist&quot;)</code> 。</p>
 <ul>
-<li>
-<p>修改 <code>etc/config.toml</code> 文件，配置 <code>raftdb-path = &quot;/Users/yunai/pingcap/debugger/raftdb&quot;</code> 。</p>
-<p><img src="http://www.iocoder.cn/images/TiKV/2019_08_05/04.png" alt=""></p>
+<li><p>修改 <code>etc/config.toml</code> 文件，配置 <code>raftdb-path = &quot;/Users/yunai/pingcap/debugger/raftdb&quot;</code> 。</p>
+<p>  <img src="http://www.iocoder.cn/images/TiKV/2019_08_05/04.png" alt=""></p>
 </li>
-<li>
-<p>修改 <code>etc/config.toml</code> 文件，配置 <code>data-dir = &quot;/Users/yunai/pingcap/debugger/data&quot;</code> 。</p>
-<p><img src="http://www.iocoder.cn/images/TiKV/2019_08_05/05.png" alt=""></p>
+<li><p>修改 <code>etc/config.toml</code> 文件，配置 <code>data-dir = &quot;/Users/yunai/pingcap/debugger/data&quot;</code> 。</p>
+<p>  <img src="http://www.iocoder.cn/images/TiKV/2019_08_05/05.png" alt=""></p>
 </li>
 </ul>
 <hr>
 <p>此时，笔者运行 TiKV 运行服务实例<strong>成功</strong>，开森，希望胖友也顺利。运行成功日志如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">[INFO] TiKV is ready to serve</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">[INFO] TiKV is ready to serve</div></pre></td></tr></table></figure>
 <p>测试启动是否成功命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 20160</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 20160</div></pre></td></tr></table></figure>
 <ul>
 <li><code>20160</code> 为 TiKV 服务的<strong>默认</strong>端口。</li>
 </ul>
-<h1>3. 使用 TiKV</h1>
-<p>下面，我们要尝试 TiKV 存储数据，有如下两种方式 ：</p>
+<h1 id="3-使用-TiKV"><a href="#3-使用-TiKV" class="headerlink" title="3. 使用 TiKV"></a>3. 使用 TiKV</h1><p>下面，我们要尝试 TiKV 存储数据，有如下两种方式 ：</p>
 <ul>
 <li>第一种，使用 TiDB 。</li>
 <li>第二种，使用 <code>tikv-client-lib-java</code> 。</li>
 </ul>
 <p>笔者优先考虑使用的是第二种，<strong>失败</strong>，因此后面换成了第一种，<strong>成功</strong>。</p>
-<h2>3.1 TiDB</h2>
-<p>安装过程如下 ：</p>
+<h2 id="3-1-TiDB"><a href="#3-1-TiDB" class="headerlink" title="3.1 TiDB"></a>3.1 TiDB</h2><p>安装过程如下 ：</p>
 <ol>
-<li>
-<p>如果胖友未配置 <code>GOPATH</code> <strong>环境变量</strong>，参考 <a href="https://segmentfault.com/a/1190000008317179" rel="external nofollow noopener noreferrer" target="_blank">《使用Homebrew安装配置golang环境》</a> 。</p>
-</li>
-<li>
-<p>安装命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/pingcap/tidb.git <span class="variable">$GOPATH</span>/src/github.com/pingcap/tidb</div><div class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src/github.com/pingcap/tidb</div><div class="line">make</div></pre></td></tr></table></figure></p>
+<li>如果胖友未配置 <code>GOPATH</code> <strong>环境变量</strong>，参考 <a href="https://segmentfault.com/a/1190000008317179" rel="external nofollow noopener noreferrer" target="_blank">《使用Homebrew安装配置golang环境》</a> 。</li>
+<li><p>安装命令如下 ：</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/pingcap/tidb.git <span class="variable">$GOPATH</span>/src/github.com/pingcap/tidb</div><div class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src/github.com/pingcap/tidb</div><div class="line">make</div></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>启动命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> bin</div><div class="line">nohup ./tidb-server --store=tikv  --path=<span class="string">"127.0.0.1:2379"</span>   --<span class="built_in">log</span>-file=tidb.log &amp;</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> bin</div><div class="line">nohup ./tidb-server --store=tikv  --path=<span class="string">"127.0.0.1:2379"</span>   --<span class="built_in">log</span>-file=tidb.log &amp;</div></pre></td></tr></table></figure>
 <ul>
 <li>参考自文章 ：<a href="https://github.com/pingcap/tidb/blob/master/docs/QUICKSTART.md#pre-requirement" rel="external nofollow noopener noreferrer" target="_blank">《tidb —— Quick Start》</a></li>
 </ul>
 <p>测试启动是否成功命令如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 4000</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">telnet 127.0.0.1 4000</div></pre></td></tr></table></figure>
 <ul>
 <li><code>4000</code> 为 TiDB 服务的<strong>默认</strong>端口。</li>
 </ul>
@@ -287,22 +267,15 @@ PD supports distribution and fault-tolerance by embedding <a href="https://githu
 <ul>
 <li>请愉快的使用 MySQL 进行操作吧。</li>
 </ul>
-<h2>3.2 tikv-client-lib-java</h2>
-<ol>
-<li>
-<p>克隆项目 <code>tikv-client-lib-java</code> ，地址为 <a href="https://github.com/pingcap/tikv-client-lib-java" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/pingcap/tikv-client-lib-java</a> 。</p>
-</li>
-<li>
-<p>命令行输入 ：<code>mvn package</code> ，打包出 <code>tikv-client-0.1.0-SNAPSHOT.jar</code> 。</p>
-</li>
-<li>
-<p>创建测试项目，导入 <code>tikv-client-0.1.0-SNAPSHOT.jar</code> ，运行 <a href="https://github.com/pingcap/tikv-client-lib-java#how-to-use-for-now" rel="external nofollow noopener noreferrer" target="_blank">《 How to use for now 》</a> 提供的示例，报错如下 ：</p>
-<p><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">    19:39:42.085 [main] INFO  com.pingcap.tikv.PDClient - Switched to new leader: com.pingcap.tikv.PDClient<span class="variable">$LeaderWrapper</span>@4961f6af</div><div class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.IndexOutOfBoundsException: Index: -1</div><div class="line">	at java.util.Collections<span class="variable">$EmptyList</span>.get(Collections.java:4454)</div><div class="line">	at com.pingcap.tikv.operation.ScanIterator.hasNext(ScanIterator.java:113)</div><div class="line">	at com.pingcap.tikv.catalog.CatalogTransaction.hashGetFields(CatalogTransaction.java:115)</div><div class="line">	at com.pingcap.tikv.catalog.CatalogTransaction.getDatabases(CatalogTransaction.java:137)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.loadDatabases(Catalog.java:106)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.&lt;init&gt;(Catalog.java:49)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.&lt;init&gt;(Catalog.java:46)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog.&lt;init&gt;(Catalog.java:115)</div><div class="line">	at com.pingcap.tikv.TiSession.getCatalog(TiSession.java:82)</div><div class="line">	at me.yunai.doraemon.tikv.Demo001.main(Demo001.java:22)</div></pre></td></tr></table></figure></p>
+<h2 id="3-2-tikv-client-lib-java"><a href="#3-2-tikv-client-lib-java" class="headerlink" title="3.2 tikv-client-lib-java"></a>3.2 tikv-client-lib-java</h2><ol>
+<li>克隆项目 <code>tikv-client-lib-java</code> ，地址为 <a href="https://github.com/pingcap/tikv-client-lib-java" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/pingcap/tikv-client-lib-java</a> 。</li>
+<li>命令行输入 ：<code>mvn package</code> ，打包出 <code>tikv-client-0.1.0-SNAPSHOT.jar</code> 。</li>
+<li><p>创建测试项目，导入 <code>tikv-client-0.1.0-SNAPSHOT.jar</code> ，运行 <a href="https://github.com/pingcap/tikv-client-lib-java#how-to-use-for-now" rel="external nofollow noopener noreferrer" target="_blank">《 How to use for now 》</a> 提供的示例，报错如下 ：</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">    19:39:42.085 [main] INFO  com.pingcap.tikv.PDClient - Switched to new leader: com.pingcap.tikv.PDClient<span class="variable">$LeaderWrapper</span>@4961f6af</div><div class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.IndexOutOfBoundsException: Index: -1</div><div class="line">	at java.util.Collections<span class="variable">$EmptyList</span>.get(Collections.java:4454)</div><div class="line">	at com.pingcap.tikv.operation.ScanIterator.hasNext(ScanIterator.java:113)</div><div class="line">	at com.pingcap.tikv.catalog.CatalogTransaction.hashGetFields(CatalogTransaction.java:115)</div><div class="line">	at com.pingcap.tikv.catalog.CatalogTransaction.getDatabases(CatalogTransaction.java:137)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.loadDatabases(Catalog.java:106)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.&lt;init&gt;(Catalog.java:49)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog<span class="variable">$CatalogCache</span>.&lt;init&gt;(Catalog.java:46)</div><div class="line">	at com.pingcap.tikv.catalog.Catalog.&lt;init&gt;(Catalog.java:115)</div><div class="line">	at com.pingcap.tikv.TiSession.getCatalog(TiSession.java:82)</div><div class="line">	at me.yunai.doraemon.tikv.Demo001.main(Demo001.java:22)</div></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>TODO 【3002】tikv-client-lib-java</p>
-<h1>666. 彩蛋</h1>
-<p>又是被狙击的一个过程，折腾了一天，终于完稿！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>又是被狙击的一个过程，折腾了一天，终于完稿！</p>
 <p>好啦，胖友，分享一波朋友圈可好！</p>
   
 	</div>
@@ -353,7 +326,7 @@ PD supports distribution and fault-tolerance by embedding <a href="https://githu
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 安装 PD</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 启动 TiKV</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. 使用 TiKV</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 TiDB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 tikv-client-lib-java</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-安装-PD"><span class="toc-number">1.</span> <span class="toc-text">1. 安装 PD</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-启动-TiKV"><span class="toc-number">2.</span> <span class="toc-text">2. 启动 TiKV</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-使用-TiKV"><span class="toc-number">3.</span> <span class="toc-text">3. 使用 TiKV</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-TiDB"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 TiDB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-tikv-client-lib-java"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 tikv-client-lib-java</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">4.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

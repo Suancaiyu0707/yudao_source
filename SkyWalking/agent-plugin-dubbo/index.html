@@ -21,8 +21,7 @@
 
 1. 概述
 2. DubboInstrumentation
-
-2.1 Dubb">
+2.1 Dubbo">
     
 
     
@@ -149,12 +148,11 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/">http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/">1. 概述</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/">2. DubboInstrumentation</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/">2. DubboInstrumentation</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/agent-plugin-dubbo/">2.1 DubboInterceptor</a></li>
 </ul>
 </li>
@@ -163,53 +161,47 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>SkyWalking Agent Dubbo 插件</strong>。涉及到的代码不多，如下图：</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Agent Dubbo 插件</strong>。涉及到的代码不多，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_25/01.png" alt=""></p>
-<h1>2. DubboInstrumentation</h1>
-<p>在 <a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/resources/skywalking-plugin.def" rel="external nofollow noopener noreferrer" target="_blank"><code>skywalking-plugin.def</code></a> 里，定义了插件，如下图：</p>
+<h1 id="2-DubboInstrumentation"><a href="#2-DubboInstrumentation" class="headerlink" title="2. DubboInstrumentation"></a>2. DubboInstrumentation</h1><p>在 <a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/resources/skywalking-plugin.def" rel="external nofollow noopener noreferrer" target="_blank"><code>skywalking-plugin.def</code></a> 里，定义了插件，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_25/03.png" alt=""></p>
 <hr>
 <p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/tomcat-7.x-8.x-plugin/src/main/java/org/skywalking/apm/plugin/tomcat78x/define/TomcatInstrumentation.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.tomcat78x.define.TomcatInstrumentation</code></a> ，实现 ClassInstanceMethodsEnhancePluginDefine 抽象类，定义了方法切面，代码如下：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_25/02.png" alt=""></p>
-<h2>2.1 DubboInterceptor</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.dubbo.DubboInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，DubboInstrumentation 的拦截器。<strong>同时适用于 Dubbo 服务提供者与消费者</strong>。代码如下：</p>
+<h2 id="2-1-DubboInterceptor"><a href="#2-1-DubboInterceptor" class="headerlink" title="2.1 DubboInterceptor"></a>2.1 DubboInterceptor</h2><p><a href="https://github.com/YunaiV/skywalking/blob/0128349b40592b8ae329443c52f43577cc9fa16b/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.plugin.dubbo.DubboInterceptor</code></a> ，实现 InstanceMethodsAroundInterceptor 接口，DubboInstrumentation 的拦截器。<strong>同时适用于 Dubbo 服务提供者与消费者</strong>。代码如下：</p>
 <ul>
-<li><a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，若是服务提供者，创建 EntrySpan 对象；若是服务消费者，创建 ExitSpan 对象。代码如下：
-<ul>
-<li>----- 服务消费者 -----</li>
+<li><a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java" rel="external nofollow noopener noreferrer" target="_blank"><code>#beforeMethod(...)</code></a> 方法，若是服务提供者，创建 EntrySpan 对象；若是服务消费者，创建 ExitSpan 对象。代码如下：<ul>
+<li>—– 服务消费者 —–</li>
 <li>第 71 行：创建 ContextCarrier 对象。</li>
 <li>第 74 行：调用 <code>ContextManager#createExitSpan(...)</code> 创建 ExitSpan 对象，并将<strong>链路追踪上下文注入到 ContextCarrier 对象</strong>，用于跨进程的链路追踪。其中，调用 <a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L146" rel="external nofollow noopener noreferrer" target="_blank"><code>#generateOperationName(URL, Invocation)</code></a> 方法，生成操作名，例如：<code>&quot;org.skywalking.apm.plugin.test.Test.test(String)&quot;</code> 。</li>
 <li>第 79 至 83 行：设置 ContextCarrier 对象到 RPCContext ，从而将 ContextCarrier 对象<strong>隐式传参</strong>。</li>
-<li>----- 服务提供者者 -----</li>
+<li>—– 服务提供者者 —–</li>
 <li>第 87 至 92 行：解析 ContextCarrier 对象，用于跨进程的链路追踪。在 <a href="http://www.iocoder.cn/SkyWalking/agent-collect-trace/?self">《SkyWalking 源码分析 —— Agent 收集 Trace 数据》「 3.2.3 ContextCarrier 」</a> 有详细解析。</li>
 <li>第 95 行：调用 <code>ContextManager#createLocalSpan(operationName, contextCarrier)</code> 方法，创建 EntrySpan 对象。</li>
-<li>----- ALL -----</li>
+<li>—– ALL —–</li>
 <li>第 99 至 72 行：设置 EntrySpan 对象的 <code>url</code> 标签键值对。其中，调用 <a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L169-L176" rel="external nofollow noopener noreferrer" target="_blank"><code>#generateRequestURL(URL, Invocation)</code></a> 方法，生成链接。例如，<code>&quot;dubbo://127.0.0.1:20880/org.skywalking.apm.plugin.test.Test.test(String)&quot;</code>。</li>
 <li>第 102 行：设置 EntrySpan 对象的组件类型。</li>
 <li>第 105 行：设置 EntrySpan 对象的分层。</li>
 </ul>
 </li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L109" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterMethod(...)</code></a> 方法，完成 EntrySpan 对象。
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L109" rel="external nofollow noopener noreferrer" target="_blank"><code>#afterMethod(...)</code></a> 方法，完成 EntrySpan 对象。<ul>
 <li>第 112 至 115 行：当返回结果包含异常时，调用 <a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L132" rel="external nofollow noopener noreferrer" target="_blank"><code>#dealException(Throwable)</code></a> 方法，处理异常。</li>
 <li>调用 <code>ContextManager#stopSpan()</code> 方法，完成 EntrySpan 对象。</li>
 </ul>
 </li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L123" rel="external nofollow noopener noreferrer" target="_blank"><code>#handleMethodException(...)</code></a> 方法，调用 <a href="https://github.com/YunaiV/skywalking/blob/e4bfdfad2540adbc85b4437359b9a5183f05f403/apm-sniffer/apm-sdk-plugin/dubbo-plugin/src/main/java/org/skywalking/apm/plugin/dubbo/DubboInterceptor.java#L132" rel="external nofollow noopener noreferrer" target="_blank"><code>#dealException(Throwable)</code></a> 方法，处理异常。</li>
 </ul>
-<h1>666. 彩蛋</h1>
-<p>一大波插件来袭，继续！</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>一大波插件来袭，继续！</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_11_25/04.png" alt=""></p>
 <p>胖友，分享一波朋友圈。</p>
   
@@ -261,7 +253,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. DubboInstrumentation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 DubboInterceptor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-DubboInstrumentation"><span class="toc-number">2.</span> <span class="toc-text">2. DubboInstrumentation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-DubboInterceptor"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 DubboInterceptor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

@@ -17,10 +17,10 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
 
 1. 概述
-2.">
+">
     
 
     
@@ -147,8 +147,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/">http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing/">2. 环境配置</a></li>
@@ -160,84 +160,67 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>WebClientHttpRoutingFilter 的代码实现</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>WebClientHttpRoutingFilter 的代码实现</strong>。</p>
 <p>WebClientHttpRoutingFilter ，Http <strong>路由</strong>网关过滤器。其根据 <code>http://</code> 或 <code>https://</code> 前缀( Scheme )过滤处理，使用基于 <code>org.springframework.cloud.gateway.filter.WebClient</code> 实现的 HttpClient 请求后端 Http 服务。</p>
 <p>WebClientWriteResponseFilter ，与 WebClientHttpRoutingFilter <strong>成对使用</strong>的网关过滤器。其将 WebClientWriteResponseFilter 请求后端 Http 服务的<strong>响应</strong>写回客户端。</p>
 <p>大体流程如下 ：</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_01/01.png" alt=""></p>
-<h1>2. 环境配置</h1>
-<p>目前 WebClientHttpRoutingFilter / WebClientWriteResponseFilter 处于<strong>实验</strong>阶段，建议等正式发布在使用。</p>
+<h1 id="2-环境配置"><a href="#2-环境配置" class="headerlink" title="2. 环境配置"></a>2. 环境配置</h1><p>目前 WebClientHttpRoutingFilter / WebClientWriteResponseFilter 处于<strong>实验</strong>阶段，建议等正式发布在使用。</p>
 <p>OK，下面我们来看看怎么配置环境。</p>
 <p>第一步，在 NettyConfiguration 注释掉 <code>#routingFilter(...)</code> 和 <code>#nettyWriteResponseFilter()</code> 两个 Bean 方法。</p>
 <p>第二步，在 GatewayAutoConfiguration 打开 <code>#webClientHttpRoutingFilter()</code> 和 <code>#webClientWriteResponseFilter()</code> 两个 Bean 方法。</p>
 <p>第三步，配置完成，启动 Spring Cloud Gateway 。</p>
-<h1>3. WebClientHttpRoutingFilter</h1>
-<p><code>org.springframework.cloud.gateway.filter.WebClientHttpRoutingFilter</code> ，Http <strong>路由</strong>网关过滤器。</p>
+<h1 id="3-WebClientHttpRoutingFilter"><a href="#3-WebClientHttpRoutingFilter" class="headerlink" title="3. WebClientHttpRoutingFilter"></a>3. WebClientHttpRoutingFilter</h1><p><code>org.springframework.cloud.gateway.filter.WebClientHttpRoutingFilter</code> ，Http <strong>路由</strong>网关过滤器。</p>
 <p><strong>构造方法</strong>，代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebClientHttpRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> WebClient webClient;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">WebClientHttpRoutingFilter</span><span class="params">(WebClient webClient)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.webClient = webClient;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebClientHttpRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> WebClient webClient;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">WebClientHttpRoutingFilter</span><span class="params">(WebClient webClient)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.webClient = webClient;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li><code>webClient</code> 属性，默认情况下，使用 <code>org.springframework.web.reactive.function.client.DefaultWebClient</code> 实现类。通过该属性，<strong>请求后端的 Http 服务</strong>。</li>
 </ul>
 <hr>
 <p><code>#getOrder()</code> 方法，代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>返回顺序为 <code>Integer.MAX_VALUE</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</li>
 </ul>
 <hr>
 <p><code>#filter(ServerWebExchange, GatewayFilterChain)</code> 方法，代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="meta">@Override</span></div><div class="line"> <span class="number">2</span>: <span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"> <span class="number">3</span>: 	<span class="comment">// 获得 requestUrl</span></div><div class="line"> <span class="number">4</span>: 	URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"> <span class="number">5</span>: </div><div class="line"> <span class="number">6</span>: 	<span class="comment">// 判断是否能够处理</span></div><div class="line"> <span class="number">7</span>: 	String scheme = requestUrl.getScheme();</div><div class="line"> <span class="number">8</span>: 	<span class="keyword">if</span> (isAlreadyRouted(exchange) || (!scheme.equals(<span class="string">"http"</span>) &amp;&amp; !scheme.equals(<span class="string">"https"</span>))) &#123;</div><div class="line"> <span class="number">9</span>: 		<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">10</span>: 	&#125;</div><div class="line"><span class="number">11</span>: </div><div class="line"><span class="number">12</span>: 	<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">13</span>: 	setAlreadyRouted(exchange);</div><div class="line"><span class="number">14</span>: </div><div class="line"><span class="number">15</span>: 	ServerHttpRequest request = exchange.getRequest();</div><div class="line"><span class="number">16</span>: </div><div class="line"><span class="number">17</span>: 	<span class="comment">//<span class="doctag">TODO:</span> support forms</span></div><div class="line"><span class="number">18</span>: 	<span class="comment">// Request Method</span></div><div class="line"><span class="number">19</span>: 	HttpMethod method = request.getMethod();</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 	<span class="comment">// Request</span></div><div class="line"><span class="number">22</span>: 	RequestBodySpec bodySpec = <span class="keyword">this</span>.webClient.method(method)</div><div class="line"><span class="number">23</span>: 			.uri(requestUrl)</div><div class="line"><span class="number">24</span>: 			.headers(httpHeaders -&gt; &#123;</div><div class="line"><span class="number">25</span>: 				httpHeaders.addAll(request.getHeaders());</div><div class="line"><span class="number">26</span>: 				httpHeaders.remove(HttpHeaders.HOST);</div><div class="line"><span class="number">27</span>: 			&#125;);</div><div class="line"><span class="number">28</span>: </div><div class="line"><span class="number">29</span>: 	<span class="comment">// Request Body</span></div><div class="line"><span class="number">30</span>: 	RequestHeadersSpec&lt;?&gt; headersSpec;</div><div class="line"><span class="number">31</span>: 	<span class="keyword">if</span> (requiresBody(method)) &#123;</div><div class="line"><span class="number">32</span>: 		headersSpec = bodySpec.body(BodyInserters.fromDataBuffers(request.getBody()));</div><div class="line"><span class="number">33</span>: 	&#125; <span class="keyword">else</span> &#123;</div><div class="line"><span class="number">34</span>: 		headersSpec = bodySpec;</div><div class="line"><span class="number">35</span>: 	&#125;</div><div class="line"><span class="number">36</span>: </div><div class="line"><span class="number">37</span>: 	<span class="keyword">return</span> headersSpec.exchange()</div><div class="line"><span class="number">38</span>: 			<span class="comment">// .log("webClient route")</span></div><div class="line"><span class="number">39</span>: 			.flatMap(res -&gt; &#123;</div><div class="line"><span class="number">40</span>: 				ServerHttpResponse response = exchange.getResponse();</div><div class="line"><span class="number">41</span>: </div><div class="line"><span class="number">42</span>: 				<span class="comment">// Response Header</span></div><div class="line"><span class="number">43</span>: 				response.getHeaders().putAll(res.headers().asHttpHeaders());</div><div class="line"><span class="number">44</span>: </div><div class="line"><span class="number">45</span>: 				<span class="comment">// Response Status</span></div><div class="line"><span class="number">46</span>: 				response.setStatusCode(res.statusCode());</div><div class="line"><span class="number">47</span>: </div><div class="line"><span class="number">48</span>: 				<span class="comment">// 设置 Response 到 CLIENT_RESPONSE_ATTR</span></div><div class="line"><span class="number">49</span>: 				<span class="comment">// Defer committing the response until all route filters have run</span></div><div class="line"><span class="number">50</span>: 				<span class="comment">// Put client response as ServerWebExchange attribute and write response later NettyWriteResponseFilter</span></div><div class="line"><span class="number">51</span>: 				exchange.getAttributes().put(CLIENT_RESPONSE_ATTR, res);</div><div class="line"><span class="number">52</span>: 				<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">53</span>: 			&#125;);</div><div class="line"><span class="number">54</span>: &#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="meta">@Override</span></div><div class="line"> <span class="number">2</span>: <span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"> <span class="number">3</span>: 	<span class="comment">// 获得 requestUrl</span></div><div class="line"> <span class="number">4</span>: 	URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"> <span class="number">5</span>: </div><div class="line"> <span class="number">6</span>: 	<span class="comment">// 判断是否能够处理</span></div><div class="line"> <span class="number">7</span>: 	String scheme = requestUrl.getScheme();</div><div class="line"> <span class="number">8</span>: 	<span class="keyword">if</span> (isAlreadyRouted(exchange) || (!scheme.equals(<span class="string">"http"</span>) &amp;&amp; !scheme.equals(<span class="string">"https"</span>))) &#123;</div><div class="line"> <span class="number">9</span>: 		<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">10</span>: 	&#125;</div><div class="line"><span class="number">11</span>: </div><div class="line"><span class="number">12</span>: 	<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">13</span>: 	setAlreadyRouted(exchange);</div><div class="line"><span class="number">14</span>: </div><div class="line"><span class="number">15</span>: 	ServerHttpRequest request = exchange.getRequest();</div><div class="line"><span class="number">16</span>: </div><div class="line"><span class="number">17</span>: 	<span class="comment">//<span class="doctag">TODO:</span> support forms</span></div><div class="line"><span class="number">18</span>: 	<span class="comment">// Request Method</span></div><div class="line"><span class="number">19</span>: 	HttpMethod method = request.getMethod();</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 	<span class="comment">// Request</span></div><div class="line"><span class="number">22</span>: 	RequestBodySpec bodySpec = <span class="keyword">this</span>.webClient.method(method)</div><div class="line"><span class="number">23</span>: 			.uri(requestUrl)</div><div class="line"><span class="number">24</span>: 			.headers(httpHeaders -&gt; &#123;</div><div class="line"><span class="number">25</span>: 				httpHeaders.addAll(request.getHeaders());</div><div class="line"><span class="number">26</span>: 				httpHeaders.remove(HttpHeaders.HOST);</div><div class="line"><span class="number">27</span>: 			&#125;);</div><div class="line"><span class="number">28</span>: </div><div class="line"><span class="number">29</span>: 	<span class="comment">// Request Body</span></div><div class="line"><span class="number">30</span>: 	RequestHeadersSpec&lt;?&gt; headersSpec;</div><div class="line"><span class="number">31</span>: 	<span class="keyword">if</span> (requiresBody(method)) &#123;</div><div class="line"><span class="number">32</span>: 		headersSpec = bodySpec.body(BodyInserters.fromDataBuffers(request.getBody()));</div><div class="line"><span class="number">33</span>: 	&#125; <span class="keyword">else</span> &#123;</div><div class="line"><span class="number">34</span>: 		headersSpec = bodySpec;</div><div class="line"><span class="number">35</span>: 	&#125;</div><div class="line"><span class="number">36</span>: </div><div class="line"><span class="number">37</span>: 	<span class="keyword">return</span> headersSpec.exchange()</div><div class="line"><span class="number">38</span>: 			<span class="comment">// .log("webClient route")</span></div><div class="line"><span class="number">39</span>: 			.flatMap(res -&gt; &#123;</div><div class="line"><span class="number">40</span>: 				ServerHttpResponse response = exchange.getResponse();</div><div class="line"><span class="number">41</span>: </div><div class="line"><span class="number">42</span>: 				<span class="comment">// Response Header</span></div><div class="line"><span class="number">43</span>: 				response.getHeaders().putAll(res.headers().asHttpHeaders());</div><div class="line"><span class="number">44</span>: </div><div class="line"><span class="number">45</span>: 				<span class="comment">// Response Status</span></div><div class="line"><span class="number">46</span>: 				response.setStatusCode(res.statusCode());</div><div class="line"><span class="number">47</span>: </div><div class="line"><span class="number">48</span>: 				<span class="comment">// 设置 Response 到 CLIENT_RESPONSE_ATTR</span></div><div class="line"><span class="number">49</span>: 				<span class="comment">// Defer committing the response until all route filters have run</span></div><div class="line"><span class="number">50</span>: 				<span class="comment">// Put client response as ServerWebExchange attribute and write response later NettyWriteResponseFilter</span></div><div class="line"><span class="number">51</span>: 				exchange.getAttributes().put(CLIENT_RESPONSE_ATTR, res);</div><div class="line"><span class="number">52</span>: 				<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">53</span>: 			&#125;);</div><div class="line"><span class="number">54</span>: &#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>
-<p>第 4 行 ：获得 <code>requestUrl</code> 。</p>
-</li>
-<li>
-<p>第 7 至 10 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p>
+<li>第 4 行 ：获得 <code>requestUrl</code> 。</li>
+<li><p>第 7 至 10 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p>
 <ul>
-<li>
-<p><code>http://</code> 或者 <code>https://</code> 前缀( Scheme ) 。</p>
-</li>
-<li>
-<p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<li><code>http://</code> 或者 <code>https://</code> 前缀( Scheme ) 。</li>
+<li><p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>x</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>
-<p>第 13 行 ：设置该请求已经被处理。代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<li><p>第 13 行 ：设置该请求已经被处理。代码如下 ：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
-<li>
-<p>第 17 行 ：TODO 【3025】 目前暂不支持 forms 参数</p>
+<li><p>第 17 行 ：TODO 【3025】 目前暂不支持 forms 参数</p>
 </li>
-<li>
-<p>第 22 至 35 行 ：<strong>创建</strong>向后端服务的请求。</p>
-<ul>
+<li>第 22 至 35 行 ：<strong>创建</strong>向后端服务的请求。<ul>
 <li>第 22 行 ：设置 Method 属性。</li>
 <li>第 24 至 27 行 ：设置 Header 属性。</li>
 <li>第 30 至 35 行 ：设置 Body 属性。</li>
 </ul>
 </li>
-<li>
-<p>第 37 行 ：<strong>发起</strong>向后端服务的请求。</p>
-</li>
-<li>
-<p>第 40 至 53 行 ：<strong>处理</strong>返回自后端服务的相应。</p>
-<ul>
+<li>第 37 行 ：<strong>发起</strong>向后端服务的请求。</li>
+<li>第 40 至 53 行 ：<strong>处理</strong>返回自后端服务的相应。<ul>
 <li>第 43 行 ：设置 <code>response</code> 的 Header 属性。</li>
 <li>第 46 行 ：设置 <code>response</code> 的 Status 属性。</li>
 <li>第 51 行 ：设置 <code>res</code> 到 <code>CLIENT_RESPONSE_ATTR</code> 。后续 WebClientWriteResponseFilter 将响应<strong>写回</strong>给客户端。</li>
@@ -245,27 +228,24 @@
 </ul>
 </li>
 </ul>
-<h1>4. WebClientWriteResponseFilter</h1>
-<p><code>org.springframework.cloud.gateway.filter.WebClientWriteResponseFilter</code> ，Http 回写<strong>响应</strong>网关过滤器。</p>
+<h1 id="4-WebClientWriteResponseFilter"><a href="#4-WebClientWriteResponseFilter" class="headerlink" title="4. WebClientWriteResponseFilter"></a>4. WebClientWriteResponseFilter</h1><p><code>org.springframework.cloud.gateway.filter.WebClientWriteResponseFilter</code> ，Http 回写<strong>响应</strong>网关过滤器。</p>
 <p><code>#getOrder()</code> 方法，代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WRITE_RESPONSE_FILTER_ORDER = -<span class="number">1</span>;</div><div class="line">    </div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> WRITE_RESPONSE_FILTER_ORDER;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WRITE_RESPONSE_FILTER_ORDER = -<span class="number">1</span>;</div><div class="line">    </div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> WRITE_RESPONSE_FILTER_ORDER;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>返回顺序为 <code>-1</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</li>
 </ul>
 <hr>
 <p><code>#filter(ServerWebExchange, GatewayFilterChain)</code> 方法，代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="meta">@Override</span></div><div class="line"> <span class="number">2</span>: <span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"> <span class="number">3</span>: 	<span class="comment">// NOTICE: nothing in "pre" filter stage as CLIENT_RESPONSE_ATTR is not added</span></div><div class="line"> <span class="number">4</span>: 	<span class="comment">// until the WebHandler is run</span></div><div class="line"> <span class="number">5</span>: 	<span class="keyword">return</span> chain.filter(exchange).then(Mono.defer(() -&gt; &#123;</div><div class="line"> <span class="number">6</span>: 	    <span class="comment">// 获得 Response</span></div><div class="line"> <span class="number">7</span>: 		ClientResponse clientResponse = exchange.getAttribute(CLIENT_RESPONSE_ATTR);</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">if</span> (clientResponse == <span class="keyword">null</span>) &#123;</div><div class="line"> <span class="number">9</span>: 			<span class="keyword">return</span> Mono.empty();</div><div class="line"><span class="number">10</span>: 		&#125;</div><div class="line"><span class="number">11</span>: 		log.trace(<span class="string">"WebClientWriteResponseFilter start"</span>);</div><div class="line"><span class="number">12</span>: 		ServerHttpResponse response = exchange.getResponse();</div><div class="line"><span class="number">13</span>: </div><div class="line"><span class="number">14</span>: 		<span class="keyword">return</span> response.writeWith(clientResponse.body(BodyExtractors.toDataBuffers())).log(<span class="string">"webClient response"</span>);</div><div class="line"><span class="number">15</span>: 	&#125;));</div><div class="line"><span class="number">16</span>: &#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="meta">@Override</span></div><div class="line"> <span class="number">2</span>: <span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"> <span class="number">3</span>: 	<span class="comment">// NOTICE: nothing in "pre" filter stage as CLIENT_RESPONSE_ATTR is not added</span></div><div class="line"> <span class="number">4</span>: 	<span class="comment">// until the WebHandler is run</span></div><div class="line"> <span class="number">5</span>: 	<span class="keyword">return</span> chain.filter(exchange).then(Mono.defer(() -&gt; &#123;</div><div class="line"> <span class="number">6</span>: 	    <span class="comment">// 获得 Response</span></div><div class="line"> <span class="number">7</span>: 		ClientResponse clientResponse = exchange.getAttribute(CLIENT_RESPONSE_ATTR);</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">if</span> (clientResponse == <span class="keyword">null</span>) &#123;</div><div class="line"> <span class="number">9</span>: 			<span class="keyword">return</span> Mono.empty();</div><div class="line"><span class="number">10</span>: 		&#125;</div><div class="line"><span class="number">11</span>: 		log.trace(<span class="string">"WebClientWriteResponseFilter start"</span>);</div><div class="line"><span class="number">12</span>: 		ServerHttpResponse response = exchange.getResponse();</div><div class="line"><span class="number">13</span>: </div><div class="line"><span class="number">14</span>: 		<span class="keyword">return</span> response.writeWith(clientResponse.body(BodyExtractors.toDataBuffers())).log(<span class="string">"webClient response"</span>);</div><div class="line"><span class="number">15</span>: 	&#125;));</div><div class="line"><span class="number">16</span>: &#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>第 5 行 ：调用 <code>#then(Mono)</code> 方法，实现 <strong>After Filter</strong> 逻辑。</li>
 <li>第 7 至 11 行 ：从 <code>CLIENT_RESPONSE_ATTR</code> 中，获得 ClientResponse 。</li>
 <li>第 14 行 ：将 ClientResponse 写回给客户端。</li>
 </ul>
-<h1>5. 和 NettyRoutingFilter 对比</h1>
-<p>在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter》</a> 中，我们知道 NettyRoutingFilter / NettyWriteResponseFilter 和 WebClientHttpRoutingFilter / WebClientHttpRoutingFilter 实现<strong>一样</strong>的功能。</p>
+<h1 id="5-和-NettyRoutingFilter-对比"><a href="#5-和-NettyRoutingFilter-对比" class="headerlink" title="5. 和 NettyRoutingFilter 对比"></a>5. 和 NettyRoutingFilter 对比</h1><p>在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-netty-routing/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.7) 之 NettyRoutingFilter》</a> 中，我们知道 NettyRoutingFilter / NettyWriteResponseFilter 和 WebClientHttpRoutingFilter / WebClientHttpRoutingFilter 实现<strong>一样</strong>的功能。</p>
 <p>那么为什么要再实现一次呢？</p>
 <p>TODO 【3001】</p>
-<h1>666. 彩蛋</h1>
-<p>呼呼，主要的过滤器已经写完，后面熔断、限流过滤器的实现。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>呼呼，主要的过滤器已经写完，后面熔断、限流过滤器的实现。</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_01/02.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好！</p>
   
@@ -317,7 +297,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. WebClientHttpRoutingFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. WebClientWriteResponseFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. 和 NettyRoutingFilter 对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-环境配置"><span class="toc-number">2.</span> <span class="toc-text">2. 环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-WebClientHttpRoutingFilter"><span class="toc-number">3.</span> <span class="toc-text">3. WebClientHttpRoutingFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-WebClientWriteResponseFilter"><span class="toc-number">4.</span> <span class="toc-text">4. WebClientWriteResponseFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-和-NettyRoutingFilter-对比"><span class="toc-number">5.</span> <span class="toc-text">5. 和 NettyRoutingFilter 对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">6.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

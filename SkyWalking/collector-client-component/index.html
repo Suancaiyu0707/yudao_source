@@ -148,7 +148,7 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-client-component/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/collector-client-component/">http://www.iocoder.cn/SkyWalking/collector-client-component/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-client-component/">1. 概述</a></li>
@@ -163,51 +163,42 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>SkyWalking Collector Client Component 客户端组件</strong>。Collector 通过客户端，和其他服务进行通信，例如 Elastic Search 、Zookeeper 、H2 等等。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>SkyWalking Collector Client Component 客户端组件</strong>。Collector 通过客户端，和其他服务进行通信，例如 Elastic Search 、Zookeeper 、H2 等等。</p>
 <p>Client Component 在 SkyWalking 架构图处于如下位置( <strong>红框</strong> ) ：</p>
 <blockquote>
-<p>FROM https://github.com/apache/incubating-skywalking<br>
-<img src="http://www.iocoder.cn/images/SkyWalking/2020_07_25/01.jpeg" alt=""></p>
+<p>FROM <a href="https://github.com/apache/incubating-skywalking" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/apache/incubating-skywalking</a><br><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_25/01.jpeg" alt=""></p>
 </blockquote>
 <p>下面我们来看看整体的项目结构，如下图所示 ：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_25/02.png" alt=""></p>
 <p>OK，我们从<strong>接口到实现</strong>的顺序进行分享。</p>
-<h1>2. Client</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/c546a9a4d4588d99bf532da519ae721ef60b918e/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/Client.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.Client</code></a> ，客户端<strong>接口</strong>。其定义接口方法如下：</p>
+<h1 id="2-Client"><a href="#2-Client" class="headerlink" title="2. Client"></a>2. Client</h1><p><a href="https://github.com/YunaiV/skywalking/blob/c546a9a4d4588d99bf532da519ae721ef60b918e/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/Client.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.Client</code></a> ，客户端<strong>接口</strong>。其定义接口方法如下：</p>
 <ul>
 <li><code>#initialize()</code> 方法，初始化客户端。</li>
 <li><code>#shutdown()</code> 方法，关闭客户端。</li>
 </ul>
 <p>Client 的实现类，如下类图：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_25/03.png" alt=""></p>
-<h1>3. ElasticSearchClient</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/elasticsearch/ElasticSearchClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.elasticsearch.ElasticSearchClient</code></a> ，Elastic Search 客户端。</p>
+<h1 id="3-ElasticSearchClient"><a href="#3-ElasticSearchClient" class="headerlink" title="3. ElasticSearchClient"></a>3. ElasticSearchClient</h1><p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/elasticsearch/ElasticSearchClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.elasticsearch.ElasticSearchClient</code></a> ，Elastic Search 客户端。</p>
 <p>基于 <code>org.elasticsearch.client.transport</code> 的 <code>5.5.0</code> 版本，封装 SkyWalking 需要的 Elastic Search 操作。目前用于 <a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-storage/collector-storage-es-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-storage-es-provider</code></a> 模块。</p>
-<h1>4. GRPCClient</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/grpc/GRPCClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.grpc.GRPCClient</code></a> ，gRPC 客户端。</p>
+<h1 id="4-GRPCClient"><a href="#4-GRPCClient" class="headerlink" title="4. GRPCClient"></a>4. GRPCClient</h1><p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/grpc/GRPCClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.grpc.GRPCClient</code></a> ，gRPC 客户端。</p>
 <p>基于 <code>io.grpc.grpc-core</code> 的 <code>1.8.0</code> 版本，封装 SkyWalking 需要的 gRPC 操作。目前用于 <a href="https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-remote/collector-remote-grpc-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-remote-grpc-provider</code></a> 模块。</p>
-<h1>5. H2Client</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/h2/H2Client.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.h2.H2Client</code></a> ，H2 数据库客户端。</p>
+<h1 id="5-H2Client"><a href="#5-H2Client" class="headerlink" title="5. H2Client"></a>5. H2Client</h1><p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/h2/H2Client.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.h2.H2Client</code></a> ，H2 数据库客户端。</p>
 <p>基于 <code>com.h2database.h2</code> 的 <code>1.4.196</code> 版本，封装 SkyWalking 需要的 H2 数据库操作。目前用于 <a href="https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-storage/collector-storage-h2-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-storage-h2-provider</code></a> / <a href="https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-cluster/collector-cluster-standalone-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-cluster-standalone-provider</code></a> 模块。</p>
-<h1>6. RedisClient</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/redis/RedisClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.redis.RedisClient</code></a> ，Redis 客户端。</p>
+<h1 id="6-RedisClient"><a href="#6-RedisClient" class="headerlink" title="6. RedisClient"></a>6. RedisClient</h1><p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/redis/RedisClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.redis.RedisClient</code></a> ，Redis 客户端。</p>
 <p>基于 <code>redis.clients.jedis</code> 的 <code>2.9.0</code> 版本，封装 SkyWalking 需要的 Reids 操作。预计未来用于 <a href="https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-cluster/collector-cluster-redis-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-cluster-redis-provider</code></a> 模块。</p>
-<h1>7. ZookeeperClient</h1>
-<p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/zookeeper/ZookeeperClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.zookeeper.ZookeeperClient</code></a> ，Zookeeper 客户端。</p>
+<h1 id="7-ZookeeperClient"><a href="#7-ZookeeperClient" class="headerlink" title="7. ZookeeperClient"></a>7. ZookeeperClient</h1><p><a href="https://github.com/YunaiV/skywalking/blob/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-component/client-component/src/main/java/org/skywalking/apm/collector/client/zookeeper/ZookeeperClient.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.client.zookeeper.ZookeeperClient</code></a> ，Zookeeper 客户端。</p>
 <p>基于 <code>org.apache.zookeeper.zookeeper</code> 的 <code>3.4.10</code> 版本，封装 SkyWalking 需要的 Zookeeper 操作。预计未来用于 <a href="https://github.com/YunaiV/skywalking/tree/001f700612ad52bc1eb1a278bc0e2ff9e5330df8/apm-collector/apm-collector-cluster/collector-cluster-zookeeper-provider" rel="external nofollow noopener noreferrer" target="_blank"><code>collector-cluster-zookeeper-provider</code></a> 模块。</p>
-<h1>666. 彩蛋</h1>
-<p>哈哈哈，是不是看的很有成就感( 笔者又在水更了 )。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>哈哈哈，是不是看的很有成就感( 笔者又在水更了 )。</p>
 <p>不要方，下面还有一篇水更。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_07_25/04.png" alt=""></p>
 <p>胖友，分享个朋友圈可好？</p>
@@ -260,7 +251,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. Client</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. ElasticSearchClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. GRPCClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. H2Client</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6. RedisClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">7. ZookeeperClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Client"><span class="toc-number">2.</span> <span class="toc-text">2. Client</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-ElasticSearchClient"><span class="toc-number">3.</span> <span class="toc-text">3. ElasticSearchClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-GRPCClient"><span class="toc-number">4.</span> <span class="toc-text">4. GRPCClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-H2Client"><span class="toc-number">5.</span> <span class="toc-text">5. H2Client</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-RedisClient"><span class="toc-number">6.</span> <span class="toc-text">6. RedisClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-ZookeeperClient"><span class="toc-number">7.</span> <span class="toc-text">7. ZookeeperClient</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">8.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

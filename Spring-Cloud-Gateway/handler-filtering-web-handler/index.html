@@ -17,10 +17,10 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
 
 1. 概述
-2. ">
+2">
     
 
     
@@ -147,8 +147,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/">http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/">1. 概述</a></li>
 <li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/handler-filtering-web-handler/">2. FilteringWebHandler</a></li>
@@ -157,18 +157,17 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>FilteringWebHandler</strong>。</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>FilteringWebHandler</strong>。</p>
 <p>在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/handler-route-predicate-handler-mapping/?self">《Spring-Cloud-Gateway 源码解析 —— 处理器 (3.2) 之 RoutePredicateHandlerMapping 路由匹配 》「2.1 SimpleHandlerAdapter」</a> 里，我们看到 <code>SimpleHandlerAdapter#handle(ServerWebExchange, Object)</code> 调用 <code>FilteringWebHandler#handle(ServerWebExchange)</code> 方法，处理请求。</p>
 <p>FilteringWebHandler 通过创建请求对应的 Route 对应的 GatewayFilterChain 进行处理。</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_20/01.jpeg" alt=""></p>
@@ -180,9 +179,8 @@
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1>2. FilteringWebHandler</h1>
-<p><code>org.springframework.cloud.gateway.handler.FilteringWebHandler</code> ，<code>#handle(ServerWebExchange)</code> 代码如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FilteringWebHandler</span> <span class="keyword">implements</span> <span class="title">WebHandler</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="comment">/**</span></div><div class="line"><span class="comment"> 4: 	 * 全局过滤器</span></div><div class="line"><span class="comment"> 5: 	*/</span></div><div class="line"> <span class="number">6</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> List&lt;GatewayFilter&gt; globalFilters;</div><div class="line"> <span class="number">7</span>: </div><div class="line"> <span class="number">8</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">9</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">handle</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line"><span class="number">10</span>: 	    <span class="comment">// 获得 Route</span></div><div class="line"><span class="number">11</span>: 		Route route = exchange.getRequiredAttribute(GATEWAY_ROUTE_ATTR);</div><div class="line"><span class="number">12</span>: 		<span class="comment">// 获得 GatewayFilter</span></div><div class="line"><span class="number">13</span>: 		List&lt;GatewayFilter&gt; gatewayFilters = route.getFilters();</div><div class="line"><span class="number">14</span>: 		List&lt;GatewayFilter&gt; combined = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="keyword">this</span>.globalFilters);</div><div class="line"><span class="number">15</span>: 		combined.addAll(gatewayFilters);</div><div class="line"><span class="number">16</span>: </div><div class="line"><span class="number">17</span>: 		<span class="comment">// 排序</span></div><div class="line"><span class="number">18</span>: 		<span class="comment">//<span class="doctag">TODO:</span> needed or cached?</span></div><div class="line"><span class="number">19</span>: 		AnnotationAwareOrderComparator.sort(combined);</div><div class="line"><span class="number">20</span>: 		logger.debug(<span class="string">"Sorted gatewayFilterFactories: "</span>+ combined);</div><div class="line"><span class="number">21</span>: </div><div class="line"><span class="number">22</span>: 		<span class="comment">// 创建 DefaultGatewayFilterChain</span></div><div class="line"><span class="number">23</span>: 		<span class="keyword">return</span> <span class="keyword">new</span> DefaultGatewayFilterChain(combined).filter(exchange);</div><div class="line"><span class="number">24</span>: 	&#125;</div><div class="line"><span class="number">25</span>: &#125;</div></pre></td></tr></table></figure></p>
+<h1 id="2-FilteringWebHandler"><a href="#2-FilteringWebHandler" class="headerlink" title="2. FilteringWebHandler"></a>2. FilteringWebHandler</h1><p><code>org.springframework.cloud.gateway.handler.FilteringWebHandler</code> ，<code>#handle(ServerWebExchange)</code> 代码如下 ：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FilteringWebHandler</span> <span class="keyword">implements</span> <span class="title">WebHandler</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="comment">/**</span></div><div class="line"><span class="comment"> 4: 	 * 全局过滤器</span></div><div class="line"><span class="comment"> 5: 	*/</span></div><div class="line"> <span class="number">6</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> List&lt;GatewayFilter&gt; globalFilters;</div><div class="line"> <span class="number">7</span>: </div><div class="line"> <span class="number">8</span>: 	<span class="meta">@Override</span></div><div class="line"> <span class="number">9</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">handle</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line"><span class="number">10</span>: 	    <span class="comment">// 获得 Route</span></div><div class="line"><span class="number">11</span>: 		Route route = exchange.getRequiredAttribute(GATEWAY_ROUTE_ATTR);</div><div class="line"><span class="number">12</span>: 		<span class="comment">// 获得 GatewayFilter</span></div><div class="line"><span class="number">13</span>: 		List&lt;GatewayFilter&gt; gatewayFilters = route.getFilters();</div><div class="line"><span class="number">14</span>: 		List&lt;GatewayFilter&gt; combined = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="keyword">this</span>.globalFilters);</div><div class="line"><span class="number">15</span>: 		combined.addAll(gatewayFilters);</div><div class="line"><span class="number">16</span>: </div><div class="line"><span class="number">17</span>: 		<span class="comment">// 排序</span></div><div class="line"><span class="number">18</span>: 		<span class="comment">//<span class="doctag">TODO:</span> needed or cached?</span></div><div class="line"><span class="number">19</span>: 		AnnotationAwareOrderComparator.sort(combined);</div><div class="line"><span class="number">20</span>: 		logger.debug(<span class="string">"Sorted gatewayFilterFactories: "</span>+ combined);</div><div class="line"><span class="number">21</span>: </div><div class="line"><span class="number">22</span>: 		<span class="comment">// 创建 DefaultGatewayFilterChain</span></div><div class="line"><span class="number">23</span>: 		<span class="keyword">return</span> <span class="keyword">new</span> DefaultGatewayFilterChain(combined).filter(exchange);</div><div class="line"><span class="number">24</span>: 	&#125;</div><div class="line"><span class="number">25</span>: &#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>本方法涉及到的过滤器 GlobalFilter / GatewayFilter / GatewayFilterAdapter / OrderedGatewayFilter 类，我们在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》</a> 详细解析。</li>
 <li>本方法涉及到的过滤器链 GatewayFilterChain / DefaultGatewayFilterChain 类，我们在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》</a> 详细解析。</li>
@@ -191,8 +189,7 @@
 <li>第 19 行 ：排序获得的 GatewayFilter 数组。</li>
 <li>第 23 行 ：使用获得的 GatewayFilter 数组创建 DefaultGatewayFilterChain ，<strong>过滤处理请求</strong>。</li>
 </ul>
-<h1>666. 彩蛋</h1>
-<p>哈哈哈，我水更我快乐。主要还是考虑文章尽量解耦，所以这篇内容偏水( 很水 )。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>哈哈哈，我水更我快乐。主要还是考虑文章尽量解耦，所以这篇内容偏水( 很水 )。</p>
 <p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_25/01.jpeg" alt=""></p>
 <p>胖友，分享一波朋友圈可好！</p>
   
@@ -244,7 +241,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. FilteringWebHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-FilteringWebHandler"><span class="toc-number">2.</span> <span class="toc-text">2. FilteringWebHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

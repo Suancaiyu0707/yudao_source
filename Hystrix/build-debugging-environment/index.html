@@ -17,7 +17,7 @@
     <meta name="author" content="芋道源码">
     
     <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Hystrix/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Hystrix 1.5.X 版本
+本文主要基于 Hystrix 1.5.X 版本  
 
 1. 依赖工具
 2. 源码拉取
@@ -27,7 +27,7 @@
 
 
 
-🙂�">
+�">
     
 
     
@@ -154,8 +154,8 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Hystrix/build-debugging-environment/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 Hystrix 1.5.X 版本</strong></p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Hystrix/build-debugging-environment/">http://www.iocoder.cn/Hystrix/build-debugging-environment/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Hystrix 1.5.X 版本</strong>  </p>
 <ul>
 <li><a href="http://www.iocoder.cn/Hystrix/build-debugging-environment/">1. 依赖工具</a></li>
 <li><a href="http://www.iocoder.cn/Hystrix/build-debugging-environment/">2. 源码拉取</a></li>
@@ -165,18 +165,17 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 依赖工具</h1>
-<ul>
+<h1 id="1-依赖工具"><a href="#1-依赖工具" class="headerlink" title="1. 依赖工具"></a>1. 依赖工具</h1><ul>
 <li>Gradle</li>
 <li>JDK</li>
 <li>IntelliJ IDEA</li>
@@ -189,12 +188,10 @@
 <li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
 <li>两书齐买，京东包邮。</li>
 </ul>
-<h1>2. 源码拉取</h1>
-<p>从官方仓库 <a href="https://github.com/Netflix/Hystrix.git" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/Netflix/Hystrix.git</a> <code>Fork</code> 出属于自己的仓库。为什么要 <code>Fork</code> ？既然开始阅读、调试源码，我们可能会写一些注释，有了自己的仓库，可以进行自由的提交。😈</p>
+<h1 id="2-源码拉取"><a href="#2-源码拉取" class="headerlink" title="2. 源码拉取"></a>2. 源码拉取</h1><p>从官方仓库 <a href="https://github.com/Netflix/Hystrix.git" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/Netflix/Hystrix.git</a> <code>Fork</code> 出属于自己的仓库。为什么要 <code>Fork</code> ？既然开始阅读、调试源码，我们可能会写一些注释，有了自己的仓库，可以进行自由的提交。😈</p>
 <p>使用 <code>IntelliJ IDEA</code> 从 <code>Fork</code> 出来的仓库拉取代码。在项目路径下，在<strong>命令行</strong>执行 <code>./gradlew</code> 命令，<code>Gradle</code> 会下载依赖包，可能会花费一些时间，耐心等待下。其间可能会出现因为网络原因( 我相信你懂的 )，可能会出现失败的情况，淡定，重新执行上述命令直到成功。此刻，你就是一个 <code>while(true)</code> 的小强。</p>
 <p>本文基于 <code>master</code> 分支。</p>
-<h1>3. 运行示例</h1>
-<p>在 <code>hystrix-examples</code> 子项目下，提供了<strong>大量</strong>的示例，如下图：</p>
+<h1 id="3-运行示例"><a href="#3-运行示例" class="headerlink" title="3. 运行示例"></a>3. 运行示例</h1><p>在 <code>hystrix-examples</code> 子项目下，提供了<strong>大量</strong>的示例，如下图：</p>
 <p><img src="http://www.iocoder.cn/images/Hystrix/2018_10_01/01.png" alt=""></p>
 <ul>
 <li><code>basic</code> 包 ：针对 Hystrix 每个特性提供小的单元测试示例。你可以从 CommandHelloWorld 开始尝试。</li>
@@ -207,16 +204,13 @@
 </ul>
 <p>另外，笔者也整理了下 Hystrix 的特性如下( 可能不是很严谨，主要辅助理解 ) ：</p>
 <ul>
-<li>断路器机制
-<ul>
+<li>断路器机制<ul>
 <li>计算线路健康度</li>
 </ul>
 </li>
 <li>Fallback ( 失败回退 )</li>
-<li>资源隔离
-<ul>
-<li>方式
-<ul>
+<li>资源隔离<ul>
+<li>方式<ul>
 <li>线程池</li>
 <li>信号量</li>
 </ul>
@@ -224,20 +218,17 @@
 <li>依赖隔离</li>
 </ul>
 </li>
-<li>执行模型
-<ul>
+<li>执行模型<ul>
 <li>同步执行</li>
 <li>异步执行</li>
-<li>Reactive模式执行
-<ul>
+<li>Reactive模式执行<ul>
 <li>observe</li>
 <li>toObservable</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>运维平台
-<ul>
+<li>运维平台<ul>
 <li>基础 Dashboard</li>
 <li>整合 Turbine</li>
 </ul>
@@ -245,8 +236,7 @@
 <li>缓存</li>
 <li>请求合并( HystrixCollapser )</li>
 </ul>
-<h1>4. 彩蛋</h1>
-<p>为了显得本文的诚意( 真的不是水更 )，友情提示如下：</p>
+<h1 id="4-彩蛋"><a href="#4-彩蛋" class="headerlink" title="4. 彩蛋"></a>4. 彩蛋</h1><p>为了显得本文的诚意( 真的不是水更 )，友情提示如下：</p>
 <p>Hystrix 基于 RxJava 实现，所以笔者推荐阅读如下文章 ：</p>
 <ul>
 <li><a href="http://gank.io/post/560e15be2dca930e00da1083" rel="external nofollow noopener noreferrer" target="_blank">《给 Android 开发者的 RxJava 详解》</a></li>
@@ -306,7 +296,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 依赖工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. 源码拉取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. 运行示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-依赖工具"><span class="toc-number">1.</span> <span class="toc-text">1. 依赖工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-源码拉取"><span class="toc-number">2.</span> <span class="toc-text">2. 源码拉取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-运行示例"><span class="toc-number">3.</span> <span class="toc-text">3. 运行示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-彩蛋"><span class="toc-number">4.</span> <span class="toc-text">4. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

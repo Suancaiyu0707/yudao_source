@@ -21,9 +21,8 @@
 
 1. 概述
 2. Data
-
 2.1 Collection
-2">
+2.">
     
 
     
@@ -150,12 +149,11 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-streaming-second/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">http://www.iocoder.cn/SkyWalking/collector-streaming-second/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">1. 概述</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">2. Data</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">2. Data</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">2.1 Collection</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">2.2 DataCollection</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">2.3 Window</a></li>
@@ -163,8 +161,7 @@
 </ul>
 </li>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">3. AggregationWorker</a></li>
-<li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">4. PersistenceWorker</a>
-<ul>
+<li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">4. PersistenceWorker</a><ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">4.1 WorkerCreateListener</a></li>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-streaming-second/">4.2 PersistenceTimer</a></li>
 </ul>
@@ -174,24 +171,22 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文接 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》</a> ，主要分享 <strong>Collector Streaming 流式处理的第二部分</strong>。主要包含如下部分：<img src="http://www.iocoder.cn/images/SkyWalking/2020_09_01/01.png" alt=""></p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文接 <a href="http://www.iocoder.cn/SkyWalking/collector-streaming-first/?self">《SkyWalking 源码分析 —— Collector Streaming Computing 流式处理（一）》</a> ，主要分享 <strong>Collector Streaming 流式处理的第二部分</strong>。主要包含如下部分：<img src="http://www.iocoder.cn/images/SkyWalking/2020_09_01/01.png" alt=""></p>
 <ul>
 <li>AggregationWorker ：聚合处理数据，后提交 Data 到 Next 节点们处理。</li>
 <li>PersistenceWorker ：聚合处理数据，后存储 Data 。</li>
 </ul>
-<h1>2. Data</h1>
-<p>AggregationWorker 和 PersistenceWorker ，都先<strong>聚合</strong>处理数据，在进行各自的后续处理。那么聚合处理的数据结果，需要有<strong>容器</strong>进行缓存暂存：</p>
+<h1 id="2-Data"><a href="#2-Data" class="headerlink" title="2. Data"></a>2. Data</h1><p>AggregationWorker 和 PersistenceWorker ，都先<strong>聚合</strong>处理数据，在进行各自的后续处理。那么聚合处理的数据结果，需要有<strong>容器</strong>进行缓存暂存：</p>
 <ul>
 <li><code>org.skywalking.apm.collector.core.cache</code> ：接口</li>
 <li><code>org.skywalking.apm.collector.stream.worker.impl.data</code> ：实现</li>
@@ -199,32 +194,27 @@
 <p>类图如下：<img src="http://www.iocoder.cn/images/SkyWalking/2020_09_01/02.png" alt=""></p>
 <ul>
 <li>Collection ：数据采集，提供有读、写<strong>两个状态</strong>的数据容器。</li>
-<li>Window ：窗口( 😈这个解释怪怪的 )，内有<strong>两个 Collection</strong>。
-<ul>
+<li>Window ：窗口( 😈这个解释怪怪的 )，内有<strong>两个 Collection</strong>。<ul>
 <li>一个 Collection ，负责写入<strong>数据</strong>数据</li>
 <li>一个 Collection ，负责读出<strong>处理</strong>数据</li>
 <li>当写的 Collection <strong>符合处理的条件</strong>，读写 Collection 切换</li>
 </ul>
 </li>
 </ul>
-<h2>2.1 Collection</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Collection.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.core.cache.Collection</code></a> ，数据采集<strong>接口</strong>。</p>
+<h2 id="2-1-Collection"><a href="#2-1-Collection" class="headerlink" title="2.1 Collection"></a>2.1 Collection</h2><p><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Collection.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.core.cache.Collection</code></a> ，数据采集<strong>接口</strong>。</p>
 <ul>
 <li>数据相关 ：<code>#collection()</code> / <code>#size()</code> / <code>#clear()</code></li>
 <li>读相关 ：<code>#reading()</code> / <code>#isReading()</code> / <code>#finishReading()</code></li>
 <li>写相关 ：<code>#writing()</code> / <code>#isWriting()</code> / <code>#finishWriting()</code></li>
 </ul>
-<h2>2.2 DataCollection</h2>
-<p><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCollection.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.stream.worker.impl.data.DataCollection</code></a> ，实现 Collection 接口，数据采集实现类，使用 <a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCollection.java#L38" rel="external nofollow noopener noreferrer" target="_blank"><code>Map&lt;String, Data&gt;</code></a> 作为数据容器。</p>
-<h2>2.3 Window</h2>
-<p><code>org.skywalking.apm.collector.core.cache.Window</code> ，窗口<strong>抽象类</strong>。</p>
+<h2 id="2-2-DataCollection"><a href="#2-2-DataCollection" class="headerlink" title="2.2 DataCollection"></a>2.2 DataCollection</h2><p><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCollection.java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.skywalking.apm.collector.stream.worker.impl.data.DataCollection</code></a> ，实现 Collection 接口，数据采集实现类，使用 <a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCollection.java#L38" rel="external nofollow noopener noreferrer" target="_blank"><code>Map&lt;String, Data&gt;</code></a> 作为数据容器。</p>
+<h2 id="2-3-Window"><a href="#2-3-Window" class="headerlink" title="2.3 Window"></a>2.3 Window</h2><p><code>org.skywalking.apm.collector.core.cache.Window</code> ，窗口<strong>抽象类</strong>。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L50" rel="external nofollow noopener noreferrer" target="_blank">构造方法</a> ，代码如下：</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L44" rel="external nofollow noopener noreferrer" target="_blank"><code>windowDataA</code></a> 属性，窗口数据A 。</li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L48" rel="external nofollow noopener noreferrer" target="_blank"><code>windowDataB</code></a> 属性，窗口数据B 。</li>
 <li>通过 <a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L61" rel="external nofollow noopener noreferrer" target="_blank"><code>#collectionInstance()</code></a> <strong>抽象</strong>方法，创建窗口数据( Collection )对象。</li>
-<li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>pointer</code></a> 属性，数据指向 <code>windowDataA</code> 或 <code>windowDataA</code>。
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L39" rel="external nofollow noopener noreferrer" target="_blank"><code>pointer</code></a> 属性，数据指向 <code>windowDataA</code> 或 <code>windowDataA</code>。<ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L111" rel="external nofollow noopener noreferrer" target="_blank"><code>#getCurrent()</code></a> 方法，获得<strong>现</strong>数据指向，即 <code>pointer</code> 。</li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L118" rel="external nofollow noopener noreferrer" target="_blank"><code>#getLast()</code></a> 方法，获得<strong>原</strong>数据指向，即<strong>非</strong> <code>pointer</code> 。</li>
 </ul>
@@ -234,8 +224,7 @@
 <hr>
 <p><strong>切换 Collection 相关</strong>，方法如下：</p>
 <ul>
-<li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L68" rel="external nofollow noopener noreferrer" target="_blank"><code>#trySwitchPointer()</code></a> 方法，返回是否可以切换 Collection 。可以切换需要满足如下条件：
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L68" rel="external nofollow noopener noreferrer" target="_blank"><code>#trySwitchPointer()</code></a> 方法，返回是否可以切换 Collection 。可以切换需要满足如下条件：<ul>
 <li>只有<strong>一个调用方</strong>申请切换，通过 <code>windowSwitch</code> 属性进行计数。</li>
 <li><strong>原</strong>数据指向<strong>不处于正在读取状态</strong>。如果切换，一边读一边写，可能会有并发问题。</li>
 <li>无论是否可以切换 Collection ，需要调用 <a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L75" rel="external nofollow noopener noreferrer" target="_blank"><code>#trySwitchPointerFinally()</code></a> 方法，<strong>释放</strong> <code>windowSwitch</code> 的计数。</li>
@@ -249,8 +238,7 @@
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/d6019b49d686f79d07528a19b09d4f0ccc4eca9b/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/cache/Window.java#L98" rel="external nofollow noopener noreferrer" target="_blank"><code>#getCurrentAndWriting()</code></a> 方法，获得<strong>现</strong>数据指向，并标记<strong>正在写入中</strong>。通过<strong>正在写入</strong>标记，切换 Collection 完成后，可以判断该 Collection 正在写入中，<strong>若是，等待不在写入中，开始数据读取并处理</strong>。</li>
 </ul>
-<h2>2.4 DataCache</h2>
-<p><code>org.skywalking.apm.collector.stream.worker.impl.data.DataCache</code> ，实现 Window 抽象类，数据缓存。</p>
+<h2 id="2-4-DataCache"><a href="#2-4-DataCache" class="headerlink" title="2.4 DataCache"></a>2.4 DataCache</h2><p><code>org.skywalking.apm.collector.stream.worker.impl.data.DataCache</code> ，实现 Window 抽象类，数据缓存。</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L36" rel="external nofollow noopener noreferrer" target="_blank"><code>#collectionInstance()</code></a> <strong>实现</strong>方法，创建 DataCollection 对象。</li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L82" rel="external nofollow noopener noreferrer" target="_blank"><code>#currentCollectionSize()</code></a> 方法，获得当前数据指向( 写入 Collection )的数据数量。</li>
@@ -258,8 +246,7 @@
 <hr>
 <p><strong>写 Collection 相关</strong>，方法如下：</p>
 <ul>
-<li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L73" rel="external nofollow noopener noreferrer" target="_blank"><code>#writing()</code></a> 方法，调用 <code>#getCurrentAndWriting()</code> 方法，开始写入。即，获得<strong>现</strong>数据指向，并标记<strong>正在写入中</strong>。
-<ul>
+<li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L73" rel="external nofollow noopener noreferrer" target="_blank"><code>#writing()</code></a> 方法，调用 <code>#getCurrentAndWriting()</code> 方法，开始写入。即，获得<strong>现</strong>数据指向，并标记<strong>正在写入中</strong>。<ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L34" rel="external nofollow noopener noreferrer" target="_blank"><code>lockedDataCollection</code></a> 属性，写入的窗口数据。</li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L66" rel="external nofollow noopener noreferrer" target="_blank"><code>#put(id, data)</code></a> 方法，向 <code>lockedDataCollection</code> 属性，写入 Data 。</li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L56" rel="external nofollow noopener noreferrer" target="_blank"><code>#get(id)</code></a> 方法，向 <code>lockedDataCollection</code> 属性，根据 ID 获得 Data 。</li>
@@ -268,8 +255,7 @@
 </li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/e6e1a7899e7b0e674a61f323447d4b66cffa8136/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/data/DataCache.java#L89" rel="external nofollow noopener noreferrer" target="_blank"><code>#finishWriting()</code></a> 方法，完成写入。即，标记 <code>lockedDataCollection</code> <strong>不在正在写入中</strong>。</li>
 </ul>
-<h1>3. AggregationWorker</h1>
-<p><code>org.skywalking.apm.collector.stream.worker.impl.AggregationWorker</code> ，实现 AbstractLocalAsyncWorker 抽象类，<strong>异步聚合</strong> Worker，负责聚合处理数据，后提交 Data 到 Next 节点们处理。</p>
+<h1 id="3-AggregationWorker"><a href="#3-AggregationWorker" class="headerlink" title="3. AggregationWorker"></a>3. AggregationWorker</h1><p><code>org.skywalking.apm.collector.stream.worker.impl.AggregationWorker</code> ，实现 AbstractLocalAsyncWorker 抽象类，<strong>异步聚合</strong> Worker，负责聚合处理数据，后提交 Data 到 Next 节点们处理。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/ccd030f6b449954fccc7be4e19c15290e8affc77/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/AggregationWorker.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><strong>构造方法</strong></a> ，代码如下：</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/ccd030f6b449954fccc7be4e19c15290e8affc77/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/AggregationWorker.java#L41" rel="external nofollow noopener noreferrer" target="_blank"><code>dataCache</code></a> 属性，数据缓存。</li>
@@ -291,8 +277,7 @@
 <li>第 82 至 85 行：提交数据给 Next 节点们继续处理。</li>
 <li>第 87 行：标记<strong>原</strong>指向完成读取。</li>
 </ul>
-<h1>4. PersistenceWorker</h1>
-<p><code>org.skywalking.apm.collector.stream.worker.impl.PersistenceWorker</code> ，实现 AbstractLocalAsyncWorker 抽象类，<strong>异步批量存储</strong> Worker，负责聚合处理数据，后存储 Data 。</p>
+<h1 id="4-PersistenceWorker"><a href="#4-PersistenceWorker" class="headerlink" title="4. PersistenceWorker"></a>4. PersistenceWorker</h1><p><code>org.skywalking.apm.collector.stream.worker.impl.PersistenceWorker</code> ，实现 AbstractLocalAsyncWorker 抽象类，<strong>异步批量存储</strong> Worker，负责聚合处理数据，后存储 Data 。</p>
 <p>考虑到需要保证存储的时效性，PersistenceWorker 使用 PersistenceTimer ，定时存储 Data ，在 <a href="#">「4.2 PersistenceWorker」</a> 详细解析。</p>
 <hr>
 <p><a href="https://github.com/YunaiV/skywalking/blob/ccd030f6b449954fccc7be4e19c15290e8affc77/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/AggregationWorker.java#L47" rel="external nofollow noopener noreferrer" target="_blank"><strong>构造方法</strong></a> ，代码如下：</p>
@@ -307,8 +292,7 @@
 <hr>
 <p><a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/PersistenceWorker.java#L71" rel="external nofollow noopener noreferrer" target="_blank"><code>#onWork(message)</code></a> <strong>实现</strong>方法，当满足条件时存储 Data ，而后聚合数据。这点和 AggregationWorker 相反的，因为要考虑并发问题。代码如下：</p>
 <ul>
-<li>第 72 行：调用 <code>DataCache#currentCollectionSize()</code> 方法，获得当前写入 Collection 的数据数量，判断是否超过 5000 。
-<ul>
+<li>第 72 行：调用 <code>DataCache#currentCollectionSize()</code> 方法，获得当前写入 Collection 的数据数量，判断是否超过 5000 。<ul>
 <li>第 75 行：调用 <code>DataCache#trySwitchPointer()</code> 方法，<strong>判断</strong>是否可以切换 Collection 。通过该判断，保证和 PersistenceTimer 一起时，不会出现<strong>并发问题</strong>。</li>
 <li>第 77 行：调用 <code>Window#switchPointer()</code> 方法，切换数据指针，并标记<strong>原</strong>指向正在读取中。</li>
 <li>第 80 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/PersistenceWorker.java#L100" rel="external nofollow noopener noreferrer" target="_blank"><code>#buildBatchCollection()</code></a> 方法，创建批量操作对象数组。该方法和 <code>AggregationWorker#sendToNext()</code> 方法<strong>基本类似</strong>。</li>
@@ -318,29 +302,24 @@
 </li>
 <li>第 91 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/PersistenceWorker.java#L164" rel="external nofollow noopener noreferrer" target="_blank"><code>#aggregate(message)</code></a> 方法，聚合数据。该方法和 <code>AggregationWorker#aggregate(message)</code> 方法<strong>基本相似</strong>。</li>
 </ul>
-<h2>4.1 WorkerCreateListener</h2>
-<p><code>org.skywalking.apm.collector.stream.worker.base.WorkerCreateListener</code> ，Worker 创建监听器。</p>
+<h2 id="4-1-WorkerCreateListener"><a href="#4-1-WorkerCreateListener" class="headerlink" title="4.1 WorkerCreateListener"></a>4.1 WorkerCreateListener</h2><p><code>org.skywalking.apm.collector.stream.worker.base.WorkerCreateListener</code> ，Worker 创建监听器。</p>
 <p>Worker 在创建时，会调用 <a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/base/WorkerCreateListener.java#L36" rel="external nofollow noopener noreferrer" target="_blank"><code>WorkerCreateListener#addWorker</code></a> 方法，记录所有的 PersistenceWorker 对象。</p>
-<p><strong>记录下来有什么用呢</strong>？在 <a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/AgentStreamBootStartup.java#L47" rel="external nofollow noopener noreferrer" target="_blank">AgentStreamBootStartup</a> 启动时，创建 PersistenceTimer 对象，并将 WorkerCreateListener 记录的 PersistenceWorker 对象集合<strong>传递</strong>给 PersistenceTimer 对象。这样，PersistenceTimer 能够&quot;<strong>访问</strong>&quot;到 PersistenceWorker 对象们的 DataCache ，<strong>定时</strong>存储数据。</p>
-<h2>4.2 PersistenceTimer</h2>
-<p><code>org.skywalking.apm.collector.stream.timer.PersistenceTimer</code> ，持久化定时任务，负责<strong>定时</strong>、<strong>批量</strong>存储 PersistenceWorker 缓存的数据。</p>
+<p><strong>记录下来有什么用呢</strong>？在 <a href="https://github.com/YunaiV/skywalking/blob/bf563461e75b6717d7b4589d7c3f579acf305541/apm-collector/apm-collector-agent-stream/collector-agent-stream-provider/src/main/java/org/skywalking/apm/collector/agent/stream/AgentStreamBootStartup.java#L47" rel="external nofollow noopener noreferrer" target="_blank">AgentStreamBootStartup</a> 启动时，创建 PersistenceTimer 对象，并将 WorkerCreateListener 记录的 PersistenceWorker 对象集合<strong>传递</strong>给 PersistenceTimer 对象。这样，PersistenceTimer 能够”<strong>访问</strong>“到 PersistenceWorker 对象们的 DataCache ，<strong>定时</strong>存储数据。</p>
+<h2 id="4-2-PersistenceTimer"><a href="#4-2-PersistenceTimer" class="headerlink" title="4.2 PersistenceTimer"></a>4.2 PersistenceTimer</h2><p><code>org.skywalking.apm.collector.stream.timer.PersistenceTimer</code> ，持久化定时任务，负责<strong>定时</strong>、<strong>批量</strong>存储 PersistenceWorker 缓存的数据。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/ec95c9966b7e013c8a44ea2e0f748ad339363ce3/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/timer/PersistenceTimer.java#L43" rel="external nofollow noopener noreferrer" target="_blank"><code>#start(IBatchDAO, List&lt;PersistenceWorker&gt;)</code></a> 方法，创建延迟 1 秒，每 1 秒执行一次 <code>#extractDataAndSave()</code> 方法的定时任务，用于<strong>定时</strong>、<strong>批量</strong>存储 PersistenceWorker 缓存的数据。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/ec95c9966b7e013c8a44ea2e0f748ad339363ce3/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/timer/PersistenceTimer.java#L52" rel="external nofollow noopener noreferrer" target="_blank"><code>#extractDataAndSave(IBatchDAO, List&lt;PersistenceWorker&gt;)</code></a> 方法，代码如下：</p>
 <ul>
-<li>
-<p>第 55 至 68 行：获得所有 PersistenceWorker 读 Collection 缓存的数据。</p>
+<li><p>第 55 至 68 行：获得所有 PersistenceWorker 读 Collection 缓存的数据。</p>
 <ul>
 <li>第 60 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/ec95c9966b7e013c8a44ea2e0f748ad339363ce3/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/PersistenceWorker.java#L61" rel="external nofollow noopener noreferrer" target="_blank"><code>PersistenceWorker#flushAndSwitch()</code></a> 切换数据指针，即切换读写 Collection 。</li>
 <li>第 62 行：调用 <a href="https://github.com/YunaiV/skywalking/blob/ec95c9966b7e013c8a44ea2e0f748ad339363ce3/apm-collector/apm-collector-stream/src/main/java/org/skywalking/apm/collector/stream/worker/impl/PersistenceWorker.java#L100" rel="external nofollow noopener noreferrer" target="_blank"><code>PersistenceWorker#buildBatchCollection()</code></a> 方法，创建批量操作对象数组。</li>
 <li><strong>怎么保证并发安全</strong>？通过 <code>Window#trySwitchPointer()</code> 方法，保证读 Collection <strong>正在被读取中</strong>时，PersistenceWorker 和 PersistenceTimer 有且仅有一个切换队列，读取数据。当读取完成后，调用 <code>Window#finishReadingLast()</code> 方法，清空原数据指向，并标记原数据指向完成正在读取中。</li>
 </ul>
 </li>
-<li>
-<p>第 71 行：调用 <code>IBatchDAO#batchPersistence(List&lt;?&gt;)</code> 方法，执行批量操作，进行存储。</p>
+<li><p>第 71 行：调用 <code>IBatchDAO#batchPersistence(List&lt;?&gt;)</code> 方法，执行批量操作，进行存储。</p>
 </li>
 </ul>
-<h1>666. 彩蛋</h1>
-<p>呼呼，终于把流式处理给写完了，如果写的不详细或者不合适的，胖友看到麻烦告知笔者，谢谢。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>呼呼，终于把流式处理给写完了，如果写的不详细或者不合适的，胖友看到麻烦告知笔者，谢谢。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_09_01/03.png" alt=""></p>
 <p>胖友，分享一波朋友圈可好。</p>
   
@@ -392,7 +371,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. Data</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 Collection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 DataCollection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Window</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 DataCache</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. AggregationWorker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. PersistenceWorker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 WorkerCreateListener</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 PersistenceTimer</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Data"><span class="toc-number">2.</span> <span class="toc-text">2. Data</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Collection"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 Collection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-DataCollection"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 DataCollection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Window"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Window</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-DataCache"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 DataCache</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-AggregationWorker"><span class="toc-number">3.</span> <span class="toc-text">3. AggregationWorker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-PersistenceWorker"><span class="toc-number">4.</span> <span class="toc-text">4. PersistenceWorker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-WorkerCreateListener"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 WorkerCreateListener</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-PersistenceTimer"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 PersistenceTimer</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

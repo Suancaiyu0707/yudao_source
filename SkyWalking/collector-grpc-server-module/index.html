@@ -148,7 +148,7 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/">http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <p><strong>本文主要基于 SkyWalking 3.2.6 正式版</strong></p>
 <ul>
 <li><a href="http://www.iocoder.cn/SkyWalking/collector-grpc-server-module/">1. 概述</a></li>
@@ -160,36 +160,32 @@
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. 概述</h1>
-<p>本文主要分享 <strong>Collector gRPC Server Manager</strong>。Collector 通过该管理器，管理启动的多个 gRPC Server，例如 Agent gRPC Server、Remote gRPC Server 。<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png" alt=""></p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>Collector gRPC Server Manager</strong>。Collector 通过该管理器，管理启动的多个 gRPC Server，例如 Agent gRPC Server、Remote gRPC Server 。<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/02.png" alt=""></p>
 <blockquote>
 <p>友情提示：建议胖友已经读过 <a href="http://www.iocoder.cn/SkyWalking/collector-server-component/?self">《SkyWalking 源码分析 —— Collector Server Component 服务器组件》</a></p>
 <p>另外，本文和 <a href="http://www.iocoder.cn/SkyWalking/collector-jetty-server-module/?self">《SkyWalking 源码分析 —— Collector Jetty Server Manager》</a> 相似度 99%</p>
 </blockquote>
 <p>gRPC Server Manager 在 SkyWalking 架构图处于如下位置( <strong>红框</strong> ) ：</p>
 <blockquote>
-<p>FROM https://github.com/apache/incubating-skywalking<br>
-<img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/01.jpeg" alt=""></p>
+<p>FROM <a href="https://github.com/apache/incubating-skywalking" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/apache/incubating-skywalking</a><br><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/01.jpeg" alt=""></p>
 </blockquote>
 <p>下面我们来看看整体的项目结构，如下图所示 ：</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/03.png" alt=""></p>
 <p>😈 代码量非常少，考虑到这是个单独的项目，所以单独成文。</p>
-<h1>2. GRPCManagerModule</h1>
-<p><code>org.skywalking.apm.collector.grpc.manager.GRPCManagerModule</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java" rel="external nofollow noopener noreferrer" target="_blank">Module</a> 抽象类，gRPC Server 管理器 Module 。</p>
+<h1 id="2-GRPCManagerModule"><a href="#2-GRPCManagerModule" class="headerlink" title="2. GRPCManagerModule"></a>2. GRPCManagerModule</h1><p><code>org.skywalking.apm.collector.grpc.manager.GRPCManagerModule</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Module.java" rel="external nofollow noopener noreferrer" target="_blank">Module</a> 抽象类，gRPC Server 管理器 Module 。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/621598af465bfcefee3432c2ef80aff25a33f1bf/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-define/src/main/java/org/skywalking/apm/collector/grpc/manager/GRPCManagerModule.java#L33" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回模块名为 <code>&quot;gRPC_manager&quot;</code> 。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/621598af465bfcefee3432c2ef80aff25a33f1bf/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-define/src/main/java/org/skywalking/apm/collector/grpc/manager/GRPCManagerModule.java#L37" rel="external nofollow noopener noreferrer" target="_blank"><code>#services()</code></a> <strong>实现</strong>方法，返回 Service 类名：GRPCManagerService 。</p>
-<h1>3. GRPCManagerProvider</h1>
-<p><code>org.skywalking.apm.collector.grpc.manager.GRPCManagerProvider</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java" rel="external nofollow noopener noreferrer" target="_blank">ModuleProvider</a> <strong>抽象类</strong>，gRPC Server 管理器组件服务提供者。</p>
+<h1 id="3-GRPCManagerProvider"><a href="#3-GRPCManagerProvider" class="headerlink" title="3. GRPCManagerProvider"></a>3. GRPCManagerProvider</h1><p><code>org.skywalking.apm.collector.grpc.manager.GRPCManagerProvider</code> ，实现 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/ModuleProvider.java" rel="external nofollow noopener noreferrer" target="_blank">ModuleProvider</a> <strong>抽象类</strong>，gRPC Server 管理器组件服务提供者。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/f9de7bf75f62c16fd05cc0d1beb8f5b756108ec3/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-provider/src/main/java/org/skywalking/apm/collector/grpc/manager/GRPCManagerProvider.java#L46" rel="external nofollow noopener noreferrer" target="_blank"><code>#name()</code></a> <strong>实现</strong>方法，返回组件服务提供者名为 <code>&quot;gRPC&quot;</code> 。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/f9de7bf75f62c16fd05cc0d1beb8f5b756108ec3/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-provider/src/main/java/org/skywalking/apm/collector/grpc/manager/GRPCManagerProvider.java#L50" rel="external nofollow noopener noreferrer" target="_blank"><code>module()</code></a> <strong>实现</strong>方法，返回组件类为 GRPCManagerModule 。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/f9de7bf75f62c16fd05cc0d1beb8f5b756108ec3/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-provider/src/main/java/org/skywalking/apm/collector/grpc/manager/GRPCManagerProvider.java#L72" rel="external nofollow noopener noreferrer" target="_blank"><code>#requiredModules()</code></a> <strong>实现</strong>方法，返回依赖组件为空。</p>
@@ -203,20 +199,17 @@
 <ul>
 <li>第 63 至 69 行 ：遍历注册的服务器列表，逐个调用 <code>GRPCServer#start()</code> 方法，进行启动。</li>
 </ul>
-<h1>4. GRPCManagerService</h1>
-<p><code>org.skywalking.apm.collector.grpc.manager.service.GRPCManagerService</code> ，继承 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Service.java" rel="external nofollow noopener noreferrer" target="_blank">Service</a> <strong>接口</strong>，gRPC Server 管理器服务<strong>接口</strong>。</p>
+<h1 id="4-GRPCManagerService"><a href="#4-GRPCManagerService" class="headerlink" title="4. GRPCManagerService"></a>4. GRPCManagerService</h1><p><code>org.skywalking.apm.collector.grpc.manager.service.GRPCManagerService</code> ，继承 <a href="https://github.com/YunaiV/skywalking/blob/40823179d7228207b06b603b9a1c09dfc4f78593/apm-collector/apm-collector-core/src/main/java/org/skywalking/apm/collector/core/module/Service.java" rel="external nofollow noopener noreferrer" target="_blank">Service</a> <strong>接口</strong>，gRPC Server 管理器服务<strong>接口</strong>。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/48f76a555c043fee2932230077a8112d4888d10f/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-define/src/main/java/org/skywalking/apm/collector/grpc/manager/service/GRPCManagerService.java#L38" rel="external nofollow noopener noreferrer" target="_blank"><code>#createIfAbsent(host, port)</code></a> <strong>接口</strong>方法，创建 gRPC Server ，若不存在。</p>
 <p><strong>怎么没有类似 JettyManagerService 的 <code>#addHandler(...)</code> 方法</strong>？目前是调用方直接调用 <code>#createIfAbsent(host, port)</code> 方法，获得 gRPC Server 后，后调用 <code>Server#addHandler(ServerHandler)</code> 方法。例如：</p>
 <ul>
 <li><a href="https://github.com/YunaiV/skywalking/blob/9c586ca730cc89d4d5ad6b4294f2779a23925a8c/apm-collector/apm-collector-agent-grpc/collector-agent-grpc-provider/src/main/java/org/skywalking/apm/collector/agent/grpc/AgentModuleGRPCProvider.java#L72" rel="external nofollow noopener noreferrer" target="_blank"><code>AgentModuleGRPCProvider#start(Properties)</code></a></li>
 <li><a href="https://github.com/YunaiV/skywalking/blob/9c586ca730cc89d4d5ad6b4294f2779a23925a8c/apm-collector/apm-collector-remote/collector-remote-grpc-provider/src/main/java/org/skywalking/apm/collector/remote/grpc/RemoteModuleGRPCProvider.java#L61" rel="external nofollow noopener noreferrer" target="_blank"><code>RemoteModuleGRPCProvider#start(Properties)</code></a></li>
 </ul>
-<h2>4.1 GRPCManagerServiceImpl</h2>
-<p><code>org.skywalking.apm.collector.grpc.manager.service.GRPCManagerServiceImpl</code> ，gRPC Server 管理器服务<strong>实现类</strong>。</p>
+<h2 id="4-1-GRPCManagerServiceImpl"><a href="#4-1-GRPCManagerServiceImpl" class="headerlink" title="4.1 GRPCManagerServiceImpl"></a>4.1 GRPCManagerServiceImpl</h2><p><code>org.skywalking.apm.collector.grpc.manager.service.GRPCManagerServiceImpl</code> ，gRPC Server 管理器服务<strong>实现类</strong>。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/9c586ca730cc89d4d5ad6b4294f2779a23925a8c/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-provider/src/main/java/org/skywalking/apm/collector/grpc/manager/service/GRPCManagerServiceImpl.java#L44" rel="external nofollow noopener noreferrer" target="_blank"><strong>构造方法</strong></a> ，使用来自 GRPCManagerProvider 的 <code>servers</code> 服务器数组。<strong>这是为什么 GRPCManagerProvider 没有对 <code>servers</code> 做新增操作，结果里面有数据的原因</strong>。</p>
 <p><a href="https://github.com/YunaiV/skywalking/blob/9c586ca730cc89d4d5ad6b4294f2779a23925a8c/apm-collector/apm-collector-grpc-manager/collector-grpc-manager-provider/src/main/java/org/skywalking/apm/collector/grpc/manager/service/GRPCManagerServiceImpl.java#L48" rel="external nofollow noopener noreferrer" target="_blank"><code>#createIfAbsent(host, port)</code></a> <strong>实现</strong>方法，创建 gRPC Server ，若不存在。判断方式为 <code>host + port</code> 为唯一。</p>
-<h1>666. 彩蛋</h1>
-<p>呵呵哒的一篇，嘿嘿。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>呵呵哒的一篇，嘿嘿。</p>
 <p><img src="http://www.iocoder.cn/images/SkyWalking/2020_08_05/04.png" alt=""></p>
 <p>胖友，分享个朋友圈可好？</p>
   
@@ -268,7 +261,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. GRPCManagerModule</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. GRPCManagerProvider</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. GRPCManagerService</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 GRPCManagerServiceImpl</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-GRPCManagerModule"><span class="toc-number">2.</span> <span class="toc-text">2. GRPCManagerModule</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-GRPCManagerProvider"><span class="toc-number">3.</span> <span class="toc-text">3. GRPCManagerProvider</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-GRPCManagerService"><span class="toc-number">4.</span> <span class="toc-text">4. GRPCManagerService</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-GRPCManagerServiceImpl"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 GRPCManagerServiceImpl</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
 </div>
 
 <div id="asidepart">

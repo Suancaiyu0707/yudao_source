@@ -20,10 +20,10 @@
 
 
 
-🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：
+🙂🙂🙂关注微信公众号：【芋道源码】有福利：
 
 RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
-">
+Rock">
     
 
     
@@ -150,26 +150,24 @@ RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/Myth/good-collection/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Myth/good-collection/">http://www.iocoder.cn/Myth/good-collection/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：</p>
 <ol>
 <li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
 <li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
 <li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>0. 概述</h1>
-<ul>
-<li>项目：https://github.com/yu199195/Myth</li>
+<h1 id="0-概述"><a href="#0-概述" class="headerlink" title="0. 概述"></a>0. 概述</h1><ul>
+<li>项目：<a href="https://github.com/yu199195/Myth" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/yu199195/Myth</a></li>
 <li>简介：基于消息队列解决分布式事务框架</li>
-<li>功能：
-<ul>
+<li>功能：<ul>
 <li>RPC框架支持 : dubbo,motan,springcloud。</li>
 <li>消息中间件支持 : jms(activimq),amqp(rabbitmq),kafka,roceketmq。</li>
 <li>本地事务存储支持 : redis,mogondb,zookeeper,file,mysql。</li>
@@ -180,12 +178,10 @@ RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
 </ul>
 </li>
 </ul>
-<h1>1. 【有生】Myth 源码解析</h1>
-<ul>
+<h1 id="1-【有生】Myth-源码解析"><a href="#1-【有生】Myth-源码解析" class="headerlink" title="1. 【有生】Myth 源码解析"></a>1. 【有生】Myth 源码解析</h1><ul>
 <li>作者 ：有生</li>
-<li>博客 ：https://www.jianshu.com/u/3cf68512886a</li>
-<li>目录 ：
-<ul>
+<li>博客 ：<a href="https://www.jianshu.com/u/3cf68512886a" rel="external nofollow noopener noreferrer" target="_blank">https://www.jianshu.com/u/3cf68512886a</a></li>
+<li>目录 ：<ul>
 <li><a href="https://www.jianshu.com/p/40ea1e219ff2" rel="external nofollow noopener noreferrer" target="_blank">《Myth源码解析系列之（一）- 项目简介》</a></li>
 <li><a href="https://www.jianshu.com/p/d101cacd3043" rel="external nofollow noopener noreferrer" target="_blank">《Myth源码解析系列之（二）- 项目结构介绍》</a></li>
 <li><a href="https://www.jianshu.com/p/37ad06080ed3" rel="external nofollow noopener noreferrer" target="_blank">《Myth源码解析系列之（三）- 环境搭建》</a></li>
@@ -198,8 +194,7 @@ RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
 </ul>
 </li>
 </ul>
-<h1>666. 欢迎投稿</h1>
-  
+<h1 id="666-欢迎投稿"><a href="#666-欢迎投稿" class="headerlink" title="666. 欢迎投稿"></a>666. 欢迎投稿</h1>  
 	</div>
 		<footer class="article-footer clearfix">
 
@@ -248,7 +243,7 @@ RocketMQ / MyCAT / Sharding-JDBC 所有源码分析文章列表
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">0. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">1. 【有生】Myth 源码解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 欢迎投稿</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-概述"><span class="toc-number">1.</span> <span class="toc-text">0. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-【有生】Myth-源码解析"><span class="toc-number">2.</span> <span class="toc-text">1. 【有生】Myth 源码解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-欢迎投稿"><span class="toc-number">3.</span> <span class="toc-text">666. 欢迎投稿</span></a></li></ol>
 </div>
 
 <div id="asidepart">
