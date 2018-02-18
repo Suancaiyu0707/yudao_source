@@ -36,7 +36,7 @@ permalink: Spring-Security/good-collection
     * [《Spring Security(五)--动手实现一个IP_Login》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247483980&idx=1&sn=cb40ba4fea5cf100a98896d9a0404a43&chksm=fa497dfdcd3ef4ebdd162db2f674d882fd87d2648c775272a8af238c0500289d439d858804e5#rd) 
     * [《从零开始的Spring Security OAuth2（一）》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247484013&idx=1&sn=da6baff361a525abb4699a1208bdc8a8&chksm=fa497ddccd3ef4ca32fb4190337a363aab821eb93ababc7fbcab23ad01bdb13f44e0894a4af6#rd) 
     * [《从零开始的Spring Security OAuth2（二）》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247484039&idx=1&sn=822f9bdf0b3833cb2a44920d07831073&chksm=fa497d36cd3ef420dc3bb1482551aae225b8c8e9a74a8eda07e802d6cc0746d6d29ef9664684#rd) 
-    * [《从零开始的Spring Security OAuth2（三）》](https://mp.weixin.qq.com/cgi-bin/home?t=home/index&token=1583325040&lang=zh_CN) 
+    * [《从零开始的Spring Security OAuth2（三）》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247484068&idx=1&sn=65f2f44e9d284d4cf353d49016ba2af6&chksm=fa497d15cd3ef4032f644ea0a662ee2d5ebdd493a9719b3db66b8846598465cc48c3d0cb3c14#rd) 
 
 # 2. 欢迎投稿
 
