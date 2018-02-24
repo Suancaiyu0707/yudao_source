@@ -284,6 +284,8 @@ public int getOrder() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 限于对 Reactor 和 Netty 了解不够深入，写的不够透彻。回头深入理解下它们。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_25/03.png)

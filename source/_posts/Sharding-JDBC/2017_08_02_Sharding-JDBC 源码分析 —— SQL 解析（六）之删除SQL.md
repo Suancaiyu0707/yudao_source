@@ -142,6 +142,8 @@ protected void skipBetweenDeleteAndTable() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 道友，帮我分享一波怎么样？
 
 **后面 SQL 路由和改写会更加有趣哟！**

@@ -74,8 +74,12 @@ GRPCChannelListener 实现类如下图，后续文章会详细解析。
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 "水"文一篇，哈哈哈。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_20/04.png)
 
 胖友，分享一波朋友圈可好。
+
+

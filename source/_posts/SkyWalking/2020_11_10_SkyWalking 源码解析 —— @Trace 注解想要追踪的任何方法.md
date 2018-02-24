@@ -120,8 +120,12 @@ public String log() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 简单一文一篇。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_10/07.png)
 
 胖友，分享个朋友圈可好？
+
+

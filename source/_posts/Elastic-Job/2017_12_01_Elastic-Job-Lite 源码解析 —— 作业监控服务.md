@@ -164,6 +164,8 @@ private void process(final Socket socket) throws IOException {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 芋道君：是是是，对对的，我水更啦！😆
 
 ![](http://www.iocoder.cn/images/Elastic-Job/2017_12_01/02.png)

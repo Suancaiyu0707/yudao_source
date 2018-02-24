@@ -581,6 +581,8 @@ ps：点击[链接](https://github.com/YunaiV/tcc-transaction/blob/c164ff5ab29d3
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 这篇略( 超 )微( 级 )水更，哈哈哈，为[《TCC-Transaction 源码分析 —— 事务恢复》](http://www.iocoder.cn/TCC-Transaction/transaction-recover/?self)做铺垫啦。
 
 使用 RedisTransactionRepository 和 ZooKeeperTransactionRepository 存储事务还是 Get 蛮多点的。

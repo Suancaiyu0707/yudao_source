@@ -170,6 +170,8 @@ Collector Naming Server 通过 `apm-collector-naming` 项目实现，其中：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 2017.12.15 归途 从北京回上海。
 
 突然有种感觉，获得像包方便面，快捷而不营养。

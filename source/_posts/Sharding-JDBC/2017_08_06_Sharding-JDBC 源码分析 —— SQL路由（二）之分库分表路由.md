@@ -975,6 +975,8 @@ public SQLRouteResult route(final String logicSQL, final List<Object> parameters
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 篇幅有些长，希望能让大家对**路由**有比较完整的认识。  
 如果内容有错误，烦请您指正，我会**认真**修改。  
 如果表述不清晰，不太理解的，欢迎加我微信（wangwenbin-server）一起探讨。

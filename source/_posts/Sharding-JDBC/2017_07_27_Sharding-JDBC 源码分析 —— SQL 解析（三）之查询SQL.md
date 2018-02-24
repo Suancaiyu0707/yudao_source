@@ -1043,6 +1043,8 @@ public final class OrderByToken implements SQLToken {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 咳咳咳，确实有一些略长。但请相信，INSERT / UPDATE / DELETE 会简单很多很多。考试考的 SQL 最多的是什么？SELECT 语句呀！为啥，难呗。恩，我相信看到此处的你，一定是能看懂的，加油！
 
 🙂如果对本文有不理解的地方，可以关注我的公众号**（[芋道源码](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)）**获得**微信号**，我们来一场，1 对 1 的搞基吧，不不不，是交流交流。

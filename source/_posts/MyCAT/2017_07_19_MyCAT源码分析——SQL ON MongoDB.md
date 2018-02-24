@@ -433,9 +433,9 @@ private int InsertData(SQLInsertStatement state) {
 
 # 5. 彩蛋
 
-老铁，看到这里，来一波微信公众号关注吧？！
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
-![wechat_mp](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+老铁，看到这里，来一波微信公众号关注吧？！
 
 **1、支持多 MongoDB ，并使用 MyCAT 进行分片。**
 

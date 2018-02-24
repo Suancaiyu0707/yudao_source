@@ -128,8 +128,12 @@ ps：目前 DataCarrier **最长**每 20 秒消费一次。
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 HOHO ，简单水更一篇，保持 Trace 相关的小系列文章，主题明确。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_05/02.jpeg)
 
 胖友，分享个朋友圈可好？
+
+

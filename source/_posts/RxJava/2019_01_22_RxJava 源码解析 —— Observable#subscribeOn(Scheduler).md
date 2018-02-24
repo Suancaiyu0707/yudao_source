@@ -178,4 +178,8 @@ OperatorSubscribeOn 类，代码如下 ：
     }
     ```
 
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 

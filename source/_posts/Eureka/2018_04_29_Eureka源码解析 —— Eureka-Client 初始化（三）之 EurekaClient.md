@@ -720,6 +720,8 @@ logger.info("Discovery Client initialized at timestamp {} with initial instances
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 由于笔者是边理解源码边输出博客内容，如果有错误或者不清晰的地方，**欢迎**微笑给我的微信公众号( **芋道源码** ) 留言，我会**仔细**回复。感谢 + 1024。
 
 后面文章不断更新，会慢慢完善本文中的。

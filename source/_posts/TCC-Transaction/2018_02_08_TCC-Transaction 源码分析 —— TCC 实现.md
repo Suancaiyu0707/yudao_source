@@ -1334,6 +1334,8 @@ private void enlistParticipant(ProceedingJoinPoint pjp) throws IllegalAccessExce
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 受限于本人的能力，蛮多处表达不够清晰或者易懂，非常抱歉。如果你对任何地方有任何疑问，欢迎添加本人微信号( wangwenbin-server )，期待与你的交流。不限于 TCC，也可以是分布式事务，也可以是微服务，以及等等。
 
 ![](http://www.iocoder.cn/images/TCC-Transaction/2018_02_08/05.png)

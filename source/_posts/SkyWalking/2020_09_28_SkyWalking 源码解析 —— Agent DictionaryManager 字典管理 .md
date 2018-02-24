@@ -164,8 +164,12 @@ API 处理的流程大体如下：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 写水文，好枯燥。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_28/04.png)
 
 胖友，分享个朋友圈可好？
+
+

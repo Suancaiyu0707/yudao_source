@@ -756,11 +756,11 @@ public String getBindingActualTable(final String dataSource, final String logicT
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 哈哈哈，看完**SQL改写**后，**SQL解析**是不是清晰多了！嘿嘿嘿，反正我现在有点嗨。恩，蛮嗨的。
 
 当然，如果**SQL解析**理解上有点疑惑的你，**欢迎**加我的微信，咱 **1对1** 搞基。关注我的微信公众号：[【芋道源码】](https://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg) 即可获得。
-
-![](https://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
 
 道友，转发一波朋友圈可好？
 

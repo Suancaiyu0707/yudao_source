@@ -1745,6 +1745,8 @@ public void statusUpdate(final SchedulerDriver schedulerDriver, final Protos.Tas
     
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：真的真的真的，好长好长好长啊。但是真的真的真的，干货！  
 芋道君：那必须的！
 

@@ -231,6 +231,8 @@ TODO 【3001】
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼呼，主要的过滤器已经写完，后面熔断、限流过滤器的实现。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_01/02.png)

@@ -387,6 +387,8 @@ public void remove(final Collection<TaskContext.MetaInfo> metaInfoList) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 原本以为会是一篇水更，后面研究 TASK_LOST，发现收获大大的，干货妥妥的。
 
 ![](http://www.iocoder.cn/images/Elastic-Job/2018_01_10/03.png)

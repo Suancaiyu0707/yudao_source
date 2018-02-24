@@ -297,8 +297,12 @@ private static class DefaultGatewayFilterChain implements GatewayFilterChain {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 啦啦啦，终于到过滤器了。开森！
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_01/03.png)
 
 胖友，分享一波朋友圈可好！
+
+

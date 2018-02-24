@@ -230,6 +230,8 @@ public class RoutePredicateHandlerMapping extends AbstractHandlerMapping {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 一不小心简单写了下 WebFlux 的 DispatcherHandler 的源码解析，嘿嘿嘿。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_20/04.png)

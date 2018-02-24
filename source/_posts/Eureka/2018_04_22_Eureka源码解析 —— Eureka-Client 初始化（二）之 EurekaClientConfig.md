@@ -277,6 +277,8 @@ public class DefaultEurekaTransportConfig implements EurekaTransportConfig {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 涉及到配置，内容初看起来会比较多，慢慢理解后，就会变得很“啰嗦”，请保持耐心。
 
 胖友，分享一个朋友圈可好。

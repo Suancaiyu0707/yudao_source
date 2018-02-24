@@ -399,6 +399,8 @@ OK ，我们开始看看 `#getTuple()` 方法，代码如下 ：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 恩恩，干了一些的文章。这个周末还是木有完成计划写的文章。继续加油！
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_01/06.png)

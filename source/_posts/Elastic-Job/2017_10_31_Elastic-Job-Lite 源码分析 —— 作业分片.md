@@ -538,6 +538,8 @@ public ShardingContexts getJobShardingContext(final List<Integer> shardingItems)
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：小伙伴，更新了干货嘛，双击 666。  
 芋道君：那必须的嘛，而且这么勤快更新！是不是应该分享一波朋友圈。
 

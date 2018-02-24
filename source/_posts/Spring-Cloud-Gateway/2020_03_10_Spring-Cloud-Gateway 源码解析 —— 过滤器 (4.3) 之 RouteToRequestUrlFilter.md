@@ -134,6 +134,8 @@ RouteToRequestUrlFilter 根据**匹配**的 Route ，计算请求的地址。**�
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 硬生生把这个文章丰富了下。人生如戏，全靠套路。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_10/01.png)

@@ -77,8 +77,12 @@ permalink: SkyWalking/trace-id-integrate-into-logs
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 简单一文一篇 Again 。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_15/06.png)
 
 胖友，分享个朋友圈可好？
+
+

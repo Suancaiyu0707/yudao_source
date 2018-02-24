@@ -90,4 +90,8 @@ permalink: Sharding-JDBC/why-read-Sharding-JDBC-source-code
 * [ ] 分布式事务 ：最大努力送达型事务
 * [ ] 分布式事务 ：TCC型事务(TBD)
 
+## 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 

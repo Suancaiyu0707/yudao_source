@@ -94,10 +94,14 @@ permalink: SkyWalking/ui-3-trace
         * 第 44 行：调用 [`SegmentEsUIDAO#load(segmentId)`](https://github.com/YunaiV/skywalking/blob/c3f55e55593158e065b9589855ca90e819558765/apm-collector/apm-collector-storage/collector-storage-es-provider/src/main/java/org/skywalking/apm/collector/storage/es/dao/SegmentEsUIDAO.java#L45) 方法，获得 TraceSegment 。
         * 第 58 至 139 行：循环获得的 TraceSegment 的 Span 数组，找到对应的 Span 记录，设置后返回。
 
-# 6. 彩蛋
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 水更第三发！
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
+
+

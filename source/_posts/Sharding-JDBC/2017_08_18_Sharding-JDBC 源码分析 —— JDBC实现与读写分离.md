@@ -959,6 +959,8 @@ private static boolean isMasterRoute(final SQLType sqlType) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 没有彩蛋  
 没有彩  
 没有  

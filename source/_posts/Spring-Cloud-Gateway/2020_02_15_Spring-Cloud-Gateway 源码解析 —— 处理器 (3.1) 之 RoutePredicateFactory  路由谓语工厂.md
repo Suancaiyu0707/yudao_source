@@ -675,6 +675,8 @@ RoutePredicateFactory **实现类**如下图 ：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 代码好多，贴的手都抽了。嘿嘿，RemoteAddrRoutePredicateFactory 写的有点偷懒。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_15/04.png)

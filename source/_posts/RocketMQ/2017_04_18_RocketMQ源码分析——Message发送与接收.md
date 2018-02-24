@@ -1127,6 +1127,9 @@ permalink: RocketMQ/message-send-and-receive
 
 # 4、某种结尾
 
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 感谢阅读、收藏、点赞本文的工程师同学。
 
 阅读源码是件令自己很愉悦的事情，编写源码解析是让自己脑细胞死伤无数的过程，痛并快乐着。

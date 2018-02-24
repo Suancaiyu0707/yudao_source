@@ -151,4 +151,5 @@ kubernetes在阿里云已经有host-gw + vpc的支持。
 2. [kubernetes入门1：kubernetes+flannel+etcd环境搭建(通用安装)](http://zdevops.blog.51cto.com/2579684/1735492)
 3. [用 Flannel 配置 Kubernetes 网络](http://dockone.io/article/1186)
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 

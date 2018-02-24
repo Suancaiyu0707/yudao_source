@@ -167,6 +167,8 @@ public interface PeerAwareInstanceRegistry extends InstanceRegistry {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 本文是一篇**简介**( 啪啪啪，打脸 )，如果胖友比较着急想了解原理，可以阅读 [携程 ——《深度剖析服务发现组件Netflix Eureka》](http://techshow.ctrip.com/archives/1699.html?from=www.iocoder.cn) 先，写的非常非常非常不错。
 
 快马加鞭，更新 [《Eureka 源码解析 —— 应用实例注册发现 （一）之注册》](http://www.iocoder.cn/Eureka/instance-registry-register/?self) **ing** ...

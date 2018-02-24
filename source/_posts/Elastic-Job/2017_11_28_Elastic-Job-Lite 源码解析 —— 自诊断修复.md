@@ -112,6 +112,8 @@ protected void runOneIteration() throws Exception {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 芋道君：【动作：一脚踢开旁白君】，这是对前面解析的主节点选举和作业分片的复习！不是水更！  
 旁白君：你承认水...【动作：芋道君又来一记千年杀】
 

@@ -159,6 +159,8 @@ public void execute() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 芋道君：可能有点水更，和大家实际开发太相关，想想还是更新下。  
 旁白君：哎哟哟，哎哟喂。
 

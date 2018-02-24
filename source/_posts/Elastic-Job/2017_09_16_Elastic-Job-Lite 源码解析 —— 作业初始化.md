@@ -566,6 +566,8 @@ public void scheduleJob(final String cron) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 作业初始化，如果你对 Quartz 不是特别了解，可以再看 Quartz 再重新理解。
 
 下一篇，[《Elastic-Job-Lite 源码解析 —— 作业执行》](http://www.iocoder.cn/Elastic-Job/job-execute/?self) 起航！

@@ -35,3 +35,7 @@ permalink: RocketMQ/namesrv-intro
    * 注册Broker，提供Broker信息（名字、角色编号、地址、集群名）
    * 注册Topic，提供Topic信息（Topic名、读写权限、队列情况）
 
+## 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+

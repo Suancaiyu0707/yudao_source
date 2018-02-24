@@ -343,6 +343,8 @@ class FailoverSettingsChangedJobListener extends AbstractJobListener {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：啊啊啊，有点绕。  
 芋道君：耐心，耐心，耐心。
 

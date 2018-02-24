@@ -73,6 +73,8 @@ permalink: SkyWalking/agent-plugin-mongodb
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 算是本系列的小完结？偷懒下，后面在补充一些其他的。
 
 呼呼，撒花！

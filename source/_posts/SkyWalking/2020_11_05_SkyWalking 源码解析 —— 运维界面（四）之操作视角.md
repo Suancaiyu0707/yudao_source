@@ -81,10 +81,14 @@ permalink: SkyWalking/ui-4-operation
     * 第 60 至 74 行：解析 `startTime` 和 `endTime` 参数。
     * 第 94 行：调用 [`ServiceTreeService#loadServiceTree(entryServiceId, startTime, endTime)`](https://github.com/YunaiV/skywalking/blob/7e453f0e8237685b7b46ddd390afce3b76b45123/apm-collector/apm-collector-ui/collector-ui-jetty-provider/src/main/java/org/skywalking/apm/collector/ui/service/ServiceTreeService.java#L74) 方法，获得指定操作的关联操作调用统计树列表，涉及 **ServiceReference** 数据表。代码比较简单易懂( 笔者太懒了 )，胖友自己阅读理解。![](http://www.iocoder.cn/images/SkyWalking/2020_11_05/04.png)
 
-# 6. 彩蛋
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 水更第四发！
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
+
+

@@ -254,8 +254,12 @@ TODO 【4007】
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 距离 Segment 已经不远了。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_25/09.png)
 
 胖友，分享个朋友圈可好？
+
+

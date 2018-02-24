@@ -153,6 +153,8 @@ BootService 目前有**七个**实现类，在后续的文章，我们会解析�
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 每次写初始化相关的文章，写少了，怕太水；写多了，又怕太复杂。
 
 嗯，送一发妹子。
@@ -160,3 +162,5 @@ BootService 目前有**七个**实现类，在后续的文章，我们会解析�
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_05/08.png)
 
 胖友，分享个朋友圈可好？
+
+

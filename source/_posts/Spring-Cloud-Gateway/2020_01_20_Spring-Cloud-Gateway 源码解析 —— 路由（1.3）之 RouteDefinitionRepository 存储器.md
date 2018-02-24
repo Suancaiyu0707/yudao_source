@@ -214,6 +214,8 @@ public InMemoryRouteDefinitionRepository inMemoryRouteDefinitionRepository() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 比较干爽( 水更 )的一篇文章。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_20/03.png)

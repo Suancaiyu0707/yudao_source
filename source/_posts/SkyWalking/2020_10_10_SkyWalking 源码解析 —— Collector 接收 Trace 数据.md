@@ -307,8 +307,12 @@ data_20171205004132.sw		offset_20171205004132.sw
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼呼，即将开始 Trace 流式处理的文章，很嗨皮。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_10/08.png)
 
 胖友，分享个朋友圈可好？
+
+

@@ -353,6 +353,8 @@ public void checkMaxTimeDiffSecondsTolerable() throws JobExecutionEnvironmentExc
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 Elastic-Job-Lite 源码解析系列第一篇文章，希望大家多多支持，预计全部更新完会有 15+ 篇。Elastic-Job-Cloud 源码系列后续也会更新。
 
 道友，分享一波**微信朋友圈**支持支持支持，可好？

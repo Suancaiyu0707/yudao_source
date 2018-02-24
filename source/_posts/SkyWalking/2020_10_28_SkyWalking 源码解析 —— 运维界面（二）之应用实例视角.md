@@ -106,8 +106,12 @@ permalink: SkyWalking/ui-2-instance
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 水更第二发！
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_25/05.png)
 
 胖友，分享一波朋友圈可好？
+
+

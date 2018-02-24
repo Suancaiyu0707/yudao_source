@@ -741,6 +741,8 @@ public final class JobEventRdbListener extends JobEventRdbIdentity implements Jo
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：瞎比比了这么长，能不能简单粗暴一点。  
 芋道君：是是是。
 

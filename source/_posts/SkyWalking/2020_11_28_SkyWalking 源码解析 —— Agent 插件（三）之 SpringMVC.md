@@ -296,6 +296,8 @@ AbstractControllerInstrumentation 是一个**抽象基类**，有 [「 4.5 Contr
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 Spring 的体系，真的是博大精深！被 `core-patch` 部分卡了好久，虽然现在还是有点模糊。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_28/11.png)

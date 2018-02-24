@@ -481,6 +481,8 @@ public void doFilter(ServletRequest request, ServletResponse response,
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 啦啦啦，Eureka-Server 启动完成！
 
 准备工作已经完成，可以开始更加有趣的注册、续约、取消注册、过期等等 Eureka-Client 与 Eureka-Server 的交互。

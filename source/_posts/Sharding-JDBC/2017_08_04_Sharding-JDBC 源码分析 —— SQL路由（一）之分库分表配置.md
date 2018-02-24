@@ -315,6 +315,8 @@ public ShardingRule(
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 本文看似在水更，实是为[《分表分库路由》](https://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)做铺垫（一阵脸红😳）。
 
 But，无论怎么说，道友，我做了新的关注二维码（感谢猫🐱先生），是不是可以推荐一波公众号给基佬。

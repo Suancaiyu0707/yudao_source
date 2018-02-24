@@ -163,6 +163,8 @@ OK，下面我们来看看 Eureka 是如何实现自定义的 StringCache 类。
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 又 Get 新姿势了，好开森。
 
 胖友，分享个朋友圈，可好？！

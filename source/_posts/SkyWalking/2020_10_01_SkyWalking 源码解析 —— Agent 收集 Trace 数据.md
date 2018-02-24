@@ -569,6 +569,8 @@ ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 元旦很认真( 硬憋 )出一篇"硬货"。哈哈哈。
 
 由于篇幅较长，内容略多，如果有错误的或者解释不清晰的，烦请胖友斧正。
@@ -576,3 +578,5 @@ ContextSnapshot 和 ContextCarrier 比较类似，笔者就列举一些方法：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_01/08.png)
 
 胖友，分享个朋友圈可好？
+
+

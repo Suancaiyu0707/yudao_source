@@ -24,3 +24,6 @@ permalink: RocketMQ/store-init-and-shutdown
 > 5. **认真的**源码交流微信群。
 
 -------
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+

@@ -297,11 +297,12 @@ static void initWorkerId() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 没有彩蛋。HOHOHO
 
 道友，分享一波朋友圈可好。
 
 感谢你，技术如此只好，还关注我的公众号。
 
-![](https://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
 

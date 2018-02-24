@@ -2070,6 +2070,8 @@ Yunai-MacdeMacBook-Pro-2:config yunai$ cat consumerOffset.json
 
 # 7、结尾
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 感谢同学们对本文的阅读、收藏、点赞。
 
 😈如果解析存在问题或者表达误解的，表示抱歉。如果方便的话，可以加下 **QQ：7685413**。让我们来一场 1 ：1 交流（搞基）。

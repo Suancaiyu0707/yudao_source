@@ -450,6 +450,8 @@ public void executeInTransaction(final TransactionExecutionCallback callback) {
 
 # 666. 彩蛋
    
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+   
 旁白君：煞笔芋道君，又在水更  
 芋道君：人艰不拆，好不好。
 

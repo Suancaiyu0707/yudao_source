@@ -70,8 +70,12 @@ permalink: SkyWalking/agent-plugin-dubbo
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 一大波插件来袭，继续！
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_11_25/04.png)
 
 胖友，分享一波朋友圈。
+
+

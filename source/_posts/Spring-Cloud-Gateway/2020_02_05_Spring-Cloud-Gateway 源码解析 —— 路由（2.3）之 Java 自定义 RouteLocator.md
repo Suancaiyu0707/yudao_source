@@ -168,6 +168,8 @@ RouteSpec / PredicateSpec / GatewayFilterSpec 实现上就是常见的 Builder �
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 原先还在纠结 Routes 怎么解释合适，画了个图，满意。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_05/02.png)

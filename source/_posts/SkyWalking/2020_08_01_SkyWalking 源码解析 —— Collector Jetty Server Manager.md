@@ -96,8 +96,12 @@ Jetty Server Manager 在 SkyWalking 架构图处于如下位置( **红框** ) �
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呵呵哒的一篇，嘿嘿。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_01/04.png)
 
 胖友，分享个朋友圈可好？
+
+

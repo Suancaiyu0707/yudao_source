@@ -92,3 +92,8 @@ public final class OnSubscribeDefer<T> implements OnSubscribe<T> {
     * 调用 `Func0#call()` 方法，创建**动态**的 Observable 。
     * 调用 `Observable#unsafeSubscribe(...)` 方法，**继续订阅逻辑**。
 
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+

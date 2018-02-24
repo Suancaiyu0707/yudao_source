@@ -72,5 +72,7 @@ TODO
 
 ## 参考文章 ##
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 1. nginx动态配置及服务发现那些事：http://xiaorui.cc/2016/10/16/nginx动态配置及服务发现那些事/
 

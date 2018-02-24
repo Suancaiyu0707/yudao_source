@@ -81,3 +81,8 @@ public class Observable<T> {
     * `#onCompleted()` 方法，CountDownLatch (`finished`) 减一。
     * `#onError()` 方法，设置执行时发生的异常( `error` )，并 CountDownLatch (`finished`) 减一。
 * 返回的 Future ，通过 CountDownLatch ( `error` ) 判断是否执行完成；通过 `value` ， `error` 获得执行的结果。
+
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+

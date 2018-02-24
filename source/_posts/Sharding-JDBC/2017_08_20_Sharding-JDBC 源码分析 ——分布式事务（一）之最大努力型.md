@@ -780,6 +780,8 @@ for (TransactionLog transactionLog : transactionLogs) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 哈哈哈
 
 算是坚持把这个系列写完了，给自己 32 個赞。

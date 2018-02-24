@@ -189,6 +189,8 @@ RoutePredicateHandlerMapping 使用 CachingRouteLocator 来获取 Route 信息�
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 满足。主要因为 [「4. 高能」](#) 这小节，原来还是非常担心服务列表的缓存与刷新问题，如果不解决，网关基本属于不可用的状态。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_25/02.png)

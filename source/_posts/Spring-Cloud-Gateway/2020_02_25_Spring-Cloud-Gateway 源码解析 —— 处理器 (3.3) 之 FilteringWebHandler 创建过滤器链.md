@@ -87,6 +87,8 @@ FilteringWebHandler 通过创建请求对应的 Route 对应的 GatewayFilterCha
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 哈哈哈，我水更我快乐。主要还是考虑文章尽量解耦，所以这篇内容偏水( 很水 )。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_25/01.jpeg)

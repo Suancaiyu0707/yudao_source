@@ -46,5 +46,9 @@ permalink: Spring-MVC/good-collection
     * [《Spring MVC 之 调用复用》](http://blog.csdn.net/u012410733/article/details/76862212)
     * [《Spring MVC 之 自定义List绑定》](http://blog.csdn.net/u012410733/article/details/78980304)
  
-# 666. 欢迎投稿
+# 3. 欢迎投稿
+
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 

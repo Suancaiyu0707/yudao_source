@@ -415,6 +415,8 @@ public final class GeneratedKeyToken implements SQLToken {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 是不是比[《SQL 解析（三）之插入SQL》](http://www.iocoder.cn/Sharding-JDBC/sql-parse-3/?self)简单很多。
 
 **道友，可否分享一波【本文】到朋友圈**。

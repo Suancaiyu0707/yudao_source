@@ -124,6 +124,8 @@ import org.springframework.context.annotation.Configuration
  
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 😈 "**一本正经**" 的写完了，反正我是不管了。哈哈哈哈。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_02_10/01.png)

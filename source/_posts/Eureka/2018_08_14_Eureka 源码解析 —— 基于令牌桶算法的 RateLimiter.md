@@ -370,6 +370,8 @@ class InstanceInfoReplicator implements Runnable {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 后面找时间研究下 Google Guava RateLimiter 的源码实现，从功能上更加强大，感兴趣的胖友可以瞅瞅呀。
 
 胖友，分享我的公众号( **芋道源码** ) 给你的胖友可好？

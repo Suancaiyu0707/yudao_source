@@ -425,6 +425,8 @@ SpanListener 的子类如下图：![](http://www.iocoder.cn/images/SkyWalking/20
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 抱歉，本文可能会存在一些错误或者细节没有扣到，烦请见谅。  
 胖友如果有疑惑，请给我的公众号留言，一起探讨。
 
@@ -433,3 +435,5 @@ SpanListener 的子类如下图：![](http://www.iocoder.cn/images/SkyWalking/20
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_15/13.png)
 
 胖友，分享个朋友圈可好？
+
+

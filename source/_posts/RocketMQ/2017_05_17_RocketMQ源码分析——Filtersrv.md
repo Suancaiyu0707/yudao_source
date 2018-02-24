@@ -465,4 +465,8 @@ permalink: RocketMQ/filtersrv
 
 ![Filtersrv过可用](http://www.iocoder.cn/images/RocketMQ/2017_05_17/02.png)
 
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 

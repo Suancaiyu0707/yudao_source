@@ -136,6 +136,8 @@ LoadBalancerClientFilter 根据 `lb://` 前缀过滤处理，使用 `serviceId` 
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 没有彩蛋，继续往下写！当然，《天才麻将少女》的福利还是有的！
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_15/03.png)

@@ -323,6 +323,8 @@ public final class RegistryCenterConnectionStateListener implements ConnectionSt
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：芋道君，你又水更了！  
 芋道君：是是是，是是是！
 

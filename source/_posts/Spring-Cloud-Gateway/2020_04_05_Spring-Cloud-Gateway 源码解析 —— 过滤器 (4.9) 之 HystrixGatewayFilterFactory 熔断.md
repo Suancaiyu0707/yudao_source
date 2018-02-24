@@ -183,6 +183,8 @@ spring:
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 嘿嘿嘿，写完熔断，准备限流过滤器走起。鸡冻！
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_05/01.png)

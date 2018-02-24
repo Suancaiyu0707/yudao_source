@@ -32,3 +32,8 @@ permalink: Happylifeplat-TCC/good-collection
  * [《tcc源码解析系列(四)之项目实战》](https://yu199195.github.io/2017/10/12/TCC/tcc-four/)
  * [《tcc源码解析系列(五)之项目实战》](https://yu199195.github.io/2017/10/12/TCC/tcc-five/)
  * [《tcc源码解析系列之tcc-admin事务管理后台》](https://yu199195.github.io/2017/10/13/tcc/tcc-seven/)
+
+ # 666. 彩蛋
+ 
+ ![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+

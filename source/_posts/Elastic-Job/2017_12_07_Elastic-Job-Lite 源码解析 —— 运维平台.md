@@ -114,6 +114,8 @@ permalink: Elastic-Job/job-console
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：这写的... 略飘逸（随意）  
 芋道君：哈哈哈，我要开始 Elastic-Job-Cloud 啦啦啦啦。
 

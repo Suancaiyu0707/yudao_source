@@ -129,6 +129,8 @@ Worker 实现 `rx.Subscription` **接口**，但是并未实现对应的方法�
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 本文偏介绍性，大量内容引用 [《ReactiveX文档中文翻译 —— Scheduler》](https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html) 。
 
 后续根据需要，可能解析默认调度器的源码实现。

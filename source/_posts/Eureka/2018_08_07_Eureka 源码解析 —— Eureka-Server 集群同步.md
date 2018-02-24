@@ -832,6 +832,8 @@ OK，撒花！记住：Eureka 通过 Heartbeat 实现 Eureka-Server 集群同步
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 写的比较嗨皮，所以就送胖友一只胖友
 
 ![](http://www.iocoder.cn/images/Eureka/2018_08_07/04.png)
@@ -857,3 +859,4 @@ eureka server 集群假定是 s1 s2
 
 注册，相当于 insertOrUpdate   
 心跳，附加了校验是否要发起【注册】  
+

@@ -1044,6 +1044,8 @@ public void afterJobExecuted(final ShardingContexts shardingContexts) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼！略长略长略长！
 
 下面会更新如下两篇文章，为后续的主节点选举、失效转移、作业分片策略等文章做铺垫：

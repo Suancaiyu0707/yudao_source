@@ -304,8 +304,12 @@ AbstractWorker 的代码实现，在 [「2.2 Graph 启动」](#) 已经详细解
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼呼，蛮嗨皮的。卡了一个周末，差点又堕落了。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_08_25/13.png)
 
 胖友，分享一波朋友圈可好！
+
+

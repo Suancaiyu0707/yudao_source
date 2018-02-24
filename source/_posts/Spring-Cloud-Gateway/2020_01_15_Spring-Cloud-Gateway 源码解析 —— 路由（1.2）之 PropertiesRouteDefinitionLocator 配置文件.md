@@ -153,6 +153,8 @@ public class GatewayProperties {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 TODO 【3017】 与 Spring Cloud Config 结合
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_15/02.png)

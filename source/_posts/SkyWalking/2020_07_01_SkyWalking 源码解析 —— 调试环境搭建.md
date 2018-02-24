@@ -93,7 +93,9 @@ permalink: SkyWalking/build-debugging-environment
 
 参考 [《官方文档 —— Sky Walking Web UI》](https://github.com/OpenSkywalking/skywalking-ui#quickstart-zh) 安装。
 
-# 6. 彩蛋
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 SkyWalking 环境搭建完成，胖友们可以起飞，源码读起来。
 
@@ -104,3 +106,5 @@ SkyWalking 环境搭建完成，胖友们可以起飞，源码读起来。
 如下是笔者对代码量和用途的简单整理，完善度比较低，可能有一丢丢的帮助 ：
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_01/09.png)
+
+

@@ -420,6 +420,8 @@ GatewayFilterFactory 实现类较多，根据用途整理如下脑图 ：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 恩，稍显啰嗦的一篇文章，后面会比较精彩，你懂的。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_05/02.png)

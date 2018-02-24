@@ -252,11 +252,14 @@ cluster:
 
 【TODO 4003】等实现后来写写，基于 Redis Pub Sub 保证实时性
 
-
 # 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 有一种硬生生把很简单的东西，写的很复杂的感觉。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_20/10.png)
 
 胖友，分享个朋友圈可好？
+
+

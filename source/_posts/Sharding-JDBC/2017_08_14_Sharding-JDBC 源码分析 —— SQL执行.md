@@ -689,6 +689,8 @@ public final class BestEffortsDeliveryListener {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 本文完，但也未完。
 
 **跨分片事务问题**。例如：

@@ -354,8 +354,12 @@ Collector 在接收到 GC 指标上传后，调用 [`JVMMetricsServiceHandler#se
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 比想象中冗长的文章，有些考验耐心，心疼 SkyWalking 开发者 30 秒。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_10_20/16.png)
 
 胖友，分享个朋友圈可好？
+
+

@@ -383,6 +383,8 @@ protected static class GatewayActuatorConfiguration {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 是不是内心里面有种感觉，“劳资看了一堆构造函数”？
 
 嘿嘿嘿，后面咱一篇一篇走起！

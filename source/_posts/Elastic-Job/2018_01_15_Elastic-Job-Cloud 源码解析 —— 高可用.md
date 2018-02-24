@@ -669,6 +669,8 @@ Elastic-Job-Lite 也会存在作业节点 和 Zookeeper 数据不一致的情况
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 给英文和我一样半斤八两的同学一本葵花宝典+辟邪剑谱：
 
 * [《Mesos中文手册》](https://mesos-cn.gitbooks.io/mesos-cn/content/)。

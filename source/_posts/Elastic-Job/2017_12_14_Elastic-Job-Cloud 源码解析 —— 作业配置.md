@@ -362,6 +362,8 @@ public final class LocalCloudJobConfiguration implements JobRootConfiguration {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 芋道君：本文主要为[《Elastic-Job-Cloud 源码解析 —— 作业调度（一）》](http://www.iocoder.cn/Elastic-Job/cloud-job-scheduler-and-executor-first/?self)做铺垫，这会是一篇长文。读懂 Elastic-Job-Cloud 作业调度后，整个人脑洞又开的不行不行的！  
 旁白君：支持+1024。
 

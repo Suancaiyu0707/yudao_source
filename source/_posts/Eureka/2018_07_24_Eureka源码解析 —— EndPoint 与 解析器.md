@@ -953,6 +953,8 @@ private void scheduleServerEndpointTask(EurekaTransport eurekaTransport,
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 T T  一开始看解析器，没反应过来是委托设计模式，一脸懵逼+一脸懵逼+一脸懵逼。后面理顺了，发现超级奈斯( Nice ) 啊 ！！！！
 
 胖友，你学会了么？

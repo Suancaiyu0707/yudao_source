@@ -399,6 +399,8 @@ public boolean onRowData(String dataNode, byte[] rowData) {
 
 # 4. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 如下是本文涉及到的核心类，有兴趣的同学可以翻一翻。
 
 ![](http://www.iocoder.cn/images/MyCAT/2017_07_12/09.png)

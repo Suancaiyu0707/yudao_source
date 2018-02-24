@@ -523,6 +523,8 @@ public class RedisRateLimiter implements RateLimiter {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 哇哈哈，过滤器全部完成。恩，当然后面需要在考虑一下，例如认证过滤器等等。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_10/01.png)

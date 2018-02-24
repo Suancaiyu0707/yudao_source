@@ -205,6 +205,8 @@ public Mono<HashMap<String, Object>> combinedfilters(@PathVariable String id) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 水更一篇，哈哈哈。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_15/01.png)

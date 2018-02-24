@@ -130,8 +130,12 @@ GRPCHandler 无任何接口方法。
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 又双叒叕成功更新了一篇水文。😜
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_28/06.png)
 
 胖友，分享个朋友圈可好？
+
+

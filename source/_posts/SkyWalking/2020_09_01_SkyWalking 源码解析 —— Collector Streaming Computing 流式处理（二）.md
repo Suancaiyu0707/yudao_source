@@ -203,8 +203,12 @@ Worker 在创建时，会调用 [`WorkerCreateListener#addWorker`](https://githu
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼呼，终于把流式处理给写完了，如果写的不详细或者不合适的，胖友看到麻烦告知笔者，谢谢。
 
 ![](http://www.iocoder.cn/images/SkyWalking/2020_09_01/03.png)
 
 胖友，分享一波朋友圈可好。
+
+

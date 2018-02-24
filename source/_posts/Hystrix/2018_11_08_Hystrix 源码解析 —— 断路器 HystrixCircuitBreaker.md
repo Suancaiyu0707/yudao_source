@@ -434,6 +434,8 @@ private boolean isAfterSleepWindow() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 呼呼，相对比较干净的一篇文章，满足。
 
 胖友，分享一波朋友圈可好！

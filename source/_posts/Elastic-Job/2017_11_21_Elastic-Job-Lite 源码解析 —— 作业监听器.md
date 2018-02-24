@@ -292,6 +292,8 @@ public final void beforeJobExecuted(final ShardingContexts shardingContexts) {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 旁白君：哎哟喂，AbstractDistributeOnceElasticJobListener 还不错哟。  
 芋道君：那必须必的。
 

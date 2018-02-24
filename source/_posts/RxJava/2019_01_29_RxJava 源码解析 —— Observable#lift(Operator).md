@@ -198,6 +198,8 @@ OnSubscribeLift ，代码如下 ：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 是不是非常清晰！聪慧如你！
 
 胖友，分享个朋友圈可好？

@@ -74,7 +74,9 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 
 使用浏览器访问 `http://127.0.0.1:8080/image/webp` 地址，我们会看到一张 **"狼"** 图。恭喜你，调试环境已经搭建完成。为什么会返回一张图片呢，答案在 `GatewaySampleApplication#customRouteLocator()` 方法的路由配置。
 
-# 4. 彩蛋
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 胖友，分享一波朋友圈可好！
 
@@ -83,3 +85,4 @@ permalink: Spring-Cloud-Gateway/build-debugging-environment
 在送一波真彩蛋 ：
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_01_01/02.png)
+

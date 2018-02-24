@@ -1009,6 +1009,8 @@ public class DubboTransactionContextEditor implements TransactionContextEditor {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 HOHO，对动态代理又学习了一遍，蛮 High 的。
 
 这里推荐动态代理无关，和 Dubbo 相关的文章：

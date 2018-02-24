@@ -1000,6 +1000,8 @@ public final class LimitDecoratorResultSetMerger extends AbstractDecoratorResult
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 诶？应该是有蛮多地方解释的不是很清晰，如果让您阅读误解或是阻塞，非常抱歉。代码读起来比较易懂，使用文字来解释，对表述能力较差的自己，可能就绞尽脑汁，一脸懵逼。
 
 恩，如果可以，还烦请把读起来不太爽的地方告诉我，谢谢。

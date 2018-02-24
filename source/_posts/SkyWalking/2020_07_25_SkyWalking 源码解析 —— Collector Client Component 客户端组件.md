@@ -90,6 +90,8 @@ Client 的实现类，如下类图：
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 哈哈哈，是不是看的很有成就感( 笔者又在水更了 )。
 
 不要方，下面还有一篇水更。
@@ -97,3 +99,5 @@ Client 的实现类，如下类图：
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_25/04.png)
 
 胖友，分享个朋友圈可好？
+
+

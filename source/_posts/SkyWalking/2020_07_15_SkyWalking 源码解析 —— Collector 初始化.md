@@ -216,6 +216,8 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 可能要进入特别忙碌的一段时间，不确定 SkyWalking 文章后续的更新频率。
 
 继续加油。
@@ -223,3 +225,5 @@ BootstrapFlow [**构造方法**](https://github.com/YunaiV/skywalking/blob/40823
 ![](http://www.iocoder.cn/images/SkyWalking/2020_07_15/11.png)
 
 胖友，分享个朋友圈可好？
+
+

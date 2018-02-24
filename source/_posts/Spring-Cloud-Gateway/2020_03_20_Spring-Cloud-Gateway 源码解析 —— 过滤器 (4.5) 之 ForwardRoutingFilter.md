@@ -143,6 +143,8 @@ spring:
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 一开始想错了 ForwardRoutingFilter 了的用途，调试许久，后面看了官方提供的示例 `org.springframework.cloud.gateway.test.ForwardTests` ，豁然开朗。
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_20/01.png)

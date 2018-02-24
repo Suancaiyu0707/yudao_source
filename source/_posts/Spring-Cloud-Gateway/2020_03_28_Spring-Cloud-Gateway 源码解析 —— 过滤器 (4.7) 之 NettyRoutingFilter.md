@@ -271,6 +271,8 @@ public int getOrder() {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
 下一篇 [《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.8) 之 WebClientHttpRoutingFilter》](http://www.iocoder.cn/Spring-Cloud-Gateway/filter-web-client-http-routing) 走起！
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_28/02.png)
