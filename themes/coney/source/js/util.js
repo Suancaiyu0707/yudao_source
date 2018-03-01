@@ -191,7 +191,7 @@ function removeCategoriesPageTitle() {
             continue
         }
 
-        console.log(el);
+        // console.log(el);
         el.setAttribute('title', el.getAttribute('title').replace(category, ''));
     }
 }
@@ -203,7 +203,7 @@ $(document).ready(function(){
     removeCategoriesPageTitle();
 
     if (isDomainVIP()) {
-        console.log('vip域名，跳转中');
+        // console.log('vip域名，跳转中');
         // debugger;
         var search = location.search;
         if (search && search.length > 0) {
@@ -218,7 +218,7 @@ $(document).ready(function(){
     var from = getFrom();
 
     if (isMobile()) {
-        console.log('手机端，不用弹窗');
+        // console.log('手机端，不用弹窗');
         // alert('手机');
 
         $('#authorInfo').remove();
@@ -229,7 +229,7 @@ $(document).ready(function(){
     }
 //        alert('啦啦啦');
     if (isVIP()) {
-        console.log('你是vip，不用弹窗');
+        // console.log('你是vip，不用弹窗');
 //            alert('啦啦啦');
         return;
     }
