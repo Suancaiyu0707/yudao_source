@@ -1,0 +1,698 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>数据库实体设计 —— 交易（2.2）之物流信息（快递发货） | 芋道源码 —— 纯源码解析博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="芋道源码">
+    
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Entity/trade-module-deliver-express/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+1. 概述
+2. 背景了解
+2.1 物流设置
+2.2 快递发货运费模板
+2.3 物流单
+
+
+3. 数据库实体
+3.1 Ex">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析博客">芋道源码 —— 纯源码解析博客</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="/2018-meet-you">知识星球</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Entity/trade-module-deliver-express/" title="数据库实体设计 —— 交易（2.2）之物流信息（快递发货）" itemprop="url">数据库实体设计 —— 交易（2.2）之物流信息（快递发货）</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="芋道源码">芋道源码</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2018-03-04T16:00:00.000Z" itemprop="datePublished">2018-03-05</time>-->
+    <!--更新日期:<time datetime="2018-02-07T05:23:23.000Z" itemprop="dateModified">2018-02-07</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">http://www.iocoder.cn/Entity/trade-module-deliver-express/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<ul>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">1. 概述</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">2. 背景了解</a><ul>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">2.1 物流设置</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">2.2 快递发货运费模板</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">2.3 物流单</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3. 数据库实体</a><ul>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3.1 Express</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3.2 ExpressOrder</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3.3 TradeDeliverySetting</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3.3 TradeDeliveryExpressTemplate</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">3.5 TradeDeliveryExpressOrder</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4. API</a><ul>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4.1 ExpressAPI</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4.2 TradeDeliverySettingAPI</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4.3 TradeDeliveryExpressTemplateAPI</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4.4 TradeDeliveryExpressOrderAPI</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">4.5 TradeDeliveryOnlineAPI</a></li>
+</ul>
+</li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-express/">666. 彩蛋</a></li>
+</ul>
+<hr>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享<strong>交易模块的<a href="#">物流信息</a>的数据库实体设计</strong>。</p>
+<p>基于如下信息，逆向猜测数据库实体：</p>
+<ul>
+<li><a href="https://www.youzanyun.com/apilist/list/group_trade/logistics" rel="external nofollow noopener noreferrer" target="_blank">有赞云提供的物流API</a></li>
+<li><a href="https://www.youzan.com/v2/trade/delivery" rel="external nofollow noopener noreferrer" target="_blank">有赞<strong>微商城</strong>的快递发货</a></li>
+</ul>
+<blockquote>
+<p>【护脸旁白】<br>笔者非电商行业出身 &amp;&amp; <strong>非有赞工程师</strong>，所以有错误或不合理的地方，烦请斧正和探讨。<br>有赞是个各方面都很 NICE 的公司，<a href="http://www.iocoder.cn/NeiTui/hangzhou/?self">推荐</a> 。</p>
+</blockquote>
+<h1 id="2-背景了解"><a href="#2-背景了解" class="headerlink" title="2. 背景了解"></a>2. 背景了解</h1><h2 id="2-1-物流设置"><a href="#2-1-物流设置" class="headerlink" title="2.1 物流设置"></a>2.1 物流设置</h2><p>订单支持三种物流方式：</p>
+<ol>
+<li><a href="https://help.youzan.com/qa#/menu/2119/detail/992?_k=ohe3xz" rel="external nofollow noopener noreferrer" target="_blank">上门自提</a></li>
+<li><a href="https://help.youzan.com/qa#/menu/2119/detail/993?_k=m4delx" rel="external nofollow noopener noreferrer" target="_blank">同城配送功能</a></li>
+<li><a href="https://help.youzan.com/qa#/menu/2119/detail/994?_k=c5f7sh" rel="external nofollow noopener noreferrer" target="_blank">快递发货</a></li>
+</ol>
+<p>通过<strong>物流设置</strong>，配置三种物流的开关以及全局设置。</p>
+<p>本文仅分享<strong>快递发货</strong>，其他物流方式，在如下文章分享：</p>
+<ol>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-local//?self">《数据库实体设计 —— 交易（2.4）之物流信息（同城配送）》</a></li>
+<li><a href="http://www.iocoder.cn/Entity/trade-module-deliver-self-fetch/?self">《数据库实体设计 —— 交易（2.3）之物流信息（上门自提）》</a></li>
+</ol>
+<p>界面如下：</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/02.png" alt=""></p>
+<h2 id="2-2-快递发货运费模板"><a href="#2-2-快递发货运费模板" class="headerlink" title="2.2 快递发货运费模板"></a>2.2 快递发货运费模板</h2><p>参见文档：</p>
+<ul>
+<li><a href="https://help.youzan.com/qa#/menu/2119/detail/994?_k=gaoqe5" rel="external nofollow noopener noreferrer" target="_blank">《如何设置运费模版（按件按重量）？》</a></li>
+<li><a href="https://bbs.youzan.com/forum.php?mod=viewthread&amp;tid=602557" rel="external nofollow noopener noreferrer" target="_blank">《运费计费规则》</a></li>
+</ul>
+<p>界面如下：</p>
+<ol>
+<li>列表  <img src="http://www.iocoder.cn/images/Entity/2018_03_05/03.png" alt=""></li>
+<li>添加  <img src="http://www.iocoder.cn/images/Entity/2018_03_05/05.png" alt=""></li>
+</ol>
+<h2 id="2-3-物流单"><a href="#2-3-物流单" class="headerlink" title="2.3 物流单"></a>2.3 物流单</h2><p>在 <a href="http://www.iocoder.cn/Entity/trade-module-order/?self">《数据库实体设计 —— 交易（2.1）之订单信息》</a> 一文中，我们提到一次交易下，如果购买了<strong>多种</strong>商品，每种商品会生成一个交易明细。</p>
+<p>卖家可以选择多个交易明细进行发货，即一次交易可以有多个物流单。例如，买家购买了 A、B、C 商品，卖家可以按照 [A,B,C] ，也可以 [A,B]+[C]，也可以 [A]+[B]+[C] 以及等等<strong>手动</strong>发货。</p>
+<p>界面如下：</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/04.png" alt=""></p>
+<h1 id="3-数据库实体"><a href="#3-数据库实体" class="headerlink" title="3. 数据库实体"></a>3. 数据库实体</h1><p>整体实体类关系如下图：</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/06.png" alt=""></p>
+<p>全部实体在 <a href="https://github.com/YunaiV/doraemon-entity/tree/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery" rel="external nofollow noopener noreferrer" target="_blank">Github 物流实体目录</a> 下可见。</p>
+<h2 id="3-1-Express"><a href="#3-1-Express" class="headerlink" title="3.1 Express"></a>3.1 Express</h2><p><strong>通用</strong></p>
+<p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/Express.java" rel="external nofollow noopener noreferrer" target="_blank">Express</a> ，快递公司，例如圆通，申通等等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 编号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer id;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 名字</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String name;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否展示</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 1-展示</span></div><div class="line"><span class="comment"> * 0-隐藏</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer display;</div></pre></td></tr></table></figure>
+<hr>
+<p><strong>数据</strong></p>
+<p>胖友可以解析 <a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/youzan_express.json" rel="external nofollow noopener noreferrer" target="_blank"><code>youzan_express.json</code></a> ，生成自己的物流公司数据。有如下注意点：</p>
+<ol>
+<li>数据来自有赞 API ，感谢有赞。</li>
+<li>如果有些物流自己产品暂不支持，可以设置为隐藏。</li>
+</ol>
+<h2 id="3-2-ExpressOrder"><a href="#3-2-ExpressOrder" class="headerlink" title="3.2 ExpressOrder"></a>3.2 ExpressOrder</h2><p><strong>通用</strong></p>
+<p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/ExpressOrder.java" rel="external nofollow noopener noreferrer" target="_blank">ExpressOrder</a> ，快递订单。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快递单号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String nu;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快递公司编号 &#123;<span class="doctag">@link</span> Express#id&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer expressId;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 创建时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date createdTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快递状态</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 0：在途，即货物处于运输过程中；</span></div><div class="line"><span class="comment"> * 1：揽件，货物已由快递公司揽收并且产生了第一条跟踪信息；</span></div><div class="line"><span class="comment"> * 2：疑难，货物寄送过程出了问题；</span></div><div class="line"><span class="comment"> * 3：签收，收件人已签收；</span></div><div class="line"><span class="comment"> * 4：退签，即货物由于用户拒签、超区等原因退回，而且发件人已经签收；</span></div><div class="line"><span class="comment"> * 5：派件，即快递正在进行同城派件；</span></div><div class="line"><span class="comment"> * 6：退回，货物正处于退回发件人的途中；</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer status;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 过程事件数据</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 使用 JSON 将 &#123;<span class="doctag">@link</span> Event&#125;数组 格式化成字符串</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String data;</div></pre></td></tr></table></figure>
+<ul>
+<li>商家发货时，填写好快递单号，会插入记录到<strong>该表</strong>（当然前提是不存在）。<ul>
+<li><a href="#">「 3.5 TradeDeliveryExpressOrder 」</a> ，<strong>关联指向</strong> ExpressOrder 。</li>
+<li>存在<strong>单独服务</strong>，有<strong>定时任务</strong>调用不同物流公司的 API 查询快递进度，存储到该表中。猜测有赞使用的是 <a href="https://www.kuaidi100.com/openapi/api_post.shtml" rel="external nofollow noopener noreferrer" target="_blank">api.kuaidi100.com</a> 获得物流单号的跟踪信息。</li>
+</ul>
+</li>
+<li>复合主键<ul>
+<li><code>nu</code> ，快递单号。</li>
+<li><code>expressId</code> ，快递公司编号。</li>
+</ul>
+</li>
+<li><code>createdTime</code> ，创建时间。<strong>注意</strong>，这是记录的创建时间，而不是物流订单实际发货的时间。</li>
+<li><code>status</code> ，状态。流转如下图：  <img src="http://www.iocoder.cn/images/Entity/2018_03_05/10.png" alt=""></li>
+<li><p><code>data</code> ，过程事件数据，使用 JSON 将 <a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/ExpressOrder.java#L13-L32" rel="external nofollow noopener noreferrer" target="_blank">Event</a> 数组格式化成字符串。Event 代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Event</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 时间</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> Date time;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 状态</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * 与 &#123;<span class="doctag">@link</span> ExpressOrder#status&#125; 一致</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> Integer status;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 上下文</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * 例如，到达：上海静安区公司宝山服务部 由 已签收 签收 || 到达：浙江杭州余杭区良渚公司 已揽件</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> String context;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<p>实际场景下，我们不排除商家乱填或者填错快递单号，系统肯定不能无限轮询 API 查询快递进度。目前笔者的想法是，按照商家填写快递单号，设置一个 <code>refreshTime</code> ，超过这个时间 N 天，不再轮询。没太深入思考，胖友有好的思路，欢迎一起讨论起来。😈</p>
+<p>笔者又想了想，ExpressOrder 非业务流程里必须的数据，更多的用处是让用户能方便看到的快递信息。因此，可以考虑在用户进入订单详情页查看快递信息时，调用 <a href="https://www.kuaidi100.com/openapi/api_post.shtml" rel="external nofollow noopener noreferrer" target="_blank">api.kuaidi100.com</a> 获得物流单号的跟踪信息。至于是否缓存，笔者觉得不太需要，因为用户不会<strong>经常重复</strong>看快递信息。当然，胖友的业务场景里需要提供用户物流的进度，例如正在派送中，还是需要存储的。</p>
+<h2 id="3-3-TradeDeliverySetting"><a href="#3-3-TradeDeliverySetting" class="headerlink" title="3.3 TradeDeliverySetting"></a>3.3 TradeDeliverySetting</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/TradeDeliverySetting.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliverySetting</a> ，交易发货设置。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 店铺编号 &#123;<span class="doctag">@link</span> cn.iocoder.doraemon.shopgroup.shop.entity.Shop#id&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer id;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 更新时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date updateTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否开通快递发货功能</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Boolean isExpress;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 计费方式</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 0-按商品累加运费</span></div><div class="line"><span class="comment"> * 1-组合运费（推荐使用）</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer calcType;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否支持同城</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Boolean isLocal;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否支持同城定时达</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Boolean isLocalInTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否支持自提</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Boolean isSelf;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>id</code> ，店铺编号。通过该字段，和店铺关联。</li>
+<li><code>updateTime</code> ，最后更新时间。</li>
+<li><strong>快递发货</strong>相关<ul>
+<li><code>isExpress</code> ，是否开通快递发货功能。</li>
+<li><code>calcType</code> ，计费方式。目前有两种计费方式，参见 <a href="https://bbs.youzan.com/forum.php?mod=viewthread&amp;tid=602557" rel="external nofollow noopener noreferrer" target="_blank">《运费计费规则》</a> 。</li>
+</ul>
+</li>
+<li><strong>同城配送</strong>相关<ul>
+<li><code>isLocal</code> ，是否支持同城。</li>
+<li><code>isLocalInTime</code> ，是否支持同城定时达。</li>
+</ul>
+</li>
+<li><strong>上门自提</strong>相关<ul>
+<li><code>isSelf</code> ，是否支持自提。  </li>
+</ul>
+</li>
+</ul>
+<h2 id="3-3-TradeDeliveryExpressTemplate"><a href="#3-3-TradeDeliveryExpressTemplate" class="headerlink" title="3.3 TradeDeliveryExpressTemplate"></a>3.3 TradeDeliveryExpressTemplate</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/TradeDeliveryExpressTemplate.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliveryExpressTemplate</a> ，交易发货快递运费模板。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 模板编号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer id;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 店铺编号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer shopId;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 模板名称</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String name;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 状态</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 1-正常</span></div><div class="line"><span class="comment"> * 2-删除</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer status;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 当前使用次数</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 当使用次数大于零，不能删除</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer useCount;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 付费类型</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 1-买家付费</span></div><div class="line"><span class="comment"> * 2-卖家付费</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer payType;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 是否包邮</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 0-否</span></div><div class="line"><span class="comment"> * 1-是</span></div><div class="line"><span class="comment"> * 2-部分</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer freeType;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 复制于哪个模板的编号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer copyOfTemplateId;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 计算类型</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 1-按件</span></div><div class="line"><span class="comment"> * 2-按重量</span></div><div class="line"><span class="comment"> * 3-按体积</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer valuationType;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 运费规则数组</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 使用 JSON 将 &#123;<span class="doctag">@link</span> ValueRule&#125;数组 格式化成字符串</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String valuationRules;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 创建时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date createTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 更新时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date updateTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 删除时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer deleteTime;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>id</code> ，模板编号。</li>
+<li><code>shopId</code> ，店铺编号。一个店铺可以有多个模板。</li>
+<li><code>name</code> ，模板名称。</li>
+<li><code>status</code> ，状态。删除模板时，标记 <code>status = 2</code> 删除。</li>
+<li><code>useCount</code> ，当前使用该模板的商品数。当 <code>userCount &gt; 0</code> 时，不允许删除。<strong>为什么有该字段</strong>？商品模块<strong>依赖</strong>快递模板，模板删除时，需要保证不存在引用该模板的商品。那么如果没有该字段，删除该模板则需要<strong>反向依赖</strong>商品模块，计算有多少商品引用了该模板。通过这样的方式，进行<strong>解耦</strong>。当然，商品引用模板时，需要增长计数；取消引用模板时，需要减小计数。</li>
+<li><code>payType</code> ，付费类型。目前有赞看到使用<strong>卖家付费</strong>。</li>
+<li><code>freeType</code> ，包邮类型。</li>
+<li><code>copyOfTemplateId</code> ，复制自哪个模板的编号。</li>
+<li><code>valuationType</code> ，计算运费类型。目前有赞主要使用<strong>按件、按重量</strong>。</li>
+<li><p><code>valuationRules</code> ，运费规则数组。使用 JSON 将 <a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/entity/TradeDeliveryExpressTemplate.java#L14-L37" rel="external nofollow noopener noreferrer" target="_blank">ValueRule</a> 数组格式化成字符串进行存储。ValueRule 代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 地区编号数组</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> List&lt;String&gt; regions;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 首件数量，单位根据 &#123;<span class="doctag">@link</span> #valuationType&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer firstAmount;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 首件运费，单位：分</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer firstFee;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 续件数量，单位根据 &#123;<span class="doctag">@link</span> #valuationType&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer additionalAmount;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 续件运费，单位：分</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer additionalFee;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>regions</code> ，地区编号数组。存储该字段比较<strong>讲究</strong>：<ul>
+<li>选择浙江省下所有的城市，只需要存储浙江省的地区编号。</li>
+<li>选择浙江省下部分的城市，存储选择的浙江的城市的地区编号。当然，如果有需要，可以新建一个 ValueRule 对象，配置浙江省剩下部分的城市的价格配置。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>😈 这里可能有专业剁手三十年的经验的小伙伴可能就会问：What？包邮怎么处理？</p>
+<p>答：<strong>包邮</strong>在 <a href="https://help.youzan.com/qa#/menu/2186/detail/325?_k=ksz0df" rel="external nofollow noopener noreferrer" target="_blank">《满减送》</a> 功能，后续我们分享营销模块时，会专门分享。</p>
+<h2 id="3-5-TradeDeliveryExpressOrder"><a href="#3-5-TradeDeliveryExpressOrder" class="headerlink" title="3.5 TradeDeliveryExpressOrder"></a>3.5 TradeDeliveryExpressOrder</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/TradeDeliveryExpressOrderAPI.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliveryExpressOrder</a> ，交易发货快递订单。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 交易编号 &#123;<span class="doctag">@link</span> cn.iocoder.doraemon.tradegroup.trade.entity.Trade#id&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String tid;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 交易明细编号 &#123;<span class="doctag">@link</span> cn.iocoder.doraemon.tradegroup.trade.entity.TradeOrder#id&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Long oid;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快递单号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> String nu;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快递公司编号</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer expressId;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 状态</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 1-正常</span></div><div class="line"><span class="comment"> * 2-删除</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Integer status;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 发货时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date createTime;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 删除时间</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> Date deleteTime;</div></pre></td></tr></table></figure>
+<ul>
+<li>指向对应的 TradeOrder<ul>
+<li><code>tid</code> ，交易编号，即 <code>Trade.tid</code> 。</li>
+<li><code>oid</code> ，交易明细编号，即 <code>TradeOrder.id</code> 。</li>
+</ul>
+</li>
+<li>指向对应的 ExpressOrder<ul>
+<li><code>nu</code> ，快递单号，即 <code>ExpressOrder.nu</code> 。</li>
+<li><code>expressId</code> ，快递公司编号，即 <code>Express.id</code> 。</li>
+</ul>
+</li>
+<li><code>status</code> ，状态。卖家可能交易明细( 交易订单 )发货时，填写错了快递单号。此时，可以修改信息。修改时，将原有 TradeDeliveryExpressOrder 记录标记 <code>status = 2</code> 删除，并添加新记录。</li>
+</ul>
+<h1 id="4-API"><a href="#4-API" class="headerlink" title="4. API"></a>4. API</h1><p>基于如下整理 API 类。</p>
+<ul>
+<li><a href="https://www.youzanyun.com/apilist/list/group_trade/logistics" rel="external nofollow noopener noreferrer" target="_blank">有赞云提供的物流API</a></li>
+</ul>
+<h2 id="4-1-ExpressAPI"><a href="#4-1-ExpressAPI" class="headerlink" title="4.1 ExpressAPI"></a>4.1 ExpressAPI</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/ExpressAPI.java" rel="external nofollow noopener noreferrer" target="_blank">ExpressAPI</a> ，<strong>快递</strong> API 。</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/07.png" alt=""></p>
+<h2 id="4-2-TradeDeliverySettingAPI"><a href="#4-2-TradeDeliverySettingAPI" class="headerlink" title="4.2 TradeDeliverySettingAPI"></a>4.2 TradeDeliverySettingAPI</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/TradeDeliverySettingAPI.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliverySettingAPI</a> ，交易发货<strong>设置</strong> API 。</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/09.png" alt=""></p>
+<h2 id="4-3-TradeDeliveryExpressTemplateAPI"><a href="#4-3-TradeDeliveryExpressTemplateAPI" class="headerlink" title="4.3 TradeDeliveryExpressTemplateAPI"></a>4.3 TradeDeliveryExpressTemplateAPI</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/TradeDeliveryExpressTemplateAPI.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliveryExpressTemplateAPI</a> ，交易发货快递<strong>运费模板</strong> API 。</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/08.png" alt=""></p>
+<h2 id="4-4-TradeDeliveryExpressOrderAPI"><a href="#4-4-TradeDeliveryExpressOrderAPI" class="headerlink" title="4.4 TradeDeliveryExpressOrderAPI"></a>4.4 TradeDeliveryExpressOrderAPI</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/TradeDeliveryExpressOrderAPI.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliveryExpressOrderAPI</a> ，交易发货<strong>快递订单</strong> API 。</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/11.png" alt=""></p>
+<h2 id="4-5-TradeDeliveryOnlineAPI"><a href="#4-5-TradeDeliveryOnlineAPI" class="headerlink" title="4.5 TradeDeliveryOnlineAPI"></a>4.5 TradeDeliveryOnlineAPI</h2><p><a href="https://github.com/YunaiV/doraemon-entity/blob/9c17e86eb7e3b24beea529ff70433d72223f8f81/src/main/java/cn/iocoder/doraemon/tradegroup/delivery/TradeDeliveryOnlineAPI.java" rel="external nofollow noopener noreferrer" target="_blank">TradeDeliveryOnlineAPI</a> ，交易发货<strong>核心</strong> API 。</p>
+<p><img src="http://www.iocoder.cn/images/Entity/2018_03_05/13.png" alt=""></p>
+<hr>
+<p><strong>为什么独立于快递订单的 API</strong>？原因如下：</p>
+<ol>
+<li>交易有多种物流方式，不仅限于快递。</li>
+<li>TradeDeliveryExpressOrderAPI 基于 TradeDeliveryExpressOrder 提供API 服务，不提供和 Trade 和 TradeOrder 的关联逻辑。需要关联的逻辑在 TradeDeliveryOnlineAPI 完成。</li>
+</ol>
+<p><strong>这块涉及到 API 的拆分，有经验的胖友欢迎一起探讨</strong>。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p>原先把物流想简单的，梳理一次，Get 了蛮多经验的。</p>
+<p>下面在了解下上门自提和同城配送功能。思考了下，这两种方式都蛮符合基于医院场景的一些诉求。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库实体设计/">数据库实体设计</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Entity/trade-module-deliver-express/" data-title="数据库实体设计 —— 交易（2.2）之物流信息（快递发货） | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Entity/trade-module-deliver-self-fetch/" title="数据库实体设计 —— 交易（2.3）之物流信息（上门自提）">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  数据库实体设计 —— 交易（2.3）之物流信息（上门自提）</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/Weekdays/2018-03-04/" title="芋道源码的周八（2018.03.04）">
+ <strong>NEXT:</strong><br> 
+ <span>芋道源码的周八（2018.03.04）
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-背景了解"><span class="toc-number">2.</span> <span class="toc-text">2. 背景了解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-物流设置"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 物流设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-快递发货运费模板"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 快递发货运费模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-物流单"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 物流单</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-数据库实体"><span class="toc-number">3.</span> <span class="toc-text">3. 数据库实体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Express"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Express</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-ExpressOrder"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 ExpressOrder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-TradeDeliverySetting"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 TradeDeliverySetting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-TradeDeliveryExpressTemplate"><span class="toc-number">3.4.</span> <span class="toc-text">3.3 TradeDeliveryExpressTemplate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-TradeDeliveryExpressOrder"><span class="toc-number">3.5.</span> <span class="toc-text">3.5 TradeDeliveryExpressOrder</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-API"><span class="toc-number">4.</span> <span class="toc-text">4. API</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-ExpressAPI"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 ExpressAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-TradeDeliverySettingAPI"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 TradeDeliverySettingAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-TradeDeliveryExpressTemplateAPI"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 TradeDeliveryExpressTemplateAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-TradeDeliveryExpressOrderAPI"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 TradeDeliveryExpressOrderAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-TradeDeliveryOnlineAPI"><span class="toc-number">4.5.</span> <span class="toc-text">4.5 TradeDeliveryOnlineAPI</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">5.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Myth/" title="Myth">Myth<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>35</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/数据库实体设计/" title="数据库实体设计">数据库实体设计<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/芋道源码的周八/" title="芋道源码的周八">芋道源码的周八<sup>11</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+
+                <div id="authorInfo2">
+
+                    <div> <img width="100%" src="/images/common/zsxq/02.png"> </div>
+
+                </div>
+    </aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2018 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+

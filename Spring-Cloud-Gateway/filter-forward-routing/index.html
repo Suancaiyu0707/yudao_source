@@ -1,5 +1,594 @@
-<!DOCTYPE HTML><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E"><meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0"><meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214"><meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1"><meta name="sogou_site_verification" content="MpPsku240L"><title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter | 芋道源码 —— 纯源码解析博客</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1"><meta name="author" content="芋道源码"><meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 Spring-Cloud-Gateway 2.0.X M4  
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="google-site-verification" content="GkJ68PCnxM9Ih7Zm9v8p91FOCV7ymNCO2KdGbflLh3E">
+    <meta name="360-site-verification" content="dd6547587641bfede036f7c79561e8a0">
+    <meta name="shenma-site-verification" content="fd96cf3751972c9b05f8471d2ccadddc_1496951214">
+    <meta name="msvalidate.01" content="1D38B05050A977F6FDEDA481198343F1">
+    <meta name="sogou_site_verification" content="MpPsku240L">
+
+  
+    <title>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter | 芋道源码 —— 纯源码解析博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="芋道源码">
+    
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+本文主要基于 Spring-Cloud-Gateway 2.0.X M4
 
 1. 概述
-2. Route"><meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表"><link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析博客" type="application/atom+xml"><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/css/style.css"><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="//hm.baidu.com/hm.js?9e70e3362807c1bd185a79655b307027";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script>!function(){var t="http:"==document.location.protocol?"http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";document.write('<script src="'+t+'" id="sozz"><\/script>')}()</script><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head></html><body><header><div><div id="textlogo"><h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析博客">芋道源码 —— 纯源码解析博客</a></h1><a class="blog-motto">愿半生编码，如一生老友！</a></div><div class="navbar"><a class="navbutton navmobile" href="#" title="菜单"></a></div><nav class="animated"><ul><ul><li><a href="/">文章</a></li><li><a href="/2018-meet-you">知识星球</a></li><li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li><li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li><li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li><li><a href="/link_url">友链</a></li></ul></ul></nav></div></header><div id="container"><div id="main" class="post" itemscope="" itemprop="blogPost"><article itemprop="articleBody"><header class="article-info clearfix"><h1 itemprop="name"><a href="/Spring-Cloud-Gateway/filter-forward-routing/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter" itemprop="url">Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter</a></h1><p class="article-author"></p><p class="article-time">总阅读量:<span id="busuanzi_value_page_pv"></span>次</p></header><div class="article-content"><p>摘要: 原创出处 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p><p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p><ul><li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">1. 概述</a></li><li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">2. RouteToRequestUrlFilter</a></li><li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">666. 彩蛋</a></li></ul><hr><p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p><blockquote><p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：</p><ol><li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li><li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li><li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li><li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li><li><strong>认真的</strong>源码交流微信群。</li></ol></blockquote><hr><h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>本文主要分享 <strong>ForwardRoutingFilter 的代码实现</strong>。</p><p>RouteToRequestUrlFilter ，转发<strong>路由</strong>网关过滤器。其根据 <code>forward://</code> 前缀( Scheme )过滤处理，<strong>将请求转发到当前网关实例本地接口</strong>。</p><p>举个例子，配置 RouteDefinition 路由定义如下 ：</p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  application:</span></div><div class="line"><span class="attr">      name:</span> <span class="string">juejin-gateway</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">forward_sample</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">forward:///globalfilters</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/globalfilters</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">PrefixPath=/application/gateway</span></div></pre></td></tr></table></figure><ul><li>我们假定网关端口为 <code>8080</code> 。</li><li>当请求 <code>http://127.0.0.1:8080/globalfilters</code> 接口，Spring Cloud Gateway 处理过程如下 ：<ul><li>匹配到路由 Route (<code>id = forward_sample</code>) 。</li><li><strong>配置</strong>的 PrefixPathGatewayFilterFactory 将请求<strong>改写</strong>成 <code>http://127.0.0.1:8080/application/gateway/globalfilters</code> 。</li><li>ForwardRoutingFilter 判断有 <code>forward://</code> 前缀( Scheme )，过滤处理，将请求<strong>转发</strong>给 DispatcherHandler 。</li><li>DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong> <a href="https://github.com/spring-cloud/spring-cloud-gateway/blob/83496b78944269050373bb92bb2181e1b7c070e8/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/actuate/GatewayWebfluxEndpoint.java#L96" rel="external nofollow noopener noreferrer" target="_blank"><code>application/gateway/globalfilters</code></a> 。</li></ul></li><li>为什么需要配置 PrefixPathGatewayFilterFactory ？需要通过 PrefixPathGatewayFilterFactory 将请求重写路径，以匹配本地 API ，否则 DispatcherHandler 转发会失败。</li></ul><p>另外，RouteToRequestUrlFilter 是 Spring Cloud Gateway 实现的一种<strong>路由</strong>网关过滤器，目前还提供 WebsocketRoutingFilter / NettyRoutingFilter / WebClientHttpRoutingFilter 。</p><hr><p><strong>推荐 Spring Cloud 书籍</strong>：</p><ul><li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li><li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li><li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li><li>两书齐买，京东包邮。</li></ul><h1 id="2-RouteToRequestUrlFilter"><a href="#2-RouteToRequestUrlFilter" class="headerlink" title="2. RouteToRequestUrlFilter"></a>2. RouteToRequestUrlFilter</h1><p><code>org.springframework.cloud.gateway.filter.ForwardRoutingFilter</code> ，代码如下 ：</p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForwardRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(ForwardRoutingFilter.class);</div><div class="line"> <span class="number">4</span>: </div><div class="line"> <span class="number">5</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> DispatcherHandler dispatcherHandler;</div><div class="line"> <span class="number">6</span>: </div><div class="line"> <span class="number">7</span>: 	<span class="function"><span class="keyword">public</span> <span class="title">ForwardRoutingFilter</span><span class="params">(DispatcherHandler dispatcherHandler)</span> </span>&#123;</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">this</span>.dispatcherHandler = dispatcherHandler;</div><div class="line"> <span class="number">9</span>: 	&#125;</div><div class="line"><span class="number">10</span>: </div><div class="line"><span class="number">11</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">12</span>: 	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="number">13</span>: 		<span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line"><span class="number">14</span>: 	&#125;</div><div class="line"><span class="number">15</span>: </div><div class="line"><span class="number">16</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">17</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"><span class="number">18</span>: 	    <span class="comment">// 获得 requestUrl</span></div><div class="line"><span class="number">19</span>: 		URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 		<span class="comment">// 判断是否能够处理</span></div><div class="line"><span class="number">22</span>: 		String scheme = requestUrl.getScheme();</div><div class="line"><span class="number">23</span>: 		<span class="keyword">if</span> (isAlreadyRouted(exchange) || !scheme.equals(<span class="string">"forward"</span>)) &#123;</div><div class="line"><span class="number">24</span>: 			<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">25</span>: 		&#125;</div><div class="line"><span class="number">26</span>: </div><div class="line"><span class="number">27</span>: 		<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">28</span>: 		setAlreadyRouted(exchange);</div><div class="line"><span class="number">29</span>: </div><div class="line"><span class="number">30</span>: 		<span class="comment">//<span class="doctag">TODO:</span> translate url?</span></div><div class="line"><span class="number">31</span>: </div><div class="line"><span class="number">32</span>: 		<span class="keyword">if</span> (log.isTraceEnabled()) &#123;</div><div class="line"><span class="number">33</span>: 			log.trace(<span class="string">"Forwarding to URI: "</span>+requestUrl);</div><div class="line"><span class="number">34</span>: 		&#125;</div><div class="line"><span class="number">35</span>: </div><div class="line"><span class="number">36</span>: 		<span class="comment">// DispatcherHandler 匹配并转发到当前网关实例本地接口</span></div><div class="line"><span class="number">37</span>: 		<span class="keyword">return</span> <span class="keyword">this</span>.dispatcherHandler.handle(exchange);</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure><ul><li>实现 <strong>GlobalFilter</strong> 接口。</li><li><code>#getOrder()</code> 方法，返回顺序为 <code>Integer.MAX_VALUE</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</li><li>第 19 行 ：获得 <code>requestUrl</code> 。</li><li><p>第 22 至 25 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p><ul><li><code>forward://</code> 前缀( Scheme ) 。</li><li><p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure><ul><li>x</li></ul></li></ul></li><li><p>第 28 行 ：设置该请求已经被处理。代码如下 ：</p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></li><li><p>第 37 行 ：将请求<strong>转发</strong>给 DispatcherHandler 。DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong>。</p></li></ul><h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋"></a>666. 彩蛋</h1><p><img src="http://www.iocoder.cn/images/Architecture/2017_12_29/01.png" alt="知识星球"></p><p>一开始想错了 ForwardRoutingFilter 了的用途，调试许久，后面看了官方提供的示例 <code>org.springframework.cloud.gateway.test.ForwardTests</code> ，豁然开朗。</p><p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_20/01.png" alt=""></p><p>胖友，分享一波朋友圈可好！</p></div><footer class="article-footer clearfix"><div class="article-categories"><span></span> <a class="article-category-link" href="/categories/Spring-Cloud-Gateway/">Spring-Cloud-Gateway</a></div><div class="article-share" id="share"><div data-url="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/" data-title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix"></div></div></footer></article><nav class="article-nav clearfix"><div class="prev"><a href="/Spring-Cloud-Gateway/filter-websocket-routing/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter"><strong>PREVIOUS:</strong><br><span>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter</span></a></div><div class="next"><a href="/Spring-Cloud-Gateway/filter-load-balancer-client/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡"><strong>NEXT:</strong><br><span>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡</span></a></div></nav></div><div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div><div id="toc" class="toc-aside"><strong class="toc-title">文章目录</strong><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-概述"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-RouteToRequestUrlFilter"><span class="toc-number">2.</span> <span class="toc-text">2. RouteToRequestUrlFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#666-彩蛋"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol></div><div id="asidepart"><aside class="clearfix"><div id="authorInfo"><div><img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"></div><div class="social-list"></div></div><div class="categorieslist"><p class="asidetitle">微信公众号福利：芋道源码</p><ul><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">0. 阅读源码葵花宝典</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">2. 您对于源码的疑问每条留言都将得到认真回复</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">3. 新的源码解析文章实时收到通知，每周六十点更新</a></li><li><a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群</a></li></ul></div><div class="categorieslist"><p class="asidetitle">分类</p><ul><li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li><li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li><li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li><li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li><li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li><li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li><li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li><li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li><li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li><li><a href="/categories/Myth/" title="Myth">Myth<sup>1</sup></a></li><li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li><li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li><li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li><li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li><li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>35</sup></a></li><li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li><li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li><li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li><li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li><li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li><li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li><li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>5</sup></a></li><li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li><li><a href="/categories/数据库实体设计/" title="数据库实体设计">数据库实体设计<sup>1</sup></a></li><li><a href="/categories/芋道源码的周八/" title="芋道源码的周八">芋道源码的周八<sup>8</sup></a></li></ul></div><div id="authorInfo2"><div><img width="100%" src="/images/common/zsxq/02.png"></div></div></aside></div></div><footer><div id="footer"><img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display:none"><p class="copyright">© 2018 <a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a> && <span style="display:inline" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span> && <span style="display:inline" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span></p></div><div class="copyright">沪ICP备17037075号-1</div></footer><script src="/js/jquery-2.1.0.min.js"></script><script type="text/javascript">$(document).ready(function(){function e(){"number"==typeof window.innerWidth?n=window.innerWidth:document.documentElement&&document.documentElement.clientWidth&&(n=document.documentElement.clientWidth)}$(".navbar").click(function(){$("header nav").toggleClass("shownav")});var n=0,s=$("#main"),a=$("#asidepart"),o=$(".closeaside"),d=$(".openaside");$(window).resize(function(){e(),n>=1024?$("header nav").removeClass("shownav"):(s.removeClass("moveMain"),a.css("display","block").removeClass("fadeOut"),d.css("display","none"),$("#toc.toc-aside").css("display","none"))}),o.click(function(){a.addClass("fadeOut").css("display","none"),d.css("display","block").addClass("fadeIn"),s.addClass("moveMain")}),d.click(function(){d.css("display","none").removeClass("beforeFadeIn"),a.css("display","block").removeClass("fadeOut").addClass("fadeIn"),s.removeClass("moveMain")}),$(window).scroll(function(){d.css("top",Math.max(80,260-$(this).scrollTop()))})})</script><script type="text/javascript">$(document).ready(function(){var a=$(".article-content>iframe"),t=$(".article-content>embed"),n=$("#toc");$("article h2");ah=$("article h2"),ta=$("#toc.toc-aside"),o=$(".openaside"),c=$(".closeaside"),a.length>0&&a.wrap('<div class="video-container" />'),t.length>0&&t.wrap('<div class="video-container" />'),0==ah.length?n.css("display","none"):(c.click(function(){ta.css("display","block").addClass("fadeIn")}),o.click(function(){ta.css("display","none")}),$(window).scroll(function(){ta.css("top",Math.max(140,320-$(this).scrollTop()))}))})</script><script type="text/javascript">$(document).ready(function(){var t=$(".share"),a=t.attr("data-url"),e=encodeURIComponent(a),r=['<a href="#" class="overlay" id="qrcode"></a>','<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url='+e+'"/></div>','<a href="#textlogo" class="article-back-to-top" title="Top"></a>','<a href="https://www.facebook.com/sharer.php?u='+e+'" class="article-share-facebook" target="_blank" title="Facebook"></a>','<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>','<a href="https://twitter.com/intent/tweet?url='+e+'" class="article-share-twitter" target="_blank" title="Twitter"></a>','<a href="http://service.weibo.com/share/share.php?title='+t.attr("data-title")+"&url="+e+"&ralateUid="+t.attr("data-tsina")+'&searchPic=true&style=number" class="article-share-weibo" target="_blank" title="Weibo"></a>','<span title="Share to"></span>'].join("");t.append(r),$(".article-share-qrcode").click(function(){var t=$("#qrcode-pic").attr("data-src");$("#qrcode-pic").attr("src",t),$("#qrcode-pic").load(function(){$(".qrcode strong").text(" ")})})})</script><link rel="stylesheet" href="/alert/css/alert.css"><script src="/alert/js/alert.js"></script><script src="/js/jquery.cookie.js"></script><script src="/js/util.js"></script><script type="text/javascript">!function(e,a,t,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=a.createElement(t),s=a.getElementsByTagName(t)[0],o.async=1,o.src="//www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-107572620-1","auto"),ga("send","pageview")</script></body>
+2. RouteTo">
+    
+
+    
+    <meta name="keywords" content="Java,架构,后端,服务端,RocketMQ,MyCAT,分布式消息队列,分布式存储,技术博客,Sharding-JDBC,分库分表">
+    
+
+    
+    
+    <link rel="alternate" href="atom.xml" title="芋道源码 —— 纯源码解析博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='9e70e3362807c1bd185a79655b307027';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    <!-- 百度站长-被动推送 -->
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <!-- 360搜索-自动收录 -->
+    <script>
+        (function(){
+            var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?f05b61dd54bbc38386611a5238672938":"https://jspassport.ssl.qhimg.com/11.0.1.js?f05b61dd54bbc38386611a5238672938";
+            document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+    
+    <div id="textlogo">
+        <h1 class="site-name"><a href="/" title="芋道源码 —— 纯源码解析博客">芋道源码 —— 纯源码解析博客</a></h1>
+        <a class="blog-motto">
+            
+            愿半生编码，如一生老友！
+            
+        </a>
+    </div>
+    <div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+        </a></div>
+    <nav class="animated">
+        <ul>
+            <ul>
+                
+                <li><a href="/">文章</a></li>
+                
+                <li><a href="/2018-meet-you">知识星球</a></li>
+                
+                <li><a href="https://github.com/YunaiV" rel="external nofollow noopener noreferrer" target="_blank">Github</a></li>
+                
+                <li><a href="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31_bak.jpg">微信公众号</a></li>
+                
+                <li><a href="/categories/%E5%B7%A5%E4%BD%9C%E5%86%85%E6%8E%A8/">工作内推</a></li>
+                
+                <li><a href="/link_url">友链</a></li>
+                
+                <!--<li>-->
+                    <!---->
+                        <!--<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">-->
+                            <!--<label>Search</label>-->
+                            <!--<input type="text" id="search" name="q" autocomplete="off" maxlength="20"-->
+                                   <!--placeholder="搜索"/>-->
+                            <!--<input type="hidden" name="q" value="site:www.iocoder.cn">-->
+                        <!--</form>-->
+                        <!---->
+                <!--</li>-->
+            </ul>
+    </ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+
+        <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/Spring-Cloud-Gateway/filter-forward-routing/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter" itemprop="url">Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter</a>
+  </h1>
+  <p class="article-author">
+      <!--By-->
+    <!---->
+      <!--<a href="http://www.iocoder.cn" title="芋道源码">芋道源码</a>-->
+    <!---->
+  </p>
+  <p class="article-time">
+    <!--<time datetime="2020-03-19T16:00:00.000Z" itemprop="datePublished">2020-03-20</time>-->
+    <!--更新日期:<time datetime="2018-02-24T15:11:15.000Z" itemprop="dateModified">2018-02-24</time>-->
+    <!---->
+      总阅读量:<span id="busuanzi_value_page_pv"></span>次
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<p>摘要: 原创出处 http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
+<p><strong>本文主要基于 Spring-Cloud-Gateway 2.0.X M4</strong></p>
+<ul>
+<li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">1. 概述</a></li>
+<li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">2. RouteToRequestUrlFilter</a></li>
+<li><a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/">666. 彩蛋</a></li>
+</ul>
+<hr>
+<p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
+<blockquote>
+<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<ol>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li><strong>认真的</strong>源码交流微信群。</li>
+</ol>
+</blockquote>
+<hr>
+<h1>1. 概述</h1>
+<p>本文主要分享 <strong>ForwardRoutingFilter 的代码实现</strong>。</p>
+<p>RouteToRequestUrlFilter ，转发<strong>路由</strong>网关过滤器。其根据 <code>forward://</code> 前缀( Scheme )过滤处理，<strong>将请求转发到当前网关实例本地接口</strong>。</p>
+<p>举个例子，配置 RouteDefinition 路由定义如下 ：</p>
+<p><figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  application:</span></div><div class="line"><span class="attr">      name:</span> <span class="string">juejin-gateway</span></div><div class="line"><span class="attr">  cloud:</span></div><div class="line"><span class="attr">    gateway:</span></div><div class="line"><span class="attr">      routes:</span></div><div class="line">      <span class="comment"># =====================================</span></div><div class="line"><span class="attr">      - id:</span> <span class="string">forward_sample</span></div><div class="line"><span class="attr">        uri:</span> <span class="attr">forward:///globalfilters</span></div><div class="line"><span class="attr">        order:</span> <span class="number">10000</span></div><div class="line"><span class="attr">        predicates:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">Path=/globalfilters</span></div><div class="line"><span class="attr">        filters:</span></div><div class="line"><span class="bullet">        -</span> <span class="string">PrefixPath=/application/gateway</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>我们假定网关端口为 <code>8080</code> 。</li>
+<li>当请求 <code>http://127.0.0.1:8080/globalfilters</code> 接口，Spring Cloud Gateway 处理过程如下 ：
+<ul>
+<li>匹配到路由 Route (<code>id = forward_sample</code>) 。</li>
+<li><strong>配置</strong>的 PrefixPathGatewayFilterFactory 将请求<strong>改写</strong>成 <code>http://127.0.0.1:8080/application/gateway/globalfilters</code> 。</li>
+<li>ForwardRoutingFilter 判断有 <code>forward://</code> 前缀( Scheme )，过滤处理，将请求<strong>转发</strong>给 DispatcherHandler 。</li>
+<li>DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong> <a href="https://github.com/spring-cloud/spring-cloud-gateway/blob/83496b78944269050373bb92bb2181e1b7c070e8/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/actuate/GatewayWebfluxEndpoint.java#L96" rel="external nofollow noopener noreferrer" target="_blank"><code>application/gateway/globalfilters</code></a> 。</li>
+</ul>
+</li>
+<li>为什么需要配置 PrefixPathGatewayFilterFactory ？需要通过 PrefixPathGatewayFilterFactory 将请求重写路径，以匹配本地 API ，否则 DispatcherHandler 转发会失败。</li>
+</ul>
+<p>另外，RouteToRequestUrlFilter 是 Spring Cloud Gateway 实现的一种<strong>路由</strong>网关过滤器，目前还提供 WebsocketRoutingFilter / NettyRoutingFilter / WebClientHttpRoutingFilter 。</p>
+<hr>
+<p><strong>推荐 Spring Cloud 书籍</strong>：</p>
+<ul>
+<li>请支持正版。下载盗版，<strong>等于主动编写低级 BUG</strong> 。</li>
+<li>程序猿DD —— <a href="https://union-click.jd.com/jdc?d=505Twi" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud微服务实战》</a></li>
+<li>周立 —— <a href="https://union-click.jd.com/jdc?d=k3sAaK" rel="external nofollow noopener noreferrer" target="_blank">《Spring Cloud与Docker微服务架构实战》</a></li>
+<li>两书齐买，京东包邮。</li>
+</ul>
+<h1>2. RouteToRequestUrlFilter</h1>
+<p><code>org.springframework.cloud.gateway.filter.ForwardRoutingFilter</code> ，代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"> <span class="number">1</span>: <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForwardRoutingFilter</span> <span class="keyword">implements</span> <span class="title">GlobalFilter</span>, <span class="title">Ordered</span> </span>&#123;</div><div class="line"> <span class="number">2</span>: </div><div class="line"> <span class="number">3</span>: 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(ForwardRoutingFilter.class);</div><div class="line"> <span class="number">4</span>: </div><div class="line"> <span class="number">5</span>: 	<span class="keyword">private</span> <span class="keyword">final</span> DispatcherHandler dispatcherHandler;</div><div class="line"> <span class="number">6</span>: </div><div class="line"> <span class="number">7</span>: 	<span class="function"><span class="keyword">public</span> <span class="title">ForwardRoutingFilter</span><span class="params">(DispatcherHandler dispatcherHandler)</span> </span>&#123;</div><div class="line"> <span class="number">8</span>: 		<span class="keyword">this</span>.dispatcherHandler = dispatcherHandler;</div><div class="line"> <span class="number">9</span>: 	&#125;</div><div class="line"><span class="number">10</span>: </div><div class="line"><span class="number">11</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">12</span>: 	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="number">13</span>: 		<span class="keyword">return</span> Ordered.LOWEST_PRECEDENCE;</div><div class="line"><span class="number">14</span>: 	&#125;</div><div class="line"><span class="number">15</span>: </div><div class="line"><span class="number">16</span>: 	<span class="meta">@Override</span></div><div class="line"><span class="number">17</span>: 	<span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> </span>&#123;</div><div class="line"><span class="number">18</span>: 	    <span class="comment">// 获得 requestUrl</span></div><div class="line"><span class="number">19</span>: 		URI requestUrl = exchange.getRequiredAttribute(GATEWAY_REQUEST_URL_ATTR);</div><div class="line"><span class="number">20</span>: </div><div class="line"><span class="number">21</span>: 		<span class="comment">// 判断是否能够处理</span></div><div class="line"><span class="number">22</span>: 		String scheme = requestUrl.getScheme();</div><div class="line"><span class="number">23</span>: 		<span class="keyword">if</span> (isAlreadyRouted(exchange) || !scheme.equals(<span class="string">"forward"</span>)) &#123;</div><div class="line"><span class="number">24</span>: 			<span class="keyword">return</span> chain.filter(exchange);</div><div class="line"><span class="number">25</span>: 		&#125;</div><div class="line"><span class="number">26</span>: </div><div class="line"><span class="number">27</span>: 		<span class="comment">// 设置已经路由</span></div><div class="line"><span class="number">28</span>: 		setAlreadyRouted(exchange);</div><div class="line"><span class="number">29</span>: </div><div class="line"><span class="number">30</span>: 		<span class="comment">//<span class="doctag">TODO:</span> translate url?</span></div><div class="line"><span class="number">31</span>: </div><div class="line"><span class="number">32</span>: 		<span class="keyword">if</span> (log.isTraceEnabled()) &#123;</div><div class="line"><span class="number">33</span>: 			log.trace(<span class="string">"Forwarding to URI: "</span>+requestUrl);</div><div class="line"><span class="number">34</span>: 		&#125;</div><div class="line"><span class="number">35</span>: </div><div class="line"><span class="number">36</span>: 		<span class="comment">// DispatcherHandler 匹配并转发到当前网关实例本地接口</span></div><div class="line"><span class="number">37</span>: 		<span class="keyword">return</span> <span class="keyword">this</span>.dispatcherHandler.handle(exchange);</div><div class="line"><span class="number">38</span>: 	&#125;</div><div class="line"><span class="number">39</span>: &#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>
+<p>实现 <strong>GlobalFilter</strong> 接口。</p>
+</li>
+<li>
+<p><code>#getOrder()</code> 方法，返回顺序为 <code>Integer.MAX_VALUE</code> 。在 <a href="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-intro/?self">《Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.1) 之 GatewayFilter 一览》「3. GlobalFilter」</a> ，我们列举了所有 GlobalFilter 的顺序。</p>
+</li>
+<li>
+<p>第 19 行 ：获得 <code>requestUrl</code> 。</p>
+</li>
+<li>
+<p>第 22 至 25 行 ：判断 ForwardRoutingFilter 是否能够处理该请求，需要满足两个条件 ：</p>
+<ul>
+<li>
+<p><code>forward://</code> 前缀( Scheme ) 。</p>
+</li>
+<li>
+<p>调用 <code>ServerWebExchangeUtils#isAlreadyRouted(ServerWebExchange)</code> 方法，判断该请求暂未被其他 Routing 网关处理。代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> exchange.getAttributeOrDefault(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>x</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>第 28 行 ：设置该请求已经被处理。代码如下 ：</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setAlreadyRouted</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</div><div class="line">    exchange.getAttributes().put(GATEWAY_ALREADY_ROUTED_ATTR, <span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>第 37 行 ：将请求<strong>转发</strong>给 DispatcherHandler 。DispatcherHandler 匹配并转发到<strong>当前网关实例本地接口</strong>。</p>
+</li>
+</ul>
+<h1>666. 彩蛋</h1>
+<p><img src="http://www.iocoder.cn/images/Architecture/2017_12_29/01.png" alt="知识星球"></p>
+<p>一开始想错了 ForwardRoutingFilter 了的用途，调试许久，后面看了官方提供的示例 <code>org.springframework.cloud.gateway.test.ForwardTests</code> ，豁然开朗。</p>
+<p><img src="http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_03_20/01.png" alt=""></p>
+<p>胖友，分享一波朋友圈可好！</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Spring-Cloud-Gateway/">Spring-Cloud-Gateway</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.iocoder.cn/Spring-Cloud-Gateway/filter-forward-routing/" data-title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.5) 之 ForwardRoutingFilter | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/Spring-Cloud-Gateway/filter-websocket-routing/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.6) 之 WebSocketRoutingFilter</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/Spring-Cloud-Gateway/filter-load-balancer-client/" title="Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡">
+ <strong>NEXT:</strong><br> 
+ <span>Spring-Cloud-Gateway 源码解析 —— 过滤器 (4.4) 之 LoadBalancerClientFilter 负载均衡
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+        <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="toc" class="toc-aside">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. RouteToRequestUrlFilter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+</div>
+
+<div id="asidepart">
+    <!--<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>-->
+    <aside class="clearfix">
+        <div id="authorInfo">
+            <!---->
+            <!--<div class="author-logo"></div>-->
+            <!---->
+
+            <div> <img width="100%" src="/images/common/wechat_mp_2017_07_31_bak.jpg"> </div>
+
+            <div class="social-list">
+                
+                
+                
+                
+                
+            </div>
+        </div>
+
+        
+        <div class="categorieslist">
+    <p class="asidetitle">微信公众号福利：芋道源码</p>
+    <ul>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 0. 阅读源码葵花宝典 </a></li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 1. RocketMQ / MyCAT / Sharding-JDBC 详细中文注释源码 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 2. 您对于源码的疑问每条留言都将得到认真回复 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg"> 3. 新的源码解析文章实时收到通知，每周六十点更新 </a> </li>
+
+        <li> <a href="/images/common/wechat_mp_2017_07_31_bak.jpg">4. 认真的源码交流微信群 </a> </li>
+
+
+    </ul>
+</div>
+
+        
+        
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+            
+			    <li><a href="/categories/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Dubbo/" title="Dubbo">Dubbo<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Cloud/" title="Elastic-Job-Cloud">Elastic-Job-Cloud<sup>6</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Elastic-Job-Lite/" title="Elastic-Job-Lite">Elastic-Job-Lite<sup>16</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Eureka/" title="Eureka">Eureka<sup>23</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Happylifeplat-TCC/" title="Happylifeplat-TCC">Happylifeplat-TCC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Hystrix/" title="Hystrix">Hystrix<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/JUC/" title="JUC">JUC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/MyCAT/" title="MyCAT">MyCAT<sup>9</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Myth/" title="Myth">Myth<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RocketMQ/" title="RocketMQ">RocketMQ<sup>14</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/RxJava/" title="RxJava">RxJava<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Sharding-JDBC/" title="Sharding-JDBC">Sharding-JDBC<sup>18</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/SkyWalking/" title="SkyWalking">SkyWalking<sup>35</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Cloud-Gateway/" title="Spring-Cloud-Gateway">Spring-Cloud-Gateway<sup>24</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-MVC/" title="Spring-MVC">Spring-MVC<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/Spring-Security/" title="Spring-Security">Spring-Security<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TCC-Transaction/" title="TCC-Transaction">TCC-Transaction<sup>7</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/TiKV/" title="TiKV">TiKV<sup>2</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/工作内推/" title="工作内推">工作内推<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/技术杂文/" title="技术杂文">技术杂文<sup>5</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/数据库实体设计/" title="数据库实体设计">数据库实体设计<sup>1</sup></a></li>
+            
+		
+            
+			    <li><a href="/categories/芋道源码的周八/" title="芋道源码的周八">芋道源码的周八<sup>8</sup></a></li>
+            
+		
+		</ul>
+</div>
+
+        
+
+                <div id="authorInfo2">
+
+                    <div> <img width="100%" src="/images/common/zsxq/02.png"> </div>
+
+                </div>
+    </aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    <img src="http://www.iocoder.cn/images/common/wechat_mp_simple.png" style="display: none">
+    
+            <p class="copyright"> © 2018 
+		
+		<a href="http://www.iocoder.cn" target="_blank" title="芋道源码">芋道源码</a>
+		
+            && <span style="display: inline;" id="busuanzi_container_site_uv">总访客数 <span id="busuanzi_value_site_uv" font="微软雅黑"></span> 次</span>
+            && <span style="display: inline;" id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv" font="微软雅黑"></span> 次</span>
+            <!--&& Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>-->
+            <!--&& Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>-->
+            </p></div>
+            <div class="copyright">沪ICP备17037075号-1</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/alert/css/alert.css">
+<script src="/alert/js/alert.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/util.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-107572620-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+  </body>
+
+
