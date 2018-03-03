@@ -30,7 +30,7 @@ permalink: Spring-MVC/good-collection
 * 作者 ：zhisheng
 * 博客 ：http://www.54tianzhisheng.cn
 * 目录 ：
-    * [《看透 Spring MVC 源代码分析与实践 —— 网站基础知识》](http://www.54tianzhisheng.cn/2017/07/14/Spring-MVC01/) 
+    * [《看透 Spring MVC 源代码分析与实践 —— 网站基础知识》](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247484162&idx=1&sn=17c1816deb182ce2612591429d4a58db&chksm=fa497cb3cd3ef5a512c17d7df2fc7d95e083721c1b747f6f1d6111eccabcfeecebc81d67971d#rd) 
     * [《看透 Spring MVC 源代码分析与实践 —— 俯视 Spring MVC》](http://www.54tianzhisheng.cn/2017/07/14/Spring-MVC02/) 
     * [《看透 Spring MVC 源代码分析与实践 —— Spring MVC 组件分析》](http://www.54tianzhisheng.cn/2017/07/21/Spring-MVC03/) 
  
