@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/link_url/</loc>
+    
+    <lastmod>2018-03-06T02:07:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
+    
+    <lastmod>2018-03-06T02:07:39.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Architecture/books-recommended/</loc>
+    
+    <lastmod>2018-03-06T02:05:41.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
+    
+    <lastmod>2018-03-06T02:05:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Entity/good-collection/</loc>
     
     <lastmod>2018-03-06T01:52:59.000Z</lastmod>
@@ -37,23 +65,9 @@
   </url>
   
   <url>
-    <loc>http://www.iocoder.cn/Architecture/books-recommended/</loc>
-    
-    <lastmod>2018-03-06T01:47:45.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.iocoder.cn/Architecture/how-to-read-article/</loc>
     
     <lastmod>2018-03-06T01:47:40.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Architecture/how-to-read-source-code/</loc>
-    
-    <lastmod>2018-03-06T01:47:34.000Z</lastmod>
     
   </url>
   
@@ -411,13 +425,6 @@
     <loc>http://www.iocoder.cn/Spring-Cloud-Gateway/filter-hystrix/</loc>
     
     <lastmod>2018-02-24T15:11:52.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
-    
-    <lastmod>2018-02-24T15:11:39.000Z</lastmod>
     
   </url>
   
@@ -1377,13 +1384,6 @@
     <loc>http://www.iocoder.cn/Weekdays/2018-02-24/</loc>
     
     <lastmod>2018-02-24T13:23:05.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/link_url/</loc>
-    
-    <lastmod>2018-02-24T02:53:46.000Z</lastmod>
     
   </url>
   
