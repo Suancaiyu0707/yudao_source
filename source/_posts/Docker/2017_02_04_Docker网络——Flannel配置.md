@@ -1,7 +1,7 @@
 title: Docker 网络 —— Flannel 配置
 date: 2017-02-04
 tags:
-categories: Docker
+categories:
 permalink: Docker/docker-network-flannel
 
 -------
