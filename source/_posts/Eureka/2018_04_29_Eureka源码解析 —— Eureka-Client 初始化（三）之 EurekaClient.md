@@ -60,6 +60,12 @@ Eureka-Client 自身初始化过程中，涉及到主要对象如下图：
 * 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
 * 两书齐买，京东包邮。
 
+**推荐 Spring Cloud 视频**：
+
+* [Java 微服务实践 - Spring Boot](https://segmentfault.com/ls/1650000011063780?r=bPN0Ir)
+* [Java 微服务实践 - Spring Cloud](https://segmentfault.com/ls/1650000011386794?r=bPN0Ir)
+* [Java 微服务实践 - Spring Boot / Spring Cloud](https://segmentfault.com/ls/1650000011387052?r=bPN0Ir)
+
 # 2. EurekaClient
 
 [`com.netflix.discovery.EurekaClient`](https://github.com/YunaiV/eureka/blob/3ef162f20a28c75de84321b69412c4ef138ad55a/eureka-client/src/main/java/com/netflix/discovery/EurekaClient.java)，Eureka-Client **接口**，声明如下方法：

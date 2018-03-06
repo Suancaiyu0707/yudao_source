@@ -42,6 +42,21 @@ WebClientWriteResponseFilter ，与 WebClientHttpRoutingFilter **成对使用**�
 
 ![](http://www.iocoder.cn/images/Spring-Cloud-Gateway/2020_04_01/01.png)
 
+-------
+
+**推荐 Spring Cloud 书籍**：
+
+* 请支持正版。下载盗版，**等于主动编写低级 BUG** 。
+* 程序猿DD —— [《Spring Cloud微服务实战》](https://union-click.jd.com/jdc?d=505Twi)
+* 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
+* 两书齐买，京东包邮。
+
+**推荐 Spring Cloud 视频**：
+
+* [Java 微服务实践 - Spring Boot](https://segmentfault.com/ls/1650000011063780?r=bPN0Ir)
+* [Java 微服务实践 - Spring Cloud](https://segmentfault.com/ls/1650000011386794?r=bPN0Ir)
+* [Java 微服务实践 - Spring Boot / Spring Cloud](https://segmentfault.com/ls/1650000011387052?r=bPN0Ir)
+
 # 2. 环境配置
 
 目前 WebClientHttpRoutingFilter / WebClientWriteResponseFilter 处于**实验**阶段，建议等正式发布在使用。

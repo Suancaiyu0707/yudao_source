@@ -52,6 +52,12 @@ permalink: Spring-Cloud-Gateway/handler-route-predicate-handler-mapping
 * 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
 * 两书齐买，京东包邮。
 
+**推荐 Spring Cloud 视频**：
+
+* [Java 微服务实践 - Spring Boot](https://segmentfault.com/ls/1650000011063780?r=bPN0Ir)
+* [Java 微服务实践 - Spring Cloud](https://segmentfault.com/ls/1650000011386794?r=bPN0Ir)
+* [Java 微服务实践 - Spring Boot / Spring Cloud](https://segmentfault.com/ls/1650000011387052?r=bPN0Ir)
+
 # 2. DispatcherHandler
 
 `org.springframework.web.reactive.DispatcherHandler` ，请求分发处理器，Spring WebFlux 的访问入口。可能大多数人对这个类都比较陌生，我们来看看他在 Spring MVC 的兄弟 [DispatcherServlet](http://jinnianshilongnian.iteye.com/blog/1602617) 是不是就有点熟悉的感觉。

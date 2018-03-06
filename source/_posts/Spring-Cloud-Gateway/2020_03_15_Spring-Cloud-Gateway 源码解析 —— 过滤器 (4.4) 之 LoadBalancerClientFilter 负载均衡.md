@@ -44,6 +44,12 @@ LoadBalancerClientFilter 根据 `lb://` 前缀过滤处理，使用 `serviceId` 
 * 周立 —— [《Spring Cloud与Docker微服务架构实战》](https://union-click.jd.com/jdc?d=k3sAaK)
 * 两书齐买，京东包邮。
 
+**推荐 Spring Cloud 视频**：
+
+* [Java 微服务实践 - Spring Boot](https://segmentfault.com/ls/1650000011063780?r=bPN0Ir)
+* [Java 微服务实践 - Spring Cloud](https://segmentfault.com/ls/1650000011386794?r=bPN0Ir)
+* [Java 微服务实践 - Spring Boot / Spring Cloud](https://segmentfault.com/ls/1650000011387052?r=bPN0Ir)
+
 # 2. 环境搭建
 
 在 [《Spring-Cloud-Gateway 源码解析 —— 路由（1.4）之 DiscoveryClientRouteDefinitionLocator 注册中心》「2. 环境搭建」](http://www.iocoder.cn/Spring-Cloud-Gateway/route-definition-locator-discover-client/?self) 有详细教程。
