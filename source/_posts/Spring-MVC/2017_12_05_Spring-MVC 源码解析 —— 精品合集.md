@@ -10,6 +10,7 @@ permalink: Spring-MVC/good-collection
 
 - [1. 【zhisheng】Spring-MVC 源码解析](http://www.iocoder.cn/Spring-MVC/good-collection/)
 - [2. 【carl.zhao】Spring-MVC 源码解析](http://www.iocoder.cn/Spring-MVC/good-collection/)
+- [2. 【相见欢】Spring-MVC 源码解析](http://www.iocoder.cn/Spring-MVC/good-collection/)
 - [666. 欢迎投稿](http://www.iocoder.cn/Spring-MVC/good-collection/)
 
 -------
@@ -45,8 +46,17 @@ permalink: Spring-MVC/good-collection
     * [《Spring MVC 与 Servlet》](http://blog.csdn.net/u012410733/article/details/76732339)
     * [《Spring MVC 之 调用复用》](http://blog.csdn.net/u012410733/article/details/76862212)
     * [《Spring MVC 之 自定义List绑定》](http://blog.csdn.net/u012410733/article/details/78980304)
- 
-# 3. 欢迎投稿
+
+# 3. 【相见欢】Spring-MVC 源码解析
+
+* 作者 ：相见欢
+* 博客 ：https://my.oschina.net/lichhao/blog?catalog=285356
+* 目录 ：
+    * [《SpringMVC源码剖析（一）- 从抽象和接口说起》](https://my.oschina.net/lichhao/blog/99039)
+    * [《SpringMVC源码剖析（二）- DispatcherServlet的前世今生》](https://my.oschina.net/lichhao/blog/100138)
+    * [《SpringMVC源码剖析（三）- DispatcherServlet的初始化流程》](https://my.oschina.net/lichhao/blog/102315)
+    * [《SpringMVC源码剖析（四）- DispatcherServlet请求转发的实现》](https://my.oschina.net/lichhao/blog/104943)
+    * [《SpringMVC源码剖析（五)-消息转换器HttpMessageConverter》](https://my.oschina.net/lichhao/blog/172562) 
 
 # 666. 彩蛋
 
