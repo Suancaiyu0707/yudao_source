@@ -2,9 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/MyBatis/good-collection/</loc>
+    
+    <lastmod>2018-03-10T17:07:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/good-collection/</loc>
+    
+    <lastmod>2018-03-10T16:50:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiDB/good-collection/</loc>
+    
+    <lastmod>2018-03-10T16:41:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-second/</loc>
+    
+    <lastmod>2018-03-10T16:38:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-first/</loc>
+    
+    <lastmod>2018-03-10T16:38:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
     
-    <lastmod>2018-03-10T16:15:56.000Z</lastmod>
+    <lastmod>2018-03-10T16:25:31.000Z</lastmod>
     
   </url>
   
@@ -1223,20 +1258,6 @@
     <loc>http://www.iocoder.cn/MyCAT/why-read-MyCAT-source-code/</loc>
     
     <lastmod>2018-02-24T14:58:05.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-second/</loc>
-    
-    <lastmod>2018-02-24T14:53:59.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-first/</loc>
-    
-    <lastmod>2018-02-24T14:53:53.000Z</lastmod>
     
   </url>
   
