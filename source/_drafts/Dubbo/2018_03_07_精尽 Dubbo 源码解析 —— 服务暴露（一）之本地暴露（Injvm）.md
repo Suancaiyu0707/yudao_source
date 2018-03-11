@@ -1,4 +1,4 @@
-title: 精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露
+title: 精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）
 date: 2018-03-07
 tags:
 categories: Dubbo
@@ -60,6 +60,11 @@ Dubbo 服务暴露有两种方式
 
 在不配置 `scope` 的情况下，**默认两种方式都暴露**。因为，Dubbo 自身无法确认应用中，是否存在[本地引用](http://dubbo.io/books/dubbo-user-book/demos/local-call.html)的情况。
 大多数情况下，我们不需要配置 `scope` 。如果胖友可以明确服务器消费引用服务的方式，也可以进行设置。
+
+我们知道 Dubbo 提供了多种协议( Protocol )实现。
+
+* **本文**仅分享本地暴露，该方式仅使用 Injvm 协议实现，具体代码在 `dubbo-rpc-injvm` 模块中。
+* **下几篇**会分享远程暴露，该方式有多种协议实现，例如 Dubbo ( 默认协议 )、Hessian 、Rest 等等。我们会每个协议对应一篇文章，进行分享。
 
 # 2. doExportUrls
 
