@@ -208,7 +208,7 @@ permalink: Dubbo/service-export-remote-dubbo
 
 本文涉及的 Protocol 类图如下：
 
-[Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_03_10/04.png)
+![Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_03_10/04.png)
 
 ## 3.1 ProtocolFilterWrapper
 
@@ -351,7 +351,7 @@ public static RegistryProtocol getRegistryProtocol() {
     }
     ```
     
-    * 该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：[getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
+    * 该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：![getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
 * 第 11 行：获得注册中心对象。 【TODO 8014】注册中心
 * 第 14 行：调用 `#getRegistedProviderUrl(originInvoker)` 方法，获得服务提供者 URL 。代码如下：
 
