@@ -432,10 +432,6 @@ Protocol **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一�
         * DemoFilter 【自定义】
 * 第 15 至 47 行：**倒序**循环 Filter ，创建带 Filter 链的 Invoker 对象。因为是通过**嵌套**声明匿名类循环调用的方式，所以要倒序。胖友可以手工模拟下这个过程。通过这样的方式，实际过滤的顺序，还是我们上面看到的**正序**。
 
-### 3.2.3 refer
-
-本文不涉及，跳过
-
 ## 3.3 ProtocolListenerWrapper
 
 [`com.alibaba.dubbo.rpc.protocol.ProtocolListenerWrapper`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/ProtocolListenerWrapper.java) ，实现 Protocol 接口，Protocol 的 Wrapper 拓展实现类，用于给 Exporter 增加 ExporterListener ，监听 Exporter 暴露完成和取消暴露完成。
@@ -467,10 +463,6 @@ Protocol **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一�
     * 继续以上面的例子为基础，`listeners` 为**空**。胖友可以自行实现 ExporterListener ，并进行配置 `@Activate` 注解，或者 XML 中 `listener` 属性。
 * 第 11 行：创建带 ExporterListener 的 ListenerExporterWrapper 对象。在这个过程中，会执行 `ExporterListener#exported(exporter)` 方法。
     * 🙂 在 [「4.3 ListenerExporterWrapper」](#) 详细解析。
-
-### 3.2.3 refer
-
-本文不涉及，跳过
 
 ## 3.4 AbstractProtocol
 
@@ -548,10 +540,6 @@ public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
 ```
 
 * 创建 InjvmExporter 对象。
-
-### 3.5.3 refer
-
-本文不涉及，跳过
 
 # 4. Exporter
 
@@ -654,7 +642,7 @@ class InjvmExporter<T> extends AbstractExporter<T> {
 ```
 
 * `key` 属性，服务键。
-* `#exporterMap` 属性，Exporter 集合。在上文 `InjvmProtocol#export(invoker)` 方法中，我们可以看到，该属性就是 `AbstractProtocol.exporterMap` 属性。
+* `exporterMap` 属性，Exporter 集合。在上文 `InjvmProtocol#export(invoker)` 方法中，我们可以看到，该属性就是 `AbstractProtocol.exporterMap` 属性。
     * **构造方法**，**发起**暴露，将自己添加到 `exporterMap` 中。
     * `#unexport()` 方法，**取消**暴露，将自己移除出 `exporterMap` 中。
 

@@ -33,7 +33,7 @@ permalink: Dubbo/service-export-remote-dubbo
 
 远程暴露服务的顺序图如下：
 
-TODO 芋艿，此处有一图。
+![远程流程暴露顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_10/02.png)
 
 在 [`#doExportUrlsFor1Protocol(protocolConfig, registryURLs)`](https://github.com/YunaiV/dubbo/blob/c635dd1990a1803643194048f408db310f06175b/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/ServiceConfig.java#L621-L648) 方法中，涉及**远程暴露服务**的代码如下：
 
@@ -208,17 +208,479 @@ TODO 芋艿，此处有一图。
 
 本文涉及的 Protocol 类图如下：
 
-TODO [Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_03_07/04.png)
+[Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_03_10/04.png)
 
 ## 3.1 ProtocolFilterWrapper
 
+接 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「 3.2 ProtocolFilterWrapper」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 小节。
+
+`#export(invoker)` 方法，代码如下：
+
+```Java
+  1: public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+  2:     // 注册中心
+  3:     if (Constants.REGISTRY_PROTOCOL.equals(invoker.getUrl().getProtocol())) {
+  4:         return protocol.export(invoker);
+  5:     }
+  6:     // 建立带有 Filter 过滤链的 Invoker ，再暴露服务。
+  7:     return protocol.export(buildInvokerChain(invoker, Constants.SERVICE_FILTER_KEY, Constants.PROVIDER));
+  8: }
+```
+
+* 第 2 至 5 行：当 `invoker.url.protocl = registry` ，**注册中心的 URL** ，无需创建 Filter 过滤链。 
+* 第 7 行：调用 `#buildInvokerChain(invoker, key, group)` 方法，创建带有 Filter 过滤链的 Invoker 对象。
+* 第 7 行：调用 `protocol#export(invoker)` 方法，继续暴露服务。
+* 在 RegistryProtocol 中，会调用 `DubboProtocol#export(...)` 方法时，会走【**第 7 行**】的流程。
+
 ## 3.2 RegistryProtocol
+
+[`com.alibaba.dubbo.registry.integration.RegistryProtocol`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-registry/dubbo-registry-api/src/main/java/com/alibaba/dubbo/registry/integration/RegistryProtocol.java) ，实现 Protocol 接口，注册中心协议实现类。
+
+### 3.2.1 属性
+
+属性相关，代码如下：
+
+> 友情提示，仅包含本文涉及的属性。
+
+```Java
+// ... 省略部分和本文无关的属性。
+
+/**
+ * 单例。在 Dubbo SPI 中，被初始化，有且仅有一次。
+ */
+private static RegistryProtocol INSTANCE;
+
+/**
+ * 绑定关系集合。
+ *
+ * key：服务 Dubbo URL
+ */
+// To solve the problem of RMI repeated exposure port conflicts, the services that have been exposed are no longer exposed.
+// 用于解决rmi重复暴露端口冲突的问题，已经暴露过的服务不再重新暴露
+// providerurl <--> exporter
+private final Map<String, ExporterChangeableWrapper<?>> bounds = new ConcurrentHashMap<String, ExporterChangeableWrapper<?>>();
+/**
+ * Protocol 自适应拓展实现类，通过 Dubbo SPI 自动注入。
+ */
+private Protocol protocol;
+/**
+ * RegistryFactory 自适应拓展实现类，通过 Dubbo SPI 自动注入。
+ */
+private RegistryFactory registryFactory;
+
+public RegistryProtocol() {
+    INSTANCE = this;
+}
+
+public static RegistryProtocol getRegistryProtocol() {
+    if (INSTANCE == null) {
+        ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(Constants.REGISTRY_PROTOCOL); // load
+    }
+    return INSTANCE;
+}
+```
+
+* `INSTANCE` **静态**属性，单例。通过 Dubbo SPI 加载创建，有且仅有一次。
+    * `#getRegistryProtocol()` **静态**方法，获得单例。 
+* `bounds` 属性，绑定关系集合。其中，Key 为**服务提供者 URL** 。
+* `protocol` 属性，Protocol 自适应拓展实现类，通过 Dubbo SPI 自动注入。
+* `registryFactory` 属性，自适应拓展实现类，通过 Dubbo SPI 自动注入。
+    * 用于创建注册中心 Registry 对象。 
+
+### 3.2.2 export
+
+本文涉及的 `#export(invoker)` 方法，代码如下：
+
+```Java
+  1: public <T> Exporter<T> export(final Invoker<T> originInvoker) throws RpcException {
+  2:     // 暴露服务
+  3:     // export invoker
+  4:     final ExporterChangeableWrapper<T> exporter = doLocalExport(originInvoker);
+  5: 
+  6:     // 获得注册中心 URL
+  7:     URL registryUrl = getRegistryUrl(originInvoker);
+  8: 
+  9:     // 获得注册中心对象 【TODO 8014】注册中心
+ 10:     // registry provider
+ 11:     final Registry registry = getRegistry(originInvoker);
+ 12: 
+ 13:     // 获得服务提供者 URL
+ 14:     final URL registedProviderUrl = getRegistedProviderUrl(originInvoker);
+ 15: 
+ 16:     //to judge to delay publish whether or not
+ 17:     boolean register = registedProviderUrl.getParameter("register", true);
+ 18: 
+ 19:     // 【TODO 8014】注册中心
+ 20:     ProviderConsumerRegTable.registerProvider(originInvoker, registryUrl, registedProviderUrl);
+ 21: 
+ 22:     // 【TODO 8014】注册中心
+ 23:     if (register) {
+ 24:         register(registryUrl, registedProviderUrl);
+ 25:         ProviderConsumerRegTable.getProviderWrapper(originInvoker).setReg(true);
+ 26:     }
+ 27: 
+ 28:     // 【TODO 8015】配置规则
+ 29:     // Subscribe the override data
+ 30:     // FIXME When the provider subscribes, it will affect the scene : a certain JVM exposes the service and call the same service. Because the subscribed is cached key with the name of the service, it causes the subscription information to cover.
+ 31:     final URL overrideSubscribeUrl = getSubscribedOverrideUrl(registedProviderUrl);
+ 32:     final OverrideListener overrideSubscribeListener = new OverrideListener(overrideSubscribeUrl, originInvoker);
+ 33:     overrideListeners.put(overrideSubscribeUrl, overrideSubscribeListener);
+ 34:     registry.subscribe(overrideSubscribeUrl, overrideSubscribeListener);
+ 35:     //Ensure that a new exporter instance is returned every time export
+ 36:     return new DestroyableExporter<T>(exporter, originInvoker, overrideSubscribeUrl, registedProviderUrl);
+ 37: }
+```
+
+* 第 4 行：调用 `#doLocalExport(invoker)` 方法，暴露服务。
+* 第 7 行：调用 `#getRegistryUrl(originInvoker)` 方法，获得注册中心 URL 。代码如下：
+
+    ```Java
+    /**
+     * 获得注册中心 URL
+     *
+     * @param originInvoker 原始 Invoker
+     * @return URL
+     */
+    private URL getRegistryUrl(Invoker<?> originInvoker) {
+        URL registryUrl = originInvoker.getUrl();
+        if (Constants.REGISTRY_PROTOCOL.equals(registryUrl.getProtocol())) { // protocol
+            String protocol = registryUrl.getParameter(Constants.REGISTRY_KEY, Constants.DEFAULT_DIRECTORY);
+            registryUrl = registryUrl.setProtocol(protocol).removeParameter(Constants.REGISTRY_KEY);
+        }
+        return registryUrl;
+    }
+    ```
+    
+    * 该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：[getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
+* 第 11 行：获得注册中心对象。 【TODO 8014】注册中心
+* 第 14 行：调用 `#getRegistedProviderUrl(originInvoker)` 方法，获得服务提供者 URL 。代码如下：
+
+    ```Java
+    private URL getRegistedProviderUrl(final Invoker<?> originInvoker) {
+        // 从注册中心的 export 参数中，获得服务提供者的 URL
+        URL providerUrl = getProviderUrl(originInvoker);
+        //The address you see at the registry
+        return providerUrl.removeParameters(getFilteredKeys(providerUrl)) // 移除 .hide 为前缀的参数
+                .removeParameter(Constants.MONITOR_KEY) // monitor
+                .removeParameter(Constants.BIND_IP_KEY) // bind.ip
+                .removeParameter(Constants.BIND_PORT_KEY) // bind.port
+                .removeParameter(QOS_ENABLE) // qos.enable
+                .removeParameter(QOS_PORT) // qos.port
+                .removeParameter(ACCEPT_FOREIGN_IP); // qos.accept.foreign.ip
+    }
+    
+    private URL getProviderUrl(final Invoker<?> origininvoker) {
+        String export = origininvoker.getUrl().getParameterAndDecoded(Constants.EXPORT_KEY); // export
+        if (export == null || export.length() == 0) {
+            throw new IllegalArgumentException("The registry export url is null! registry: " + origininvoker.getUrl());
+        }
+        return URL.valueOf(export);
+    }
+    
+    private static String[] getFilteredKeys(URL url) {
+        Map<String, String> params = url.getParameters();
+        if (params != null && !params.isEmpty()) {
+            List<String> filteredKeys = new ArrayList<String>();
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (entry != null && entry.getKey() != null && entry.getKey().startsWith(Constants.HIDE_KEY_PREFIX)) {
+                    filteredKeys.add(entry.getKey());
+                }
+            }
+            return filteredKeys.toArray(new String[filteredKeys.size()]);
+        } else {
+            return new String[]{};
+        }
+    }
+    ```
+    * **重点**，从注册中心的 URL 中获得 `export` 参数对应的值，即服务提供者的 URL 。
+    * 移除**多余**的参数。因为，这些参数注册到注册中心没有实际的用途。
+* 第 17 行：配置项 `register` ，服务提供者是否注册到配置中心。
+* 第 20 行：【TODO 8014】注册中心
+* 第 23 至 26 行：// 【TODO 8015】配置规则
+* 第 36 行：创建 DestroyableExporter 对象。
+
+### 3.2.3 doLocalExport
+
+`#doLocalExport()` 方法，暴露服务。**此处的 Local 指的是，本地启动服务，但是不包括向注册中心注册服务的意思**。代码如下：
+
+```Java
+  1: /**
+  2:  * 暴露服务。
+  3:  *
+  4:  * 此处的 Local 指的是，本地启动服务，但是不包括向注册中心注册服务的意思。
+  5:  *
+  6:  * @param originInvoker 原始 Invoker
+  7:  * @param <T> 泛型
+  8:  * @return Exporter 对象
+  9:  */
+ 10: @SuppressWarnings("unchecked")
+ 11: private <T> ExporterChangeableWrapper<T> doLocalExport(final Invoker<T> originInvoker) {
+ 12:     // 获得在 `bounds` 中的缓存 Key
+ 13:     String key = getCacheKey(originInvoker);
+ 14:     // 从 `bounds` 获得，是不是已经暴露过服务
+ 15:     ExporterChangeableWrapper<T> exporter = (ExporterChangeableWrapper<T>) bounds.get(key);
+ 16:     if (exporter == null) {
+ 17:         synchronized (bounds) {
+ 18:             exporter = (ExporterChangeableWrapper<T>) bounds.get(key);
+ 19:             // 未暴露过，进行暴露服务
+ 20:             if (exporter == null) {
+ 21:                 // 创建 Invoker Delegate 对象
+ 22:                 final Invoker<?> invokerDelegete = new InvokerDelegete<T>(originInvoker, getProviderUrl(originInvoker));
+ 23:                 // 暴露服务，创建 Exporter 对象
+ 24:                 // 使用 创建的Exporter对象 + originInvoker ，创建 ExporterChangeableWrapper 对象
+ 25:                 exporter = new ExporterChangeableWrapper<T>((Exporter<T>) protocol.export(invokerDelegete), originInvoker);
+ 26:                 // 添加到 `bounds`
+ 27:                 bounds.put(key, exporter);
+ 28:             }
+ 29:         }
+ 30:     }
+ 31:     return exporter;
+ 32: }
+```
+
+* 第 13 行：调用 `#getCacheKey(originInvoker)` 方法，获得在 `bounds` 中的缓存 Key 。代码如下：
+
+    ```Java
+    /**
+     * Get the key cached in bounds by invoker
+     *
+     * 获 取invoker 在 bounds中 缓存的key
+     *
+     * @param originInvoker 原始 Invoker
+     * @return url 字符串
+     */
+    private String getCacheKey(final Invoker<?> originInvoker) {
+        URL providerUrl = getProviderUrl(originInvoker);
+        return providerUrl.removeParameters("dynamic", "enabled").toFullString();
+    }
+    ```
+
+* 第 14 至 18 行：从 `bounds` 中，获得已经暴露过的 ExporterChangeableWrapper 对象。
+* 第 20 至 28 行：未暴露过，进行暴露服务。
+    * 第 22 行：调用 `#getProviderUrl(originInvoker)` 方法，获得服务提供者的 URL 。
+    * 第 22 行：创建 [`com.alibaba.dubbo.registry.integration.RegistryProtocol.InvokerDelegete`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-registry/dubbo-registry-api/src/main/java/com/alibaba/dubbo/registry/integration/RegistryProtocol.java#L320-L339) 对象。
+        * InvokerDelegete 实现 [`com.alibaba.dubbo.rpc.protocol.InvokerWrapper`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/InvokerWrapper.java) 类，主要增加了 `#getInvoker()` 方法，获得真实的，非 InvokerDelegete 的 Invoker 对象。因为，可能会存在 `InvokerDelegete.invoker` 也是 InvokerDelegete 类型的情况。
+    * 第 25 行：调用 `DubboProtocol#export(invoker)` 方法，暴露服务，返回 Exporter 对象。
+        * 在 [「4.3 DubboProtocol」](#) 中，详细分享。
+        * 🙂 若此若是**其他**协议，若调用对应协议的 `XXXProtocol#export(invoker)` 方法。
+    * 第 25 行：使用【创建的 Exporter 对象】+【`originInvoker`】，创建 ExporterChangeableWrapper 对象。这样，`originInvoker` 就和 Exporter 对象，形成了**绑定**的关系。
+        * 🙂 ExporterChangeableWrapper 在 [「4.1 ExporterChangeableWrapper」](#) 看详细代码。
+    * 第 27 行：添加到 `bounds` 。
 
 ## 3.3 DubboProtocol
 
+[`com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-default/src/main/java/com/alibaba/dubbo/rpc/protocol/dubbo/DubboProtocol.java) ，实现 AbstractProtocol 抽象类，Dubbo 协议实现类。
+
+### 3.3.1 属性
+
+属性相关，代码如下：
+
+> 友情提示，仅包含本文涉及的属性。
+
+```Java
+// ... 省略部分和本文无关的属性。
+
+/**
+ * 通信服务器集合
+ *
+ * key: 服务器地址。格式为：host:port
+ */
+private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<String, ExchangeServer>(); // <host:port,Exchanger>
+```
+
+* `serverMap` 属性，通信服务器集合。其中，Key 为**服务器地址**，格式为 `host:port`。
+
+### 3.3.2 export
+
+本文涉及的 `#export(invoker)` 方法，代码如下：
+
+```Java
+  1: public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+  2:     URL url = invoker.getUrl();
+  3: 
+  4:     // 创建 DubboExporter 对象，并添加到 `exporterMap` 。
+  5:     // export service.
+  6:     String key = serviceKey(url);
+  7:     DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
+  8:     exporterMap.put(key, exporter);
+  9: 
+ 10:     // TODO 【8005 sub】
+ 11:     //export an stub service for dispatching event
+ 12:     Boolean isStubSupportEvent = url.getParameter(Constants.STUB_EVENT_KEY, Constants.DEFAULT_STUB_EVENT);
+ 13:     Boolean isCallbackservice = url.getParameter(Constants.IS_CALLBACK_SERVICE, false);
+ 14:     if (isStubSupportEvent && !isCallbackservice) {
+ 15:         String stubServiceMethods = url.getParameter(Constants.STUB_EVENT_METHODS_KEY);
+ 16:         if (stubServiceMethods == null || stubServiceMethods.length() == 0) {
+ 17:             if (logger.isWarnEnabled()) {
+ 18:                 logger.warn(new IllegalStateException("consumer [" + url.getParameter(Constants.INTERFACE_KEY) +
+ 19:                         "], has set stubproxy support event ,but no stub methods founded."));
+ 20:             }
+ 21:         } else {
+ 22:             stubServiceMethodsMap.put(url.getServiceKey(), stubServiceMethods);
+ 23:         }
+ 24:     }
+ 25: 
+ 26:     // 启动服务器
+ 27:     openServer(url);
+ 28: 
+ 29:     // TODO 【8013 】kryo fst
+ 30:     optimizeSerialization(url);
+ 31:     return exporter;
+ 32: }
+```
+
+* 第 6 行：调用 [`#serviceKey(url)`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/AbstractProtocol.java#L45-L47) 方法，获得服务键。该方法从父类继承而来。
+* 第 7 行：创建 DubboExporter 对象。
+    * 🙂 在 [「4.3 DubboExporter」](#) 详细解析。 
+* 第 8 行：添加到 [`exporterMap`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/AbstractProtocol.java#L40) 中。该属性从父类继承而来。
+* 第 10 至 24 行：TODO 【8005 sub】
+* 第 27 行：调用 `#openServer(url)` 方法，启动服务器。
+* 第 30 行：// TODO 【8013 】kryo fst
+
+### 3.3.3 openServer
+
+`#openServer(url)` 方法，启动服务器。代码如下：
+
+```Java
+  1: /**
+  2:  * 启动服务器
+  3:  *
+  4:  * @param url URL
+  5:  */
+  6: private void openServer(URL url) {
+  7:     // find server.
+  8:     String key = url.getAddress();
+  9:     //client can export a service which's only for server to invoke
+ 10:     boolean isServer = url.getParameter(Constants.IS_SERVER_KEY, true); // isserver
+ 11:     if (isServer) {
+ 12:         ExchangeServer server = serverMap.get(key);
+ 13:         if (server == null) {
+ 14:             serverMap.put(key, createServer(url));
+ 15:         } else {
+ 16:             // server supports reset, use together with override
+ 17:             server.reset(url); //【TODO 8016】通信服务器
+ 18:         }
+ 19:     }
+ 20: }
+```
+
+* 第 8 行：获得服务器地址。
+* 第 10 行：配置项 `isserver` ，可以暴露一个仅当前 JVM 可调用的服务。目前该配置项已经不存在。
+* 第 12 行：从 `serverMap` 获得对应服务器地址已存在的通信服务器。即，**不重复创建**。 
+* 第 13 至 14 行：通信服务器不存在，调用 `#createServer(url)` 方法，创建服务器。
+* 第 15 至 18 行：【TODO 8016】通信服务器
+
+### 3.3.4 createServer
+
+【TODO 8016】通信服务器
+
+### 3.3.5 optimizeSerialization
+
+// TODO 【8013 】kryo fst
+
 # 4. Exporter
 
-# 5. 
+本文涉及的 Exporter 类图如下：
+
+![Exporter 类图](http://www.iocoder.cn/images/Dubbo/2018_03_10/03.png)
+
+## 4.1 ExporterChangeableWrapper
+
+[`com.alibaba.dubbo.registry.integration.RegistryProtocol.ExporterChangeableWrapper`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-registry/dubbo-registry-api/src/main/java/com/alibaba/dubbo/registry/integration/RegistryProtocol.java#L422-L454) ，实现 Exporter 接口，Exporter 可变的包装器。
+
+* 建立【返回的 Exporter】与【Protocol export 出的 Exporter】的对应关系。
+* 在 override 时可以进行关系修改。
+
+代码如下：
+
+```Java
+private class ExporterChangeableWrapper<T> implements Exporter<T> {
+
+    /**
+     * 原 Invoker 对象
+     */
+    private final Invoker<T> originInvoker;
+    /**
+     * 暴露的 Exporter 对象
+     */
+    private Exporter<T> exporter;
+
+    public ExporterChangeableWrapper(Exporter<T> exporter, Invoker<T> originInvoker) {
+        this.exporter = exporter;
+        this.originInvoker = originInvoker;
+    }
+
+    public Invoker<T> getOriginInvoker() {
+        return originInvoker;
+    }
+
+    public Invoker<T> getInvoker() {
+        return exporter.getInvoker();
+    }
+
+    public void setExporter(Exporter<T> exporter) {
+        this.exporter = exporter;
+    }
+
+    public void unexport() {
+        String key = getCacheKey(this.originInvoker);
+        // 移除出 `bounds`
+        bounds.remove(key);
+        // 取消暴露
+        exporter.unexport();
+    }
+}
+```
+
+## 4.2 DestroyableExporter
+
+[`com.alibaba.dubbo.registry.integration.RegistryProtocol.DestroyableExporter`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-registry/dubbo-registry-api/src/main/java/com/alibaba/dubbo/registry/integration/RegistryProtocol.java#L456-L506) ，实现 Exporter 接口，可销毁的 Exporter 实现类。
+
+【TODO 8014】注册中心
+
+【TODO 8015】配置规则
+
+## 4.3 DubboExporter
+
+[`com.alibaba.dubbo.rpc.protocol.dubbo.DubboExporter`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-default/src/main/java/com/alibaba/dubbo/rpc/protocol/dubbo/DubboExporter.java) ，实现 AbstractExporter 抽象类，Dubbo Exporter 实现类。代码如下：
+
+```Java
+public class DubboExporter<T> extends AbstractExporter<T> {
+
+    /**
+     * 服务键
+     */
+    private final String key;
+    /**
+     * Exporter 集合
+     *
+     * key: 服务键
+     *
+     * 该值实际就是 {@link com.alibaba.dubbo.rpc.protocol.AbstractProtocol#exporterMap}
+     */
+    private final Map<String, Exporter<?>> exporterMap;
+
+    public DubboExporter(Invoker<T> invoker, String key, Map<String, Exporter<?>> exporterMap) {
+        super(invoker);
+        this.key = key;
+        this.exporterMap = exporterMap;
+    }
+
+    @Override
+    public void unexport() {
+        // 取消暴露
+        super.unexport();
+        // 移除
+        exporterMap.remove(key);
+    }
+
+}
+```
+
+* `key` 属性，服务键。
+* `#exporterMap` 属性，Exporter 集合。在上文 `DubboProtocol#export(invoker)` 方法中，我们可以看到，该属性就是 `AbstractProtocol.exporterMap` 属性。
+    * **构造方法**，**发起**暴露，将自己添加到 `exporterMap` 中。
+    * `#unexport()` 方法，**取消**暴露，将自己移除出 `exporterMap` 中。
 
 # 666. 彩蛋
 
