@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
+    
+    <lastmod>2018-03-12T18:03:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
+    
+    <lastmod>2018-03-11T10:48:59.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iocoder.cn/MyBatis/good-collection/</loc>
     
     <lastmod>2018-03-10T17:07:21.000Z</lastmod>
@@ -33,13 +47,6 @@
     <loc>http://www.iocoder.cn/TiKV/build-debugging-environment-first/</loc>
     
     <lastmod>2018-03-10T16:38:52.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
-    
-    <lastmod>2018-03-10T16:25:31.000Z</lastmod>
     
   </url>
   
@@ -481,13 +488,6 @@
     <loc>http://www.iocoder.cn/link_url/</loc>
     
     <lastmod>2018-03-06T02:07:45.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.iocoder.cn/chinese-comment-repository/</loc>
-    
-    <lastmod>2018-03-06T02:07:39.000Z</lastmod>
     
   </url>
   

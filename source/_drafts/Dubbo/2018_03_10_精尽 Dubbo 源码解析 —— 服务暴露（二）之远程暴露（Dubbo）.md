@@ -6,6 +6,34 @@ permalink: Dubbo/service-export-remote-dubbo
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+- [2. 远程暴露](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [2.1 loadMonitor](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+- [3. Protocol](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [3.1 ProtocolFilterWrapper](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [3.2 RegistryProtocol](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [3.3 DubboProtocol](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+- [4. Exporter](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [4.1 ExporterChangeableWrapper](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [4.2 DestroyableExporter](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+  - [4.3 DubboExporter](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/service-export-remote-dubbo/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》](http://www.iocoder.cn/Dubbo/service-export-local/?self) 一文中，我们已经分享了**本地暴露服务**。在本文中，我们来分享**远程暴露服务**。在 Dubbo 中提供多种协议( Protocol ) 的实现，大体流程一致，本文以 [Dubbo Protocol](http://dubbo.io/books/dubbo-user-book/references/protocol/dubbo.html) 为例子，这也是 Dubbo 的**默认**协议。
@@ -26,7 +54,7 @@ permalink: Dubbo/service-export-remote-dubbo
 
 相比**本地暴露**，**远程暴露**会多做如下几件事情：
 
-* 启动本地服务器，绑定服务端口，提供远程调用。
+* 启动通信服务器，绑定服务端口，提供远程调用。
 * 向注册中心注册服务提供者，提供服务消费者从注册中心发现服务。
 
 # 2. 远程暴露
@@ -350,7 +378,6 @@ public static RegistryProtocol getRegistryProtocol() {
         return registryUrl;
     }
     ```
-    
     * 该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：![getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
 * 第 11 行：获得注册中心对象。 【TODO 8014】注册中心
 * 第 14 行：调用 `#getRegistedProviderUrl(originInvoker)` 方法，获得服务提供者 URL 。代码如下：
@@ -683,4 +710,12 @@ public class DubboExporter<T> extends AbstractExporter<T> {
     * `#unexport()` 方法，**取消**暴露，将自己移除出 `exporterMap` 中。
 
 # 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+写的有点神情恍惚。
+
+一度以为自己在老家。
+
+夜，02:02 ，睡觉....
 

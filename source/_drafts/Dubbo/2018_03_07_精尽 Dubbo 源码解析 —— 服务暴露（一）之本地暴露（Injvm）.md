@@ -41,21 +41,21 @@ permalink: Dubbo/service-export-local
 
 Dubbo 服务暴露有两种方式
 
-* 本地暴露，JVM 内部通信。配置如下：
+* 本地暴露，JVM 本地调用。配置如下：
 
     ```XML
-    <dubbo:service  scope="local" />
+    <dubbo:service scope="local" />
     ```
 
 * 远程暴露，网络远程通信。配置如下：
 
     ```XML
-    <dubbo:service  scope="local" />
+    <dubbo:service scope="remote" />
     ```
 * 【可以不算】不暴露，配置如下：    
 
     ```XML
-    <dubbo:service  scope="none" />
+    <dubbo:service scope="none" />
     ```
 
 在不配置 `scope` 的情况下，**默认两种方式都暴露**。因为，Dubbo 自身无法确认应用中，是否存在[本地引用](http://dubbo.io/books/dubbo-user-book/demos/local-call.html)的情况。
