@@ -1,3 +1,11 @@
+title: 精尽 Dubbo 源码分析 —— 服务引用（一）之本地引用（Injvm）
+date: 2018-05-01
+tags:
+categories: Dubbo
+permalink: Dubbo/reference-export-local
+
+-------
+
 # 1. 概述
 
 Dubbo 服务引用，**和 Dubbo 服务暴露一样**，**也**有两种方式：
@@ -188,5 +196,256 @@ private String url;
 
 # 3. Protocol
 
+**服务引用与暴露的 Protocol 很多类似点**，本文就不重复叙述了。
+
+建议不熟悉的胖友，请点击 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「3. Protocol」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 查看。
+
+本文涉及的 Protocol 类图如下：
+
+[Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/04.png)
+
+## 3.1 ProtocolFilterWrapper
+
+### 3.1.1 refer
+
+本文涉及的 `#refer(type, url)` 方法，代码如下：
+
+```Java
+  1: public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+  2:     // 注册中心
+  3:     if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+  4:         return protocol.refer(type, url);
+  5:     }
+  6:     // 引用服务，返回 Invoker 对象
+  7:     // 给改 Invoker 对象，包装成带有 Filter 过滤链的 Invoker 对象
+  8:     return buildInvokerChain(protocol.refer(type, url), Constants.REFERENCE_FILTER_KEY, Constants.CONSUMER);
+  9: }
+```
+
+* 第 2 至 5 行：当 `invoker.url.protocl = registry` ，跳过，本地引用服务不会符合这个判断。在远程引用服务会符合暴露该判断，所以下一篇文章分享。
+* 第 8 行：调用 `protocol#refer(type, url)` 方法，继续引用服务，最终返回 Invoker 。
+* 第 8 行：在引用服务完成后，调用 `#buildInvokerChain(invoker, key, group)` 方法，创建带有 Filter 过滤链的 Invoker 对象。
+
+### 3.1.2 buildInvokerChain
+
+和 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「3.1.3  buildInvokerChain」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 基本一致，**默认情况下**，获得的 Filter 数组结果相同。
+
+当然，因为传入的参数 `group` 不同，如果胖友自定义了**自动激活**的 Filter 只出现在 `group = consumer` ，那么服务消费者就会多一个该 Filter 实现。
+
+## 3.2 ProtocolListenerWrapper
+
+本文涉及的 `#refer(type, url)` 方法，代码如下：
+
+```Java
+  1: public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+  2:     // 注册中心协议
+  3:     if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+  4:         return protocol.refer(type, url);
+  5:     }
+  6:     // 引用服务
+  7:     Invoker<T> invoker = protocol.refer(type, url);
+  8:     // 获得 InvokerListener 数组
+  9:     List<InvokerListener> listeners = Collections.unmodifiableList(ExtensionLoader.getExtensionLoader(InvokerListener.class).getActivateExtension(url, Constants.INVOKER_LISTENER_KEY));
+ 10:     // 创建 ListenerInvokerWrapper 对象
+ 11:     return new ListenerInvokerWrapper<T>(invoker, listeners);
+ 12: }
+```
+
+* 第 2 至 5 行：当 `invoker.url.protocl = registry` ，跳过，本地引用服务不会符合这个判断。在远程引用服务会符合暴露该判断，所以下一篇文章分享。
+* 第 7 行：调用 `protocol#refer(type, url)` 方法，继续引用服务，最终返回 Invoker 。
+* 第 9 行：调用 `ExtensionLoader#getActivateExtension(url, key, group)` 方法，获得监听器数组。
+    * 🙂 不熟悉的胖友，请看 [《精尽 Dubbo 源码分析 —— 拓展机制 SPI》](http://www.iocoder.cn/Dubbo/spi/?self) 文章。 
+    * 继续以上面的例子为基础，`listeners` 为**空**。胖友可以自行实现 ExporterListener ，并进行配置 `@Activate` 注解，或者 XML 中 `listener` 属性。
+* 第 11 行：创建带 InvokerListener 的 ListenerInvokerWrapper 对象。在这个过程中，会执行 `ExporterListener#referred(invoker)` 方法。
+    * 🙂 在 [「4.3 ListenerInvokerWrapper」](#) 详细解析。
+
+## 3.3 InjvmProtocol
+
+本文涉及的 `#refer(type, url)` 方法，代码如下：
+
+```Java
+public <T> Invoker<T> refer(Class<T> serviceType, URL url) throws RpcException {
+    return new InjvmInvoker<T>(serviceType, url, url.getServiceKey(), exporterMap);
+}
+```
+
+* 创建 InjvmInvoker 对象。**注意**，传入的 `exporterMap` 参数，包含**所有的** InjvmExporter 对象。
+
 # 4. Invoker
+
+Exporter **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一览》「4.1 Invoker」](#) 有详细解析。
+
+本文涉及的 Invoker 类图如下：
+
+[Exporter 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/05.png)
+
+## 4.1 AbstractInvoker
+
+[`com.alibaba.dubbo.rpc.protocol.AbstractInvoker`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/AbstractInvoker.java) ，实现 Invoker 接口，抽象 Invoker 类，主要提供了 Invoker 的通用属性和 `#invoke(Invocation)` 方法的通用实现。
+
+本文主要涉及到它的通用属性，代码如下：
+
+```Java
+/**
+ * 接口类型
+ */
+private final Class<T> type;
+/**
+ * 服务 URL
+ */
+private final URL url;
+/**
+ * 公用的隐式传参。在 {@link #invoke(Invocation)} 方法中使用。
+ */
+private final Map<String, String> attachment;
+/**
+ * 是否可用
+ */
+private volatile boolean available = true;
+/**
+ * 是否销毁
+ */
+private AtomicBoolean destroyed = new AtomicBoolean(false);
+```
+
+ps：`#invoke(Invocation)` 方法，在后续的文章分享。
+
+## 4.2 InjvmInvoker
+
+[`com.alibaba.dubbo.rpc.protocol.injvm.InjvmInvoker`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-rpc/dubbo-rpc-injvm/src/main/java/com/alibaba/dubbo/rpc/protocol/injvm/InjvmInvoker.java) ，实现 AbstractInvoker 抽象类，Injvm Invoker 实现类。
+
+### 4.2.1 属性
+
+```Java
+/**
+ * 服务键
+ */
+private final String key;
+/**
+ * Exporter 集合
+ *
+ * key: 服务键
+ *
+ * 该值实际就是 {@link com.alibaba.dubbo.rpc.protocol.AbstractProtocol#exporterMap}
+ */
+private final Map<String, Exporter<?>> exporterMap;
+
+InjvmInvoker(Class<T> type, URL url, String key, Map<String, Exporter<?>> exporterMap) {
+    super(type, url);
+    this.key = key;
+    this.exporterMap = exporterMap;
+}
+```
+
+* `key` 属性，服务键。
+* `exporterMap` 属性，Exporter 集合。在 `InjvmInvoker#invoke(invocation)` 方法中，通过该 Invoker 的 `key` 属性，获得对应的 Exporter 对象。
+
+### 4.2.2 isAvailable
+
+`#isAvailable()` 方法，是否可用。代码如下：
+
+```Java
+@Override
+public boolean isAvailable() {
+    // 判断是否有 Exporter 对象
+    InjvmExporter<?> exporter = (InjvmExporter<?>) exporterMap.get(key);
+    if (exporter == null) {
+        return false;
+    } else {
+        return super.isAvailable();
+    }
+}
+```
+
+* 开启 [启动时检查](https://dubbo.gitbooks.io/dubbo-user-book/demos/preflight-check.html) 时，调用该方法，判断该 Invoker 对象，是否有对应的 Exporter 。若不存在，**说明依赖服务不存在**，检查不通过。
+
+## 4.3 ListenerInvokerWrapper
+
+[`com.alibaba.dubbo.rpc.listener.ListenerInvokerWrapper`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/listener/ListenerInvokerWrapper.java) ，实现 Invoker 接口，具有监听器功能的 Invoker 包装器。代码如下：
+
+```Java
+public class ListenerInvokerWrapper<T> implements Invoker<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ListenerInvokerWrapper.class);
+
+    /**
+     * 真实的 Invoker 对象
+     */
+    private final Invoker<T> invoker;
+    /**
+     * Invoker 监听器数组
+     */
+    private final List<InvokerListener> listeners;
+
+    public ListenerInvokerWrapper(Invoker<T> invoker, List<InvokerListener> listeners) {
+        if (invoker == null) {
+            throw new IllegalArgumentException("invoker == null");
+        }
+        this.invoker = invoker;
+        this.listeners = listeners;
+        // 执行监听器
+        if (listeners != null && !listeners.isEmpty()) {
+            for (InvokerListener listener : listeners) {
+                if (listener != null) {
+                    try {
+                        listener.referred(invoker);
+                    } catch (Throwable t) {
+                        logger.error(t.getMessage(), t);
+                    }
+                }
+            }
+        }
+    }
+
+    public Class<T> getInterface() {
+        return invoker.getInterface();
+    }
+
+    public URL getUrl() {
+        return invoker.getUrl();
+    }
+
+    public boolean isAvailable() {
+        return invoker.isAvailable();
+    }
+
+    public Result invoke(Invocation invocation) throws RpcException {
+        return invoker.invoke(invocation);
+    }
+
+    @Override
+    public String toString() {
+        return getInterface() + " -> " + (getUrl() == null ? " " : getUrl().toString());
+    }
+
+    public void destroy() {
+        try {
+            invoker.destroy();
+        } finally {
+            // 执行监听器
+            if (listeners != null && !listeners.isEmpty()) {
+                for (InvokerListener listener : listeners) {
+                    if (listener != null) {
+                        try {
+                            listener.destroyed(invoker);
+                        } catch (Throwable t) {
+                            logger.error(t.getMessage(), t);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+```
+
+* **构造方法**，循环 `listeners` ，执行 `InvokerListener#referred(invoker)` 方法。😈 和 ListenerExporterWrapper 不同，若执行过程中发生异常 RuntimeException ，**仅**打印错误日志，继续执行，最终**不**抛出异常。
+* `#unexport()` 方法，循环 `listeners` ，执行 `InvokerListener#destroyed(invoker)` 。😈 和 ListenerExporterWrapper 不同，若执行过程中发生异常 RuntimeException ，**仅**打印错误日志，继续执行，最终**不**抛出异常。
+
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+连续熬夜几天，要调整下作息了。
 
