@@ -32,9 +32,9 @@ Dubbo 服务引用，**和 Dubbo 服务暴露一样**，**也**有两种方式�
 
 # 2. createProxy
 
-远程暴露服务的顺序图如下：
+远程引用服务的顺序图如下：
 
-TODO
+![远程流程引用顺序图](http://www.iocoder.cn/images/Dubbo/2018_05_01/02.png)
 
 在 [《精尽 Dubbo 源码分析 —— API 配置（三）之服务消费者》](http://www.iocoder.cn/Dubbo/configuration-api-3/?self) 一文中，我们看到 `ReferenceConfig#init()` 方法中，会在配置初始化完成后，调用顺序图的**起点** `#createProxy(map)` 方法，开始引用服务。代码如下：
 
@@ -160,19 +160,18 @@ private String url;
      35:     return isJvmRefer;
      36: }
     ```
-    
     * ============ 本地引用 ============
-    * 第 15 至 18 行：当 `scope = local` 或 `injvm = true` 时，本地引用。
-    * 第 27 至 30 行：调用 `#getExporter(url)` 方法，判断当本地已经有 `url` 对应的 InjvmExporter 时，**直接**引用。🙂 本地已有的服务，不必要使用远程服务，减少网络开销，提升性能。
-        * 🙂 代码比较简单，已经添加中文注释，胖友点击链接查看。
-        * [`InjvmProtocol#getExporter(url)`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-rpc/dubbo-rpc-injvm/src/main/java/com/alibaba/dubbo/rpc/protocol/injvm/InjvmProtocol.java#L63-L94)
-        * [`UrlUtils#isServiceKeyMatch(pattern, value)`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-common/src/main/java/com/alibaba/dubbo/common/utils/UrlUtils.java#L462-L491)
-    * ============ 远程引用 ============
-    * 第 10 至 13 行：当 `protocol = injvm` 时，本身已经是 Injvm 协议了，走正常流程即可。**这是最特殊的，下面会更好的理解**。另外，因为 `#isInjvmRefer(url)` 方法，仅有在 `#createProxy(map)` 方法中调用，因此实际也不会触发该逻辑。
-    * 第 19 至 22 行：当 `scope = remote` 时，远程引用。
-    * 第 23 至 26 行：当 `generic = true` 时，即使用泛化调用，远程引用。
-        * [《Dubbo 用户指南 —— 泛化调用》](https://dubbo.gitbooks.io/dubbo-user-book/demos/generic-reference.html) 
-    * 第 31 至 34 行：默认，远程引用。
+        * 第 15 至 18 行：当 `scope = local` 或 `injvm = true` 时，本地引用。
+        * 第 27 至 30 行：调用 `#getExporter(url)` 方法，判断当本地已经有 `url` 对应的 InjvmExporter 时，**直接**引用。🙂 本地已有的服务，不必要使用远程服务，减少网络开销，提升性能。
+            * 🙂 代码比较简单，已经添加中文注释，胖友点击链接查看。
+            * [`InjvmProtocol#getExporter(url)`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-rpc/dubbo-rpc-injvm/src/main/java/com/alibaba/dubbo/rpc/protocol/injvm/InjvmProtocol.java#L63-L94)
+            * [`UrlUtils#isServiceKeyMatch(pattern, value)`](https://github.com/YunaiV/dubbo/blob/6f366fae76b4fc5fc4fb0352737b6e847a3a2b0b/dubbo-common/src/main/java/com/alibaba/dubbo/common/utils/UrlUtils.java#L462-L491)
+        * ============ 远程引用 ============
+        * 第 10 至 13 行：当 `protocol = injvm` 时，本身已经是 Injvm 协议了，走正常流程即可。**这是最特殊的，下面会更好的理解**。另外，因为 `#isInjvmRefer(url)` 方法，仅有在 `#createProxy(map)` 方法中调用，因此实际也不会触发该逻辑。
+        * 第 19 至 22 行：当 `scope = remote` 时，远程引用。
+        * 第 23 至 26 行：当 `generic = true` 时，即使用泛化调用，远程引用。
+            * [《Dubbo 用户指南 —— 泛化调用》](https://dubbo.gitbooks.io/dubbo-user-book/demos/generic-reference.html) 
+        * 第 31 至 34 行：默认，远程引用。
 
 * 第 23 至 31 行：**本地引用**。
     * 第 26 行：创建本地服务引用 URL 对象。 
@@ -189,7 +188,7 @@ private String url;
     * 🌞 当然，笔者建议，如果真的是需要本地应用，建议配置 `scope = local` 。这样，会更加明确和清晰。
 
 * 第 38 至 51 行：若配置 `check = true` 配置项时，调用 `Invoker#isAvailable()` 方法，启动时检查。
-    * 🙂 该方法在 [TODO]() ，详细分享。
+    * 🙂 该方法在 [「4.2 InjvmInvoker」](#) ，详细分享。
     * 🙂 [《Dubbo 用户指南 —— 启动时检查》](https://dubbo.gitbooks.io/dubbo-user-book/demos/preflight-check.html)
 * 第 55 行：调用 `ProxyFactory#getProxy(invoker)` 方法，创建 Service 代理对象。该 Service 代理对象的内部，会调用 `Invoker#invoke(Invocation)` 方法，进行 Dubbo 服务的调用。
     * 🙂 详细的实现，后面单独写文章分享。
@@ -202,7 +201,7 @@ private String url;
 
 本文涉及的 Protocol 类图如下：
 
-[Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/04.png)
+![Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/04.png)
 
 ## 3.1 ProtocolFilterWrapper
 
@@ -277,7 +276,7 @@ Exporter **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一�
 
 本文涉及的 Invoker 类图如下：
 
-[Exporter 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/05.png)
+![Exporter 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/05.png)
 
 ## 4.1 AbstractInvoker
 
