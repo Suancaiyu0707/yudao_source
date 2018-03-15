@@ -70,7 +70,7 @@ Dubbo 服务暴露有两种方式
 
 本地暴露服务的顺序图如下：
 
-![本地流程暴露顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_07/03.png)
+![本地暴露顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_07/03.png)
 
 在 [《精尽 Dubbo 源码分析 —— API 配置（二）之服务提供者》](http://www.iocoder.cn/Dubbo/configuration-api-2/?self) 一文中，我们看到 `ServiceConfig#export()` 方法中，会在配置初始化完成后，调用顺序图的**起点** `#doExportUrls()` 方法，开始暴露服务。代码如下：
 
@@ -421,14 +421,14 @@ Protocol **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一�
 * 第 13 行：调用 `ExtensionLoader#getActivateExtension(url, key, group)` 方法，获得过滤器数组。
     * 🙂 不熟悉的胖友，请看 [《精尽 Dubbo 源码分析 —— 拓展机制 SPI》](http://www.iocoder.cn/Dubbo/spi/?self) 文章。 
     * 继续以上面的例子为基础，`filters` 为：
->         * EchoFilter
->         * ClassLoaderFilter
->         * GenericFilter
->         * ContextFilter
->         * TraceFilter
->         * TimeoutFilter
->         * MonitorFilter
->         * ExceptionFilter
+        * EchoFilter
+        * ClassLoaderFilter
+        * GenericFilter
+        * ContextFilter
+        * TraceFilter
+        * TimeoutFilter
+        * MonitorFilter
+        * ExceptionFilter
         * DemoFilter 【自定义】
 * 第 15 至 47 行：**倒序**循环 Filter ，创建带 Filter 链的 Invoker 对象。因为是通过**嵌套**声明匿名类循环调用的方式，所以要倒序。胖友可以手工模拟下这个过程。通过这样的方式，实际过滤的顺序，还是我们上面看到的**正序**。
 

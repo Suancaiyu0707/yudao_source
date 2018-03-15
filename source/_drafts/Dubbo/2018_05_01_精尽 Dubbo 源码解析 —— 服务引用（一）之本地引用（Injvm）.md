@@ -2,7 +2,34 @@ title: 精尽 Dubbo 源码分析 —— 服务引用（一）之本地引用（I
 date: 2018-05-01
 tags:
 categories: Dubbo
-permalink: Dubbo/reference-export-local
+permalink: Dubbo/reference-refer-local
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/reference-refer-local/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+- [2. createProxy](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+- [3. Protocol](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [3.1 ProtocolFilterWrapper](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [3.2 ProtocolListenerWrapper](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [3.3 InjvmProtocol](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+- [4. Invoker](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [4.1 AbstractInvoker](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [4.2 InjvmInvoker](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [4.3 ListenerInvokerWrapper](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
 
 -------
 
@@ -32,9 +59,9 @@ Dubbo 服务引用，**和 Dubbo 服务暴露一样**，**也**有两种方式�
 
 # 2. createProxy
 
-远程引用服务的顺序图如下：
+本地引用服务的顺序图如下：
 
-![远程流程引用顺序图](http://www.iocoder.cn/images/Dubbo/2018_05_01/02.png)
+![本地引用顺序图](http://www.iocoder.cn/images/Dubbo/2018_05_01/02.png)
 
 在 [《精尽 Dubbo 源码分析 —— API 配置（三）之服务消费者》](http://www.iocoder.cn/Dubbo/configuration-api-3/?self) 一文中，我们看到 `ReferenceConfig#init()` 方法中，会在配置初始化完成后，调用顺序图的**起点** `#createProxy(map)` 方法，开始引用服务。代码如下：
 

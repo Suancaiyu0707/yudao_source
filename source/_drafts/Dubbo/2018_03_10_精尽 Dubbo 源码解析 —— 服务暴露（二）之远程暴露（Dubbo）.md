@@ -61,7 +61,7 @@ permalink: Dubbo/service-export-remote-dubbo
 
 远程暴露服务的顺序图如下：
 
-![远程流程暴露顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_10/02.png)
+![远程暴露顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_10/02.png)
 
 在 [`#doExportUrlsFor1Protocol(protocolConfig, registryURLs)`](https://github.com/YunaiV/dubbo/blob/c635dd1990a1803643194048f408db310f06175b/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/ServiceConfig.java#L621-L648) 方法中，涉及**远程暴露服务**的代码如下：
 
@@ -125,7 +125,7 @@ permalink: Dubbo/service-export-remote-dubbo
     * 😈 为什么传递的是**注册中心的 URL** 呢？下文会详细解析。
 * 第 23 行：创建 [`com.alibaba.dubbo.config.invoker.DelegateProviderMetaDataInvoker`](https://github.com/YunaiV/dubbo/blob/c635dd1990a1803643194048f408db310f06175b/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/invoker/DelegateProviderMetaDataInvoker.java) 对象。该对象在 Invoker 对象的基础上，增加了当前服务提供者 ServiceConfig 对象。
 * 第 26 行：调用 `Protocol#export(invoker)` 方法，暴露服务。
-    * 此处 Dubbo SPI **自适应**的特性的**好处**就出来了，可以**自动**根据 URL 参数，获得对应的拓展实现。例如，`invoker` 传入后，根据 `invoker.url` 自动获得对应 Protocol 拓展实现为 InjvmProtocol 。
+    * 此处 Dubbo SPI **自适应**的特性的**好处**就出来了，可以**自动**根据 URL 参数，获得对应的拓展实现。例如，`invoker` 传入后，根据 `invoker.url` 自动获得对应 Protocol 拓展实现为 DubboProtocol 。
     * 实际上，Protocol 有两个 Wrapper 拓展实现类： ProtocolFilterWrapper、ProtocolListenerWrapper 。所以，`#export(...)` 方法的调用顺序是：
         * **Protocol$Adaptive => ProtocolFilterWrapper => ProtocolListenerWrapper => RegistryProtocol**
         * => 
