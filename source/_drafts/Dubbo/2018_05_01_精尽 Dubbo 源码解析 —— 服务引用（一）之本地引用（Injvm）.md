@@ -303,7 +303,7 @@ Exporter **接口**，在 [《精尽 Dubbo 源码分析 —— 核心流程一�
 
 本文涉及的 Invoker 类图如下：
 
-![Exporter 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/05.png)
+![Invoker 类图](http://www.iocoder.cn/images/Dubbo/2018_05_01/05.png)
 
 ## 4.1 AbstractInvoker
 

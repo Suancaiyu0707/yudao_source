@@ -33,7 +33,7 @@ permalink: Dubbo/reference-refer-dubbo
 
 远程暴露服务的顺序图如下：
 
-TODO [远程引用顺序图](http://www.iocoder.cn/images/Dubbo/2018_03_10/02.png)
+![远程引用顺序图](http://www.iocoder.cn/images/Dubbo/2018_05_04/02.png)
 
 在 [`#createProxy(map)`](https://github.com/YunaiV/dubbo/blob/c635dd1990a1803643194048f408db310f06175b/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/ServiceConfig.java#L621-L648) 方法中，涉及**远程引用服务**的代码如下：
 
@@ -206,6 +206,14 @@ private String url;
 
 # 3. Protocol
 
+**服务引用与暴露的 Protocol 很多类似点**，本文就不重复叙述了。
+
+建议不熟悉的胖友，请点击 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「3. Protocol」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 查看。
+
+本文涉及的 Protocol 类图如下：
+
+![Protocol 类图](http://www.iocoder.cn/images/Dubbo/2018_05_04/03.png)
+
 ## 3.1 ProtocolFilterWrapper
 
 接 [《精尽 Dubbo 源码分析 —— 服务引用（一）之本地引用（Injvm）》「 3.1 ProtocolFilterWrapper」](http://www.iocoder.cn/Dubbo/service-reference-local/?self) 小节。
@@ -267,7 +275,7 @@ private Cluster cluster;
  25: }
 ```
 
-* 第 3 行：获得**真实**的注册中心的 URL 。该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：[getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
+* 第 3 行：获得**真实**的注册中心的 URL 。该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：![getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
 * 第 5 行：获得注册中心 Registry 对象。
 * 第 7至 9 行：【TODO 8018】RegistryService.class
 * 第 13 行：获得服务引用配置参数集合 `qs` 。
@@ -325,7 +333,7 @@ private Cluster cluster;
 ```
 
 * 第 12 至 15 行，创建 RegistryDirectory 对象，并设置注册中心到它的属性。
-* 第 18 行：获得服务引用配置集合 `parameters` 。**注意**，`url` 传入 RegistryDirectory 后，经过处理并重新创建，所以 `url != directory.url` ，所以获得的是服务引用配置集合。如下图所示：[parameters](http://www.iocoder.cn/images/Dubbo/2018_05_04/01.png)
+* 第 18 行：获得服务引用配置集合 `parameters` 。**注意**，`url` 传入 RegistryDirectory 后，经过处理并重新创建，所以 `url != directory.url` ，所以获得的是服务引用配置集合。如下图所示：![parameters](http://www.iocoder.cn/images/Dubbo/2018_05_04/01.png)
 * 第 19 行：创建订阅 URL 对象。
 * 第 20 至 25 行：向注册中心注册**自己**（服务消费者）【TODO 8014】注册中心
 * 第 26 终 30 行：向注册中心订阅服务提供者列表 TODO 8014】注册中心
@@ -420,6 +428,10 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 【TODO 8016】
 
 # 4. Invoker
+
+本文涉及的 Invoker 类图如下：
+
+![Invoker 类图](http://www.iocoder.cn/images/Dubbo/2018_05_04/04.png)
 
 ## 4.1 DubboInvoker
 
