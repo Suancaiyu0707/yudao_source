@@ -11,17 +11,23 @@
     <meta name="sogou_site_verification" content="MpPsku240L">
 
   
-    <title>RxJava 源码解析 —— Scheduler | 芋道源码 —— 纯源码解析博客</title>
+    <title>芋道源码的周八（2018.03.18） | 芋道源码 —— 纯源码解析博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="芋道源码">
     
-    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/RxJava/scheduler/ 「芋道源码」欢迎转载，保留摘要，谢谢！
-本文主要基于 RxJava 1.2.X 版本
-本系列写作目的，为了辅助 Hystrix 的理解，因此会较为零散与琐碎，望见谅见谅。
+    <meta name="description" content="摘要: 原创出处 http://www.iocoder.cn/Weekdays/2018-03-18/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
-1. Scheduler
-2">
+1. 推荐文章
+2. 公众号文章
+3. 知识星球文章
+
+
+
+
+🙂🙂🙂关注微信公众号：【芋道源码】有福利：  
+
+RocketMQ / MyCAT /">
     
 
     
@@ -130,7 +136,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/RxJava/scheduler/" title="RxJava 源码解析 —— Scheduler" itemprop="url">RxJava 源码解析 —— Scheduler</a>
+      <a href="/Weekdays/2018-03-18/" title="芋道源码的周八（2018.03.18）" itemprop="url">芋道源码的周八（2018.03.18）</a>
   </h1>
   <p class="article-author">
       <!--By-->
@@ -139,8 +145,8 @@
     <!---->
   </p>
   <p class="article-time">
-    <!--<time datetime="2019-01-14T16:00:00.000Z" itemprop="datePublished">2019-01-15</time>-->
-    <!--更新日期:<time datetime="2018-02-24T15:04:01.000Z" itemprop="dateModified">2018-02-24</time>-->
+    <!--<time datetime="2018-03-17T16:00:00.000Z" itemprop="datePublished">2018-03-18</time>-->
+    <!--更新日期:<time datetime="2018-03-17T01:27:26.000Z" itemprop="dateModified">2018-03-17</time>-->
     <!---->
       总阅读量:<span id="busuanzi_value_page_pv"></span>次
   </p>
@@ -148,134 +154,53 @@
 	<div class="article-content">
 		
 		
-		<p>摘要: 原创出处 http://www.iocoder.cn/RxJava/scheduler/ 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
-<p><strong>本文主要基于 RxJava 1.2.X 版本</strong></p>
-<p>本系列写作目的，为了辅助 Hystrix 的理解，因此会较为零散与琐碎，望见谅见谅。</p>
+		<p>摘要: 原创出处 <a href="http://www.iocoder.cn/Weekdays/2018-03-18/">http://www.iocoder.cn/Weekdays/2018-03-18/</a> 「芋道源码」欢迎转载，保留摘要，谢谢！</p>
 <ul>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">1. Scheduler</a></li>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">2. Worker</a></li>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">3. 默认调度器实现</a></li>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">4. 操作符与调度器</a></li>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">5. 使用示例</a></li>
-<li><a href="http://www.iocoder.cn/RxJava/scheduler/">666. 彩蛋</a></li>
+<li><a href="http://www.iocoder.cn/Weekdays/2018-03-18/">1. 推荐文章</a></li>
+<li><a href="http://www.iocoder.cn/Weekdays/2018-03-18/">2. 公众号文章</a></li>
+<li><a href="http://www.iocoder.cn/Weekdays/2018-03-18/">3. 知识星球文章</a></li>
 </ul>
 <hr>
 <p><img src="http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg" alt=""></p>
 <blockquote>
-<p>🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：</p>
+<p>🙂🙂🙂关注<strong>微信公众号：【芋道源码】</strong>有福利：  </p>
 <ol>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表</li>
-<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong></li>
-<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。</li>
-<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。</li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>所有</strong>源码分析文章列表  </li>
+<li>RocketMQ / MyCAT / Sharding-JDBC <strong>中文注释源码 GitHub 地址</strong>  </li>
+<li>您对于源码的疑问每条留言<strong>都</strong>将得到<strong>认真</strong>回复。<strong>甚至不知道如何读源码也可以请教噢</strong>。  </li>
+<li><strong>新的</strong>源码解析文章<strong>实时</strong>收到通知。<strong>每周更新一篇左右</strong>。  </li>
 <li><strong>认真的</strong>源码交流微信群。</li>
 </ol>
 </blockquote>
 <hr>
-<h1>1. Scheduler</h1>
-<p><code>rx.Scheduler</code> ，<strong>抽象类</strong>，一个可以调度工作单元( <code>rx.Scheduler.Worker</code> )<strong>们</strong>的对象。</p>
-<blockquote>
-<p>FROM <a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html" rel="external nofollow noopener noreferrer" target="_blank">《ReactiveX文档中文翻译 —— Scheduler》</a><br>
-如果你想给 Observable 操作符链添加<strong>多线程</strong>功能，你可以指定操作符( 或者特定的Observable )在特定的调度器( Scheduler )上执行。</p>
-</blockquote>
-<blockquote>
-<p>某些 ReactiveX 的 Observable 操作符有一些变体，它们可以接受一个 Scheduler 参数。这个参数指定操作符将它们的部分或全部任务放在一个特定的调度器上执行。</p>
-</blockquote>
-<blockquote>
-<p><strong>使用 ObserveOn 和 SubscribeOn 操作符</strong>，你可以让 Observable 在一个特定的调度器上执行。</p>
+<h1 id="1-推荐文章"><a href="#1-推荐文章" class="headerlink" title="1. 推荐文章"></a>1. 推荐文章</h1><p>笔者在地铁有阅读公众号技术文章的习惯。</p>
+<p>给时间一点时间，给努力一点努力。</p>
 <ul>
-<li>ObserveOn 指示一个 Observable 在一个特定的调度器上调用观察者的 onNext , onError 和 onCompleted 方法。</li>
-<li>SubscribeOn 更进一步，它指示 Observable 将全部的处理过程( 包括发射数据和通知 )放在特定的调度器上执行。</li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959855&amp;idx=1&amp;sn=f33abe8ec598c273f29cebb9365ece59&amp;chksm=bd2d07f38a5a8ee58a944507a134e1da1efc3ac9c4d1c4cff261137cd986e51f5fe7cee9de15&amp;mpshare=1&amp;scene=1&amp;srcid=0213ZyJyl2HvAPbCyxeLym4K#rd" rel="external nofollow noopener noreferrer" target="_blank">《100亿数据1万属性数据架构设计》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NTA1MDEwNg==&amp;mid=2650759628&amp;idx=1&amp;sn=721d0f6d3e733f2237fc8ee4a39e9fee&amp;chksm=f3f9d459c48e5d4fb561755e017e7a4e8f3857d96141fd59e0dc6d69a3916f4d16c7784d2905&amp;mpshare=1&amp;scene=1&amp;srcid=0214Q1sCtXPfga42EG7ZZhkh#rd" rel="external nofollow noopener noreferrer" target="_blank">《一网打尽消息队列在大型分布式系统中的实战精髓 》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzIzMzk2NDQyMw==&amp;mid=2247486827&amp;idx=1&amp;sn=ed3d23c427251c1bc6c33c926983034d&amp;source=41#wechat_redirect" rel="external nofollow noopener noreferrer" target="_blank">《分布式MySQL集群方案的探索与思考》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwODA4NjMwNA==&amp;mid=2652898089&amp;idx=1&amp;sn=b42b3a331c2d560f459a0273689355c7&amp;chksm=8cdcd766bbab5e706143f3382498cf7d5666557abdcda1c8af14d083ad169a7009e6e18ac8f5&amp;mpshare=1&amp;scene=1&amp;srcid=1209MYI4LActADLHOKL2irUb#rd" rel="external nofollow noopener noreferrer" target="_blank">《谈谈工作学习中的正气》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MjM5NzQ3ODAwMQ==&amp;mid=404465806&amp;idx=1&amp;sn=3a68a786138538ffc452bca06a4892c8&amp;scene=1&amp;srcid=1202vscm8EowihOozSrbDsR8#rd" rel="external nofollow noopener noreferrer" target="_blank">《几个大型网站的Feeds(Timeline)设计简单对比》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzA4NTU2MTg3MQ==&amp;mid=2655159668&amp;idx=1&amp;sn=e2477dc3dad62295a5bead994f6a6884&amp;chksm=84602214b317ab024706f1e21f764f4ff18b459432814df2b4a0456e03982c4c6663f1d8fe4b&amp;mpshare=1&amp;scene=1&amp;srcid=0228OHF0BIpdtkgvHcB3w6g4#rd" rel="external nofollow noopener noreferrer" target="_blank">《双面管理者：雷霆手段，菩萨心肠》</a></li>
 </ul>
-</blockquote>
+<h1 id="2-公众号文章"><a href="#2-公众号文章" class="headerlink" title="2. 公众号文章"></a>2. 公众号文章</h1><p>公众号：芋道源码，纯源码解析公众号。</p>
 <ul>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Observable.java#L10404" rel="external nofollow noopener noreferrer" target="_blank"><code>Observable#subscribeOn(Scheduler)</code></a> ，在 <a href="http://www.iocoder.cn/RxJava/observable-subscribe-on-scheduler/">《RxJava 源码解析 —— Observable#subscribeOn(Scheduler)》</a> 详细解析。</li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484212&amp;idx=1&amp;sn=1ac29a5b2ba2e8adfc1e08d045012c46&amp;chksm=fa497c85cd3ef593abc1cea253aab0e81d1158d67f41c3f963dd20142af7d89732743ef0e1cd#rd" rel="external nofollow noopener noreferrer" target="_blank">《分布式事务 TCC-Transaction 源码分析 —— Dubbo 支持》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484216&amp;idx=1&amp;sn=5792653b42903c1da1409b86f50bc21e&amp;chksm=fa497c89cd3ef59f32aaf06b595febdd6c7749be6379b97735a8e64a4b0fdea1c7878fb195eb#rd" rel="external nofollow noopener noreferrer" target="_blank">《从一次 Snowflake 异常说起》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484219&amp;idx=1&amp;sn=7c22a637bbc8ce8db00fb157c62945da&amp;chksm=fa497c8acd3ef59c2657d02fe4fe18a10902e02fa8ee77fbb5e990f8a859936e52b20df74326#rd" rel="external nofollow noopener noreferrer" target="_blank">《注册中心 Eureka 源码解析 —— Eureka-Client 初始化（三）之 EurekaClient》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484220&amp;idx=1&amp;sn=3d471da8b26388b0340d606fb151d08b&amp;chksm=fa497c8dcd3ef59b077de75ead5d9f0985fc2927fa68d93f3a850fcb05a6d78177c39560e54c#rd" rel="external nofollow noopener noreferrer" target="_blank">《看透 Spring MVC 源代码分析与实践 —— Spring MVC 组件分析》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484237&amp;idx=1&amp;sn=15a062ff27b365d5744776e8c3ccd68f&amp;chksm=fa497cfccd3ef5ea5d5acd72585d12ce09f2731a22fb045a90fe7859b233404821cfa0ce0587#rd" rel="external nofollow noopener noreferrer" target="_blank">《源码圈内推信息整理(2018-03-17)》</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&amp;mid=2247484237&amp;idx=2&amp;sn=6a889ae3f58aff6ae2519a1c891932a8&amp;chksm=fa497cfccd3ef5ea333874aee1e32c4ce874f5b6adec8eff172fa0223e3204b6fe468493cffa#rd" rel="external nofollow noopener noreferrer" target="_blank">《找工作交流群（北上广深杭成都重庆）》</a></li>
 </ul>
-<p>为什么是<strong>抽象类</strong>，而不是<strong>接口</strong>呢？官方说明如下 ：</p>
-<p><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * Why is this an abstract class instead of an interface?</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *  : Java doesn't support extension methods and there are many overload methods needing default</span></div><div class="line"><span class="comment"> *    implementations.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *  : Virtual extension methods aren't available until Java8 which RxJava will not set as a minimum target for</span></div><div class="line"><span class="comment"> *    a long time.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *  : If only an interface were used Scheduler implementations would then need to extend from an</span></div><div class="line"><span class="comment"> *    AbstractScheduler pair that gives all of the functionality unless they intend on copy/pasting the</span></div><div class="line"><span class="comment"> *    functionality.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *  : Without virtual extension methods even additive changes are breaking and thus severely impede library</span></div><div class="line"><span class="comment"> *    maintenance.</span></div><div class="line"><span class="comment"> */</span></div></pre></td></tr></table></figure></p>
-<ul>
-<li>【第一、二点】Java 在 8.0 版本之前，接口不支持默认实现方法，而 Scheduler 需要多个方法提供默认实现。RxJava 考虑到兼容性，将长期使用低版本的 Java 。</li>
-<li>【第三、四点】如果将 Scheduler 定义为接口，那么需要添加一个 AbstractScheduler 抽象类，实现接口的默认方法实现。</li>
-</ul>
-<p>Scheduler 提供方法如下 ：</p>
-<ul>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L54" rel="external nofollow noopener noreferrer" target="_blank"><code>#createWorker()</code></a> <strong>抽象</strong>方法 ：创建 Worker 。</li>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L129" rel="external nofollow noopener noreferrer" target="_blank"><code>#now()</code></a> <strong>默认</strong>方法 ：返回当前时间。</li>
-<li><s><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L208" rel="external nofollow noopener noreferrer" target="_blank"><code>#when(...)</code></a> <strong>默认</strong>方法 ：跳过，Hystrix 暂未使用。</s></li>
-</ul>
-<h1>2. Worker</h1>
-<p><code>rx.Scheduler.Worker</code> ，工作单元对象<strong>抽象类</strong>，执行 Scheduler 调度的操作( <code>rx.functions.Action0</code> )。</p>
-<p>Worker 提供方法如下 ：</p>
-<ul>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L70" rel="external nofollow noopener noreferrer" target="_blank"><code>#schedule(Action0)</code></a> <strong>抽象</strong>方法 ：<strong>立即</strong>调度操作。</li>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L87" rel="external nofollow noopener noreferrer" target="_blank"><code>#schedulePeriodically(Action0, long, long, TimeUnit)</code></a> <strong>抽象</strong>方法：<strong>延迟</strong>调度操作。</li>
-<li><s><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L109" rel="external nofollow noopener noreferrer" target="_blank"><code>#schedulePeriodically(Action0, long, long, TimeUnit)</code></a> <strong>默认</strong>方法 ：<strong>周期性</strong>操作。跳过，Hystrix 暂未使用。</s></li>
-<li><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/Scheduler.java#L119" rel="external nofollow noopener noreferrer" target="_blank"><code>#now()</code></a> <strong>默认</strong>方法 ：返回当前时间。</li>
-</ul>
-<p>Worker 实现 <code>rx.Subscription</code> <strong>接口</strong>，但是并未实现对应的方法，需要子类实现，用于 ：</p>
-<ul>
-<li><code>#unsubscribe()</code> ：<strong>原意</strong>取消订阅，<strong>实意</strong>取消操作。</li>
-<li><code>#isUnsubscribed()</code> ：<strong>原意</strong>订阅是否取消，<strong>实意</strong>操作是否取消。</li>
-</ul>
-<h1>3. 默认调度器实现</h1>
-<p>在 <code>rx.internal.schedulers</code> 包下，提供了多种默认调度器的实现。</p>
-<p><img src="http://www.iocoder.cn/images/RxJava/2019_01_15/01.png" alt=""></p>
-<p><a href="https://github.com/ReactiveX/RxJava/blob/5b2394c9ee91f298661fff5e043744c84b425808/src/main/java/rx/schedulers/Schedulers.java" rel="external nofollow noopener noreferrer" target="_blank"><code>rx.schedulers.Schedulers</code></a> ，默认调度器单例工厂，创建上图调度器工厂并进行管理。</p>
-<blockquote>
-<p>参考 <a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html#%E8%B0%83%E5%BA%A6%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB" rel="external nofollow noopener noreferrer" target="_blank">《ReactiveX文档中文翻译 —— Scheduler》「调度器的种类」</a></p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>单例</th>
-<th>类</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Schedulers#io()</code></td>
-<td>CachedThreadScheduler</td>
-<td>用于 IO 密集型任务，如异步阻塞 IO 操作，这个调度器的线程池会根据需要增长</td>
-</tr>
-<tr>
-<td><code>Schedulers#computation()</code></td>
-<td>EventLoopsScheduler</td>
-<td>用于普通的计算任务，默认线程数等于处理器的数量</td>
-</tr>
-<tr>
-<td><code>Schedulers#from(Executor)</code></td>
-<td>ExecutorScheduler</td>
-<td>使用指定的 Executor 作为调度器</td>
-</tr>
-<tr>
-<td><code>Schedulers#immediate()</code></td>
-<td>ImmediateScheduler</td>
-<td>在当前线程立即开始执行任务</td>
-</tr>
-<tr>
-<td><code>Schedulers#newThread()</code></td>
-<td>NewThreadScheduler</td>
-<td>为每个任务创建一个新线程</td>
-</tr>
-<tr>
-<td><code>Schedulers#trampoline()</code></td>
-<td>TrampolineScheduler</td>
-<td>当其它排队的任务完成后，在当前线程排队开始执行</td>
-</tr>
-</tbody>
-</table>
-<p>在 Hystrix 里，继承 Scheduler <strong>抽象类</strong>，实现了<strong>自定义</strong>的 Scheduler 。</p>
-<p>因此，跳过默认调度器的源码解析。</p>
-<h1>4. 操作符与调度器</h1>
-<p>点击 <a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html#%E9%BB%98%E8%AE%A4%E8%B0%83%E5%BA%A6%E5%99%A8" rel="external nofollow noopener noreferrer" target="_blank">《ReactiveX文档中文翻译 —— Scheduler》「默认调度器」</a> 查看。</p>
-<h1>5. 使用示例</h1>
-<p>点击 <a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html#%E4%BD%BF%E7%94%A8%E8%B0%83%E5%BA%A6%E5%99%A8" rel="external nofollow noopener noreferrer" target="_blank">《ReactiveX文档中文翻译 —— Scheduler》「使用调度器」</a> 查看。</p>
-<p>可能你会觉得示例有丢丢“奇怪”，在 <a href="http://www.iocoder.cn/RxJava/observable-subscribe-on-scheduler/">《RxJava 源码解析 —— Observable#subscribeOn(Scheduler)》</a> 你将获得答案。</p>
-<h1>666. 彩蛋</h1>
+<h1 id="3-知识星球文章"><a href="#3-知识星球文章" class="headerlink" title="3. 知识星球文章"></a>3. 知识星球文章</h1><p>知识星球：芋道源码，一群给 2018 立起 Flag ，阅读源码，理解源码，分享源码。</p>
+<p>愿你是同行人。</p>
+<p><strong>精尽 Dubbo 源码解析</strong></p>
+<p>开始更新第一篇。目前写了 10 余篇，逐步放出中…</p>
+<p><img src="http://www.iocoder.cn/images/Weekdays/2018_03_18/01.png" alt=""></p>
+<p>读懂 Dubbo 源码，从《<strong>调试环境搭建</strong>》开始。</p>
+<p>加入方式：长按下方二维码。</p>
 <p><img src="http://www.iocoder.cn/images/Architecture/2017_12_29/01.png" alt="知识星球"></p>
-<p>本文偏介绍性，大量内容引用 <a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Scheduler.html" rel="external nofollow noopener noreferrer" target="_blank">《ReactiveX文档中文翻译 —— Scheduler》</a> 。</p>
-<p>后续根据需要，可能解析默认调度器的源码实现。</p>
+<p>聚有趣的灵魂<br>聊有趣的技术<br>读有趣的源码<br>写有趣的Bug  </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -283,14 +208,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/RxJava/">RxJava</a>
+  <a class="article-category-link" href="/categories/芋道源码的周八/">芋道源码的周八</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.iocoder.cn/RxJava/scheduler/" data-title="RxJava 源码解析 —— Scheduler | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.iocoder.cn/Weekdays/2018-03-18/" data-title="芋道源码的周八（2018.03.18） | 芋道源码 —— 纯源码解析博客" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -300,18 +225,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev">
- <a href="/RxJava/observable-subscribe-on-scheduler/" title="RxJava 源码解析 —— Observable#subscribeOn(Scheduler)">
+ <a href="/Eureka/project-structure/" title="Eureka 源码解析 —— 项目结构简介">
   <strong>PREVIOUS:</strong><br>
   <span>
-  RxJava 源码解析 —— Observable#subscribeOn(Scheduler)</span>
+  Eureka 源码解析 —— 项目结构简介</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/RxJava/blocking-observable/" title="RxJava 源码解析 —— BlockingObservable">
+<a href="/TCC-Transaction/http-sample/" title="TCC-Transaction 源码分析 —— 项目实战">
  <strong>NEXT:</strong><br> 
- <span>RxJava 源码解析 —— BlockingObservable
+ <span>TCC-Transaction 源码分析 —— 项目实战
 </span>
 </a>
 </div>
@@ -325,7 +250,7 @@
 
 <div id="toc" class="toc-aside">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. Scheduler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2. Worker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3. 默认调度器实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 操作符与调度器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5. 使用示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">666. 彩蛋</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-推荐文章"><span class="toc-number">1.</span> <span class="toc-text">1. 推荐文章</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-公众号文章"><span class="toc-number">2.</span> <span class="toc-text">2. 公众号文章</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-知识星球文章"><span class="toc-number">3.</span> <span class="toc-text">3. 知识星球文章</span></a></li></ol>
 </div>
 
 <div id="asidepart">
