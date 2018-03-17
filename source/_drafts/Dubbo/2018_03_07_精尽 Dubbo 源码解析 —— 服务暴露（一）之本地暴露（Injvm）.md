@@ -114,7 +114,7 @@ protected List<ProtocolConfig> protocols;
   4:  * @param provider 是否是服务提供者
   5:  * @return URL 数组
   6:  */
-  7: protected List<URL> loadRegistries(boolean provider) { // 【TODO 8004】loadRegistries
+  7: protected List<URL> loadRegistries(boolean provider) {
   8:     // 校验 RegistryConfig 配置数组。
   9:     checkRegistry();
  10:     // 创建 注册中心 URL 数组

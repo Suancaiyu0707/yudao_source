@@ -337,13 +337,13 @@ private Cluster cluster;
  17:     // all attributes of REFER_KEY
  18:     Map<String, String> parameters = new HashMap<String, String>(directory.getUrl().getParameters()); // 服务引用配置集合
  19:     URL subscribeUrl = new URL(Constants.CONSUMER_PROTOCOL, parameters.remove(Constants.REGISTER_IP_KEY), 0, type.getName(), parameters);
- 20:     // 向注册中心注册自己（服务消费者） 【TODO 8014】注册中心
+ 20:     // 向注册中心注册自己（服务消费者）
  21:     if (!Constants.ANY_VALUE.equals(url.getServiceInterface())
  22:             && url.getParameter(Constants.REGISTER_KEY, true)) {
  23:         registry.register(subscribeUrl.addParameters(Constants.CATEGORY_KEY, Constants.CONSUMERS_CATEGORY,
  24:                 Constants.CHECK_KEY, String.valueOf(false)));
  25:     }
- 26:     // 向注册中心订阅服务提供者 【TODO 8014】注册中心
+ 26:     // 向注册中心订阅服务提供者
  27:     directory.subscribe(subscribeUrl.addParameter(Constants.CATEGORY_KEY,
  28:             Constants.PROVIDERS_CATEGORY
  29:                     + "," + Constants.CONFIGURATORS_CATEGORY
@@ -351,7 +351,7 @@ private Cluster cluster;
  31: 
  32:     // 创建 Invoker 对象，【TODO 8015】集群容错
  33:     Invoker invoker = cluster.join(directory);
- 34:     // 【TODO 8014】注册中心
+ 34:     // 向本地注册表，注册消费者
  35:     ProviderConsumerRegTable.registerConsuemr(invoker, url, subscribeUrl, directory);
  36:     return invoker;
  37: }
@@ -360,11 +360,13 @@ private Cluster cluster;
 * 第 12 至 15 行，创建 RegistryDirectory 对象，并设置注册中心到它的属性。
 * 第 18 行：获得服务引用配置集合 `parameters` 。**注意**，`url` 传入 RegistryDirectory 后，经过处理并重新创建，所以 `url != directory.url` ，所以获得的是服务引用配置集合。如下图所示：![parameters](http://www.iocoder.cn/images/Dubbo/2018_05_04/01.png)
 * 第 19 行：创建订阅 URL 对象。
-* 第 20 至 25 行：向注册中心注册**自己**（服务消费者）【TODO 8014】注册中心
-* 第 26 终 30 行：向注册中心订阅服务提供者列表 TODO 8014】注册中心
+* 第 20 至 25 行：调用 `RegistryService#register(url)` 方法，向注册中心注册**自己**（服务消费者）。
+    * 在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「3. RegistryService」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
+* 第 26 终 30 行：调用 `Directory#subscribe(url)` 方法，向注册中心订阅服务提供者。
     * 在该方法中，会循环获得到的服务体用这列表，调用 `Protocol#refer(type, url)` 方法，创建每个调用服务的 Invoker 对象。
 * 第 33 行：创建 Invoker 对象，【TODO 8015】集群容错
-* 第 35 行：【TODO 8014】注册中心
+* 第 35 行：调用 `ProviderConsumerRegTable#registerConsuemr(invoker, url, subscribeUrl, directory)` 方法，向本地注册表，注册消费者。
+    * 在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「5. ProviderConsumerRegTable」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
 * 第 36 行：返回 Invoker 对象。
 
 ## 3.3 DubboProtocol

@@ -328,7 +328,7 @@ public static RegistryProtocol getRegistryProtocol() {
   6:     // 获得注册中心 URL
   7:     URL registryUrl = getRegistryUrl(originInvoker);
   8: 
-  9:     // 获得注册中心对象 【TODO 8014】注册中心
+  9:     // 获得注册中心对象
  10:     // registry provider
  11:     final Registry registry = getRegistry(originInvoker);
  12: 
@@ -338,14 +338,14 @@ public static RegistryProtocol getRegistryProtocol() {
  16:     //to judge to delay publish whether or not
  17:     boolean register = registedProviderUrl.getParameter("register", true);
  18: 
- 19:     // 【TODO 8014】注册中心
+ 19:     // 向本地注册表，注册服务提供者
  20:     ProviderConsumerRegTable.registerProvider(originInvoker, registryUrl, registedProviderUrl);
  21: 
- 22:     // 【TODO 8014】注册中心
+ 22:     // 向注册中心注册服务提供者（自己）
  23:     if (register) {
  24:         register(registryUrl, registedProviderUrl);
- 25:         ProviderConsumerRegTable.getProviderWrapper(originInvoker).setReg(true);
- 26:     }
+ 25:         ProviderConsumerRegTable.getProviderWrapper(originInvoker).setReg(true); // 标记向本地注册表的注册服务提供者，已经注册
+ 26:     } 
  27: 
  28:     // 【TODO 8015】配置规则
  29:     // Subscribe the override data
@@ -379,7 +379,7 @@ public static RegistryProtocol getRegistryProtocol() {
     }
     ```
     * 该过程是我们在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「2.1 loadRegistries」](#) 的那张图的反向流程，即**红线部分** ：![getRegistryUrl](http://www.iocoder.cn/images/Dubbo/2018_03_10/01.png)
-* 第 11 行：获得注册中心对象。 【TODO 8014】注册中心
+* 第 11 行：获得注册中心对象。
 * 第 14 行：调用 `#getRegistedProviderUrl(originInvoker)` 方法，获得服务提供者 URL 。代码如下：
 
     ```Java
@@ -422,7 +422,21 @@ public static RegistryProtocol getRegistryProtocol() {
     * **重点**，从注册中心的 URL 中获得 `export` 参数对应的值，即服务提供者的 URL 。
     * 移除**多余**的参数。因为，这些参数注册到注册中心没有实际的用途。
 * 第 17 行：配置项 `register` ，服务提供者是否注册到配置中心。
-* 第 20 行：【TODO 8014】注册中心
+* 第 20 行：调用 `ProviderConsumerRegTable#registerProvider(invoker, registryUrl)` 方法，向本地注册表，注册服务提供者。
+    * 在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「5. ProviderConsumerRegTable」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
+* 第 24 行：调用 `#register(registryUrl, registedProviderUrl)` 方法，向注册中心注册服务提供者（自己）。代码如下：
+
+    ```Java
+    public void register(URL registryUrl, URL registedProviderUrl) {
+        Registry registry = registryFactory.getRegistry(registryUrl);
+        registry.register(registedProviderUrl);
+    }
+    ```
+    * 调用 `RegistryService#register(url)` 方法，在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「3. RegistryService」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
+
+* 第 25 行：标记向本地注册表的注册服务提供者，已经注册。
+    * 在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「5. ProviderConsumerRegTable」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
+
 * 第 23 至 26 行：// 【TODO 8015】配置规则
 * 第 36 行：创建 DestroyableExporter 对象。
 
@@ -662,8 +676,6 @@ private class ExporterChangeableWrapper<T> implements Exporter<T> {
 ## 4.2 DestroyableExporter
 
 [`com.alibaba.dubbo.registry.integration.RegistryProtocol.DestroyableExporter`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-registry/dubbo-registry-api/src/main/java/com/alibaba/dubbo/registry/integration/RegistryProtocol.java#L456-L506) ，实现 Exporter 接口，可销毁的 Exporter 实现类。
-
-【TODO 8014】注册中心
 
 【TODO 8015】配置规则
 
