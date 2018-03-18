@@ -1,3 +1,41 @@
+title: 精尽 Dubbo 源码分析 —— Zookeeper 客户端
+date: 2018-07-01
+tags:
+categories: Dubbo
+permalink: Dubbo/remoting-zookeeper
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-zookeeper/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+- [2. 接口](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [2.1 StateListener](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [2.2 ChildListener](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [2.3 ZookeeperClient](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [2.4 AbstractZookeeperClient](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [2.5 ZookeeperTransporter](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+- [3. 基于 Curator 实现](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [3.1 CuratorZookeeperClient](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [3.2 CuratorZookeeperTransporter](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+- [4. 基于 ZkClient 实现](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [4.1 ZkclientZookeeperClient](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+  - [4.2 ZkclientZookeeperTransporter](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-zookeeper/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 在 `dubbo-remoting-zookeeper` 模块，实现了 Dubbo 对 Zookeeper 客户端的封装。在该模块中，抽象了**通用**的 Zookeeper Client API 接口，实现了**两种** Zookeeper Client 库的接入：
@@ -20,7 +58,7 @@
 
 `dubbo-remoting-zookeeper` 的整体类图如下：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_07_01/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_07_01/01.png)
 
 下面，我们按照接口到实现的顺序，往下看。
 
@@ -161,7 +199,7 @@ public interface ZookeeperClient {
     * `#addStateListener(listener)`
     * `#removeStateListener(listener)` 
 
-## 2.4 ZookeeperTransporter
+## 2.4 AbstractZookeeperClient
 
 `com.alibaba.dubbo.remoting.zookeeper.support.AbstractZookeeperClient` ，实现 ZookeeperClient 接口，Zookeeper 客户端**抽象类**，实现通用的逻辑。
 
@@ -381,6 +419,9 @@ public interface ZookeeperTransporter {
 
 Apache Curator ，作为 Zookeeper 客户端的库，基本是**最佳**的选择，在 Sharding-JDBC、Elastic-Job 等等中间都选择了 Curator 连接 Zookeeper 。
 
+> 友情提示，如果对 Curator 的 API 不熟悉的胖友，推荐看下官方文档，进行下学习。  
+> 🙂 本文不会写 Curator 使用方法。
+
 ## 3.1 CuratorZookeeperClient
 
 `com.alibaba.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient` ，实现 ZookeeperTransporter 抽象类，基于 Curator 的 Zookeeper 客户端实现类。
@@ -540,13 +581,21 @@ public class CuratorZookeeperTransporter implements ZookeeperTransporter {
 
 ## 4.1 ZkclientZookeeperClient
 
+[`com.alibaba.dubbo.remoting.zookeeper.zkclient.ZkclientZookeeperClient`](https://github.com/YunaiV/dubbo/blob/66a1e1b0ef4b01175be148d27fdcf519f4f01b15/dubbo-remoting/dubbo-remoting-zookeeper/src/main/java/com/alibaba/dubbo/remoting/zookeeper/zkclient/ZkclientZookeeperClient.java)
+
 ### 4.1.1 ZkClientWrapper
 
+[`com.alibaba.dubbo.remoting.zookeeper.zkclient.ZkClientWrapper`](https://github.com/YunaiV/dubbo/blob/66a1e1b0ef4b01175be148d27fdcf519f4f01b15/dubbo-remoting/dubbo-remoting-zookeeper/src/main/java/com/alibaba/dubbo/remoting/zookeeper/zkclient/ZkClientWrapper.java)
+
 ## 4.2 ZkclientZookeeperTransporter
+
+[`com.alibaba.dubbo.remoting.zookeeper.zkclient.ZkclientZookeeperTransporter`](https://github.com/YunaiV/dubbo/blob/66a1e1b0ef4b01175be148d27fdcf519f4f01b15/dubbo-remoting/dubbo-remoting-zookeeper/src/main/java/com/alibaba/dubbo/remoting/zookeeper/zkclient/ZkclientZookeeperTransporter.java)
 
 # 666. 彩蛋
 
 ![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
 小文一篇。
+
+发现，即使很简单的文章，例如本文，也要写 3 小时左右。
 
