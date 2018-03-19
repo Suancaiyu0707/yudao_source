@@ -48,7 +48,7 @@ permalink: Dubbo/registry-zookeeper
 
 下面，我们先来看下 [《Dubbo 用户指南 —— zookeeper 注册中心》](http://dubbo.io/books/dubbo-user-book/references/registry/zookeeper.html) 文档，内容如下：
 
-> [类图](http://www.iocoder.cn/images/Dubbo/2018_08_04/01.png)
+> ![类图](http://www.iocoder.cn/images/Dubbo/2018_08_04/01.png)
 > 
 > 流程说明：
 > 
