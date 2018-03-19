@@ -362,7 +362,7 @@ private Cluster cluster;
 * 第 19 行：创建订阅 URL 对象。
 * 第 20 至 25 行：调用 `RegistryService#register(url)` 方法，向注册中心注册**自己**（服务消费者）。
     * 在 [《精尽 Dubbo 源码分析 —— 注册中心（一）之抽象 API》「3. RegistryService」 ](http://www.iocoder.cn/Dubbo/registry-api/?self) ，有详细解析。
-* 第 26 终 30 行：调用 `Directory#subscribe(url)` 方法，向注册中心订阅服务提供者。
+* 第 26 终 30 行：调用 `Directory#subscribe(url)` 方法，向注册中心订阅服务提供者 + 路由规则 + 配置规则。
     * 在该方法中，会循环获得到的服务体用这列表，调用 `Protocol#refer(type, url)` 方法，创建每个调用服务的 Invoker 对象。
 * 第 33 行：创建 Invoker 对象，【TODO 8015】集群容错
 * 第 35 行：调用 `ProviderConsumerRegTable#registerConsuemr(invoker, url, subscribeUrl, directory)` 方法，向本地注册表，注册消费者。
