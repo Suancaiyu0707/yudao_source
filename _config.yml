@@ -105,8 +105,10 @@ baidusitemap:
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: baidu_url_submitter
+
+#deploy:
+#  type: baidu_url_submitter
+
 #  type: git
 #  repo:
 #    github: https://github.com/YunaiV/yunaiv.github.io.git

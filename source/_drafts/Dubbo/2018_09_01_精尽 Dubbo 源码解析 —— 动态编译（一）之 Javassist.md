@@ -6,6 +6,28 @@ permalink: Dubbo/compiler-javassist
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/compiler-javassist/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+- [2. Compiler](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+- [3. AdaptiveCompiler](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+- [4. AbstractCompiler](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+- [5. JavassistCompiler](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/compiler-javassist/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 在 Java 语言中，大多数情况下，我们已经编写好 Java 类，并编译成 Class 文件进行运行。但是在一些场景下，例如动态代理，需要运用到**动态编译**的技术。虽然我们也可以用反射的技术实现，但是相比来说，还是有一定的性能差距。
@@ -78,7 +100,7 @@ public interface Compiler {
 ```
 
 * `@SPI("javassist")` 注解，使用 Dubbo SPI 机制，默认拓展为 Javassist 。
-* `code` 参数，Java 代码字符串。如下是 ProxyFactory$Adaptive 的自适应拓展的代码实现的字符串生成**例子**：[自适应拓展的代码实现的字符串生成例子](http://www.iocoder.cn/images/Dubbo/2018_03_04/05.png)
+* `code` 参数，Java 代码字符串。如下是 ProxyFactory$Adaptive 的自适应拓展的代码实现的字符串生成**例子**：![自适应拓展的代码实现的字符串生成例子](http://www.iocoder.cn/images/Dubbo/2018_03_04/05.png)
 
 # 3. AdaptiveCompiler
 
@@ -125,7 +147,6 @@ public interface Compiler {
         AdaptiveCompiler.setDefaultCompiler(compiler);
     }
     ```
-    
     * 在 `<dubbo:application compiler="" />` 配置下，可触发该方法。
 
 * `#compile(code, classLoader)` **实现**方法：
