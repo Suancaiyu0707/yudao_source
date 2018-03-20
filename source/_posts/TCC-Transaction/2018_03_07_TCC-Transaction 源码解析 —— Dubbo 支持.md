@@ -130,8 +130,7 @@ Dubbo 的 Invoker 模型是非常关键的概念，看下图：
 > Javassist 的主要的优点，在于简单，而且快速，直接使用 Java 编码的形式，而不需要了解虚拟机指令，就能动态改变类的结构，或者动态生成类。  
 
 * 粗略一看，可能不够形象，下面我们通过看 TCC-Transaction 如何使用来理解理解。
-* [《Java学习之javassist
-》](http://www.cnblogs.com/sunfie/p/5154246.html)
+* [《Java学习之javassist》](http://www.cnblogs.com/sunfie/p/5154246.html)
 * [《Javassist 字节码操作》](http://blog.csdn.net/qbg19881206/article/details/8993562)
 
 ### 2.1.2 TccJavassistProxyFactory
