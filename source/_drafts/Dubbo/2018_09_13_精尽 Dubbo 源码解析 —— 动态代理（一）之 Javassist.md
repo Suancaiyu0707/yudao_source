@@ -1,3 +1,42 @@
+title: 精尽 Dubbo 源码分析 —— 动态代理（一）之 Javassist
+date: 2018-09-13
+tags:
+categories: Dubbo
+permalink: Dubbo/proxy-javassist
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/proxy-javassist/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [2. 性能](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [3. 整体流程](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [4. ProxyFactory](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [4.1 AbstractProxyFactory](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [4.2 StubProxyFactoryWrapper](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [4.3 JavassistProxyFactory](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [5. InvokerInvocationHandler](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [6. AbstractProxyInvoker](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [6.1 属性](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [6.2 invoke](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [7. bytecode](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [7.1 ClassGenerator](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [7.3 Proxy](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+  - [7.4 Wrapper](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/proxy-javassist/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
 
 # 1. 概述
 
@@ -26,13 +65,13 @@
 * [《动态代理方案性能对比》](http://javatar.iteye.com/blog/814426)
 * 来自老徐的某篇文章
 
-    > [菜逼老徐](http://www.iocoder.cn/images/Dubbo/2018_09_13/01.png)
+    > ![菜逼老徐](http://www.iocoder.cn/images/Dubbo/2018_09_13/01.png)
 
 # 3. 整体流程
 
 😈 瞎比比了这么多，我们开始进入正题了。相信很多胖友对**动态代理**的概念已经理解（如果暂时不理解，请 Google 下），那么 Dubbo 对它们使用在哪呢？见下图：
 
-[菜逼老王](http://www.iocoder.cn/images/Dubbo/2018_09_13/02.png)
+![菜逼老王](http://www.iocoder.cn/images/Dubbo/2018_09_13/02.png)
 
 > 旁白君：本图暂不考虑集群容错、网络调用、序列化反序列等。
 
@@ -222,7 +261,7 @@
 
 在 [《精尽 Dubbo 源码分析 —— 核心流程一览》](http://www.iocoder.cn/Dubbo/implementation-intro/) 的 [「4.5 ProxyFactory」](#)，已经分享，胖友点击查看。
 
-[ProxyFactory 子类](http://www.iocoder.cn/images/Dubbo/2018_03_01/13.png)
+![ProxyFactory 子类](http://www.iocoder.cn/images/Dubbo/2018_03_01/13.png)
 
 ## 4.1 AbstractProxyFactory
 
@@ -372,7 +411,8 @@
             // 无异常，返回结果
             return result;
         }
-        ```    
+        ```
+        * x  
 
 🙂 通过 InvokerInvocationHandler ，可以实现 Proxy 和真正的逻辑解耦。
 
