@@ -22,6 +22,8 @@ permalink: Dubbo/service-export-local
   - [4.1 AbstractExporter](http://www.iocoder.cn/Dubbo/service-export-local/)
   - [4.2 InjvmExporter](http://www.iocoder.cn/Dubbo/service-export-local/)
   - [4.3 ListenerExporterWrapper](http://www.iocoder.cn/Dubbo/service-export-local/)
+- [5. ExporterListener](http://www.iocoder.cn/Dubbo/service-export-local/)
+  - [5.1 ExporterListenerAdapter](http://www.iocoder.cn/Dubbo/service-export-local/)
 - [666. 彩蛋](http://www.iocoder.cn/Dubbo/service-export-local/)
 
 -------
@@ -722,6 +724,57 @@ public class ListenerExporterWrapper<T> implements Exporter<T> {
 
 * **构造方法**，循环 `listeners` ，执行 `ExporterListener#exported(listener)` 。若执行过程中发生异常 RuntimeException ，打印错误日志，继续执行，最终才抛出。
 * `#unexport()` 方法，循环 `listeners` ，执行 `ExporterListener#unexported(listener)` 。若执行过程中发生异常 RuntimeException ，打印错误日志，继续执行，最终才抛出。
+
+# 5.  ExporterListener
+
+[`com.alibaba.dubbo.rpc.ExporterListener`](https://github.com/YunaiV/dubbo/blob/6de0a069fcc870894e64ffd54a24e334b19dcb36/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/ExporterListener.java) ，Exporter 监听器。
+
+代码如下：
+
+```Java
+@SPI
+public interface ExporterListener {
+
+    /**
+     * The exporter exported.
+     *
+     * 当服务暴露完成
+     *
+     * @param exporter
+     * @throws RpcException
+     * @see com.alibaba.dubbo.rpc.Protocol#export(Invoker)
+     */
+    void exported(Exporter<?> exporter) throws RpcException;
+
+    /**
+     * The exporter unexported.
+     *
+     * 当服务取消暴露完成
+     *
+     * @param exporter
+     * @throws RpcException
+     * @see com.alibaba.dubbo.rpc.Exporter#unexport()
+     */
+    void unexported(Exporter<?> exporter);
+
+}
+```
+
+![ExporterListener 子类](http://www.iocoder.cn/images/Dubbo/2018_03_01/17.png)
+
+## 5.1 ExporterListenerAdapter
+
+`com.alibaba.dubbo.rpc.listener.ExporterListenerAdapter` ，实现 ExporterListener 接口，ExporterListener 适配器抽象类。代码如下：
+
+```Java
+public abstract class ExporterListenerAdapter implements ExporterListener {
+
+    public void exported(Exporter<?> exporter) throws RpcException { }
+
+    public void unexported(Exporter<?> exporter) throws RpcException { }
+
+}
+```
 
 # 666. 彩蛋
 

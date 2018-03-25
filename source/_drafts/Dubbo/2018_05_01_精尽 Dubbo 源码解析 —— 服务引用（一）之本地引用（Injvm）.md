@@ -18,6 +18,9 @@ permalink: Dubbo/reference-refer-local
   - [4.1 AbstractInvoker](http://www.iocoder.cn/Dubbo/reference-refer-local/)
   - [4.2 InjvmInvoker](http://www.iocoder.cn/Dubbo/reference-refer-local/)
   - [4.3 ListenerInvokerWrapper](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+- [4. InvokerListener](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [4.1 InvokerListenerAdapter](http://www.iocoder.cn/Dubbo/reference-refer-local/)
+  - [4.2 DeprecatedInvokerListener](http://www.iocoder.cn/Dubbo/reference-refer-local/)
 - [666. 彩蛋](http://www.iocoder.cn/Dubbo/reference-refer-local/)
 
 -------
@@ -254,7 +257,11 @@ private String url;
 
 ### 3.1.2 buildInvokerChain
 
-和 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「3.1.3  buildInvokerChain」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 基本一致，**默认情况下**，获得的 Filter 数组结果相同。
+和 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》「3.1.3  buildInvokerChain」](http://www.iocoder.cn/Dubbo/service-export-local/?self) 基本一致，**默认情况下**，获得的 Filter 数组如下：
+
+* ConsumerContextFilter
+* FutureFilter
+* MonitorFilter
 
 当然，因为传入的参数 `group` 不同，如果胖友自定义了**自动激活**的 Filter 只出现在 `group = consumer` ，那么服务消费者就会多一个该 Filter 实现。
 
@@ -468,6 +475,100 @@ public class ListenerInvokerWrapper<T> implements Invoker<T> {
 
 * **构造方法**，循环 `listeners` ，执行 `InvokerListener#referred(invoker)` 方法。😈 和 ListenerExporterWrapper 不同，若执行过程中发生异常 RuntimeException ，**仅**打印错误日志，继续执行，最终**不**抛出异常。
 * `#unexport()` 方法，循环 `listeners` ，执行 `InvokerListener#destroyed(invoker)` 。😈 和 ListenerExporterWrapper 不同，若执行过程中发生异常 RuntimeException ，**仅**打印错误日志，继续执行，最终**不**抛出异常。
+
+# 5. InvokerListener
+
+[`com.alibaba.dubbo.rpc.InvokerListener`](https://github.com/YunaiV/dubbo/blob/6de0a069fcc870894e64ffd54a24e334b19dcb36/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/InvokerListener.java) ，Invoker 监听器。
+
+代码如下：
+
+```Java
+@SPI
+public interface InvokerListener {
+
+    /**
+     * The invoker referred
+     *
+     * 当服务引用完成
+     *
+     * @param invoker
+     * @throws RpcException
+     * @see com.alibaba.dubbo.rpc.Protocol#refer(Class, URL)
+     */
+    void referred(Invoker<?> invoker) throws RpcException;
+
+    /**
+     * The invoker destroyed.
+     *
+     * 当服务销毁引用完成
+     *
+     * @param invoker
+     * @see com.alibaba.dubbo.rpc.Invoker#destroy()
+     */
+    void destroyed(Invoker<?> invoker);
+
+}
+```
+
+![InvokerListener 子类](http://www.iocoder.cn/images/Dubbo/2018_03_01/16.png)
+
+## 5.1 InvokerListenerAdapter
+
+`com.alibaba.dubbo.rpc.listener.InvokerListenerAdapter` ，实现 InvokerListener 接口，InvokerListener 适配器**抽象类**。代码如下：
+
+```Java
+public abstract class InvokerListenerAdapter implements InvokerListener {
+
+    public void referred(Invoker<?> invoker) throws RpcException { }
+
+    public void destroyed(Invoker<?> invoker) { }
+
+}
+```
+
+## 5.2 DeprecatedInvokerListener
+
+`com.alibaba.dubbo.rpc.listener.DeprecatedInvokerListener` ，实现 InvokerListenerAdapter **抽象类** ，引用废弃的服务时，打印错误日志提醒。代码如下：
+
+```Java
+@Activate(Constants.DEPRECATED_KEY)
+public class DeprecatedInvokerListener extends InvokerListenerAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeprecatedInvokerListener.class);
+
+    public void referred(Invoker<?> invoker) throws RpcException {
+        if (invoker.getUrl().getParameter(Constants.DEPRECATED_KEY, false)) {
+            LOGGER.error("The service " + invoker.getInterface().getName() + " is DEPRECATED! Declare from " + invoker.getUrl());
+        }
+    }
+
+}
+```
+
+* `@Activate(Constants.DEPRECATED_KEY)` 注解，基于 Dubbo SPI Activate 机制加载。配置方式如下：
+
+    ```XML
+    <dubbo:service interface="com.alibaba.dubbo.demo.DemoService" ref="demoService" deprecated="true" />
+    ```  
+    * 通过设置 `"deprecated"` 为 `true` 来设置。
+    * 该方式仅适用于**远程引用**服务。
+ 
+* 在 `#referred(invoker)` 方法中，打印错误日志，例如：
+
+    ```Java
+    [25/03/18 07:37:56:056 CST] main ERROR listener.DeprecatedInvokerListener:  [DUBBO] The service com.alibaba.dubbo.demo.DemoService is DEPRECATED! Declare from dubbo://192.168.3.17:20880/com.alibaba.dubbo.demo.DemoService?anyhost=true&application=demo-consumer&check=false&compiler=jdk&default.delay=-1&default.retries=0&delay=-1&deprecated=true&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.demo.DemoService&methods=sayHello,bye&pid=45155&qos.port=33333&register.ip=192.168.3.17&remote.timestamp=1521977820764&service.filter=demo&side=consumer&timestamp=1521977854685, dubbo version: 2.0.0, current host: 192.168.3.17
+    group:consumer
+    ```
+
+另外，**本地引用**服务的配置方式如下：
+
+```XML
+<dubbo:reference id="demoService" interface="com.alibaba.dubbo.demo.DemoService" protocol="injvm">
+    <dubbo:parameter key="deprecated" value="true" />
+</dubbo:reference>
+```
+
+* 因为，本地引用服务时，不是使用服务提供者的 URL ，而是服务消费者的 URL 。
 
 # 666. 彩蛋
 
