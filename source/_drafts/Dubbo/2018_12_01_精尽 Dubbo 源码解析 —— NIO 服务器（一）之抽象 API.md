@@ -1,3 +1,45 @@
+title: 精尽 Dubbo 源码分析 —— NIO 服务器（一）之抽象 API
+date: 2018-12-01
+tags:
+categories: Dubbo
+permalink: Dubbo/remoting-api-interface
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-api-interface/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [2. 一览](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [3. 最外层：通用接口](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [4. Endpoint](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [4.1 Channel](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [4.2 Client](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [4.3 Server](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [5. ChannelHandler](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [6. Transporter](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [6.1 Transporters](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [7. Codec2](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [7.1 Codec](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [7.2 Decodeable](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [8. Dispatcher](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [9. RemotingException](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [9.1 ExecutionException](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+  - [9.2 TimeoutException](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-api-interface/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 从本小节开始，我们来分享 Dubbo **自己**实现的 NIO 服务器，使用在 [`dubbo://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html) 和 [`thrift://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/thrift.html) 协议上。
@@ -21,7 +63,7 @@ Dubbo 开发团队的选择是：
 
 还是老样子，笔者习惯性对代码量进行下统计，`dubbo-remoting` 的**代码量**如下图：
 
-[代码量](http://www.iocoder.cn/images/Dubbo/2018_12_01/01.png)
+![代码量](http://www.iocoder.cn/images/Dubbo/2018_12_01/01.png)
 
 WTF ！！！ `dubbo-remoting-api` 的代码量竟然近**万行**？
 
@@ -33,7 +75,7 @@ WTF ！！！ `dubbo-remoting-api` 的代码量竟然近**万行**？
 
 > FROM [《Dubbo 开发指南 —— 框架设计》](https://dubbo.gitbooks.io/dubbo-dev-book/design.html)
 > 
-> [整体设计](http://www.iocoder.cn/images/Dubbo/2018_12_01/02.png)
+> ![整体设计](http://www.iocoder.cn/images/Dubbo/2018_12_01/02.png)
 
 **红框部分**，Protocol => Exchange => Transport => Serialize 的调用顺序。
 
@@ -50,7 +92,7 @@ WTF ！！！ `dubbo-remoting-api` 的代码量竟然近**万行**？
 
 看完以上知识，我们在回过头看 `dubbo-remoting-api` 的项目结构就清晰了：
 
-[dubbo-remoting-api](http://www.iocoder.cn/images/Dubbo/2018_12_01/03.png)
+![dubbo-remoting-api](http://www.iocoder.cn/images/Dubbo/2018_12_01/03.png)
 
 * 最外层：通用接口。
 * `buffer` 包：缓冲区。
@@ -84,7 +126,7 @@ WTF ！！！ `dubbo-remoting-api` 的代码量竟然近**万行**？
 因为**教程文章**，以教程 Demo 为准，实际会有更多需要抽象的，例如：Codec 协议编解码，Dispatcher 消息等分发。胖友再来看看 `dubbo://`  的处理流程：
 
 > FROM [《Dubbo 用户指南 —— dubbo://》](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html)  
-> [dubbo:// ](http://www.iocoder.cn/images/Dubbo/2018_12_01/04.png)
+> ![dubbo:// ](http://www.iocoder.cn/images/Dubbo/2018_12_01/04.png)
 > 
 > * Transporter: mina, netty, grizzy
 > * Serialization: dubbo, hessian2, java, json
@@ -95,7 +137,7 @@ WTF ！！！ `dubbo-remoting-api` 的代码量竟然近**万行**？
 
 **本文涉及的类图如下**：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_01/05.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_01/05.png)
 
 # 4. Endpoint
 
