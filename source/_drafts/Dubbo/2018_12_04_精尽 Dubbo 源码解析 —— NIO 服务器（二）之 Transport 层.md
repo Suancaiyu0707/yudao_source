@@ -1,3 +1,53 @@
+title: 精尽 Dubbo 源码分析 —— NIO 服务器（二）之 Transport 层
+date: 2018-12-04
+tags:
+categories: Dubbo
+permalink: Dubbo/remoting-api-transport
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-api-transport/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [2. AbstractPeer](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [2.1 AbstractEndpint](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [3. Client](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [3.1 AbstractClient](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [3.2 ClientDelegate](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [4. Server](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [4.1 AbstractServer](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [4.2 ServerDelegate](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [5. Channel](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [5.1 AbstractChannel](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [5.2 ChannelDelegate](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [7. ChannelHandler](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [7.1 ChannelHandlerAdapter](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [7.2 ChannelHandlerDispatcher](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [7.3 ChannelHandlerDelegate](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [8. Dispacher](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [8.1 ChannelHandlers](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [8.2 Dispatcher 实现类](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [8.3 ChannelEventRunnable](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [8.4 WrappedChannelHandler](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [9. Codec](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [9.1 CodecSupport](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [9.2 AbstractCodec](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+  - [9.3 CodecAdapter](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-api-transport/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文接 [《精尽 Dubbo 源码分析 —— NIO 服务器（一）之抽象 API》](http://www.iocoder.cn/Dubbo/remoting-api-interface/?self) 一文，分享 `dubbo-remoting-api` 模块， `transport` 包，**网络传输层**。
@@ -6,7 +56,7 @@
 
 涉及的类图如下：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/01.png)
 
 * 白色部分，为通用接口。
 * 蓝色部分，为 `transport` 包下的类。
@@ -90,7 +140,10 @@ public void send(Object message) throws RemotingException {
 }
 ```
 
-* TODO 芋艿，sent ？？？
+* `sent` 配置项：
+    * `true` 等待消息发出，消息发送失败将抛出异常。
+    * `false` 不等待消息发出，将消息放入 IO 队列，即刻返回。
+    * 详细参见：[《Dubbo 用户指南 —— 异步调用》](https://dubbo.gitbooks.io/dubbo-user-book/demos/async-call.html)
 
 **其他方法**
 
@@ -98,7 +151,7 @@ public void send(Object message) throws RemotingException {
 
 ## 2.1 AbstractEndpint
 
-[`com.alibaba.dubbo.remoting.transport.AbstractPeer.AbstractEndpint`](TODO) ，实现 Resetable 接口，继承 AbstractPeer 抽象类，**端点**抽象类。
+[`com.alibaba.dubbo.remoting.transport.AbstractPeer.AbstractEndpint`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractEndpoint.java) ，实现 Resetable 接口，继承 AbstractPeer 抽象类，**端点**抽象类。
 
 **构造方法**
 
@@ -147,7 +200,7 @@ public void send(Object message) throws RemotingException {
 
 ## 3.1 AbstractClient
 
-[`com.alibaba.dubbo.remoting.transport.AbstractClient`](TODO) ，实现 Client 接口，继承 AbstractEndpoint 抽象类，**客户端**抽象类，**重点**实现了公用的重连逻辑，同时抽象了连接等模板方法，供子类实现。抽象方法如下：
+[`com.alibaba.dubbo.remoting.transport.AbstractClient`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractClient.java) ，实现 Client 接口，继承 AbstractEndpoint 抽象类，**客户端**抽象类，**重点**实现了公用的重连逻辑，同时抽象了连接等模板方法，供子类实现。抽象方法如下：
 
 ```Java
 protected abstract void doOpen() throws Throwable;
@@ -457,11 +510,11 @@ protected static final String CLIENT_THREAD_POOL_NAME = "DubboClientHandler";
 
 **子类类图**
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/03.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/03.png)
 
 ## 3.2 ClientDelegate 
 
-[`com.alibaba.dubbo.remoting.transport.ClientDelegate`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ClientDelegate.java) ，实现 Client 接口，客户端委托实现类。在每个实现的方法里，直接调用被委托的 [`client`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ClientDelegate.java#L31) 属性的方法。
+[`com.alibaba.dubbo.remoting.transport.ClientDelegate`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ClientDelegate.java) ，实现 Client 接口，客户端装饰者实现类。在每个实现的方法里，直接调用被装饰的 [`client`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ClientDelegate.java#L31) 属性的方法。
 
 目前 `dubbo-rpc-default` 模块中，[ChannelWrapper](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-rpc/dubbo-rpc-default/src/main/java/com/alibaba/dubbo/rpc/protocol/dubbo/ChannelWrappedInvoker.java#L91-L160) 继承了 ClientDelegate 类。但实际上，ChannelWrapper **重新实现了所有的方法**，并且，并未复用任何方法。所以，ClientDelegate 目前用途不大。
 
@@ -470,7 +523,7 @@ protected static final String CLIENT_THREAD_POOL_NAME = "DubboClientHandler";
 ## 4.1 AbstractServer
 
 
-[`com.alibaba.dubbo.remoting.transport.AbstractServer`](TODO) ，实现 Server 接口，继承 AbstractEndpoint 抽象类，**服务器**抽象类，**重点**实现了公用的逻辑，同时抽象了开启、关闭等模板方法，供子类实现。抽象方法如下：
+[`com.alibaba.dubbo.remoting.transport.AbstractServer`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractServer.java) ，实现 Server 接口，继承 AbstractEndpoint 抽象类，**服务器**抽象类，**重点**实现了公用的逻辑，同时抽象了开启、关闭等模板方法，供子类实现。抽象方法如下：
 
 ```Java
 protected abstract void doOpen() throws Throwable;
@@ -536,7 +589,7 @@ protected abstract void doClose() throws Throwable;
  53: }
 ```
 
-* 第 24 至 36 行：从 URL 中，加载 `localAddress` `bindAddress` `accepts` `idleTimeout` 配置项。比较难理解的，可能是两个地址属性，如下是比例提供的一个例子：[例子](http://www.iocoder.cn/images/Dubbo/2018_12_04/02.png)
+* 第 24 至 36 行：从 URL 中，加载 `localAddress` `bindAddress` `accepts` `idleTimeout` 配置项。比较难理解的，可能是两个地址属性，如下是比例提供的一个例子：![例子](http://www.iocoder.cn/images/Dubbo/2018_12_04/02.png)
     * 配置项可在 [`#reset(url)`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractServer.java#L80-L129) 方法中，重置属性。 
 * 第 38 至 47 行：调用 `#doOpen()` 方法，开启服务器。
 * 第 49 至 52 行：从 [DataStore](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-common/src/main/java/com/alibaba/dubbo/common/store/DataStore.java) 中，获得线程池。
@@ -592,11 +645,11 @@ public void send(Object message, boolean sent) throws RemotingException {
 
 **子类类图**
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/04.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/04.png)
 
 ## 4.2 ServerDelegate
 
-[`com.alibaba.dubbo.remoting.transport.ServerDelegate`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ServerDelegate.java) ，实现 Client 接口，客户端委托实现类。在每个实现的方法里，直接调用被委托的 [`server`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ServerDelegate.java#L35) 属性的方法。
+[`com.alibaba.dubbo.remoting.transport.ServerDelegate`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ServerDelegate.java) ，实现 Client 接口，客户端装饰者实现类。在每个实现的方法里，直接调用被装饰的 [`server`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ServerDelegate.java#L35) 属性的方法。
 
 目前 `dubbo-remoting-p2p` 模块中，PeerServer 会继承该类，后续再看。
 
@@ -608,15 +661,513 @@ public void send(Object message, boolean sent) throws RemotingException {
 
 **发送消息**
 
+```Java
+@Override
+public void send(Object message, boolean sent) throws RemotingException {
+    if (isClosed()) {
+        throw new RemotingException(this, "Failed to send message "
+                + (message == null ? "" : message.getClass().getName()) + ":" + message
+                + ", cause: Channel closed. channel: " + getLocalAddress() + " -> " + getRemoteAddress());
+    }
+}
+```
+
+* 具体的发送方法，子类实现。在 AbstractChannel 中，目前只做状态检查。
+
 **子类类图**
 
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/05.png)
 
+## 5.2 ChannelDelegate
+
+[`com.alibaba.dubbo.remoting.transport.ChannelDelegate`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ChannelDelegate.java) ，实现 Channel 接口，通道装饰者实现类。在每个实现的方法里，直接调用被装饰的 [`channel`](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ChannelDelegate.java#L31) 属性的方法。
+
+目前 Dubbo 中，暂未用到。
 
 # 7. ChannelHandler
 
+## 7.1 ChannelHandlerAdapter
+
+`com.alibaba.dubbo.remoting.transport.ChannelHandlerAdapter` ，实现 ChannelHandler 接口，通道处理器**适配器**，每个方法为空实现。代码如下：
+
+```Java
+@Override public void connected(Channel channel) throws RemotingException { }
+
+@Override public void disconnected(Channel channel) throws RemotingException { }
+
+@Override public void sent(Channel channel, Object message) { }
+
+@Override public void received(Channel channel, Object message) throws RemotingException { }
+
+@Override public void caught(Channel channel, Throwable exception) throws RemotingException { }
+```
+
+子类，可继承它，**仅实现**想要的方法。
+
+## 7.2 ChannelHandlerDispatcher
+
+`com.alibaba.dubbo.remoting.transport.ChannelHandlerDispatcher` ，实现 ChannelHandler 接口，通道处理器**调度器**。在它内部，有一个通道处理器数组 [`channelHandlers`](https://github.com/YunaiV/dubbo/blob/4fa80f25673c4e7060847a711a87ea37ed152d91/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/ChannelHandlerDispatcher.java#L35) 属性。
+
+每个实现的方法，都会循环调用 `channelHandlers` 的方法，例如：
+
+```Java
+public void received(Channel channel, Object message) {
+    for (ChannelHandler listener : channelHandlers) {
+        try {
+            listener.received(channel, message);
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+}
+```
+
+搜索了下 ChannelHandlerDispatcher 的使用情况，主要用在 `dubbo-remoting-p2p` 的 AbstractGroup 中。
+
+## 7.3 ChannelHandlerDelegate
+
+`com.alibaba.dubbo.remoting.transport.ChannelHandlerDelegate` ，实现 ChannelHandler 接口，通道处理器**装饰者**接口。方法如下：
+
+```Java
+ChannelHandler getHandler();
+```
+
+正如，我们在上文中说道，**装饰器模式**，在 `dubbo-remoting-api` 扮演了非常重要的角色，那么最佳演员就是 ChannelHandlerDelegate 们。下面，开始他们的表演。
+
+### 7.3.1 AbstractChannelHandlerDelegate
+
+[`com.alibaba.dubbo.remoting.transport.AbstractChannelHandlerDelegate`](https://github.com/YunaiV/dubbo/blob/4fa80f25673c4e7060847a711a87ea37ed152d91/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractChannelHandlerDelegate.java) ，实现 ChannelHandlerDelegate 接口，通道处理器装饰者**抽象实现类**。在每个实现的方法里，直接调用被装饰的 [`handler`](https://github.com/YunaiV/dubbo/blob/4fa80f25673c4e7060847a711a87ea37ed152d91/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractChannelHandlerDelegate.java#L26) 属性的方法。
+
+### 7.3.2 DecodeHandler
+
+`com.alibaba.dubbo.remoting.transport.DecodeHandler` ，实现 AbstractChannelHandlerDelegate 抽象类，**解码处理器**，处理接收到的消息，实现了 Decodeable 接口的情况。
+
+**覆写了 `#received(channel, message)` 方法**
+
+```Java
+  1: @Override
+  2: public void received(Channel channel, Object message) throws RemotingException {
+  3:     if (message instanceof Decodeable) {
+  4:         decode(message);
+  5:     }
+  6: 
+  7:     if (message instanceof Request) {
+  8:         decode(((Request) message).getData());
+  9:     }
+ 10: 
+ 11:     if (message instanceof Response) {
+ 12:         decode(((Response) message).getResult());
+ 13:     }
+ 14: 
+ 15:     handler.received(channel, message);
+ 16: }
+```
+
+* 第 3 至 5 行：当消息是 Decodeable 类型时，调用 `#decode(message)` 方法，解析消息。
+* 第 7 至 9 行：当消息是 Request 类型时，调用 `#decode(message)` 方法，解析 `data` 属性。
+* 第 11 至 13 行：当消息是 Response 类型时，调用 `#decode(message)` 方法，解析 `result` 属性。
+* 第 15 行：调用 `ChannelHandler#received(channel, message)` 方法，将消息交给委托的 `handler` ，继续处理。🙂 胖友是否感受到，装饰器模式的好处：通过组合的方式，实现功能的叠加。
+
+**解析消息**
+
+```Java
+  1: private void decode(Object message) {
+  2:     if (message != null && message instanceof Decodeable) {
+  3:         try {
+  4:             ((Decodeable) message).decode(); // 解析消息
+  5:             if (log.isDebugEnabled()) {
+  6:                 log.debug(new StringBuilder(32).append("Decode decodeable message ").append(message.getClass().getName()).toString());
+  7:             }
+  8:         } catch (Throwable e) {
+  9:             if (log.isWarnEnabled()) {
+ 10:                 log.warn(new StringBuilder(32).append("Call Decodeable.decode failed: ").append(e.getMessage()).toString(), e);
+ 11:             }
+ 12:         } // ~ end of catch
+ 13:     } // ~ end of if
+ 14: } // ~ end of method decode
+```
+
+* 第 2 至 4 行：当类型是 Decodeable 时，调用 `Decodeable#decode()` 方法，进一步解析。
+* 在 `dubbo-rpc-default`  项目中，DecodeableRpcInvocation 和 DecodeableRpcResult 实现 Decodeable 接口，后面我们来分享。
+
+### 7.3.3 MultiMessageHandler
+
+`com.alibaba.dubbo.remoting.transport.MultiMessageHandler ，实现 AbstractChannelHandlerDelegate 抽象类，**多消息处理器**，处理一次性接收到多条消息的情况。
+
+**覆写了 `#received(channel, message)` 方法**
+
+```Java
+  1: @Override
+  2: public void received(Channel channel, Object message) throws RemotingException {
+  3:     if (message instanceof MultiMessage) { // 多消息
+  4:         MultiMessage list = (MultiMessage) message;
+  5:         for (Object obj : list) {
+  6:             handler.received(channel, obj);
+  7:         }
+  8:     } else {
+  9:         handler.received(channel, message);
+ 10:     }
+ 11: }
+```
+
+* 第 3 至 7 行：当消息是 MultiMessage 类型，即**多消息**，**循环**提交给 `handler` 处理。
+* 第 8 至 10 行：当**单消息**时，**直接**提交给 `handler` 处理。
+
+-------
+
+🙂 在下面的文章，我们可以看到 ChannelHandlerDelegate 的**组合使用的例子**。
+
 # 8. Dispacher
+
+本小节内容，对应 [《Dubbo 用户指南 —— 线程模型》](https://dubbo.gitbooks.io/dubbo-user-book/demos/thread-model.html) 。 
+
+简单概括这节，以**接收消息**举例子，代码如下：
+
+```Java
+executor.execute(new Runnable() {
+    handler.received(channel, message)
+});
+```
+
+将 ChannelHandler 的具体操作，调度到线程池中，这也是为什么这个模块叫 `dispacher` 的原因。
+
+## 8.1 ChannelHandlers
+
+`com.alibaba.dubbo.remoting.transport.dispatcher.ChannelHandlers` ，通道处理器**工厂**。在上文 [「3.1 AbstractClient」](#) ，我们看到 `AbstractClient#wrapChannelHandler(url, handler)` 方法中，会调用 `ChannelHandlers#wrap(url, handler)` 方法。实际上，Server 部分也会有这样类似的逻辑，只是代码实现上暂未统一。以 `dubbo-remoting-netty4` 来举例子：
+
+* NettyClient ：
+
+    ```Java
+    public NettyClient(final URL url, final ChannelHandler handler) throws RemotingException {
+        super(url, wrapChannelHandler(url, handler));
+    }
+    ```
+
+* NettyServer ：
+
+    ```Java
+    public NettyServer(URL url, ChannelHandler handler) throws RemotingException {
+        super(url, ChannelHandlers.wrap(handler, ExecutorUtil.setThreadName(url, SERVER_THREAD_POOL_NAME) /* 设置线程名到 URL 上 */));
+    }
+    ```
+
+无论 Client 还是 Server ，都是类似的，将传入的 `handler` ，最终使用 ChannelHandlers 进行一次包装。OK ，我们来看看包装通道处理器的具体代码：
+
+```Java
+  1: /**
+  2:  * 单例
+  3:  */
+  4: private static ChannelHandlers INSTANCE = new ChannelHandlers();
+  5: 
+  6: public static ChannelHandler wrap(ChannelHandler handler, URL url) {
+  7:     return ChannelHandlers.getInstance().wrapInternal(handler, url);
+  8: }
+  9: 
+ 10: protected ChannelHandler wrapInternal(ChannelHandler handler, URL url) {
+ 11:     return new MultiMessageHandler(
+ 12:             new HeartbeatHandler(
+ 13:                     ExtensionLoader.getExtensionLoader(Dispatcher.class).getAdaptiveExtension().dispatch(handler, url)
+ 14:             )
+ 15:     );
+ 16: }
+```
+
+* 第 11 至 15 行：在这里，我们就看到了多个 ChannelHandlerDelegate 的组合。包括，第 15 行的，`Dispatcher#dispatch(handler, url)` 方法，实际上也是**返回**一个 ChannelHandlerDelegate 对象。
+
+## 8.2 Dispatcher 实现类
+
+在 Dubbo 中，有多种 Dispatcher 的实现，如下：
+
+> FROM [《Dubbo 用户指南 —— 线程模型》](https://dubbo.gitbooks.io/dubbo-user-book/demos/thread-model.html)
+> 
+> * `all` 所有消息都派发到线程池，包括请求，响应，连接事件，断开事件，心跳等。
+> * `direct` 所有消息都不派发到线程池，全部在 IO 线程上直接执行。
+> * `message` 只有请求响应消息派发到线程池，其它连接断开事件，心跳等消息，直接在 IO 线程上执行。
+> * `execution` 只请求消息派发到线程池，不含响应，响应和其它连接断开事件，心跳等消息，直接在 IO 线程上执行。
+> * `connection` 在 IO 线程上，将连接断开事件放入队列，有序逐个执行，其它消息派发到线程池。
+
+**子类类图**
+
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/07.png)
+
+### 8.2.1 AllDispatcher
+
+我们以 `all` 对应的 AllDispatcher 举例子，代码如下：
+
+```Java
+public class AllDispatcher implements Dispatcher {
+
+    public static final String NAME = "all";
+
+    public ChannelHandler dispatch(ChannelHandler handler, URL url) {
+        return new AllChannelHandler(handler, url);
+    }
+
+}
+```
+
+在该类的 `#dispatch(...)` 的方法中，我们可以看到创建 AllChannelHandler 对象，并传入 `handler` 属性。🙂 聪慧如你，已经猜到 AllChannelHandler 也是 ChannelHandlerDelegate 类型。也就是说“**线程模型**”，也是通过**装饰器模式**，组合而成。
+
+每个 Dispatcher 实现类，都对应一个 ChannelHandler 实现类。默认**未配置**的情况下，使用 AllDispatcher 调度。
+
+### 8.2.2 AllChannelHandler
+
+[`com.alibaba.dubbo.remoting.transport.dispatcher.all.AllChannelHandler`](com.alibaba.dubbo.remoting.transport.dispatcher.all) ，实现 WrappedChannelHandler 抽象类。覆写 `#connected(channel)` 方法如下：
+
+> WrappedChannelHandler  是实现 ChannelHandlerDelegate 的抽象类，下文再看。
+
+```Java
+@Override
+public void connected(Channel channel) throws RemotingException {
+    ExecutorService cexecutor = getExecutorService();
+    try {
+        cexecutor.execute(new ChannelEventRunnable(channel, handler, ChannelState.CONNECTED));
+    } catch (Throwable t) {
+        throw new ExecutionException("connect event", channel, getClass() + " error when process connected event .", t);
+    }
+}
+```
+
+* 创建 ChannelEventRunnable 对象，提交给线程池执行。
+* 注意，传入的状态为 `ChannelState.CONNECTED` 。不同的实现方法，对应不同的状态。
+
+## 8.3 ChannelEventRunnable
+
+[`com.alibaba.dubbo.remoting.transport.dispatcher.ChannelEventRunnable`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/dispatcher/ChannelEventRunnable.java) ，实现 Runnable 接口。代码比较简单，胖友自己看噢。主要分成三部分：
+
+* [构造方法](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/dispatcher/ChannelEventRunnable.java#L27-L51)
+* [ChannelState](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/dispatcher/ChannelEventRunnable.java#L98-L129)
+* [`#run()`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/dispatcher/ChannelEventRunnable.java#L53-L96) 方法，简化代码如下：
+
+    ```Java
+    @Override
+    public void run() {
+        switch (state) {
+            case CONNECTED: handler.connected(channel); break;
+            case DISCONNECTED:handler.disconnected(channel); break;
+            case SENT:handler.sent(channel, message);break;
+            case RECEIVED:handler.received(channel, message);break;
+            case CAUGHT:handler.caught(channel, exception);break;
+            default: logger.warn("unknown state: " + state + ", message is " + message);
+        }
+    }
+    ```
+
+## 8.4 WrappedChannelHandler
+
+`com.alibaba.dubbo.remoting.transport.dispatcher.WrappedChannelHandler` ，实现 ChannelHandlerDelegate 接口，**包装的** WrappedChannelHandler 实现类。
+
+> 从目前的实现来看，WrappedChannelHandler 继承 AbstractChannelHandlerDelegate 更合适，因为 `#connected(channel)` 等，实现的方法都是相同的。
+
+**构造方法**
+
+```Java
+  1: /**
+  2:  * 线程池
+  3:  */
+  4: protected final ExecutorService executor;
+  5: /**
+  6:  * 通道处理器
+  7:  */
+  8: protected final ChannelHandler handler;
+  9: /**
+ 10:  * URL
+ 11:  */
+ 12: protected final URL url;
+ 13: 
+ 14: public WrappedChannelHandler(ChannelHandler handler, URL url) {
+ 15:     this.handler = handler;
+ 16:     this.url = url;
+ 17: 
+ 18:     // 创建线程池
+ 19:     executor = (ExecutorService) ExtensionLoader.getExtensionLoader(ThreadPool.class).getAdaptiveExtension().getExecutor(url);
+ 20: 
+ 21:     // 添加线程池到 DataStore 中
+ 22:     String componentKey = Constants.EXECUTOR_SERVICE_COMPONENT_KEY;
+ 23:     if (Constants.CONSUMER_SIDE.equalsIgnoreCase(url.getParameter(Constants.SIDE_KEY))) {
+ 24:         componentKey = Constants.CONSUMER_SIDE;
+ 25:     }
+ 26:     DataStore dataStore = ExtensionLoader.getExtensionLoader(DataStore.class).getDefaultExtension();
+ 27:     dataStore.put(componentKey, Integer.toString(url.getPort()), executor);
+ 28: }
+```
+
+* 第 19 行：基于 Dubbo SPI Adaptive 机制，创建线程池。
+* 第 21 至 27 行：添加线程池到 DataStore 中。🙂 这就是上文 AbstractClient 或 AbstractServer 从 DataStore 获得线程池的**方式**。当然，官方也说了，这种方式不是很优雅，有点奇淫技巧，未来会优化掉。
+
+**共享线程池**
+
+在 WrappedChannelHandler 中，有一个内置的共享线程池，如下：
+
+```Java
+protected static final ExecutorService SHARED_EXECUTOR = Executors.newCachedThreadPool(new NamedThreadFactory("DubboSharedHandler", true));
+```
+
+【TODO 8024】搞不懂，这个设计的意图，先mark留着。
+
+**子类类图**
+
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/06.png)
 
 # 9. Codec
 
+## 9.1 CodecSupport
+
+`com.alibaba.dubbo.remoting.transport.CodecSupport` ，编解码工具类，提供查询 Serialization 的功能。
+
+**初始化**
+
+```Java
+/**
+ * 序列化对象集合
+ * key：序列化类型编号 {@link Serialization#getContentTypeId()}
+ */
+private static Map<Byte, Serialization> ID_SERIALIZATION_MAP = new HashMap<Byte, Serialization>();
+/**
+ * 序列化名集合
+ * key：序列化类型编号 {@link Serialization#getContentTypeId()}
+ * value: 序列化拓展名
+ */
+private static Map<Byte, String> ID_SERIALIZATIONNAME_MAP = new HashMap<Byte, String>();
+
+static {
+    // 基于 Dubbo SPI ，初始化
+    Set<String> supportedExtensions = ExtensionLoader.getExtensionLoader(Serialization.class).getSupportedExtensions();
+    for (String name : supportedExtensions) {
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(name);
+        byte idByte = serialization.getContentTypeId();
+        if (ID_SERIALIZATION_MAP.containsKey(idByte)) {
+            logger.error("Serialization extension " + serialization.getClass().getName()
+                    + " has duplicate id to Serialization extension "
+                    + ID_SERIALIZATION_MAP.get(idByte).getClass().getName()
+                    + ", ignore this Serialization extension");
+            continue;
+        }
+        ID_SERIALIZATION_MAP.put(idByte, serialization);
+        ID_SERIALIZATIONNAME_MAP.put(idByte, name);
+    }
+}
+```
+
+Dubbo 提供了多种序列化方式，此处初始化结果，如下图：![SERIALIZATION 集合](http://www.iocoder.cn/images/Dubbo/2018_12_04/08.png)
+
+**查找 Serialization 对象**
+
+```Java
+public static Serialization getSerialization(URL url, Byte id) throws IOException {
+    Serialization serialization = getSerializationById(id);
+    String serializationName = url.getParameter(Constants.SERIALIZATION_KEY, Constants.DEFAULT_REMOTING_SERIALIZATION); // 默认，hessian2
+    // 出于安全的目的，针对 JDK 的序列化方式（对应编号为 3、4、7），检查连接到服务器的 URL 和实际传输的数据，协议是否一致。
+    // https://github.com/apache/incubator-dubbo/issues/1138
+    // Check if "serialization id" passed from network matches the id on this side(only take effect for JDK serialization), for security purpose.
+    if (serialization == null
+            || ((id == 3 || id == 7 || id == 4) && !(serializationName.equals(ID_SERIALIZATIONNAME_MAP.get(id))))) {
+        throw new IOException("Unexpected serialization id:" + id + " received from network, please check if the peer send the right id.");
+    }
+    return serialization;
+}
+```
+
+🙂 在最新的 Dubbo 版本中，已经将 `serialization` 模块，从 `dubbo-common` 中，独立成 [`dubbo-serialization`](https://github.com/apache/incubator-dubbo/blob/HEAD/dubbo-serialization/pom.xml) 。So ，我们后面开一个系列来分享。
+
+## 9.2 AbstractCodec
+
+`com.alibaba.dubbo.remoting.transport.AbstractCodec` ，实现 Codec**2** 接口，提供如下公用方法：
+
+* [`#checkPayload(channel, size)`](https://github.com/apache/incubator-dubbo/blob/05da8040e88ef5c9a544cb9dddf4c6abee6bd61a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractCodec.java#L38-L48) **静态**方法，校验消息长度。
+* [`#getSerialization(channel)`](https://github.com/apache/incubator-dubbo/blob/05da8040e88ef5c9a544cb9dddf4c6abee6bd61a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractCodec.java#L50-L52) 方法，获得 Serialization 对象。
+* [`#isClientSide(channel)`](https://github.com/apache/incubator-dubbo/blob/05da8040e88ef5c9a544cb9dddf4c6abee6bd61a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractCodec.java#L54-L71) 方法，是否为客户端侧的通道。
+* [`#isServerSide(channel)`](https://github.com/apache/incubator-dubbo/blob/05da8040e88ef5c9a544cb9dddf4c6abee6bd61a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractCodec.java#L73-L75) 方法，是否为服务端侧的通道。
+
+**子类类图**
+
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_04/09.png)
+
+编解码器的实现，通过**继承**的方式，获得更多的功能。每一个 Codec2 类实现对不同消息的编解码。通过**协议头**来判断，具体使用哪个编解码逻辑。听起来有点绕，我们来看一段简化 ExchangeCodec 的 `#decode(...)` 例子：
+
+```Java
+1: protected Object decode(Channel channel, ChannelBuffer buffer, int readable, byte[] header) throws IOException {
+2:     // check magic number.
+3:     if (readable > 0 && header[0] != MAGIC_HIGH
+4:             || readable > 1 && header[1] != MAGIC_LOW) {
+5:         // ... 省略
+6:         return super.decode(channel, buffer, readable, header);
+7:     }
+8:    
+9:      // ... 省略
+10:    
+11:     return decodeBody(channel, is, header);
+12: }
+```
+
+* 第 2 至 7 行：通过 magic number 判断到，**并非** Dubbo Exchange **信息交易的协议头**，转交给父类 TelnetCodec 处理，一般此时是 Telnet 消息。
+* 第 8 至 11 行：通过 magic number 判断到，**符合** Dubbo Exchange **信息交易的协议头**，ExchangeCodec 自己处理。
+
+### 9.2.1 TransportCodec
+
+`com.alibaba.dubbo.remoting.transport.codec.TransportCodec` ，传输编解码器，使用 Serialization 进行序列化/反序列化，直接编解码。
+
+**编码消息**
+
+```Java
+  1: @Override
+  2: public void encode(Channel channel, ChannelBuffer buffer, Object message) throws IOException {
+  3:     // 获得反序列化的 ObjectOutput 对象
+  4:     OutputStream output = new ChannelBufferOutputStream(buffer);
+  5:     ObjectOutput objectOutput = getSerialization(channel).serialize(channel.getUrl(), output);
+  6:     // 写入 ObjectOutput
+  7:     encodeData(channel, objectOutput, message);
+  8:     objectOutput.flushBuffer();
+  9:     // 释放
+ 10:     if (objectOutput instanceof Cleanable) {
+ 11:         ((Cleanable) objectOutput).cleanup();
+ 12:     }
+ 13: }
+```
+
+* 第 3 至 5 行：获得对应的 Serialization 对象，并创建用于反序列化的 ObjectOutput 对象。不同的 Serialization 实现，对应不同的 ObjectOutput 实现类。🙂 这里，我们只要读懂大体流程，详细的，我们后面文章见。
+* 第 7 行：调用 `#encodeData(channel, objectOutput, message)` 方法，写入 ObjectOutput。代码如下：
+
+    ```Java
+    protected void encodeData(Channel channel, ObjectOutput output, Object message) throws IOException {
+        encodeData(output, message);
+    }
+    
+    protected void encodeData(ObjectOutput output, Object message) throws IOException {
+        output.writeObject(message);
+    }
+    ```
+
+* 第 9 至 12 行：释放资源。目前，仅有 `kryo` 的 KryoObjectInput 、KryoObjectOutput 实现了 Cleanable 接口，需要释放资源。
+
+**解码消息**
+
+[`#decode(channel, buffer)`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/codec/TransportCodec.java#L48-L56) **实现**方法，和解码消息基本一致，胖友自己查看。
+
+## 9.3 CodecAdapter
+
+[`com.alibaba.dubbo.remoting.transport.codec.CodecAdapter`](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/codec/CodecAdapter.java) ，实现 Code2 **接口**，Codec **适配器**，将 Codec 适配成 Codec2 。
+
+🙂 代码比较简单，胖友自己查看。
+
 # 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+代码比较多，如果不熟悉 Netty 等框架的胖友，可能会一脸懵逼的看到文末。建议胖友结合如下的代码：
+
+```Java
+// Netty.java
+new ChannelInitializer<NioSocketChannel>() {
+    @Override
+    protected void initChannel(NioSocketChannel ch) {
+        NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyServer.this);
+        ch.pipeline().addLast("decoder", adapter.getDecoder()) // 解码
+                    .addLast("encoder", adapter.getEncoder())  // 解码
+                    .addLast("handler", nettyServerHandler); // 处理器
+    }
+}
+```
+
+在脑补 Debug + IDE Debug ，多考虑下。
 
