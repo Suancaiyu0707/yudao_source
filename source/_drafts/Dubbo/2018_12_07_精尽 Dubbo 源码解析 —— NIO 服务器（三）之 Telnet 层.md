@@ -6,6 +6,28 @@ permalink: Dubbo/remoting-api-telnet
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-api-telnet/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+- [2. TelnetCodec](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+- [3. TelnetHandler](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+- [4. TelnetHandlerAdapter](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+- [5. TelnetHandler 命令实现](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-api-telnet/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文接 [《精尽 Dubbo 源码分析 —— NIO 服务器（二）之抽象 API》](http://www.iocoder.cn/Dubbo/remoting-api-transport//?self) 一文，分享 `dubbo-remoting-api` 模块， `telnet` 包，**Telnet 命令**。
@@ -14,7 +36,7 @@ permalink: Dubbo/remoting-api-telnet
 
 本文涉及**类图**如下：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_07/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_07/01.png)
 
 从**用途**上，上述类可以分成三种：
 
@@ -25,7 +47,7 @@ permalink: Dubbo/remoting-api-telnet
 
 **流程**如下图：
 
-[流程](http://www.iocoder.cn/images/Dubbo/2018_12_07/02.png)
+![流程](http://www.iocoder.cn/images/Dubbo/2018_12_07/02.png)
 
 下面我们来看看具体的代码实现。
 
@@ -307,7 +329,7 @@ permalink: Dubbo/remoting-api-telnet
 
 😈 建议多调试，这样会更好理解。
 
-如下是 TelnetCodec 的被**调用栈**：[调用栈](http://www.iocoder.cn/images/Dubbo/2018_12_07/03.png)
+如下是 TelnetCodec 的被**调用栈**：![调用栈](http://www.iocoder.cn/images/Dubbo/2018_12_07/03.png)
 
 **编码**
 
@@ -414,7 +436,7 @@ public interface TelnetHandler {
  56: }
 ```
 
-* 第 8 至 10 行：处理 telnet 提示语，默认为 `"dubbo"` ，可通过 `<dubbo:application prompt="" />` 配置。提示语的效果，如下图所示红框部分：[提示语](http://www.iocoder.cn/images/Dubbo/2018_12_07/04.png)
+* 第 8 至 10 行：处理 telnet 提示语，默认为 `"dubbo"` ，可通过 `<dubbo:application prompt="" />` 配置。提示语的效果，如下图所示红框部分：![提示语](http://www.iocoder.cn/images/Dubbo/2018_12_07/04.png)
 * 第 11 至 26 行：拆除 telnet 命令和参数**两**部分。
 * 第 28 至 38 行：查找到对应的 TelnetHandler 对象，执行命令，返回结果。
 * 第 39 至 43 行：查找不到对应的 TelnetHandler 对象，返回**报错提示**。
@@ -453,7 +475,7 @@ public void received(Channel channel, Object message) throws RemotingException {
 
 在 `command` 包下，我们可以看到多种 TelnetHandler 命令的实现类，如下图所示：
 
-[command](http://www.iocoder.cn/images/Dubbo/2018_12_07/05.png)
+![command](http://www.iocoder.cn/images/Dubbo/2018_12_07/05.png)
 
 * ClearTelnetHandler
 * ExitTelnetHandler
@@ -493,5 +515,7 @@ public @interface Help {
 
 ![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
+Dubbo 2.5.8 新版本重构了 telnet 模块，提供了新的 telnet 命令支持。
 
+感兴趣的胖友，可以看下 [《Dubbo 用户指南 —— 在线运维命令-QOS》](https://dubbo.gitbooks.io/dubbo-user-book/references/qos.html)
 
