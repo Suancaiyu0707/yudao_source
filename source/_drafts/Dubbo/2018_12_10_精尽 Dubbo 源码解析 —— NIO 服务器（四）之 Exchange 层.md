@@ -1501,3 +1501,16 @@ public class HeaderExchanger implements Exchanger {
 胖友，打起精神，ExchangeCodec 非常重要。
 
 `com.alibaba.dubbo.remoting.exchange.codec.ExchangeCodec` ，继承 TelnetCodec 类，信息交换编解码器。
+
+在看具体的编解码方法的代码时，我们来先看一幅图：[协议](http://www.iocoder.cn/images/Dubbo/2018_12_10/07.png)
+
+* Header 部分，协议头，通过 Codec 编解码。
+	* `[0, 15]`：Magic Number
+	* `[16, 20]`：Serialization 编号。
+	* `[21]`：`event` 是否为事件。
+	* `[22]`：`twoWay` 是否需要响应。
+	* `[23]`：是请求还是响应。
+	* `[24 - 31]`：`status` 状态。
+	* `[32 - 95]`：`id` 编号，Long 型。
+	* `[96 - 127]`：Body 的**长度**。通过该长度，读取 Body 。
+* Body 部分，协议体，通过 Serialization 序列化/反序列化。
