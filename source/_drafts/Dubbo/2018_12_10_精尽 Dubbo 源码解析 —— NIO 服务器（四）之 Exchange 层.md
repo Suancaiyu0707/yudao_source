@@ -1,14 +1,53 @@
-title: 精尽 Dubbo 源码分析 —— NIO 服务器（二）之 Transport 层
-date: 2018-12-04
+title: 精尽 Dubbo 源码分析 —— NIO 服务器（四）之 Exchange 层
+date: 2018-12-10
 tags:
 categories: Dubbo
-permalink: Dubbo/remoting-api-transport
+permalink: Dubbo/remoting-api-exchange
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-api-exchange/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [2. ExchangeChannel](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [2.1 HeaderExchangeChannel](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [3. ExchangeClient](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [3.1 HeaderExchangeClient](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [4. ExchangeServer](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [4.1 HeaderExchangeServer](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [4.2 ExchangeServerDelegate](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [5. 请求/响应模型](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [5.1 Request](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [5.2 Response](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [5.3 ResponseFuture](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [5.4 MultiMessage](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [6. Handler](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [6.1 HeartbeatHandler](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [6.2 HeaderExchangeHandler](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [6.3 ExchangeHandler](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [6.4 Replier](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [7. Exchanger](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [7.1 HeaderExchanger](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+  - [7.2 Exchangers](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [8. ExchangeCodec](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-api-exchange/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
 
 -------
 
 # 1. 概述
 
-本文接 [《精尽 Dubbo 源码分析 —— NIO 服务器（三）之 NIO 服务器（三）之 Telnet 层》](http://www.iocoder.cn/Dubbo/remoting-api-telnet//?self) 一文，分享 `dubbo-remoting-api` 模块， `exchange` 包，**信息交换层**。
+本文接 [《精尽 Dubbo 源码分析 —— NIO 服务器（三）之 Telnet 层》](http://www.iocoder.cn/Dubbo/remoting-api-telnet//?self) 一文，分享 `dubbo-remoting-api` 模块， `exchange` 包，**信息交换层**。
 
 > **exchange** 信息交换层：封装请求响应模式，同步转异步，以 Request, Response 为中心，扩展接口为 Exchanger, ExchangeChannel, ExchangeClient, ExchangeServer。  
 
@@ -25,11 +64,11 @@ permalink: Dubbo/remoting-api-transport
 
 胖友在看下面这张图，是否就亲切多了 🙂 ：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_10/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_10/01.png)
 
 所以，`exchange` 包，很多的代码，是在 Header 的处理。OK ，下面我们来看下这个包的**类图**：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_10/02.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_10/02.png)
 
 * 白色部分，为通用接口和 `transport` 包下的类。
 * 蓝色部分，为 `exchange` 包下的类。
@@ -80,7 +119,7 @@ HeaderExchangeChannel(Channel channel) {
 }
 ```
 
-* `channel` 属性，通道。HeaderExchangeChannel 是传入 `channel` 属性的**装饰器**，每个实现的方法，都会调用 `channel` 。如下是该属性的一个例子：[`channel`](http://www.iocoder.cn/images/Dubbo/2018_12_10/03.png)
+* `channel` 属性，通道。HeaderExchangeChannel 是传入 `channel` 属性的**装饰器**，每个实现的方法，都会调用 `channel` 。如下是该属性的一个例子：![`channel`](http://www.iocoder.cn/images/Dubbo/2018_12_10/03.png)
 * `#getOrAddChannel(Channel)` **静态**方法，创建 HeaderExchangeChannel 对象。代码如下：
 
     ```Java
@@ -239,7 +278,7 @@ HeaderExchangeChannel(Channel channel) {
  46: }
 ```
 
-* `client` 属性，客户端。如下是该属性的一个例子：[`client`](http://www.iocoder.cn/images/Dubbo/2018_12_10/04.png)
+* `client` 属性，客户端。如下是该属性的一个例子：![`client`](http://www.iocoder.cn/images/Dubbo/2018_12_10/04.png)
 * 第 34 行：使用传入的 `client` 属性，创建  HeaderExchangeChannel 对象。
 * 第 35 至 41 行：读取心跳相关配置。**默认，开启心跳功能**。为什么需要有心跳功能呢？
 
@@ -836,7 +875,7 @@ private final Condition done = lock.newCondition();
  19: }
 ```
 
-* 该方法有两处被调用，如下图所示：[调用](http://www.iocoder.cn/images/Dubbo/2018_12_10/05.png)
+* 该方法有两处被调用，如下图所示：![调用](http://www.iocoder.cn/images/Dubbo/2018_12_10/05.png)
 * 第 4 行：移除 `FUTURES` 。
 * 第 6 至 7 行：调用 `DefaultFuture#doReceived(response)` 方法，响应结果。代码如下：
 
@@ -1283,7 +1322,7 @@ private int heartbeatTimeout;
  27: }
 ```
 
-* 第 3 至 17 行：当发生 ExecutionException 异常，返回异常响应( Response )。目前会发生 ExecutionException 的情况，并且符合提交，如下图所示：[ExecutionException](http://www.iocoder.cn/images/Dubbo/2018_12_10/06.png)
+* 第 3 至 17 行：当发生 ExecutionException 异常，返回异常响应( Response )。目前会发生 ExecutionException 的情况，并且符合提交，如下图所示：![ExecutionException](http://www.iocoder.cn/images/Dubbo/2018_12_10/06.png)
 
 * 第 18 至 26 行：见注释。
 
@@ -1502,9 +1541,10 @@ public class HeaderExchanger implements Exchanger {
 
 `com.alibaba.dubbo.remoting.exchange.codec.ExchangeCodec` ，继承 TelnetCodec 类，信息交换编解码器。
 
-在看具体的编解码方法的代码时，我们来先看一幅图：[协议](http://www.iocoder.cn/images/Dubbo/2018_12_10/07.png)
+在看具体的编解码方法的代码时，我们来先看一幅图：![协议](http://www.iocoder.cn/images/Dubbo/2018_12_10/07.png)
 
-* Header 部分，协议头，通过 Codec 编解码。
+* 基于**消息长度**的方式，做每条消息的**粘包拆包**处理。和我们在 [《精尽 Dubbo 源码分析 —— NIO 服务器（二）之 Transport 层》](http://www.iocoder.cn/Dubbo/remoting-api-transport/?self) 中，看到 Telnet 协议，基于**特定字符**的方式，做每条命令的**粘包拆包**处理**不同**。
+* Header 部分，协议头，通过 Codec 编解码。Bits 位如下：
 	* `[0, 15]`：Magic Number
 	* `[16, 20]`：Serialization 编号。
 	* `[21]`：`event` 是否为事件。
@@ -1514,3 +1554,222 @@ public class HeaderExchanger implements Exchanger {
 	* `[32 - 95]`：`id` 编号，Long 型。
 	* `[96 - 127]`：Body 的**长度**。通过该长度，读取 Body 。
 * Body 部分，协议体，通过 Serialization 序列化/反序列化。
+
+**属性**
+
+```Java
+// header length.
+protected static final int HEADER_LENGTH = 16;
+// magic header.
+protected static final short MAGIC = (short) 0xdabb;
+protected static final byte MAGIC_HIGH = Bytes.short2bytes(MAGIC)[0];
+protected static final byte MAGIC_LOW = Bytes.short2bytes(MAGIC)[1];
+// message flag.
+protected static final byte FLAG_REQUEST = (byte) 0x80; // 128
+protected static final byte FLAG_TWOWAY = (byte) 0x40; // 64
+protected static final byte FLAG_EVENT = (byte) 0x20; // 32
+protected static final int SERIALIZATION_MASK = 0x1f; // 31
+```
+
+* `HEADER_LENGTH` **静态**属性，Header 总长度，16 Bytes = 128 Bits 。
+* 其它**静态**属性，胖友对照上面的 Bits 位。
+
+**编码**
+
+```Java
+  1: @Override
+  2: public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
+  3:     if (msg instanceof Request) { // 请求
+  4:         encodeRequest(channel, buffer, (Request) msg);
+  5:     } else if (msg instanceof Response) { // 响应
+  6:         encodeResponse(channel, buffer, (Response) msg);
+  7:     } else { // 提交给父类( Telnet ) 处理，目前是 Telnet 命令的结果。
+  8:         super.encode(channel, buffer, msg);
+  9:     }
+ 10: }
+```
+
+* 第 3 至 4 行：调用 `#encodeRequest(channel, buffer, request)` 方法，编码请求。
+* 第 5 至 6 行：调用 `#encodeResponse(channel, buffer, response)` 方法，编码响应。
+* 第 7 至 9 行：调用 `TelnetCodec#encode(channel, buffer, msg)` 方法，编码 Telnet 命令的结果。
+* `#encodeRequest(channel, buffer, request)` 方法，代码如下：
+
+	```Java
+	  1: protected void encodeRequest(Channel channel, ChannelBuffer buffer, Request req) throws IOException {
+	  2:     Serialization serialization = getSerialization(channel);
+	  3:     // `[0, 15]`：Magic Number
+	  4:     // header.
+	  5:     byte[] header = new byte[HEADER_LENGTH];
+	  6:     // set magic number.
+	  7:     Bytes.short2bytes(MAGIC, header);
+	  8: 
+	  9:     // `[16, 20]`：Serialization 编号 && `[23]`：请求。
+	 10:     // set request and serialization flag.
+	 11:     header[2] = (byte) (FLAG_REQUEST | serialization.getContentTypeId());
+	 12: 
+	 13:     // `[21]`：`event` 是否为事件。
+	 14:     if (req.isTwoWay()) header[2] |= FLAG_TWOWAY;
+	 15:     // `[22]`：`twoWay` 是否需要响应。
+	 16:     if (req.isEvent()) header[2] |= FLAG_EVENT;
+	 17: 
+	 18:     // `[32 - 95]`：`id` 编号，Long 型。
+	 19:     // set request id.
+	 20:     Bytes.long2bytes(req.getId(), header, 4);
+	 21: 
+	 22:     // 编码 `Request.data` 到 Body ，并写入到 Buffer
+	 23:     // encode request data.
+	 24:     int savedWriteIndex = buffer.writerIndex();
+	 25:     buffer.writerIndex(savedWriteIndex + HEADER_LENGTH);
+	 26:     ChannelBufferOutputStream bos = new ChannelBufferOutputStream(buffer);
+	 27:     ObjectOutput out = serialization.serialize(channel.getUrl(), bos); // 序列化 Output
+	 28:     if (req.isEvent()) {
+	 29:         encodeEventData(channel, out, req.getData());
+	 30:     } else {
+	 31:         encodeRequestData(channel, out, req.getData());
+	 32:     }
+	 33:     // 释放资源
+	 34:     out.flushBuffer();
+	 35:     if (out instanceof Cleanable) {
+	 36:         ((Cleanable) out).cleanup();
+	 37:     }
+	 38:     bos.flush();
+	 39:     bos.close();
+	 40:     // 检查 Body 长度，是否超过消息上限。
+	 41:     int len = bos.writtenBytes();
+	 42:     checkPayload(channel, len);
+	 43:     // `[96 - 127]`：Body 的**长度**。
+	 44:     Bytes.int2bytes(len, header, 12);
+	 45: 
+	 46:     // 写入 Header 到 Buffer
+	 47:     // write
+	 48:     buffer.writerIndex(savedWriteIndex);
+	 49:     buffer.writeBytes(header); // write header.
+	 50:     buffer.writerIndex(savedWriteIndex + HEADER_LENGTH + len);
+	 51: }
+	```
+	* Header 部分，先写入 `header` 数组，再写入 Buffer 中。
+	* Body 部分，使用 Serialization 序列化 `Request.data` ，写入到 Buffer 中。
+		* `#encodeEventData(Channel channel, ObjectOutput out, Object data)` 方法，代码如下：
+		
+			```Java
+			private void encodeEventData(Channel channel, ObjectOutput out, Object data) throws IOException {
+			    encodeEventData(out, data);
+			}
+			
+			private void encodeEventData(ObjectOutput out, Object data) throws IOException {
+			    out.writeObject(data);
+			}
+			```
+			* x
+		* `#encodeRequestData(Channel channel, ObjectOutput out, Object data)` 方法，代码如下：
+
+			```Java
+			protected void encodeRequestData(Channel channel, ObjectOutput out, Object data) throws IOException {
+			    encodeRequestData(out, data);
+			}
+			
+			protected void encodeRequestData(ObjectOutput out, Object data) throws IOException {
+			    out.writeObject(data);
+			}
+			```
+			* `#encodeEventData(...)` 和 `#encodeRequestData(...)` 两个方法是一致的。
+	* 第 42 行：会调用 `#checkPayload(channel, len)` 方法，校验 Body 内容的长度。笔者在这块纠结了很久，如果过长而抛出 ExceedPayloadLimitException 异常，那么 ChannelBuffer 是否重置下写入位置。后来发现自己煞笔了，每次 ChannelBuffer 都是新创建的，所以无需重置。
+	* 为什么 Buffer 先写入了 Body ，再写入 Header 呢？因为 Header 中，里面 `[96 - 127]` 的 Body 长度，需要序列化后才得到。
+* [`#encodeResponse(channel, buffer, response)`](https://github.com/YunaiV/dubbo/blob/a89a569e608ee1282d1bce3fc2540860873629db/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/exchange/codec/ExchangeCodec.java#L292-L404) 方法，和 `#encodeRequest(chanel, buffer, request)` 方法，基本一致，胖友自己瞅瞅列。主要差异点如下：
+	* `[24 - 31]`：`status` 状态。这是 Request 没有，而 Response 有的部分。
+	* 当响应的内容过长而抛出 ExceedPayloadLimitException 异常，根据条件，发送一条 Response ( `status = BAD_RESPONSE` ) 给请求方。
+
+**解码**
+
+```Java
+  1: @Override
+  2: public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
+  3:     // 读取 Header 数组
+  4:     int readable = buffer.readableBytes();
+  5:     byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];
+  6:     buffer.readBytes(header);
+  7:     // 解码
+  8:     return decode(channel, buffer, readable, header);
+  9: }
+ 10: 
+ 11: @Override
+ 12: protected Object decode(Channel channel, ChannelBuffer buffer, int readable, byte[] header) throws IOException {
+ 13:     // 非 Dubbo 协议，目前是 Telnet 命令。
+ 14:     // check magic number.
+ 15:     if (readable > 0 && header[0] != MAGIC_HIGH || readable > 1 && header[1] != MAGIC_LOW) {
+ 16:         // 将 buffer 完全复制到 `header` 数组中。因为，上面的 `#decode(channel, buffer)` 方法，可能未读全
+ 17:         int length = header.length;
+ 18:         if (header.length < readable) {
+ 19:             header = Bytes.copyOf(header, readable);
+ 20:             buffer.readBytes(header, length, readable - length);
+ 21:         }
+ 22:         // 【TODO 8026 】header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW ？
+ 23:         for (int i = 1; i < header.length - 1; i++) {
+ 24:             if (header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW) {
+ 25:                 buffer.readerIndex(buffer.readerIndex() - header.length + i);
+ 26:                 header = Bytes.copyOf(header, i);
+ 27:                 break;
+ 28:             }
+ 29:         }
+ 30:         // 提交给父类( Telnet ) 处理，目前是 Telnet 命令。
+ 31:         return super.decode(channel, buffer, readable, header);
+ 32:     }
+ 33:     // Header 长度不够，返回需要更多的输入
+ 34:     // check length.
+ 35:     if (readable < HEADER_LENGTH) {
+ 36:         return DecodeResult.NEED_MORE_INPUT;
+ 37:     }
+ 38: 
+ 39:     // `[96 - 127]`：Body 的**长度**。通过该长度，读取 Body 。
+ 40:     // get data length.
+ 41:     int len = Bytes.bytes2int(header, 12);
+ 42:     checkPayload(channel, len);
+ 43: 
+ 44:     // 总长度不够，返回需要更多的输入
+ 45:     int tt = len + HEADER_LENGTH;
+ 46:     if (readable < tt) {
+ 47:         return DecodeResult.NEED_MORE_INPUT;
+ 48:     }
+ 49: 
+ 50:     // 解析 Header + Body
+ 51:     // limit input stream.
+ 52:     ChannelBufferInputStream is = new ChannelBufferInputStream(buffer, len);
+ 53:     try {
+ 54:         return decodeBody(channel, is, header);
+ 55:     } finally {
+ 56:         // skip 未读完的流，并打印错误日志
+ 57:         if (is.available() > 0) {
+ 58:             try {
+ 59:                 if (logger.isWarnEnabled()) {
+ 60:                     logger.warn("Skip input stream " + is.available());
+ 61:                 }
+ 62:                 StreamUtils.skipUnusedStream(is);
+ 63:             } catch (IOException e) {
+ 64:                 logger.warn(e.getMessage(), e);
+ 65:             }
+ 66:         }
+ 67:     }
+ 68: }
+```
+
+* 第 3 至 6 行：读取 `header` 数组。**注意**，这里的 `Math.min(readable, HEADER_LENGTH)` ，优先考虑解析 Dubbo 协议。
+* 第 8 行：调用 `#decode(channel, buffer, readable, header)` 方法，解码。
+* ========== 分隔线 ==========
+* 第 13 至 32 行：非 Dubbo 协议，目前是 Telnet 协议。
+	* 第 17 至 21 行：将 Buffer 完全复制到 `header` 数组中。因为，上面的 `#decode(channel, buffer)` 方法，可能未读全。因为，【第 3 至 6 行】，是以 **Dubbo 协议** 为优先考虑解码的。
+	* 第 22 至 29 行：【TODO 8026 】header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW ？搞不懂？
+	* 第 31 行：调用 `Telnet#decode(channel, buffer, readable, header)` 方法，解码 Telnet 。在 [《精尽 Dubbo 源码分析 —— NIO 服务器（三）之 Telnet 层》](http://www.iocoder.cn/Dubbo/remoting-api-telnet/?self) 有详细解析。 
+* 第 33 至 48 行：基于**消息长度**的方式，拆包。
+* 第 50 至 54 行：调用 [`#decodeBody(channel, is, header)`](https://github.com/YunaiV/dubbo/blob/a89a569e608ee1282d1bce3fc2540860873629db/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/exchange/codec/ExchangeCodec.java#L148-L218) 方法，解析 Header + Body ，根据情况，返回 Request 或 Reponse 。🙂 逻辑上，是 `#encodeRequest(...)` 和 `#encodeResponse(...)` 方法的反向，所以，胖友就自己看啦。
+* 第 55 至 67 行：skip **未读完的流**，并打印告警日志。
+
+# 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+🙂 啰嗦而又冗长。
+
+希望对胖友有一些些帮助。
+
+建议，自己尝试实现简单的 Request Response 模型。
+
