@@ -6,7 +6,35 @@ permalink: Dubbo/remoting-api-buffer
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-api-buffer/ 「芋道源码」欢迎转载，保留摘要，谢谢！
 
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+- [2. ChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [2.1 AbstractChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [2.2 ByteBufferBackedChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [2.3 HeapChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [2.4 DynamicChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+- [3. ChannelBuffers](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+- [4. ChannelBufferFactory](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [4.1 DirectChannelBufferFactory](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [4.2 HeapChannelBufferFactory](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+- [5. IO](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [5.1 ChannelBufferInputStream](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+  - [5.2 ChannelBufferOutputStream](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-api-buffer/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
 
 # 1. 概述
 
@@ -20,7 +48,7 @@ Buffer 在 NIO 框架中，扮演非常重要的角色，基本每个库都提�
 
 在 `dubbo-remoting-api` 的 `buffer` 包中，一方面定义了 ChannelBuffer 和 ChannelBufferFactory 的接口，同时提供了多种默认的实现。整体类图如下：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_13/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_13/01.png)
 
 * 其中，红框部分，是 Netty3 和 Netty4 ，实现的自定义的 ChannelBuffer 和 ChannelBufferFactory 类。
 
@@ -45,7 +73,7 @@ ChannelBuffer 在接口方法的定义上，主要参考了 Netty 的 ByteBuf  �
     ChannelBufferFactory factory()
     ```
 
-* 调用方如下：[调用方](http://www.iocoder.cn/images/Dubbo/2018_12_13/02.png)
+* 调用方如下：![调用方](http://www.iocoder.cn/images/Dubbo/2018_12_13/02.png)
 
 ## 2.1 AbstractChannelBuffer
 
@@ -76,15 +104,15 @@ private int markedWriterIndex;
 > writerIndex 和 readerIndex   
 > 
 > * 初始状态：  
-> [](http://www.iocoder.cn/images/Dubbo/2018_12_13/05.png)
+> ![](http://www.iocoder.cn/images/Dubbo/2018_12_13/05.png)
 > 
 > * 当写入5个字节后：  
-> [](http://www.iocoder.cn/images/Dubbo/2018_12_13/06.png)
+> ![](http://www.iocoder.cn/images/Dubbo/2018_12_13/06.png)
 > 
 > 这时，writerIndex 为 5，这时如果开始读取，那么这个 writerIndex 可以作为上面ByteBuffer flip 之后的 limit。 
 > 
 > * 当读取3个字节后： 
-> [](http://www.iocoder.cn/images/Dubbo/2018_12_13/07.png)
+> ![](http://www.iocoder.cn/images/Dubbo/2018_12_13/07.png)
 
 **实现方法**
 
@@ -103,7 +131,7 @@ public void getBytes(int index, ChannelBuffer dst, int length) {
 
 * 方法中调用的 `#getBytes(index, ds, dstIndex, length)` 方法，并未实现。🙂 **为啥呢**？**实质**的方法，涉及到字节数组的**实现形式**。
 
-如下是所有**未实现**的方法：[未实现方法](http://www.iocoder.cn/images/Dubbo/2018_12_13/03.png)
+如下是所有**未实现**的方法：![未实现方法](http://www.iocoder.cn/images/Dubbo/2018_12_13/03.png)
 
 ## 2.2 ByteBufferBackedChannelBuffer
 
@@ -257,7 +285,7 @@ public ChannelBufferFactory factory() {
 
 # 3. ChannelBuffers
 
-[`com.alibaba.dubbo.remoting.buffer.ChannelBuffers`](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBuffers.java) ，Buffer **工具类**，提供创建、比较 ChannelBuffer 等公用方法。如下图所示：[ChannelBuffers](http://www.iocoder.cn/images/Dubbo/2018_12_13/04.png)
+[`com.alibaba.dubbo.remoting.buffer.ChannelBuffers`](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBuffers.java) ，Buffer **工具类**，提供创建、比较 ChannelBuffer 等公用方法。如下图所示：![ChannelBuffers](http://www.iocoder.cn/images/Dubbo/2018_12_13/04.png)
 
 # 4. ChannelBufferFactory
 
@@ -382,5 +410,9 @@ public class ChannelBufferOutputStream extends OutputStream {
 
 # 666. 彩蛋
 
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
+厚着的脸皮，水更一篇。
+
+胖友，可以结合本文，在看看 Dubbo 协议的编解码逻辑。
 
