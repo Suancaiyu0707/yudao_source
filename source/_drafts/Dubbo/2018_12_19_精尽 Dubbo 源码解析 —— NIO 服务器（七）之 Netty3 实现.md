@@ -6,6 +6,36 @@ permalink: Dubbo/remoting-impl-netty3
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-impl-netty3/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [2. NettyTransporter](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [3. NettyChannel](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [4. NettyHandler](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [5. NettyServer](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [6. NettyClient](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [7. Buffer](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+  - [7.1 NettyBackedChannelBuffer](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+  - [7.2 NettyBackedChannelBufferFactory](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [8. NettyCodecAdapter](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+  - [8.1 InternalEncoder](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+  - [8.2 InternalDecoder](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [9. 日志工厂](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-impl-netty3/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文接 [《精尽 Dubbo 源码分析 —— NIO 服务器（六）之 Netty4 实现》](http://www.iocoder.cn/Dubbo/remoting-impl-netty4/?self) 一文，分享在 `dubbo-remoting-netty` 中，Netty3 如何接入实现。
@@ -14,7 +44,7 @@ permalink: Dubbo/remoting-impl-netty3
 
 涉及如下类：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_12_19/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_12_19/01.png)
 
 > 友情提示：在当前版本，默认情况下，使用 Netty3 ，如果想配置成 Netty4 ，请参考文档：[《Dubbo 用户指南 —— Netty4》](https://dubbo.gitbooks.io/dubbo-user-book/demos/netty4.html)
 
