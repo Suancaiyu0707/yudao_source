@@ -68,8 +68,8 @@ http://www.iocoder.cn/Hystrix/circuit-breaker/
 http://www.iocoder.cn/Hystrix/command-collapser-execute/
 http://www.iocoder.cn/Hystrix/command-execute-fourth-fallback/
 http://www.iocoder.cn/Hystrix/command-execute-third-timeout/
-http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/
 http://www.iocoder.cn/Starter/Spring-Cloud/
+http://www.iocoder.cn/Hystrix/command-execute-second-isolation-strategy/
 http://www.iocoder.cn/Starter/Spring-Boot/
 http://www.iocoder.cn/Hystrix/command-execute-first-run/
 http://www.iocoder.cn/Hystrix/command-execute-result-cache/
