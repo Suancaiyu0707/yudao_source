@@ -407,6 +407,8 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 
 ### 3.3.2 getClients
 
+> 友情提示，涉及 Client 的内容，胖友先看过 [《精尽 Dubbo 源码分析 —— NIO 服务器》](http://www.iocoder.cn/Dubbo/remoting-api-interface/?self)  所有的文章。
+
 `#getClients(url)` 方法，获得连接服务提供者的远程通信客户端数组。代码如下：
 
 ```Java
@@ -427,7 +429,7 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
  15:         connections = 1;
  16:     }
  17: 
- 18:     // 创建连接服务提供者的 ExchangeClient 对象数组 【TODO 8016】
+ 18:     // 创建连接服务提供者的 ExchangeClient 对象数组
  19:     ExchangeClient[] clients = new ExchangeClient[connections];
  20:     for (int i = 0; i < clients.length; i++) {
  21:         if (service_share_connect) { // 共享
@@ -445,14 +447,123 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
     * **注意**，若开启共享连接，基于 URL 为维度共享。
     * 第 21 至 22 行：共享连接，调用 `#getSharedClient(url)` 方法，获得 ExchangeClient 对象。
     * 第 23 至 25 行：不共享连接，调用 `#initClient(url)` 方法，直接创建 ExchangeClient 对象。
+* `connections` 配置项。
+    * 默认 0 。即，对同一个远程服务器，**共用**同一个连接。
+    * 大于 0 。即，每个服务引用，**独立**每一个连接。
+    * [《Dubbo 用户指南 —— 连接控制》](https://dubbo.gitbooks.io/dubbo-user-book/demos/config-connections.html)
+    * [《Dubbo 用户指南 —— dubbo:reference》](https://dubbo.gitbooks.io/dubbo-user-book/references/xml/dubbo-reference.html)
 
-### 3.3.3 getClient
+### 3.3.3 getSharedClient
 
-【TODO 8016】
+`#getClients(url)` 方法，获得连接服务提供者的远程通信客户端数组。代码如下：
 
-### 3.3.4 getSharedClient
+```Java
+/**
+ * 通信客户端集合
+ *
+ * key: 服务器地址。格式为：host:port
+ */
+private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new ConcurrentHashMap<String, ReferenceCountExchangeClient>(); // <host:port,Exchanger>
+/**
+ * TODO 8030 ，这个是什么用途啊。
+ *
+ * key: 服务器地址。格式为：host:port 。和 {@link #referenceClientMap} Key ，是一致的。
+ */
+private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap = new ConcurrentHashMap<String, LazyConnectExchangeClient>();
 
-【TODO 8016】
+  1: private ExchangeClient getSharedClient(URL url) {
+  2:     // 从集合中，查找 ReferenceCountExchangeClient 对象
+  3:     String key = url.getAddress();
+  4:     ReferenceCountExchangeClient client = referenceClientMap.get(key);
+  5:     if (client != null) {
+  6:         // 若未关闭，增加指向该 Client 的数量，并返回它
+  7:         if (!client.isClosed()) {
+  8:             client.incrementAndGetCount();
+  9:             return client;
+ 10:         // 若已关闭，移除
+ 11:         } else {
+ 12:             referenceClientMap.remove(key);
+ 13:         }
+ 14:     }
+ 15:     // 同步，创建 ExchangeClient 对象。
+ 16:     synchronized (key.intern()) {
+ 17:         // 创建 ExchangeClient 对象
+ 18:         ExchangeClient exchangeClient = initClient(url);
+ 19:         // 将 `exchangeClient` 包装，创建 ReferenceCountExchangeClient 对象
+ 20:         client = new ReferenceCountExchangeClient(exchangeClient, ghostClientMap);
+ 21:         // 添加到集合
+ 22:         referenceClientMap.put(key, client);
+ 23:         // 添加到 `ghostClientMap`
+ 24:         ghostClientMap.remove(key);
+ 25:         return client;
+ 26:     }
+ 27: }
+```
+
+* `referenceClientMap` 属性，通信客户端集合。在我们创建好 Client 对象，“**连接**”服务器后，会添加到这个集合中，用于后续的 Client 的**共享**。
+    *  ReferenceCountExchangeClient ，顾名思义，带有指向数量计数的 Client 封装。
+    *  “**连接**” ，打引号的原因，因为有 LazyConnectExchangeClient ，还是顾名思义，延迟连接的 Client 封装。
+    *  🙂 ReferenceCountExchangeClient 和 LazyConnectExchangeClient 的具体实现，在 [「5. Client」](#) 详细解析。
+* `ghostClientMap` 属性，幽灵客户端集合。TODO 8030 ，这个是什么用途啊。
+    * 【添加】每次 ReferenceCountExchangeClient **彻底**关闭( 指向归零 ) ，其内部的 `client` 会替换成**重新创建**的 LazyConnectExchangeClient 对象，此时叫这个对象为**幽灵客户端**，添加到 `ghostClientMap` 中。
+    * 【移除】当幽灵客户端，对应的 URL 的服务器被重新连接上后，会被移除。
+    * **注意**，在幽灵客户端**被移除之前**，`referenceClientMap` 中，依然保留着对应的 URL 的 ReferenceCountExchangeClient 对象。所以，`ghostClientMap` 相当于标记 `referenceClientMap` 中，哪些 LazyConnectExchangeClient 对象，是**幽灵**状态。👻
+* 第 2 至 4 行：从集合 `referenceClientMap` 中，查找 ReferenceCountExchangeClient 对象。
+* 第 5 至 14 行：查找到客户端。
+    * 第 6 至 9 行：若**未关闭**，调用 `ReferenceCountExchangeClient#incrementAndGetCount()`  方法，增加指向该客户端的数量，并返回。
+    * 第 11 至 13 行：若**已关闭**，适用于**幽灵**状态的 ReferenceCountExchangeClient 对象，从 `referenceClientMap` 中移除，准备下面的代码，创建**新的** ReferenceCountExchangeClient 对象。
+* 第 15 至 26 行：**同步**( `synchronized` ) ，创建新的 ReferenceCountExchangeClient 对象。
+    * 第 18 行：调用 `#initClient(url)`  方法，创建 ExchangeClient 对象。
+    * 第 20 行：将 ExchangeClient 对象，封装创建成 ReferenceCountExchangeClient 独享。
+    * 第 22 行：添加到集合 `referenceClientMap` 。
+    * 第 24 行：移除出集合 `ghostClientMap` ，因为不再是**幽灵**状态啦。
+
+### 3.3.4 initClient
+
+`#initClient(url)` 方法，创建 ExchangeClient 对象，"连接"服务器。
+
+```Java
+  1: private ExchangeClient initClient(URL url) {
+  2:     // 校验 Client 的 Dubbo SPI 拓展是否存在
+  3:     // client type setting.
+  4:     String str = url.getParameter(Constants.CLIENT_KEY, url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_CLIENT));
+  5:     // BIO is not allowed since it has severe performance issue.
+  6:     if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str)) {
+  7:         throw new RpcException("Unsupported client type: " + str + "," +
+  8:                 " supported client type is " + StringUtils.join(ExtensionLoader.getExtensionLoader(Transporter.class).getSupportedExtensions(), " "));
+  9:     }
+ 10: 
+ 11:     // 设置编解码器为 Dubbo ，即 DubboCountCodec
+ 12:     url = url.addParameter(Constants.CODEC_KEY, DubboCodec.NAME);
+ 13: 
+ 14:     // 默认开启 heartbeat
+ 15:     // enable heartbeat by default
+ 16:     url = url.addParameterIfAbsent(Constants.HEARTBEAT_KEY, String.valueOf(Constants.DEFAULT_HEARTBEAT));
+ 17: 
+ 18:     // 连接服务器，创建客户端
+ 19:     ExchangeClient client;
+ 20:     try {
+ 21:         // 懒连接，创建 LazyConnectExchangeClient 对象
+ 22:         // connection should be lazy
+ 23:         if (url.getParameter(Constants.LAZY_CONNECT_KEY, false)) {
+ 24:             client = new LazyConnectExchangeClient(url, requestHandler);
+ 25:         // 直接连接，创建 HeaderExchangeClient 对象
+ 26:         } else {
+ 27:             client = Exchangers.connect(url, requestHandler);
+ 28:         }
+ 29:     } catch (RemotingException e) {
+ 30:         throw new RpcException("Fail to create remoting client for service(" + url + "): " + e.getMessage(), e);
+ 31:     }
+ 32:     return client;
+ 33: }
+```
+
+* 第 2 至 9 行：校验配置的 Client 的 Dubbo SPI 拓展是否存在。若不存在，抛出 RpcException 异常。 
+* 第 12 行：设置编解码器为 `"Dubbo"` 协议，即 DubboCountCodec 。
+* 第 16 行：默认开启**心跳**功能。
+* 第 19 至 31 行：连接服务器，创建客户端。
+    * 第 21 至 24 行：**懒加载**，创建 LazyConnectExchangeClient 对象。
+    * 第 25 至 28 行：**直接连接**，创建 HeaderExchangeClient 对象。
 
 # 4. Invoker
 
@@ -504,6 +615,255 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 * 胖友，请看属性上的代码注释。
 * 第 29 行：调用父类构造方法。该方法中，会将 `interface` `group` `version` `token` `timeout` 添加到公用的隐式传参 `AbstractInvoker.attachment` 属性。
     * 🙂 代码比较简单，胖友请自己阅读。 
+
+# 5. Client
+
+> 友情提示，涉及 Client 的内容，胖友先看过 [《精尽 Dubbo 源码分析 —— NIO 服务器》](http://www.iocoder.cn/Dubbo/remoting-api-interface/?self)  所有的文章。
+
+## 5.1 ReferenceCountExchangeClient
+
+[`com.alibaba.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient`](https://github.com/YunaiV/dubbo/blob/master/dubbo-rpc/dubbo-rpc-default/src/main/java/com/alibaba/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.java)  ，实现 ExchangeClient 接口，**支持指向计数**的信息交换客户端实现类。
+
+**构造方法**
+
+```Java
+  1: /**
+  2:  * URL
+  3:  */
+  4: private final URL url;
+  5: /**
+  6:  * 指向数量
+  7:  */
+  8: private final AtomicInteger refenceCount = new AtomicInteger(0);
+  9: /**
+ 10:  * 幽灵客户端集合
+ 11:  */
+ 12: private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap;
+ 13: /**
+ 14:  * 客户端
+ 15:  */
+ 16: private ExchangeClient client;
+ 17: 
+ 18: public ReferenceCountExchangeClient(ExchangeClient client, ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap) {
+ 19:     this.client = client;
+ 20:     // 指向加一
+ 21:     refenceCount.incrementAndGet();
+ 22:     this.url = client.getUrl();
+ 23:     if (ghostClientMap == null) {
+ 24:         throw new IllegalStateException("ghostClientMap can not be null, url: " + url);
+ 25:     }
+ 26:     this.ghostClientMap = ghostClientMap;
+ 27: }
+```
+
+* `refenceCount` 属性，指向计数。
+    * 【初始】构造方法，【第 21 行】，计数加一。
+    * 【引用】每次引用，计数加一。
+* `ghostClientMap` 属性，幽灵客户端集合，和 `Protocol.ghostClientMap` 参数，一致。
+* `client` 属性，客户端。
+    * 【创建】构造方法，传入 `client` 属性，指向它。
+    * 【关闭】关闭方法，创建 LazyConnectExchangeClient 对象，指向该幽灵客户端。
+
+**装饰器模式**
+
+基于**装饰器模式**，所以，每个实现方法，都是调用 `client` 的对应的方法。例如：
+
+```Java
+@Override
+public void send(Object message) throws RemotingException {
+    client.send(message);
+}
+```
+
+**计数**
+
+```Java
+public void incrementAndGetCount() {
+    refenceCount.incrementAndGet();
+}
+```
+
+**关闭**
+
+```Java
+  1: @Override
+  2: public void close(int timeout) {
+  3:     if (refenceCount.decrementAndGet() <= 0) {
+  4:         // 关闭 `client`
+  5:         if (timeout == 0) {
+  6:             client.close();
+  7:         } else {
+  8:             client.close(timeout);
+  9:         }
+ 10:         // 替换 `client` 为 LazyConnectExchangeClient 对象。
+ 11:         client = replaceWithLazyClient();
+ 12:     }
+ 13: }
+```
+
+* 第 3 行：计数**减一**。若无指向，进行真正的关闭。
+* 第 4 至 9 行：调用 `client` 的关闭方法，进行关闭。
+* 第 11 行：调用 `#replaceWithLazyClient()` 方法，替换 `client` 为 LazyConnectExchangeClient 对象。代码如下：
+
+    ```Java
+      1: private LazyConnectExchangeClient replaceWithLazyClient() {
+      2:     // this is a defensive operation to avoid client is closed by accident, the initial state of the client is false
+      3:     URL lazyUrl = url.addParameter(Constants.LAZY_CONNECT_INITIAL_STATE_KEY, Boolean.FALSE)
+      4:             .addParameter(Constants.RECONNECT_KEY, Boolean.FALSE) // 不重连
+      5:             .addParameter(Constants.SEND_RECONNECT_KEY, Boolean.TRUE.toString())
+      6:             .addParameter("warning", Boolean.TRUE.toString())
+      7:             .addParameter(LazyConnectExchangeClient.REQUEST_WITH_WARNING_KEY, true)
+      8:             .addParameter("_client_memo", "referencecounthandler.replacewithlazyclient"); // 备注
+      9: 
+     10:     // 创建 LazyConnectExchangeClient 对象，若不存在。
+     11:     String key = url.getAddress();
+     12:     // in worst case there's only one ghost connection.
+     13:     LazyConnectExchangeClient gclient = ghostClientMap.get(key);
+     14:     if (gclient == null || gclient.isClosed()) {
+     15:         gclient = new LazyConnectExchangeClient(lazyUrl, client.getExchangeHandler());
+     16:         ghostClientMap.put(key, gclient);
+     17:     }
+     18:     return gclient;
+     19: }
+    ```
+    * 第 3 至 8 行：基于 `url` ，创建 LazyConnectExchangeClient 的 URL 链接。设置的一些参数，结合 [「5.2 LazyConnectExchangeClient」](#) 一起看。
+    * 第 10 至 17 行：创建 LazyConnectExchangeClient 对象，若不存在。
+
+## 5.2 LazyConnectExchangeClient
+
+[`com.alibaba.dubbo.rpc.protocol.dubbo.LazyConnectExchangeClient`](https://github.com/YunaiV/dubbo/blob/master/dubbo-rpc/dubbo-rpc-default/src/main/java/com/alibaba/dubbo/rpc/protocol/dubbo/LazyConnectExchangeClient.java)  ，实现 ExchangeClient 接口，**支持懒连接服务器**的信息交换客户端实现类。
+
+**构造方法**
+
+```Java
+  1: static final String REQUEST_WITH_WARNING_KEY = "lazyclient_request_with_warning";
+  2: 
+  3: /**
+  4:  * URL
+  5:  */
+  6: private final URL url;
+  7: /**
+  8:  * 通道处理器
+  9:  */
+ 10: private final ExchangeHandler requestHandler;
+ 11: /**
+ 12:  * 连接锁
+ 13:  */
+ 14: private final Lock connectLock = new ReentrantLock();
+ 15: /**
+ 16:  * lazy connect 如果没有初始化时的连接状态
+ 17:  */
+ 18: // lazy connect, initial state for connection
+ 19: private final boolean initialState;
+ 20: /**
+ 21:  * 通信客户端
+ 22:  */
+ 23: private volatile ExchangeClient client;
+ 24: /**
+ 25:  * 请求时，是否检查告警
+ 26:  */
+ 27: protected final boolean requestWithWarning;
+ 28: /**
+ 29:  * 警告计数器。每超过一定次数，打印告警日志。参见 {@link #warning(Object)}
+ 30:  */
+ 31: private AtomicLong warningcount = new AtomicLong(0);
+ 32: 
+ 33: public LazyConnectExchangeClient(URL url, ExchangeHandler requestHandler) {
+ 34:     // lazy connect, need set send.reconnect = true, to avoid channel bad status.
+ 35:     this.url = url.addParameter(Constants.SEND_RECONNECT_KEY, Boolean.TRUE.toString());
+ 36:     this.requestHandler = requestHandler;
+ 37:     this.initialState = url.getParameter(Constants.LAZY_CONNECT_INITIAL_STATE_KEY, Constants.DEFAULT_LAZY_CONNECT_INITIAL_STATE);
+ 38:     this.requestWithWarning = url.getParameter(REQUEST_WITH_WARNING_KEY, false);
+ 39: }
+```
+
+* `initialState` 属性，如果没有初始化客户端时的链接状态。有点绕，看 `#isConnected()` 方法，代码如下：
+
+    ```Java
+    @Override
+    public boolean isConnected() {
+        if (client == null) { // 客户端未初始化
+            return initialState;
+        } else {
+            return client.isConnected();
+        }
+    }
+    ```
+    * 所以，我们可以看到 ReferenceCountExchangeClient 关闭创建的 LazyConnectExchangeClient  对象的 `initialState = false` ，未连接。
+    * **默认值**，`DEFAULT_LAZY_CONNECT_INITIAL_STATE = true` 。
+
+* `requestWithWarning` 属性，请求时，是否检查告警。
+    * 所以，我们可以看到 ReferenceCountExchangeClient 关闭创建的 LazyConnectExchangeClient  对象的 `initialState = false` ，未连接。
+    * **默认值**，`false` 。
+* `warningcount` 属性，警告计数器。每超过一定次数，打印告警日志。每次发送请求时，会调用 `#warning(request)` 方法，根据情况，打印告警日志。代码如下：
+
+    ```Java
+    private void warning(Object request) {
+        if (requestWithWarning) { // 开启
+            if (warningcount.get() % 5000 == 0) { // 5000 次
+                logger.warn(new IllegalStateException("safe guard client , should not be called ,must have a bug."));
+            }
+            warningcount.incrementAndGet(); // 增加计数
+        }
+    }
+    ```
+    * 理论来说，不会被调用。如果被调用，那么就是一个 BUG 咯。
+
+**装饰器模式**
+
+基于**装饰器模式**，所以，每个实现方法，都是调用 `client` 的对应的方法。例如：
+
+```Java
+@Override
+@Override
+public void close(int timeout) {
+    if (client != null)
+        client.close(timeout);
+}
+```
+
+**初始化客户端**
+
+```Java
+private void initClient() throws RemotingException {
+    // 已初始化，跳过
+    if (client != null) {
+        return;
+    }
+    if (logger.isInfoEnabled()) {
+        logger.info("Lazy connect to " + url);
+    }
+    // 获得锁
+    connectLock.lock();
+    try {
+        // 已初始化，跳过
+        if (client != null) {
+            return;
+        }
+        // 创建 Client ，连接服务器
+        this.client = Exchangers.connect(url, requestHandler);
+    } finally {
+        // 释放锁
+        connectLock.unlock();
+    }
+}
+```
+
+* 发送消息/请求前，都会调用该方法，保证客户端已经初始化。代码如下：
+
+```Java
+public void send(Object message, boolean sent) throws RemotingException {
+    initClient();
+    client.send(message, sent);
+}
+
+@Override
+public ResponseFuture request(Object request, int timeout) throws RemotingException {
+    warning(request);
+    initClient();
+    return client.request(request, timeout);
+}
+```
 
 # 666. 彩蛋
 

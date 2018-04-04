@@ -580,9 +580,18 @@ private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<Stri
 
 ### 3.3.3 openServer
 
-`#openServer(url)` 方法，启动服务器。代码如下：
+> 友情提示：本小节的内容，胖友先看过 [《精尽 Dubbo 源码分析 —— NIO 服务器》](http://www.iocoder.cn/Dubbo/remoting-api-interface/?self)  所有的文章。
+
+`#openServer(url)` 方法，启动通信服务器。代码如下：
 
 ```Java
+/**
+ * 通信客户端集合
+ *
+ * key: 服务器地址。格式为：host:port
+ */
+private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new ConcurrentHashMap<String, ReferenceCountExchangeClient>(); // <host:port,Exchanger>
+
   1: /**
   2:  * 启动服务器
   3:  *
@@ -599,7 +608,7 @@ private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<Stri
  14:             serverMap.put(key, createServer(url));
  15:         } else {
  16:             // server supports reset, use together with override
- 17:             server.reset(url); //【TODO 8016】通信服务器
+ 17:             server.reset(url);
  18:         }
  19:     }
  20: }
@@ -609,11 +618,68 @@ private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<Stri
 * 第 10 行：配置项 `isserver` ，可以暴露一个仅当前 JVM 可调用的服务。目前该配置项已经不存在。
 * 第 12 行：从 `serverMap` 获得对应服务器地址已存在的通信服务器。即，**不重复创建**。 
 * 第 13 至 14 行：通信服务器不存在，调用 `#createServer(url)` 方法，创建服务器。
-* 第 15 至 18 行：【TODO 8016】通信服务器
+* 第 15 至 18 行：通信服务器已存在，调用 `Server#reset(url)` 方法，重置服务器的属性。
+    * 为什么**会存在**呢？因为键是 `host:port` ，那么例如，多个 Service 共用同一个 Protocol ，服务器是同一个对象。
 
 ### 3.3.4 createServer
 
-【TODO 8016】通信服务器
+`#createServer(url)` 方法，创建并启动通信服务器。代码如下：
+
+```Java
+  1: private ExchangeServer createServer(URL url) {
+  2:     // 默认开启 server 关闭时发送 READ_ONLY 事件
+  3:     // send readonly event when server closes, it's enabled by default
+  4:     url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());
+  5:     // 默认开启 heartbeat
+  6:     // enable heartbeat by default
+  7:     url = url.addParameterIfAbsent(Constants.HEARTBEAT_KEY, String.valueOf(Constants.DEFAULT_HEARTBEAT));
+  8: 
+  9:     // 校验 Server 的 Dubbo SPI 拓展是否存在
+ 10:     String str = url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_SERVER);
+ 11:     if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str)) {
+ 12:         throw new RpcException("Unsupported server type: " + str + ", url: " + url);
+ 13:     }
+ 14: 
+ 15:     // 设置编解码器为 `"Dubbo"` 
+ 16:     url = url.addParameter(Constants.CODEC_KEY, DubboCodec.NAME);
+ 17: 
+ 18:     // 启动服务器
+ 19:     ExchangeServer server;
+ 20:     try {
+ 21:         server = Exchangers.bind(url, requestHandler);
+ 22:     } catch (RemotingException e) {
+ 23:         throw new RpcException("Fail to start server(url: " + url + ") " + e.getMessage(), e);
+ 24:     }
+ 25: 
+ 26:     // 校验 Client 的 Dubbo SPI 拓展是否存在
+ 27:     str = url.getParameter(Constants.CLIENT_KEY);
+ 28:     if (str != null && str.length() > 0) {
+ 29:         Set<String> supportedTypes = ExtensionLoader.getExtensionLoader(Transporter.class).getSupportedExtensions();
+ 30:         if (!supportedTypes.contains(str)) {
+ 31:             throw new RpcException("Unsupported client type: " + str);
+ 32:         }
+ 33:     }
+ 34:     return server;
+ 35: }
+```
+
+* 第 4 行：默认开启 Server 关闭时，发送 **READ_ONLY** 事件。
+* 第 7 行：默认开启**心跳**功能。
+* 第 9 至 13 行：校验配置的 Server 的 Dubbo SPI 拓展是否存在。若不存在，抛出 RpcException 异常。
+* 第 16 行：设置编解码器为 `"Dubbo"` 协议，即 DubboCountCodec 。
+* 第 18 至 24 行：调用 `Exchangers#bind(url, handler)` 方法，启动服务器。具体 `requestHanlder` 属性值的实现，我们放在 Dubbo 协议下的 RPC 的文章里分享。`requestHanlder` 属性的简化代码如下：
+
+    ```Java
+    private ExchangeHandler requestHandler = new ExchangeHandlerAdapter() {
+    
+        public Object reply(ExchangeChannel channel, Object message) throws RemotingException {
+            // .... 省略具体实现代码
+            return invoker.invoke(inv);
+        }
+    }
+    ```
+* 第 26 至 33 行：校验配置的 Client 的 Dubbo SPI 拓展是否存在。若不存在，抛出 RpcException 异常。默认情况下，未配置，所以不会校验。
+* 第 34 行：返回通信服务器。
 
 ### 3.3.5 optimizeSerialization
 
