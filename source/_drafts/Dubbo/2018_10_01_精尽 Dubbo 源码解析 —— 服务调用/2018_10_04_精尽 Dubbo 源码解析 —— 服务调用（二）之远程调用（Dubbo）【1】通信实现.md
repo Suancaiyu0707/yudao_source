@@ -1,19 +1,53 @@
+title: 精尽 Dubbo 源码分析 —— 服务调用（二）之远程调用（Dubbo）【1】通信实现
+date: 2018-10-04
+tags:
+categories: Dubbo
+permalink: Dubbo/rpc-dubbo-1-remoting
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+- [2. Server](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+- [3. Client](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+- [4. ExchangeHandler](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+- [5. Codec](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+  - [5.1 DubboCountCodec](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+  - [5.2 DubboCodec](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+  - [5.3 DecodeableRpcInvocation](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+  - [5.4 DecodeableRpcResult](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/rpc-dubbo-1-remoting/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 从本文开始，我们开始分享 `dubbo://` 协议的远程调用，主要分成**四个部分**：
 
-1. 网络实现
+1. 通信实现
 2. 同步调用
 3. 异步调用
 4. 参数回调
 
-本文分享 **网络实现** 部分。
+本文分享 **通信实现** 部分。
 
 😈 [《精尽 Dubbo 源码解析 —— NIO 服务器》](#) 系列，是本文的**前置文章**，所以胖友需要先读完这个系列。哈哈哈，当然，也可以凑合看看先。
 
 本文涉及类图如下：
 
-![类图]()
+![类图](http://www.iocoder.cn/images/Dubbo/2018_10_04/01_01.png)
 
 # 2. Server
 
@@ -639,4 +673,8 @@ public Object decode(Channel channel, InputStream input) throws IOException {
 * 🙂 胖友看下代码注释。
 
 # 666. 彩蛋
+
+![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
+
+清明节，扫代码第一波。
 
