@@ -1,0 +1,4 @@
+目前处于实验阶段
+和比较多人请教了下，实际并未在使用
+微博 Motan 里，去除掉了该特性
+实现类为 CallbackServiceCodec ChannelWrappedInvoker

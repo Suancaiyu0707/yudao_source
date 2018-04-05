@@ -5,11 +5,26 @@
     
   <url>
     <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
-    <lastmod>2018-04-05T04:07:01.000Z</lastmod>
+    <lastmod>2018-04-05T16:27:31.000Z</lastmod>
     <data>
         <display>
         <title>Dubbo 源码解析 —— 精品合集</title>
         <pubTime>2017-11-14T16:00:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Entity/good-collection/</loc>
+    <lastmod>2018-04-05T15:34:45.000Z</lastmod>
+    <data>
+        <display>
+        <title>数据库实体设计合集</title>
+        <pubTime>2017-12-31T16:00:00.000Z</pubTime>
         
          
            
@@ -1339,21 +1354,6 @@
         <display>
         <title>视频：闲聊如何阅读源码</title>
         <pubTime>2017-12-01T16:00:00.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Entity/good-collection/</loc>
-    <lastmod>2018-03-06T01:52:59.000Z</lastmod>
-    <data>
-        <display>
-        <title>数据库实体设计合集</title>
-        <pubTime>2017-12-31T16:00:00.000Z</pubTime>
         
          
            
