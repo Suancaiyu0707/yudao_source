@@ -1,10 +1,53 @@
+title: 精尽 Dubbo 源码分析 —— HTTP 服务器
+date: 2019-02-01
+tags:
+categories: Dubbo
+permalink: Dubbo/remoting-http-api-and-impl
+
+-------
+
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [2. 原理](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [3. API](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [3.1 HttpServer](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [3.2 HttpHandler](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [3.3 HttpBinder](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [3.4 DispatcherServlet](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [3.5 ServletManager](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [4. Tomcat 实现](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [4.1 TomcatHttpServer](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [4.2 TomcatHttpBinder](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [5. Jetty 实现](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [5.1 JettyHttpServer](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [5.2 JettyHttpBinder](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [6. Servlet Bridge 实现](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [6.1 ServletHttpServer](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [6.2 ServletHttpBinder](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+  - [6.3 BootstrapListener](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/remoting-http-api-and-impl/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文，我们来分享 Dubbo 的 HTTP 服务器，在 `dubbo-remoting-http` 模块中实现，使用在 [`http://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/http.html)、 [`rest://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/rest.html)、[`hessian://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/hessian.html)、
 [`webservice://`](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/webservice.html)
  协议上。
 
-`dubbo-remoting-http` **只提供 Server 部分**，不同于前面分享的 Dubbo 的 NIO 服务器( `dubbo-remoting-api` )，提供 Client 和 Server 。代码结构如下：[代码结构](http://www.iocoder.cn/images/Dubbo/2019_02_01/02.png)
+`dubbo-remoting-http` **只提供 Server 部分**，不同于前面分享的 Dubbo 的 NIO 服务器( `dubbo-remoting-api` )，提供 Client 和 Server 。代码结构如下：![代码结构](http://www.iocoder.cn/images/Dubbo/2019_02_01/02.png)
 
 * API 层：
     * 最外层：API 定义。
@@ -24,13 +67,13 @@
 
 `dubbo-remoting-http` 模块，**类图**如下：
 
-[代码结构](http://www.iocoder.cn/images/Dubbo/2019_02_01/01.jpeg)
+![代码结构](http://www.iocoder.cn/images/Dubbo/2019_02_01/01.jpeg)
 
 * HttpBinder ，负责创建对应的 HttpServer 对象。
 * 不同的 Protocol ，实现各自的 HttpHandler 类。并且，暴露服务时，启动 HttpServer 的同时，创建对应的 HttpHandler 对象，以 **port** 为键，注册到 DispatcherServlet 上。
 * DispatcherServlet ，**核心**，调度请求，到对应的 HttpHandler 中。
 
-**整体流程**如下：[流程](http://www.iocoder.cn/images/Dubbo/2019_02_01/03.png)
+**整体流程**如下：![流程](http://www.iocoder.cn/images/Dubbo/2019_02_01/03.png)
 
 # 3. API
 
@@ -572,6 +615,11 @@ public class BootstrapListener implements ServletContextListener {
 
 ![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
+清明节，扫代码第四波。
 
+又开阔了下思路，美滋滋。另外，艿艿配置了 `http://` 协议的例子，使用 Tomcat 内嵌服务器。地址如下：
+
+* [`dubbo-http-demo-provider`](https://github.com/YunaiV/dubbo/tree/408eeb2af44f11dcd466a976add1db258a111ef0/dubbo-demo/dubbo-http-demo-provider)
+* [`dubbo-http-demo-consumer`](https://github.com/YunaiV/dubbo/tree/408eeb2af44f11dcd466a976add1db258a111ef0/dubbo-demo/dubbo-http-demo-consumer)
 
 
