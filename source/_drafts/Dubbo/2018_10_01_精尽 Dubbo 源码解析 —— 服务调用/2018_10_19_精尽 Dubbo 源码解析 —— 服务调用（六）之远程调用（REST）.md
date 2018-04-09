@@ -6,6 +6,40 @@ permalink: Dubbo/rpc-rest
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/rpc-rest/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [2. RestProtocol](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [2.1 构造方法](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [2.2 doExport](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [2.3 doRefer](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [2.4 destroy](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [3. Server](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [3.1 RestServer](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [3.2 BaseRestServer](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [3.3 NettyHttpServer](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [3.4 DubboHttpServer](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [3.5 RestServerFactory](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [4. Filter](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [4.1 RpcContextFilter](http://www.iocoder.cn/Dubbo/rpc-rest/)
+  - [4.2 LoggingFilter](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [5. ExceptionMapper](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [6. ContentType](http://www.iocoder.cn/Dubbo/rpc-rest/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/rpc-rest/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：  
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表  
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**  
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。  
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。  
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 本文，我们分享 `rest://` 协议的远程调用，主要分成**三个部分**：
@@ -44,7 +78,7 @@ permalink: Dubbo/rpc-rest
 
 本文涉及的类，如下图：
 
-[类图](http://www.iocoder.cn/images/Dubbo/2018_10_19/01.png)
+![类图](http://www.iocoder.cn/images/Dubbo/2018_10_19/01.png)
 
 我们先来看看 RestProtocol 的实现代码，然后再看其他层的实现。
 
@@ -280,6 +314,7 @@ public int getDefaultPort() {
 * 第 55 行：调用 `ResteasyClient#register(Class<?> componentClass)` 方法，注册 RpcContextFilter 到 ResteasyClient 中。
 * 第  57 至 66 行：从 `extension` 配置项，设置对应的组件（过滤器 Filter 、拦截器 Interceptor 、异常匹配器 ExceptionMapper 等等）。详细说明，参见 [《在Dubbo中开发REST风格的远程调用（RESTful Remoting）》](https://dangdangdotcom.github.io/dubbox/rest.html) 的 **[添加自定义的Filter、Interceptor等](#)** 。
 * 第 68 至 71 行：创建 ResteasyWebTarget 对象，并调用 `ResteasyWebTarget#proxy(serviceType)` 方法，创建 **Service Proxy** 对象。 
+* **注意**，上文也提到了，如果使用 Dubbo `rest://` Consumer ，需要将 JAX-RS 的**注解** 到 Service 接口类中，否则，请求的参数和方法的参数，无法映射上。
 
 
 ### 2.3.1 getErrorCode
@@ -505,7 +540,7 @@ public void deploy(Class resourceDef, Object resourceInstance, String contextPat
 
 > FROM [《RESTEASY ,从学会使用到了解原理》](http://www.cnblogs.com/langtianya/p/7624647.html) *基础上修改*
 > 
-> [流程](http://www.iocoder.cn/images/Dubbo/2018_10_19/02.png)
+> ![流程](http://www.iocoder.cn/images/Dubbo/2018_10_19/02.png)
 > 
 > * HttpServletDispatcher ：接受并分发客户端 http 请求
 > * ResourceFactory ：负责处理客户端请求的对象由谁来负责处理
@@ -777,5 +812,9 @@ public class ContentType {
 > 復行數十步，豁然開朗。
 
 共勉！
+
+-------
+
+另外，在写这篇文章的过程中，笔者在想，是不是以后可以实现一个 `springmvc://` 协议，相比 `rest://` ，更易用和通用。毕竟，使用 Resteasy 的项目，实际不多。
 
 
