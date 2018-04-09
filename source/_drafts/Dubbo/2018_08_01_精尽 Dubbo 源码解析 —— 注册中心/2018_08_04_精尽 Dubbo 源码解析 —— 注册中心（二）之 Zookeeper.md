@@ -46,7 +46,7 @@ permalink: Dubbo/registry-zookeeper
 
 😈 在《注册中心（一）之抽象 API》 中，我们分享的那是**相当抽象**。因此，在本文中，我们会分享 Dubbo 使用 Zookeeper 作为注册中心的代码，同时也会分享服务暴露和引用时，对注册中心的使用。
 
-下面，我们先来看下 [《Dubbo 用户指南 —— zookeeper 注册中心》](http://dubbo.io/books/dubbo-user-book/references/registry/zookeeper.html) 文档，内容如下：
+下面，我们先来看下 [《Dubbo 用户指南 —— zookeeper 注册中心》](https://dubbo.gitbooks.io/dubbo-user-book/references/registry/zookeeper.html) 文档，内容如下：
 
 > ![类图](http://www.iocoder.cn/images/Dubbo/2018_08_04/01.png)
 > 
@@ -61,7 +61,7 @@ permalink: Dubbo/registry-zookeeper
 * 在图中，我们可以看到 Zookeeper 的节点层级，自上而下是：
     * **Root** 层：根目录，可通过 `<dubbo:registry group="dubbo" />` 的 `"group"` 设置 Zookeeper 的根节点，缺省使用 `"dubbo"` 。
     * **Service** 层：服务接口全名。
-    * **Type** 层：分类。目前除了我们在图中看到的 `"providers"`( 服务提供者列表 ) `"consumers"`( 服务消费者列表 ) 外，还有 [`"routes"`](http://dubbo.io/books/dubbo-user-book/demos/routing-rule.html)( 路由规则列表 ) 和 [`"configurations"`](http://dubbo.io/books/dubbo-user-book/demos/config-rule.html)( 配置规则列表 )。
+    * **Type** 层：分类。目前除了我们在图中看到的 `"providers"`( 服务提供者列表 ) `"consumers"`( 服务消费者列表 ) 外，还有 [`"routes"`](https://dubbo.gitbooks.io/dubbo-user-book/demos/routing-rule.html)( 路由规则列表 ) 和 [`"configurations"`](https://dubbo.gitbooks.io/dubbo-user-book/demos/config-rule.html)( 配置规则列表 )。
     * **URL** 层：URL ，根据不同 Type 目录，下面可以是服务提供者 URL 、服务消费者 URL 、路由规则 URL 、配置规则 URL 。
     * 实际上 URL 上带有 `"category"` 参数，已经能判断每个 URL 的分类，但是 Zookeeper 是基于节点目录订阅的，所以增加了 **Type** 层。
 

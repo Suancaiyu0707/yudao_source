@@ -60,7 +60,7 @@ Dubbo 服务暴露有两种方式
     <dubbo:service scope="none" />
     ```
 
-在不配置 `scope` 的情况下，**默认两种方式都暴露**。因为，Dubbo 自身无法确认应用中，是否存在[本地引用](http://dubbo.io/books/dubbo-user-book/demos/local-call.html)的情况。
+在不配置 `scope` 的情况下，**默认两种方式都暴露**。因为，Dubbo 自身无法确认应用中，是否存在[本地引用](https://dubbo.gitbooks.io/dubbo-user-book/demos/local-call.html)的情况。
 大多数情况下，我们不需要配置 `scope` 。如果胖友可以明确服务器消费引用服务的方式，也可以进行设置。
 
 我们知道 Dubbo 提供了多种协议( Protocol )实现。
@@ -284,7 +284,7 @@ private final List<Exporter<?>> exporters = new ArrayList<Exporter<?>>();
  11:                 .setProtocol(Constants.LOCAL_PROTOCOL) // injvm
  12:                 .setHost(LOCALHOST) // 本地
  13:                 .setPort(0); // 端口=0
- 14:         // 【TODO 8012】芋艿，rest protocol
+ 14:         // 添加服务的真实类名，例如 DemoServiceImpl ，仅用于 RestProtocol 中。
  15:         ServiceClassHolder.getInstance().pushServiceClass(getServiceClass(ref));
  16:         // 使用 ProxyFactory 创建 Invoker 对象
  17:         // 使用 Protocol 暴露 Invoker 对象
@@ -304,7 +304,7 @@ private final List<Exporter<?>> exporters = new ArrayList<Exporter<?>>();
 * `exporters` 属性，Exporter 集合。
 * ========== 分割线 ========== 
 * 第 9 至 13 行：基于原有 `url` ，创建**新的**服务的本地 Dubbo URL 对象，并设置属性 `protocol=injvm` `host=127.0.0.1` `port=0` 。因为 `url` 在后面远程暴露服务会使用，所以要新创建。
-* 第 15 行：// 【TODO 8012】芋艿，rest protocol
+* 第 15 行：添加服务的真实类名，例如 DemoServiceImpl ，仅用于 RestProtocol 中。
 * 第 18 行：调用 `ProxyFactory#getInvoker(proxy, type, url)` 方法，创建 Invoker 对象。该 Invoker 对象，执行 `#invoke(invocation)` 方法时，内部会调用 Service 对象( `ref` )对应的调用方法。
     * 🙂 详细的实现，后面单独写文章分享。
 * 第 18 行：调用 `Protocol#export(invoker)` 方法，暴露服务。

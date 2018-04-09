@@ -33,9 +33,9 @@ permalink: Dubbo/reference-refer-dubbo
 
 # 1. 概述
 
-在 [《精尽 Dubbo 源码分析 —— 服务引用（一）之本地引用（Injvm）》](http://www.iocoder.cn/Dubbo/reference-refer-local/?self) 一文中，我们已经分享了**本地引用服务**。在本文中，我们来分享**远程引用服务**。在 Dubbo 中提供多种协议( Protocol ) 的实现，大体流程一致，本文以 [Dubbo Protocol](http://dubbo.io/books/dubbo-user-book/references/protocol/dubbo.html) 为例子，这也是 Dubbo 的**默认**协议。
+在 [《精尽 Dubbo 源码分析 —— 服务引用（一）之本地引用（Injvm）》](http://www.iocoder.cn/Dubbo/reference-refer-local/?self) 一文中，我们已经分享了**本地引用服务**。在本文中，我们来分享**远程引用服务**。在 Dubbo 中提供多种协议( Protocol ) 的实现，大体流程一致，本文以 [Dubbo Protocol](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html) 为例子，这也是 Dubbo 的**默认**协议。
 
-如果不熟悉该协议的同学，可以先看看 [《Dubbo 使用指南 —— dubbo://》](http://dubbo.io/books/dubbo-user-book/references/protocol/dubbo.html) ，简单了解即可。
+如果不熟悉该协议的同学，可以先看看 [《Dubbo 使用指南 —— dubbo://》](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html) ，简单了解即可。
 
 > **特性**
 > 
@@ -287,7 +287,7 @@ private Cluster cluster;
  12:     // group="a,b" or group="*"
  13:     Map<String, String> qs = StringUtils.parseQueryString(url.getParameterAndDecoded(Constants.REFER_KEY));
  14:     String group = qs.get(Constants.GROUP_KEY);
- 15:     // 分组聚合，参见文档 http://dubbo.io/books/dubbo-user-book/demos/group-merger.html
+ 15:     // 分组聚合，参见文档 https://dubbo.gitbooks.io/dubbo-user-book/demos/group-merger.html
  16:     if (group != null && group.length() > 0) {
  17:         if ((Constants.COMMA_SPLIT_PATTERN.split(group)).length > 1
  18:                 || "*".equals(group)) {
@@ -304,7 +304,7 @@ private Cluster cluster;
 * 第 5 行：获得注册中心 Registry 对象。
 * 第 7至 9 行：【TODO 8018】RegistryService.class
 * 第 13 行：获得服务引用配置参数集合 `qs` 。
-* 第 16 至 22 行：分组聚合，参见 [《Dubbo 用户指南 —— 分组聚合》](http://dubbo.io/books/dubbo-user-book/demos/group-merger.html) 文档。
+* 第 16 至 22 行：分组聚合，参见 [《Dubbo 用户指南 —— 分组聚合》](https://dubbo.gitbooks.io/dubbo-user-book/demos/group-merger.html) 文档。
 * 第 24 行：调用 `#doRefer(cluster, registry, type, url)` 方法，执行服务引用。不同于【第 20 行】的代码，后者调用 `#getMergeableCluster()` 方法，获得**可合并的** Cluster 对象，代码如下：
 
     ```Java

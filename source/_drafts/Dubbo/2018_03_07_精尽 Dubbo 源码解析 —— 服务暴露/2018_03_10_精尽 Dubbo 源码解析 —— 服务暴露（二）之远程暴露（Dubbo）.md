@@ -36,9 +36,9 @@ permalink: Dubbo/service-export-remote-dubbo
 
 # 1. 概述
 
-在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》](http://www.iocoder.cn/Dubbo/service-export-local/?self) 一文中，我们已经分享了**本地暴露服务**。在本文中，我们来分享**远程暴露服务**。在 Dubbo 中提供多种协议( Protocol ) 的实现，大体流程一致，本文以 [Dubbo Protocol](http://dubbo.io/books/dubbo-user-book/references/protocol/dubbo.html) 为例子，这也是 Dubbo 的**默认**协议。
+在 [《精尽 Dubbo 源码分析 —— 服务暴露（一）之本地暴露（Injvm）》](http://www.iocoder.cn/Dubbo/service-export-local/?self) 一文中，我们已经分享了**本地暴露服务**。在本文中，我们来分享**远程暴露服务**。在 Dubbo 中提供多种协议( Protocol ) 的实现，大体流程一致，本文以 [Dubbo Protocol](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html) 为例子，这也是 Dubbo 的**默认**协议。
 
-如果不熟悉该协议的同学，可以先看看 [《Dubbo 使用指南 —— dubbo://》](http://dubbo.io/books/dubbo-user-book/references/protocol/dubbo.html) ，简单了解即可。
+如果不熟悉该协议的同学，可以先看看 [《Dubbo 使用指南 —— dubbo://》](https://dubbo.gitbooks.io/dubbo-user-book/references/protocol/dubbo.html) ，简单了解即可。
 
 > **特性**
 > 
@@ -95,7 +95,7 @@ permalink: Dubbo/service-export-remote-dubbo
  27:             // 添加到 `exporters`
  28:             exporters.add(exporter);
  29:         }
- 30:     } else { // 用于被服务消费者直连服务提供者，参见文档 http://dubbo.io/books/dubbo-user-book/demos/explicit-target.html 。主要用于开发测试环境使用。
+ 30:     } else { // 用于被服务消费者直连服务提供者，参见文档 https://dubbo.gitbooks.io/dubbo-user-book/demos/explicit-target.html 。主要用于开发测试环境使用。
  31:         // 使用 ProxyFactory 创建 Invoker 对象
  32:         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
  33: 
@@ -110,7 +110,7 @@ permalink: Dubbo/service-export-remote-dubbo
  42: }
 ```
 
-* 第 30 至 41 行：**大体和【第 7 至 29 行】逻辑相同**。差别在于，当配置注册中心为 `"N/A"` 时，表示即使远程暴露服务，也不向注册中心注册。这种方式用于被服务消费者直连服务提供者，参见 [《Dubbo 用户指南 —— 直连提供者》](http://dubbo.io/books/dubbo-user-book/demos/explicit-target.html) 文档。
+* 第 30 至 41 行：**大体和【第 7 至 29 行】逻辑相同**。差别在于，当配置注册中心为 `"N/A"` 时，表示即使远程暴露服务，也不向注册中心注册。这种方式用于被服务消费者直连服务提供者，参见 [《Dubbo 用户指南 —— 直连提供者》](https://dubbo.gitbooks.io/dubbo-user-book/demos/explicit-target.html) 文档。
 
     > 在**开发及测试环境下**，经常需要绕过注册中心，只测试指定服务提供者，这时候可能需要点对点直连，点对点直联方式，将以服务接口为单位，忽略注册中心的提供者列表，A 接口配置点对点，不影响 B 接口从注册中心获取列表。
 
