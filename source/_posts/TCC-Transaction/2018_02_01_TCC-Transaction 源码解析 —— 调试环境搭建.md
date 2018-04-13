@@ -54,7 +54,9 @@ permalink: TCC-Transaction/build-debugging-environment
 * tcc-transaction-dubbo-sample
 * tcc-transaction-http-sample
 
-考虑到不是所有所有同学都使用过 Dubbo 服务化框架，我们以 tcc-transaction-http-sample 项为例子。
+考虑到不是所有所有同学都使用过 Dubbo 服务化框架，我们以 tcc-transaction-http-sample 项目为例子。
+
+> 旁白君，一定注意，是 tcc-transaction-http-sample 项目，千万千万千万不要用错了！！！
 
 打开 tcc-transaction-http-sample/src/main/dbscripts 目录，有四个 SQL 脚本文件：
 
