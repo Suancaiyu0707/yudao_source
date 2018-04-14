@@ -4,6 +4,57 @@
 
     
   <url>
+    <loc>http://www.iocoder.cn/Weekdays/2018-04-15/</loc>
+    <lastmod>2018-04-14T02:18:56.000Z</lastmod>
+    <data>
+        <display>
+        <title>芋道源码的周八（2018.04.15）</title>
+        <pubTime>2018-04-14T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="芋道源码的周八" url="http://www.iocoder.cn/categories/%E8%8A%8B%E9%81%93%E6%BA%90%E7%A0%81%E7%9A%84%E5%91%A8%E5%85%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
+    <lastmod>2018-04-13T18:31:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Dubbo 源码解析 —— 精品合集</title>
+        <pubTime>2017-11-14T16:00:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
+    <lastmod>2018-04-13T03:47:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>TCC-Transaction 源码分析 —— 调试环境搭建</title>
+        <pubTime>2018-01-31T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="TCC-Transaction" url="http://www.iocoder.cn/categories/TCC-Transaction/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.iocoder.cn/HikariCP/good-collection/</loc>
     <lastmod>2018-04-12T23:48:02.000Z</lastmod>
     <data>
@@ -16,21 +67,6 @@
              
               <breadCrumb title="HikarCP" url="http://www.iocoder.cn/categories/HikarCP/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/Dubbo/good-collection/</loc>
-    <lastmod>2018-04-12T11:31:23.000Z</lastmod>
-    <data>
-        <display>
-        <title>Dubbo 源码解析 —— 精品合集</title>
-        <pubTime>2017-11-14T16:00:00.000Z</pubTime>
-        
-         
-           
         </display>
     </data>
     </url>
@@ -2302,24 +2338,6 @@
         <display>
         <title>TCC-Transaction 源码分析 —— TCC 实现</title>
         <pubTime>2018-02-07T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="TCC-Transaction" url="http://www.iocoder.cn/categories/TCC-Transaction/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.iocoder.cn/TCC-Transaction/build-debugging-environment/</loc>
-    <lastmod>2018-02-24T15:07:21.000Z</lastmod>
-    <data>
-        <display>
-        <title>TCC-Transaction 源码分析 —— 调试环境搭建</title>
-        <pubTime>2018-01-31T16:00:00.000Z</pubTime>
         
          
            

@@ -6,6 +6,26 @@ permalink: Dubbo/filter-class-loader-filter
 
 -------
 
+摘要: 原创出处 http://www.iocoder.cn/Dubbo/filter-class-loader-filter/ 「芋道源码」欢迎转载，保留摘要，谢谢！
+
+- [1. 概述](http://www.iocoder.cn/Dubbo/filter-class-loader-filter/)
+- [2. Filter](http://www.iocoder.cn/Dubbo/filter-class-loader-filter/)
+- [3. ClassLoaderFilter](http://www.iocoder.cn/Dubbo/filter-class-loader-filter/)
+- [666. 彩蛋](http://www.iocoder.cn/Dubbo/filter-class-loader-filter/)
+
+-------
+
+![](http://www.iocoder.cn/images/common/wechat_mp_2017_07_31.jpg)
+
+> 🙂🙂🙂关注**微信公众号：【芋道源码】**有福利：
+> 1. RocketMQ / MyCAT / Sharding-JDBC **所有**源码分析文章列表
+> 2. RocketMQ / MyCAT / Sharding-JDBC **中文注释源码 GitHub 地址**
+> 3. 您对于源码的疑问每条留言**都**将得到**认真**回复。**甚至不知道如何读源码也可以请教噢**。
+> 4. **新的**源码解析文章**实时**收到通知。**每周更新一篇左右**。
+> 5. **认真的**源码交流微信群。
+
+-------
+
 # 1. 概述
 
 从本文开始，我们来分享 Dubbo 的**过滤器**们。在 ProtocolFilterWrapper 中，在服务引用和暴露时，`#buildInvokerChain(invoker, key, group)` 方法中，基于 Dubbo SPI **Active** 机制，加载**匹配**对应的过滤器数组，创建带有**过滤器链的 Invoker 对象**。代码如下：
@@ -71,7 +91,7 @@ private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String
 
 我们把服务提供者和消费者的过滤器统一整理如下：
 
-[过滤器整理](http://www.iocoder.cn/images/Dubbo/2018_11_12/01.png)
+![过滤器整理](http://www.iocoder.cn/images/Dubbo/2018_11_12/01.png)
 
 * **黄色**部分，代表过滤器在服务提供者和消费者上的顺序。若为空，则表示无该过滤器。
 * **蓝色**部分，EchoFilter 等等，已经在其他文章里分享。
@@ -117,13 +137,13 @@ private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String
 
 笔者看到这个过滤器，表示一脸懵逼，于是开始 Google 探索之路。
 
-1、于是搜到 [《ISSUE#1406：classloaderFilter》](https://github.com/apache/incubator-dubbo/issues/1406) ，内容如下：[ISSUE#1406](http://www.iocoder.cn/images/Dubbo/2018_11_12/02.png)
+1、于是搜到 [《ISSUE#1406：classloaderFilter》](https://github.com/apache/incubator-dubbo/issues/1406) ，内容如下：![ISSUE#1406](http://www.iocoder.cn/images/Dubbo/2018_11_12/02.png)
 
 使用我大有道词典翻译：
 
 > 在设计目的中，切换到加载了接口定义的类加载器，以便实现与相同的类加载器上下文一起工作。
 
-2、那么什么情况下会有多个 ClassLoader 的情况呢？再于是搜到 [《ISSUE#178：项目有多个ClassLoad时使用dubbo出错；》](https://github.com/apache/incubator-dubbo/issues/178) ，内容如下：[ISSUE#178](http://www.iocoder.cn/images/Dubbo/2018_11_12/01.png)
+2、那么什么情况下会有多个 ClassLoader 的情况呢？再于是搜到 [《ISSUE#178：项目有多个ClassLoad时使用dubbo出错；》](https://github.com/apache/incubator-dubbo/issues/178) ，内容如下：![ISSUE#178](http://www.iocoder.cn/images/Dubbo/2018_11_12/03.png)
 
 开始检索 **pf4j** 是什么东东？
 
