@@ -185,5 +185,9 @@ permalink: Dubbo/filter-exception-filter
 
 😜 一开始想错了，怪不得觉得好奇怪。
 
+另外，笔者有个想法。我们在实际使用时，可能会定义通用的 BusinessException ，并且每个接口，实际都会抛出该异常。那么要求开发每个接口都定义抛出 BusinessException 是比较“麻烦”的。  
+但是，按照 ExceptionFilter 的逻辑，会打印异常日志。  
+所以，笔者的想法是，重写 ExceptionFilter ，定义一些通用异常，允许直接返回结果。🙂
+
 ![知识星球](http://www.iocoder.cn/images/Architecture/2017_12_29/01.png)
 
