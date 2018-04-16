@@ -386,7 +386,7 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 // DubboProtocol.java
 
   1: public <T> Invoker<T> refer(Class<T> serviceType, URL url) throws RpcException {
-  2:     // TODO 【8013 】kryo fst
+  2:     // 初始化序列化优化器
   3:     optimizeSerialization(url);
   4:     // 获得远程通信客户端数组
   5:     // 创建 DubboInvoker 对象
@@ -399,7 +399,7 @@ protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 ```
 
 * `invokers` 属性，Invoker 集合。
-* 第 3 行：TODO 【8013 】kryo fst
+* 第 3 行：调用 `#optimizeSerialization(url)` 方法，初始化序列化优化器。在 [《精尽 Dubbo 源码分析 —— 序列化（一）之总体实现》](http://www.iocoder.cn/Dubbo/serialize-1-all?self) 中，详细解析。
 * 第 7 行：调用 `#getClients(url)` 方法，创建远程通信客户端数组。
 * 第 7 行：创建 DubboInvoker 对象。
 * 第 9 行：添加到 `invokers` 。

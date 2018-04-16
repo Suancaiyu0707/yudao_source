@@ -103,7 +103,7 @@ Dubbo 提供了**三种**实现：
 ```
 
 * 第 18 行：判断方法**开启** Cache 功能。因为，一个服务里，可能只有**部分**方法开启了 Cache 功能。
-* 第 20 行：调用 `CacheFactory$Adaptive#getCache(url)` 方法，基于 **URL + Method** 为维度，获得 Cache 对象。。
+* 第 20 行：调用 `CacheFactory$Adaptive#getCache(url)` 方法，基于 **URL + Method** 为维度，获得 Cache 对象。
 * 第 23 行：调用 `StringUtils#toArgumentString(Object[] args)` 方法，获得 Cache Key 。代码如下：
 
     ```Java

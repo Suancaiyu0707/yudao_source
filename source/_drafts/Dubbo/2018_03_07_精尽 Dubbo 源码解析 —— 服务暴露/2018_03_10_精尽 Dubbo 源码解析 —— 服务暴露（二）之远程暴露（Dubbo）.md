@@ -564,7 +564,7 @@ private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<Stri
  26:     // 启动服务器
  27:     openServer(url);
  28: 
- 29:     // TODO 【8013 】kryo fst
+ 29:     // 初始化序列化优化器
  30:     optimizeSerialization(url);
  31:     return exporter;
  32: }
@@ -576,7 +576,7 @@ private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<Stri
 * 第 8 行：添加到 [`exporterMap`](https://github.com/YunaiV/dubbo/blob/8de6d56d06965a38712c46a0220f4e59213db72f/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/protocol/AbstractProtocol.java#L40) 中。该属性从父类继承而来。
 * 第 10 至 24 行：TODO 【8033 参数回调】
 * 第 27 行：调用 `#openServer(url)` 方法，启动服务器。
-* 第 30 行：// TODO 【8013 】kryo fst
+* 第 30 行：调用 `#optimizeSerialization(url)` 方法，初始化序列化优化器。在 [《精尽 Dubbo 源码分析 —— 序列化（一）之总体实现》](http://www.iocoder.cn/Dubbo/serialize-1-all?self) 中，详细解析。
 
 ### 3.3.3 openServer
 
@@ -680,10 +680,6 @@ private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new
     ```
 * 第 26 至 33 行：校验配置的 Client 的 Dubbo SPI 拓展是否存在。若不存在，抛出 RpcException 异常。默认情况下，未配置，所以不会校验。
 * 第 34 行：返回通信服务器。
-
-### 3.3.5 optimizeSerialization
-
-// TODO 【8013 】kryo fst
 
 # 4. Exporter
 
